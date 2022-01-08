@@ -1,0 +1,124 @@
+/**
+
+MIT License
+
+Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+#pragma once
+
+#include "../CallbackDefs.h"
+#include "../Keyboard.h"
+#include "../Mouse.h"
+#include "../Rect.h"
+
+#include <functional>
+#include <memory>
+
+namespace OctaneUI
+{
+
+class Paint;
+class Theme;
+class Window;
+
+enum class Expand : uint8_t
+{
+	None,
+	Width,
+	Height,
+	Both
+};
+
+enum class HorizontalAlignment : uint8_t
+{
+	Left,
+	Center,
+	Right
+};
+
+enum class VerticalAlignment : uint8_t
+{
+	Top,
+	Center,
+	Bottom
+};
+
+class Control
+{
+public:
+	Control(Window* InWindow);
+	virtual ~Control();
+
+	Control* SetPosition(float X, float Y);
+	Control* SetPosition(const Vector2& Position);
+	Vector2 GetPosition() const;
+	Vector2 GetAbsolutePosition() const;
+
+	Control* SetSize(float Width, float Height);
+	Control* SetSize(const Vector2& Size);
+	Vector2 GetSize() const;
+
+	Control* SetParent(Control* Parent);
+	Control* GetParent() const;
+
+	Control* SetExpand(Expand InExpand);
+	Expand GetExpand() const;
+
+	bool Contains(const Vector2& Position) const;
+	Rect GetBounds() const;
+	Rect GetAbsoluteBounds() const;
+	Window* GetWindow() const;
+	Vector2 GetMousePosition() const;
+	std::shared_ptr<Theme> GetTheme() const;
+
+	Control* SetOnInvalidate(OnInvalidateSignature Fn);
+	void Invalidate(InvalidateType Type = InvalidateType::Paint);
+
+	virtual const char* GetType() const;
+	virtual void OnPaint(Paint& Brush) const;
+	virtual void Update();
+	virtual void OnFocused();
+	virtual void OnUnfocused();
+	virtual void OnKeyPressed(Keyboard::Key Key);
+	virtual void OnKeyReleased(Keyboard::Key Key);
+	virtual void OnMouseMove(const Vector2& Position);
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button);
+	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button);
+	virtual void OnMouseEnter();
+	virtual void OnMouseLeave();
+	virtual void OnText(uint32_t Code);
+
+protected:
+	virtual bool IsFixedSize() const;
+
+private:
+	Control();
+
+	Window* m_Window;
+	Control* m_Parent;
+	Rect m_Bounds;
+	Expand m_Expand;
+	OnInvalidateSignature m_OnInvalidate;
+};
+
+}

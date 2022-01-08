@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,42 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#pragma once
+
+#include "Vector2.h"
+
+#include <cstdint>
+#include <functional>
+#include <memory>
+#include <vector>
+
+namespace OctaneUI
+{
+
+class Texture
+{
+public:
+	typedef std::function<uint32_t(const std::vector<uint8_t>&, uint32_t, uint32_t)> OnLoadSignature;
+
+	static void SetOnLoad(OnLoadSignature Fn);
+	static std::shared_ptr<Texture> Load(const std::vector<uint8_t>& Data, uint32_t Width, uint32_t Height);
+	static std::shared_ptr<Texture> Load(const char* Path);
+
+	Texture();
+	~Texture();
+
+	bool IsValid() const;
+	uint32_t GetID() const;
+	Vector2 GetSize() const;
+
+private:
+	static OnLoadSignature s_OnLoad;
+
+	uint32_t m_ID;
+	Vector2 m_Size;
+};
+
+}

@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,57 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#pragma once
+
+#include "../Color.h"
+#include "Control.h"
+
+namespace OctaneUI
+{
+
+class Text;
+
+class Button : public Control
+{
+public:
+	Button(Window* InWindow);
+	virtual ~Button();
+
+	Button* SetPosition(float X, float Y);
+	Button* SetPosition(const Vector2& Position);
+
+	Button* SetSize(float Width, float Height);
+	Button* SetSize(const Vector2& Position);
+
+	Button* SetExpand(Expand InExpand);
+
+	Button* SetLabel(const char* Label);
+	const char* GetLabel() const;
+
+	Button* SetOnPressed(OnEmptySignature Fn);
+
+	virtual const char* GetType() const override;
+	virtual void OnPaint(Paint& Brush) const override;
+	virtual void Update() override;
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button);
+	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button);
+	virtual void OnMouseEnter() override;
+	virtual void OnMouseLeave() override;
+
+private:
+	enum class State : uint8_t
+	{
+		None,
+		Hovered,
+		Pressed
+	};
+
+	State m_State;
+	std::shared_ptr<Text> m_Label;
+	OnEmptySignature m_OnPressed;
+};
+
+}

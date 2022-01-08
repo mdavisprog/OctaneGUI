@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,56 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#pragma once
+
+#include "CallbackDefs.h"
+#include "Mouse.h"
+
+#include <cstdint>
+#include <functional>
+#include <memory>
+
+namespace OctaneUI
+{
+
+class Container;
+class Control;
+class Paint;
+struct Vector2;
+
+class Popup
+{
+public:
+	enum class State : uint8_t
+	{
+		None,
+		Opening,
+		Opened
+	};
+
+	Popup();
+	~Popup();
+
+	void Open(const std::shared_ptr<Container>& InContainer, bool Modal);
+	void Close();
+	void Update();
+	bool IsModal() const;
+	std::shared_ptr<Container> GetContainer() const;
+	void OnMouseMove(const Vector2& Position);
+	std::weak_ptr<Control> GetControl(const Vector2& Position) const;
+	void OnPaint(Paint& Brush);
+	void SetOnInvalidate(OnInvalidateSignature Fn);
+	void SetOnClose(OnContainerSignature Fn);
+
+private:
+	std::shared_ptr<Container> m_Container;
+	bool m_Modal;
+	State m_State;
+	OnInvalidateSignature m_OnInvalidate;
+	OnContainerSignature m_OnClose;
+};
+
+}

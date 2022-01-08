@@ -1,0 +1,174 @@
+/**
+
+MIT License
+
+Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+#include "../Icons.h"
+#include "../Paint.h"
+#include "../Window.h"
+#include "Menu.h"
+#include "MenuItem.h"
+#include "Text.h"
+
+namespace OctaneUI
+{
+
+MenuItem::MenuItem(Window* InWindow)
+	: TextSelectable(InWindow)
+	, m_Menu(nullptr)
+	, m_IsMenuBar(false)
+	, m_IsChecked(false)
+	, m_OnHover(nullptr)
+	, m_OnSelected(nullptr)
+{
+	SetOnPressed(std::bind(&MenuItem::OnPressed, this, std::placeholders::_1));
+}
+
+MenuItem::~MenuItem()
+{
+}
+
+std::shared_ptr<Menu> MenuItem::CreateMenu()
+{
+	if (!m_Menu)
+	{
+		m_Menu = std::make_shared<Menu>(GetWindow());
+	}
+
+	return m_Menu;
+}
+
+std::shared_ptr<Menu> MenuItem::GetMenu() const
+{
+	return m_Menu;
+}
+
+MenuItem* MenuItem::DestroyMenu()
+{
+	m_Menu = nullptr;
+	return this;
+}
+
+MenuItem* MenuItem::SetIsMenuBar(bool IsMenuBar)
+{
+	m_IsMenuBar = IsMenuBar;
+	return this;
+}
+
+MenuItem* MenuItem::SetChecked(bool Checked)
+{
+	m_IsChecked = Checked;
+	return this;
+}
+
+bool MenuItem::IsChecked() const
+{
+	return m_IsChecked;
+}
+
+MenuItem* MenuItem::SetOnHover(OnMenuItemSignature Fn)
+{
+	m_OnHover = Fn;
+	return this;
+}
+
+MenuItem* MenuItem::SetOnSelected(OnMenuItemSignature Fn)
+{
+	m_OnSelected = Fn;
+	return this;
+}
+
+const char* MenuItem::GetType() const
+{
+	return "MenuItem";
+}
+
+void MenuItem::OnPaint(Paint& Brush) const
+{
+	TextSelectable::OnPaint(Brush);
+
+	if (m_IsChecked)
+	{
+		const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
+		const Vector2 Position = GetAbsolutePosition() + Vector2(6.0f, GetSize().Y * 0.5f - TexCoords.GetSize().Y * 0.5f);
+
+		Brush.Image(
+			Rect(Position, Position + TexCoords.GetSize()),
+			TexCoords,
+			GetWindow()->GetIcons()->GetTexture(),
+			Color(255, 255, 255, 255)
+		);
+	}
+
+	if (m_Menu && !m_IsMenuBar)
+	{
+		const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Expand);
+		const Vector2 Position = GetAbsolutePosition()
+			+ Vector2(GetSize().X - TexCoords.GetSize().X * 1.5f, GetSize().Y * 0.5f - TexCoords.GetSize().Y * 0.5f);
+		
+		Brush.Image(
+			Rect(Position, Position + TexCoords.GetSize()),
+			TexCoords,
+			GetWindow()->GetIcons()->GetTexture(),
+			Color(255, 255, 255, 255)
+		);
+	}
+}
+
+void MenuItem::Update()
+{
+	TextSelectable::Update();
+
+	if (!m_IsMenuBar)
+	{
+		const Vector2 TextPosition = GetTextControl()->GetPosition();
+		const Vector2 CheckSize = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check).GetSize();
+		GetTextControl()->SetPosition(CheckSize.X + 12.0f, TextPosition.Y);
+	}
+}
+
+void MenuItem::OnMouseEnter()
+{
+	TextSelectable::OnMouseEnter();
+
+	if (m_OnHover)
+	{
+		m_OnHover(this);
+	}
+}
+
+void MenuItem::OnPressed(TextSelectable* Item)
+{
+	if (this != Item)
+	{
+		return;
+	}
+
+	if (m_OnSelected)
+	{
+		m_OnSelected(this);
+	}
+}
+
+}

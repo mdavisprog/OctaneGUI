@@ -1,0 +1,232 @@
+/**
+
+MIT License
+
+Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+#include "../Paint.h"
+#include "../Window.h"
+#include "Control.h"
+
+namespace OctaneUI
+{
+
+Control::Control(Window* InWindow)
+	: m_Window(InWindow)
+	, m_Parent(nullptr)
+	, m_Bounds()
+	, m_Expand(Expand::None)
+	, m_OnInvalidate(nullptr)
+{
+}
+
+Control::~Control()
+{
+}
+
+Control* Control::SetPosition(float X, float Y)
+{
+	return SetPosition(Vector2(X, Y));
+}
+
+Control* Control::SetPosition(const Vector2& Position)
+{
+	m_Bounds.SetPosition(Position);
+	Invalidate(InvalidateType::Layout);
+	return this;
+}
+
+Vector2 Control::GetPosition() const
+{
+	return m_Bounds.Min;
+}
+
+Vector2 Control::GetAbsolutePosition() const
+{
+	if (m_Parent == nullptr)
+	{
+		return GetPosition();
+	}
+
+	return m_Parent->GetAbsolutePosition() + GetPosition();
+}
+
+Control* Control::SetSize(float Width, float Height)
+{
+	return SetSize(Vector2(Width, Height));
+}
+
+Control* Control::SetSize(const Vector2& Size)
+{
+	m_Bounds.Max = m_Bounds.Min + Size;
+	Invalidate(InvalidateType::Layout);
+	return this;
+}
+
+Vector2 Control::GetSize() const
+{
+	return m_Bounds.GetSize();
+}
+
+Control* Control::SetParent(Control* Parent)
+{
+	m_Parent = Parent;
+	return this;
+}
+
+Control* Control::GetParent() const
+{
+	return m_Parent;
+}
+
+Control* Control::SetExpand(Expand InExpand)
+{
+	if (IsFixedSize())
+	{
+		return this;
+	}
+
+	m_Expand = InExpand;
+	return this;
+}
+
+Expand Control::GetExpand() const
+{
+	return m_Expand;
+}
+
+bool Control::Contains(const Vector2& Position) const
+{
+	return GetAbsoluteBounds().Contains(Position);
+}
+
+Rect Control::GetBounds() const
+{
+	return m_Bounds;
+}
+
+Rect Control::GetAbsoluteBounds() const
+{
+	Rect Result = m_Bounds;
+	Result.SetPosition(GetAbsolutePosition());
+	return Result;
+}
+
+Window* Control::GetWindow() const
+{
+	return m_Window;
+}
+
+Vector2 Control::GetMousePosition() const
+{
+	if (m_Window)
+	{
+		return m_Window->GetMousePosition();
+	}
+
+	return Vector2();
+}
+
+std::shared_ptr<Theme> Control::GetTheme() const
+{
+	return m_Window->GetTheme();
+}
+
+Control* Control::SetOnInvalidate(OnInvalidateSignature Fn)
+{
+	m_OnInvalidate = Fn;
+	return this;
+}
+
+void Control::Invalidate(InvalidateType Type)
+{
+	if (m_OnInvalidate)
+	{
+		m_OnInvalidate(this, Type);
+	}
+}
+
+const char* Control::GetType() const
+{
+	return "Control";
+}
+
+void Control::OnPaint(Paint& Brush) const
+{
+}
+
+void Control::Update()
+{
+}
+
+void Control::OnFocused()
+{
+}
+
+void Control::OnUnfocused()
+{
+}
+
+void Control::OnKeyPressed(Keyboard::Key Key)
+{
+}
+
+void Control::OnKeyReleased(Keyboard::Key Key)
+{
+}
+
+void Control::OnMouseMove(const Vector2& Position)
+{
+}
+
+bool Control::OnMousePressed(const Vector2& Position, Mouse::Button Button)
+{
+	return false;
+}
+
+void Control::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
+{
+}
+
+void Control::OnMouseEnter()
+{
+}
+
+void Control::OnMouseLeave()
+{
+}
+
+void Control::OnText(uint32_t Code)
+{
+}
+
+bool Control::IsFixedSize() const
+{
+	return false;
+}
+
+Control::Control()
+{
+}
+
+}

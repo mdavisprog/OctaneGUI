@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,72 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#include "../Paint.h"
+#include "../Texture.h"
+#include "Image.h"
+
+namespace OctaneUI
+{
+
+Image::Image(Window* InWindow)
+	: Control(InWindow)
+	, m_Texture(nullptr)
+{
+}
+
+Image::~Image()
+{
+}
+
+Image* Image::SetTexture(const char* Path)
+{
+	if (!m_Texture)
+	{
+		m_Texture = Texture::Load(Path);
+
+		if (m_Texture)
+		{
+			SetUVs(Rect(Vector2::Zero, m_Texture->GetSize()));
+		}
+	}
+
+	return this;
+}
+
+Image* Image::SetTexture(const std::shared_ptr<Texture>& InTexture)
+{
+	m_Texture = InTexture;
+	return this;
+}
+
+Image* Image::SetUVs(const Rect& UVs)
+{
+	m_UVs = UVs;
+	SetSize(m_UVs.GetSize());
+	return this;
+}
+
+const char* Image::GetType() const
+{
+	return "Image";
+}
+
+void Image::OnPaint(Paint& Brush) const
+{
+	if (!m_Texture)
+	{
+		return;
+	}
+
+	Brush.Image(GetAbsoluteBounds(), m_UVs, m_Texture, Color(255, 255, 255, 255));
+}
+
+bool Image::IsFixedSize() const
+{
+	return true;
+}
+
+}

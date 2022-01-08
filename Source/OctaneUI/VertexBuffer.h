@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,50 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#pragma once
+
+#include "Rect.h"
+#include "Vertex.h"
+
+#include <vector>
+
+namespace OctaneUI
+{
+
+class VertexBuffer
+{
+public:
+	VertexBuffer();
+	~VertexBuffer();
+
+	void AddVertex(const Vector2& Point, const Color& Col);
+	void AddVertex(const Vector2& Point, const Vector2& TexCoords, const Color& Col);
+	void AddIndex(uint32_t Index);
+
+	const std::vector<Vertex>& GetVertices() const;
+	const std::vector<uint32_t>& GetIndices() const;
+
+	uint32_t GetVertexCount() const;
+	uint32_t GetIndexCount() const;
+
+	void SetTextureID(uint32_t TextureID);
+	uint32_t GetTextureID() const;
+
+	void IncOffset(uint32_t Amount);
+	uint32_t GetOffset() const;
+
+	void SetClip(const Rect& Clip);
+	Rect GetClip() const;
+
+private:
+	std::vector<Vertex> m_Vertices;
+	std::vector<uint32_t> m_Indices;
+	uint32_t m_TextureID;
+	uint32_t m_Offset;
+	Rect m_Clip;
+};
+
+}

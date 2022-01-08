@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,28 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#include "Color.h"
+
+namespace OctaneUI
+{
+
+Color::Color()
+	: R(0)
+	, G(0)
+	, B(0)
+	, A(0)
+{
+}
+
+Color::Color(uint8_t InR, uint8_t InG, uint8_t InB, uint8_t InA)
+	: R(InR)
+	, G(InG)
+	, B(InB)
+	, A(InA)
+{
+}
+
+}

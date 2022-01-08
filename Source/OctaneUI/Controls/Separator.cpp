@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,53 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#include "../Paint.h"
+#include "../Theme.h"
+#include "Separator.h"
+
+namespace OctaneUI
+{
+
+Separator::Separator(Window* InWindow)
+	: Control(InWindow)
+	, m_OnHover(nullptr)
+{
+	SetExpand(Expand::Width);
+	SetSize(0.0f, 16.0f);
+}
+
+Separator::~Separator()
+{
+}
+
+Separator* Separator::SetOnHover(OnControlSignature Fn)
+{
+	m_OnHover = Fn;
+	return this;
+}
+
+void Separator::OnPaint(Paint& Brush) const
+{
+	const Color Fill = GetTheme()->GetColor(Theme::Colors::Separator);
+	const float Thickness = GetTheme()->GetConstant(Theme::FloatConstants::Separator_Thickness);
+	const float Margins = GetTheme()->GetConstant(Theme::FloatConstants::Separator_Margins);
+
+	const Vector2 HalfSize = GetSize() * 0.5f;
+	const Vector2 Start = GetAbsolutePosition() + Vector2(Margins, HalfSize.Y);
+	const Vector2 End = GetAbsolutePosition() + Vector2(GetSize().X - Margins, HalfSize.Y);
+
+	Brush.Line(Start, End, Fill, Thickness);
+}
+
+void Separator::OnMouseEnter()
+{
+	if (m_OnHover)
+	{
+		m_OnHover(this);
+	}
+}
+
+}

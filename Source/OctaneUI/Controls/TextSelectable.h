@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,51 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#pragma once
+
+#include "Control.h"
+
+namespace OctaneUI
+{
+
+class Text;
+
+class TextSelectable : public Control
+{
+public:
+	TextSelectable(Window* InWindow);
+	virtual ~TextSelectable();
+
+	TextSelectable* SetSelected(bool Selected);
+	bool IsSelected() const;
+
+	TextSelectable* SetText(const char* Contents);
+	const char* GetText() const;
+
+	TextSelectable* SetAlignment(HorizontalAlignment Align);
+	HorizontalAlignment GetAlignment() const;
+
+	TextSelectable* SetOnPressed(OnTextSelectableSignature Fn);
+
+	virtual const char* GetType() const override;
+	virtual void OnPaint(Paint& Brush) const override;
+	virtual void Update() override;
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
+	virtual void OnMouseEnter() override;
+	virtual void OnMouseLeave() override;
+
+protected:
+	std::shared_ptr<Text> GetTextControl() const;
+
+private:
+	bool m_Hovered;
+	bool m_Selected;
+	std::shared_ptr<Text> m_Text;
+	OnTextSelectableSignature m_OnPressed;
+	HorizontalAlignment m_Align;
+};
+
+}

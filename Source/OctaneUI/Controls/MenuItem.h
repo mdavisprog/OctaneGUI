@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,48 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#pragma once
+
+#include "TextSelectable.h"
+
+namespace OctaneUI
+{
+
+class Menu;
+
+class MenuItem : public TextSelectable
+{
+public:
+	MenuItem(Window* InWindow);
+	virtual ~MenuItem();
+
+	std::shared_ptr<Menu> CreateMenu();
+	std::shared_ptr<Menu> GetMenu() const;
+	MenuItem* DestroyMenu();
+	MenuItem* SetIsMenuBar(bool IsMenuBar);
+
+	MenuItem* SetChecked(bool Checked);
+	bool IsChecked() const;
+
+	MenuItem* SetOnHover(OnMenuItemSignature Fn);
+	MenuItem* SetOnSelected(OnMenuItemSignature Fn);
+
+	virtual const char* GetType() const override;
+	virtual void OnPaint(Paint& Brush) const override;
+	virtual void Update() override;
+	virtual void OnMouseEnter() override;
+
+private:
+	void OnPressed(TextSelectable* Item);
+
+	std::shared_ptr<Menu> m_Menu;
+	bool m_IsMenuBar;
+	bool m_IsChecked;
+	OnMenuItemSignature m_OnHover;
+	OnMenuItemSignature m_OnSelected;
+};
+
+}

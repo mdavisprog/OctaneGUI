@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,36 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#include "../Paint.h"
+#include "../Theme.h"
+#include "Panel.h"
+
+namespace OctaneUI
+{
+
+Panel::Panel(Window* InWindow)
+	: Control(InWindow)
+{
+}
+
+Panel::~Panel()
+{
+}
+
+const char* Panel::GetType() const
+{
+	return "Panel";
+}
+
+void Panel::OnPaint(Paint& Brush) const
+{
+	const Color Background = Brush.GetTheme()->GetColor(Theme::Colors::Panel);
+	const Color Outline = Brush.GetTheme()->GetColor(Theme::Colors::PanelOutline);
+	Brush.Rectangle(GetAbsoluteBounds(), Background);
+	Brush.RectangleOutline(GetAbsoluteBounds(), Outline);
+}
+
+}

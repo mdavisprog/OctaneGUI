@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,59 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#include "../Font.h"
+#include "../Paint.h"
+#include "../Theme.h"
+#include "Text.h"
+
+namespace OctaneUI
+{
+
+Text::Text(Window* InWindow)
+	: Control(InWindow)
+	, m_Contents("")
+{
+}
+
+Text::~Text()
+{
+}
+
+Text* Text::SetText(const char* InContents)
+{
+	m_Contents = InContents;
+
+	std::shared_ptr<Font> ThemeFont = GetTheme()->GetFont();
+	if (ThemeFont)
+	{
+		Vector2 Size = ThemeFont->Measure(m_Contents);
+		SetSize(Size);
+	}
+
+	return this;
+}
+
+const char* Text::GetText() const
+{
+	return m_Contents.c_str();
+}
+
+const char* Text::GetType() const
+{
+	return "Text";
+}
+
+void Text::OnPaint(Paint& Brush) const
+{
+	Brush.Text(GetAbsolutePosition(), m_Contents, Color(255, 255, 255, 255));
+}
+
+bool Text::IsFixedSize() const
+{
+	return true;
+}
+
+}

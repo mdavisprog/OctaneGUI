@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,29 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#pragma once
+
+#include "Control.h"
+
+namespace OctaneUI
+{
+
+class Separator : public Control
+{
+public:
+	Separator(Window* InWindow);
+	virtual ~Separator();
+
+	Separator* SetOnHover(OnControlSignature Fn);
+
+	virtual void OnPaint(Paint& Brush) const;
+	virtual void OnMouseEnter() override;
+
+private:
+	OnControlSignature m_OnHover;
+};
+
+}

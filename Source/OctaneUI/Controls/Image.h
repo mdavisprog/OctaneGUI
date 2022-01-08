@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,37 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#pragma once
+
+#include "Control.h"
+
+namespace OctaneUI
+{
+
+class Texture;
+
+class Image : public Control
+{
+public:
+	Image(Window* InWindow);
+	virtual ~Image();
+
+	Image* SetTexture(const char* Path);
+	Image* SetTexture(const std::shared_ptr<Texture>& InTexture);
+	Image* SetUVs(const Rect& UVs);
+
+	virtual const char* GetType() const override;
+	virtual void OnPaint(Paint& Brush) const override;
+
+protected:
+	virtual bool IsFixedSize() const override;
+
+private:
+	std::shared_ptr<Texture> m_Texture;
+	Rect m_UVs;
+};
+
+}

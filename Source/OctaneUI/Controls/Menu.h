@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,45 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#pragma once
+
+#include "Container.h"
+
+namespace OctaneUI
+{
+
+class MenuItem;
+
+class Menu : public Container
+{
+public:
+	Menu(Window* InWindow);
+	virtual ~Menu();
+
+	Menu* AddItem(const char* Label, OnEmptySignature Fn);
+	std::shared_ptr<MenuItem> GetItem(const char* Label) const;
+	Menu* AddSeparator();
+	Menu* Close();
+
+	virtual const char* GetType() const override;
+
+private:
+	typedef std::unordered_map<MenuItem*, OnEmptySignature> MenuItemMap;
+
+	void Resize();
+	void OnHovered(MenuItem* Item);
+	void OnSelected(MenuItem* Item);
+	void OnSeparatorHovered(Control* Item);
+	void SetSelected(const std::shared_ptr<Menu>& InMenu, bool Selected) const;
+
+	std::shared_ptr<Panel> m_Panel;
+	std::shared_ptr<VerticalContainer> m_Container;
+	std::vector<std::shared_ptr<MenuItem>> m_Items;
+	MenuItemMap m_Callbacks;
+	std::shared_ptr<Menu> m_Menu;
+};
+
+}

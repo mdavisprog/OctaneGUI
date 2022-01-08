@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,37 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#pragma once
+
+#include "Control.h"
+
+#include <string>
+
+namespace OctaneUI
+{
+
+class Paint;
+
+class Text : public Control
+{
+public:
+	Text(Window* InWindow);
+	virtual ~Text();
+
+	Text* SetText(const char* InContents);
+	const char* GetText() const;
+
+	virtual const char* GetType() const override;
+	virtual void OnPaint(Paint& Brush) const override;
+
+protected:
+	virtual bool IsFixedSize() const override;
+
+private:
+	std::string m_Contents;
+};
+
+}

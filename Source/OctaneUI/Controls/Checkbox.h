@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,52 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#pragma once
+
+#include "Control.h"
+
+namespace OctaneUI
+{
+
+class Text;
+
+class Checkbox : public Control
+{
+public:
+	enum class State : uint8_t
+	{
+		None,
+		Intermediate,
+		Checked
+	};
+
+	Checkbox(Window* InWindow);
+	virtual ~Checkbox();
+
+	Checkbox* SetText(const char* InText);
+	const char* GetText() const;
+
+	Checkbox* SetState(State InState);
+	State GetState() const;
+
+	Checkbox* SetTriState(bool IsTriState);
+	bool IsTriState() const;
+
+	virtual const char* GetType() const override;
+	virtual void OnPaint(Paint& Brush) const override;
+	virtual void Update() override;
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
+	virtual void OnMouseEnter() override;
+	virtual void OnMouseLeave() override;
+
+private:
+	std::shared_ptr<Text> m_Text;
+	State m_State;
+	bool m_Hovered;
+	bool m_TriState;
+};
+
+}

@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,40 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#include "Vertex.h"
+
+namespace OctaneUI
+{
+
+Vertex::Vertex()
+	: Position()
+	, TexCoords()
+	, Col()
+{
+}
+
+Vertex::Vertex(const Vector2& InPosition)
+	: Position(InPosition)
+	, TexCoords()
+	, Col()
+{
+}
+
+Vertex::Vertex(const Vector2& InPosition, const Color& InCol)
+	: Position(InPosition)
+	, TexCoords()
+	, Col(InCol)
+{
+}
+
+Vertex::Vertex(const Vector2& InPosition, const Vector2& InTexCoords, const Color& InCol)
+	: Position(InPosition)
+	, TexCoords(InTexCoords)
+	, Col(InCol)
+{
+}
+
+}

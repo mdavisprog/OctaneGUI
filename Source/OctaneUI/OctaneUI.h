@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,33 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#pragma once
+
+#include "Application.h"
+#include "Color.h"
+#include "Controls/Button.h"
+#include "Controls/Container.h"
+#include "Controls/Control.h"
+#include "Controls/HorizontalContainer.h"
+#include "Controls/Image.h"
+#include "Controls/Menu.h"
+#include "Controls/MenuBar.h"
+#include "Controls/MenuItem.h"
+#include "Controls/Panel.h"
+#include "Controls/Text.h"
+#include "Controls/TextSelectable.h"
+#include "Controls/VerticalContainer.h"
+#include "Event.h"
+#include "Font.h"
+#include "Keyboard.h"
+#include "Mouse.h"
+#include "Paint.h"
+#include "Rect.h"
+#include "Theme.h"
+#include "Vector2.h"
+#include "Vertex.h"
+#include "VertexBuffer.h"
+#include "Window.h"

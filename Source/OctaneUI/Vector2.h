@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,41 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#pragma once
+
+namespace OctaneUI
+{
+
+struct Vector2
+{
+public:
+	float X, Y;
+	static Vector2 Zero;
+
+	Vector2();
+	Vector2(float InX, float InY);
+
+	Vector2 operator+(const Vector2& Other) const;
+	Vector2 operator-(const Vector2& Other) const;
+	Vector2 operator*(const Vector2& Other) const;
+	Vector2 operator/(const Vector2& Other) const;
+
+	Vector2 operator*(float Other) const;
+
+	Vector2& operator+=(const Vector2& Other);
+	Vector2& operator-=(const Vector2& Other);
+	Vector2& operator*=(const Vector2& Other);
+	Vector2& operator/=(const Vector2& Other);
+
+	float Length() const;
+	float LengthSq() const;
+	Vector2 Invert() const;
+	Vector2 Unit() const;
+	Vector2 Floor() const;
+	bool IsZero() const;
+};
+
+}

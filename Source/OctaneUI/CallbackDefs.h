@@ -1,3 +1,5 @@
+/**
+
 MIT License
 
 Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
@@ -19,3 +21,33 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+*/
+
+#pragma once
+
+#include <functional>
+
+namespace OctaneUI
+{
+
+class Container;
+class Control;
+class MenuItem;
+class TextSelectable;
+
+enum class InvalidateType : unsigned char
+{
+	Layout,
+	Paint,
+	Both
+};
+
+typedef std::function<void()> OnEmptySignature;
+typedef std::function<void(Container*)> OnContainerSignature;
+typedef std::function<void(Control*)> OnControlSignature;
+typedef std::function<void(Control*, InvalidateType)> OnInvalidateSignature;
+typedef std::function<void(MenuItem*)> OnMenuItemSignature;
+typedef std::function<void(TextSelectable*)> OnTextSelectableSignature;
+
+}
