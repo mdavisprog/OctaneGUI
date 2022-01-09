@@ -28,6 +28,7 @@ SOFTWARE.
 
 #include "Rect.h"
 
+#include <cstdint>
 #include <memory>
 
 namespace OctaneUI
@@ -54,7 +55,7 @@ public:
 
 private:
 	std::shared_ptr<Texture> m_Texture;
-	Rect m_UVs[Type::Max];
+	Rect m_UVs[(uint32_t)Type::Max];
 };
 
 }

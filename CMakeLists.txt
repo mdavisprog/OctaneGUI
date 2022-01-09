@@ -9,17 +9,28 @@ set(SFML_INCLUDE "${PROJECT_SOURCE_DIR}/lib/SFML/include")
 if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
 	message(FATAL_ERROR, "32-bit SFML libraries not supported.")
 else()
-	set(SFML_BIN_PATH "${PROJECT_SOURCE_DIR}/lib/SFML/bin/x64")
-	set(SFML_LIBS_PATH "${PROJECT_SOURCE_DIR}/lib/SFML/lib/x64")
+	if(WIN32)
+		set(SFML_BIN_PATH "${PROJECT_SOURCE_DIR}/lib/SFML/bin/x64")
+		set(SFML_LIBS_PATH "${PROJECT_SOURCE_DIR}/lib/SFML/lib/x64")
+	else()
+		set(SFML_BIN_PATH "${PROJECT_SOURCE_DIR}/lib/SFML/lib")
+		set(SFML_LIBS_PATH "${PROJECT_SOURCE_DIR}/lib/SFML/lib")
+	endif()
 endif()
 set(
 	SFML_LIBS 
 	sfml-graphics
-	sfml-main
 	sfml-network
 	sfml-system
 	sfml-window
 )
+if(WIN32)
+	set(
+		SFML_LIBS
+		${SFML_LIBS}
+		sfml-main
+	)
+endif()
 
 set(STB_INCLUDE "${PROJECT_SOURCE_DIR}/External/stb")
 set(OCTANEUI_INCLUDE "${PROJECT_SOURCE_DIR}/Source")

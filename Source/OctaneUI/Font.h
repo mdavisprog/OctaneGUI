@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include <cstdint>
 #include <functional>
+#include <memory>
 #include <vector>
 
 namespace OctaneUI

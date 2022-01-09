@@ -86,7 +86,7 @@ void OnCreateWindow(OctaneUI::Window* Window)
 		Item.Renderer->setVerticalSyncEnabled(false);
 
 		Item.BackBuffer = new sf::RenderTexture();
-		Item.BackBuffer->create((uint32_t)Size.X, (uint32_t)Size.Y, false);
+		Item.BackBuffer->create((uint32_t)Size.X, (uint32_t)Size.Y);
 	}
 }
 

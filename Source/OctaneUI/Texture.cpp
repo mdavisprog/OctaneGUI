@@ -28,6 +28,8 @@ SOFTWARE.
 #include "stb/stb_image.h"
 #include "Texture.h"
 
+#include <cstring>
+
 namespace OctaneUI
 {
 
