@@ -357,6 +357,9 @@ void Application::ProcessEvent(const std::shared_ptr<Window>& Item)
 	case Event::Type::Text:
 		Item->OnText(E.GetData().m_Text.Code);
 		break;
+	
+	case Event::Type::None:
+	default: break;
 	}
 }
 

@@ -41,7 +41,7 @@ public:
 
 	Separator* SetOnHover(OnControlSignature Fn);
 
-	virtual void OnPaint(Paint& Brush) const;
+	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnMouseEnter() override;
 
 private:
