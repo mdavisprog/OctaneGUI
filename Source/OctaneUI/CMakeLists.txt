@@ -21,11 +21,13 @@ set(SOURCE
 	Event.cpp
 	Font.cpp
 	Icons.cpp
+	Json.cpp
 	Paint.cpp
 	Popup.cpp
 	Rect.cpp
 	Texture.cpp
 	Theme.cpp
+	Variant.cpp
 	Vector2.cpp
 	Vertex.cpp
 	VertexBuffer.cpp
