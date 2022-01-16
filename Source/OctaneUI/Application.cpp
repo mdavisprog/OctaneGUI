@@ -193,34 +193,40 @@ std::shared_ptr<Icons> Application::GetIcons() const
 	return m_Icons;
 }
 
-void Application::SetOnCreateWindow(OnWindowSignature Fn)
+Application& Application::SetOnCreateWindow(OnWindowSignature Fn)
 {
 	m_OnCreateWindow = Fn;
+	return *this;
 }
 
-void Application::SetOnDestroyWindow(OnWindowSignature Fn)
+Application& Application::SetOnDestroyWindow(OnWindowSignature Fn)
 {
 	m_OnDestroyWindow = Fn;
+	return *this;
 }
 
-void Application::SetOnPaint(OnWindowPaintSignature Fn)
+Application& Application::SetOnPaint(OnWindowPaintSignature Fn)
 {
 	m_OnPaint = Fn;
+	return *this;
 }
 
-void Application::SetOnEvent(OnWindowEventSignature Fn)
+Application& Application::SetOnEvent(OnWindowEventSignature Fn)
 {
 	m_OnEvent = Fn;
+	return *this;
 }
 
-void Application::SetOnLoadTexture(OnLoadTextureSignature Fn)
+Application& Application::SetOnLoadTexture(OnLoadTextureSignature Fn)
 {
 	m_OnLoadTexture = Fn;
+	return *this;
 }
 
-void Application::SetOnExit(OnEmptySignature Fn)
+Application& Application::SetOnExit(OnEmptySignature Fn)
 {
 	m_OnExit = Fn;
+	return *this;
 }
 
 void Application::OnPaint(Window* InWindow, const std::vector<VertexBuffer>& Buffers)

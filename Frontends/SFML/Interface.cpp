@@ -260,12 +260,13 @@ void OnExit()
 
 void Initialize(OctaneUI::Application& Application)
 {
-	Application.SetOnCreateWindow(OnCreateWindow);
-	Application.SetOnDestroyWindow(OnDestroyWindow);
-	Application.SetOnPaint(OnPaint);
-	Application.SetOnEvent(OnEvent);
-	Application.SetOnLoadTexture(OnLoadTexture);
-	Application.SetOnExit(OnExit);
+	Application
+		.SetOnCreateWindow(OnCreateWindow)
+		.SetOnDestroyWindow(OnDestroyWindow)
+		.SetOnPaint(OnPaint)
+		.SetOnEvent(OnEvent)
+		.SetOnLoadTexture(OnLoadTexture)
+		.SetOnExit(OnExit);
 }
 
 }

@@ -64,12 +64,12 @@ public:
 	std::shared_ptr<Theme> GetTheme() const;
 	std::shared_ptr<Icons> GetIcons() const;
 
-	void SetOnCreateWindow(OnWindowSignature Fn);
-	void SetOnDestroyWindow(OnWindowSignature Fn);
-	void SetOnPaint(OnWindowPaintSignature Fn);
-	void SetOnEvent(OnWindowEventSignature Fn);
-	void SetOnLoadTexture(OnLoadTextureSignature Fn);
-	void SetOnExit(OnEmptySignature Fn);
+	Application& SetOnCreateWindow(OnWindowSignature Fn);
+	Application& SetOnDestroyWindow(OnWindowSignature Fn);
+	Application& SetOnPaint(OnWindowPaintSignature Fn);
+	Application& SetOnEvent(OnWindowEventSignature Fn);
+	Application& SetOnLoadTexture(OnLoadTextureSignature Fn);
+	Application& SetOnExit(OnEmptySignature Fn);
 
 private:
 	void OnPaint(Window* InWindow, const std::vector<VertexBuffer>& Buffers);
