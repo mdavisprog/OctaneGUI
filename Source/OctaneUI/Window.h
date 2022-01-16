@@ -73,6 +73,7 @@ public:
 	void OnText(uint32_t Code);
 
 	void CreateContainer();
+
 	std::shared_ptr<Container> GetContainer() const;
 	std::shared_ptr<MenuBar> GetMenuBar() const;
 	std::shared_ptr<Theme> GetTheme() const;
@@ -82,7 +83,7 @@ public:
 	void Update();
 	void DoPaint(Paint& Brush);
 
-	void SetOnPaint(OnPaintSignature Fn);
+	Window* SetOnPaint(OnPaintSignature Fn);
 
 private:
 	Window();

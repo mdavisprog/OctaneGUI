@@ -283,9 +283,10 @@ void Window::DoPaint(Paint& Brush)
 	}
 }
 
-void Window::SetOnPaint(OnPaintSignature Fn)
+Window* Window::SetOnPaint(OnPaintSignature Fn)
 {
 	m_OnPaint = Fn;
+	return this;
 }
 
 Window::Window()
