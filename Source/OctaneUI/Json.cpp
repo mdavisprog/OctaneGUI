@@ -43,6 +43,8 @@ std::string ToLower(const std::string& Value)
 	return Result;
 }
 
+const Json Json::Invalid;
+
 Json::Json()
 	: m_Type(Type::Null)
 	, m_Data()
@@ -202,6 +204,31 @@ Json& Json::operator[](const std::string& Key)
 }
 
 Json& Json::operator[](unsigned int Index)
+{
+	return m_Array[Index];
+}
+
+const Json& Json::operator[](const char* Key) const
+{
+	if (m_Map.find(Key) == m_Map.end())
+	{
+		return Invalid;
+	}
+
+	return m_Map.at(Key);
+}
+
+const Json& Json::operator[](const std::string& Key) const
+{
+	if (m_Map.find(Key) == m_Map.end())
+	{
+		return Invalid;
+	}
+
+	return m_Map.at(Key);
+}
+
+const Json& Json::operator[](unsigned int Index) const
 {
 	return m_Array[Index];
 }

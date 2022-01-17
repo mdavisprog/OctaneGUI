@@ -79,6 +79,10 @@ public:
 	Json& operator[](const std::string& Key);
 	Json& operator[](unsigned int Index);
 
+	const Json& operator[](const char* Key) const;
+	const Json& operator[](const std::string& Key) const;
+	const Json& operator[](unsigned int Index) const;
+
 	std::string ToString() const;
 
 private:
@@ -88,6 +92,8 @@ private:
 	static const char* ParseValue(const char* Stream, Json& Value);
 	static const char* ParseArray(const char* Stream, Json& Root);
 	static const char* ParseObject(const char* Stream, Json& Root);
+
+	static const Json Invalid;
 
 	Type m_Type;
 	Variant m_Data;
