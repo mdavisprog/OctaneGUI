@@ -109,13 +109,43 @@ bool Json::GetBoolean() const
 	return m_Data.Bool();
 }
 
+bool Json::GetBooleanOr(bool Default) const
+{
+	if (!IsBoolean())
+	{
+		return Default;
+	}
+
+	return m_Data.Bool();
+}
+
 float Json::GetNumber() const
 {
 	return m_Data.Float();
 }
 
+float Json::GetNumberOr(float Default) const
+{
+	if (!IsNumber())
+	{
+		return Default;
+	}
+
+	return m_Data.Float();
+}
+
 const char* Json::GetString() const
 {
+	return m_Data.String();
+}
+
+const char* Json::GetStringOr(const char* Default) const
+{
+	if (!IsString())
+	{
+		return Default;
+	}
+
 	return m_Data.String();
 }
 

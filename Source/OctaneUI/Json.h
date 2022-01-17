@@ -62,8 +62,11 @@ public:
 	bool IsString() const;
 
 	bool GetBoolean() const;
+	bool GetBooleanOr(bool Default) const;
 	float GetNumber() const;
+	float GetNumberOr(float Default) const;
 	const char* GetString() const;
+	const char* GetStringOr(const char* Default) const;
 	unsigned int GetCount() const;
 
 	Json& operator=(bool Value);
