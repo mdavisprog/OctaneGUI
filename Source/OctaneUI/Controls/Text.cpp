@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "../Font.h"
+#include "../Json.h"
 #include "../Paint.h"
 #include "../Theme.h"
 #include "Text.h"
@@ -69,6 +70,11 @@ const char* Text::GetType() const
 void Text::OnPaint(Paint& Brush) const
 {
 	Brush.Text(GetAbsolutePosition(), m_Contents, Color(255, 255, 255, 255));
+}
+
+void Text::OnLoad(const Json& Root)
+{
+	SetText(Root["Text"].GetString());
 }
 
 bool Text::IsFixedSize() const
