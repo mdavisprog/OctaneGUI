@@ -187,6 +187,10 @@ void Control::OnUnfocused()
 {
 }
 
+void Control::OnLoad(const Json& Root)
+{
+}
+
 void Control::OnKeyPressed(Keyboard::Key Key)
 {
 }
