@@ -56,6 +56,7 @@ public:
 	virtual const char* GetType() const override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
+	virtual void OnLoad(const Json& Root) override;
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button);
 	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button);
 	virtual void OnMouseEnter() override;
@@ -68,6 +69,8 @@ private:
 		Hovered,
 		Pressed
 	};
+
+	void UpdateSize();
 
 	State m_State;
 	std::shared_ptr<Text> m_Label;

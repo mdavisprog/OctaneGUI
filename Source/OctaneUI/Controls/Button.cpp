@@ -24,6 +24,7 @@ SOFTWARE.
 
 */
 
+#include "../Json.h"
 #include "../Paint.h"
 #include "../Theme.h"
 #include "Button.h"
@@ -75,10 +76,7 @@ Button* Button::SetExpand(Expand InExpand)
 Button* Button::SetLabel(const char* Label)
 {
 	m_Label->SetText(Label);
-	Vector2 Padding = GetTheme()->GetConstant(Theme::Vector2Constants::Button_Padding);
-	Vector2 Size = m_Label->GetSize() + Padding * 2.0f;
-	SetSize(Size);
-	Update();
+	UpdateSize();
 	return this;
 }
 
@@ -119,6 +117,12 @@ void Button::Update()
 	const Vector2 Size = GetSize() * 0.5f;
 	const Vector2 LabelSize = m_Label->GetSize() * 0.5f;
 	m_Label->SetPosition(Size - LabelSize);
+}
+
+void Button::OnLoad(const Json& Root)
+{
+	m_Label->OnLoad(Root["Label"]);
+	UpdateSize();
 }
 
 bool Button::OnMousePressed(const Vector2& Position, Mouse::Button Button)
@@ -167,6 +171,14 @@ void Button::OnMouseLeave()
 	}
 
 	Invalidate();
+}
+
+void Button::UpdateSize()
+{
+	Vector2 Padding = GetTheme()->GetConstant(Theme::Vector2Constants::Button_Padding);
+	Vector2 Size = m_Label->GetSize() + Padding * 2.0f;
+	SetSize(Size);
+	Update();
 }
 
 }
