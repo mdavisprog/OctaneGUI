@@ -45,6 +45,7 @@ public:
 
 	virtual const char* GetType() const override;
 	virtual void OnPaint(Paint& Brush) const override;
+	virtual void OnLoad(const Json& Root) override;
 
 protected:
 	virtual bool IsFixedSize() const override;

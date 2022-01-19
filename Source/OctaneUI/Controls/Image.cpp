@@ -24,6 +24,7 @@ SOFTWARE.
 
 */
 
+#include "../Json.h"
 #include "../Paint.h"
 #include "../Texture.h"
 #include "Image.h"
@@ -82,6 +83,24 @@ void Image::OnPaint(Paint& Brush) const
 	}
 
 	Brush.Image(GetAbsoluteBounds(), m_UVs, m_Texture, Color(255, 255, 255, 255));
+}
+
+void Image::OnLoad(const Json& Root)
+{
+	SetTexture(Root["Texture"].GetString());
+	
+	const Json& UVs = Root["UVs"];
+	if (!UVs.IsNull())
+	{
+		const Rect Value(
+			UVs["Left"].GetNumber(),
+			UVs["Top"].GetNumber(),
+			UVs["Right"].GetNumber(),
+			UVs["Bottom"].GetNumber()
+		);
+
+		SetUVs(Value);
+	}
 }
 
 bool Image::IsFixedSize() const
