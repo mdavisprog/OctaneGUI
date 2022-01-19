@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "../Icons.h"
+#include "../Json.h"
 #include "../Paint.h"
 #include "../Theme.h"
 #include "../Window.h"
@@ -48,19 +49,14 @@ Checkbox::~Checkbox()
 {
 }
 
-Checkbox* Checkbox::SetText(const char* InText)
+Checkbox* Checkbox::SetLabel(const char* Label)
 {
-	m_Text->SetText(InText);
-
-	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
-	const Vector2 Padding = GetWindow()->GetTheme()->GetConstant(Theme::Vector2Constants::TextSelectable_Padding);
-	Vector2 Size(TexCoords.GetSize().X + m_Text->GetSize().X, m_Text->GetSize().Y + Padding.Y * 2.0f);
-	SetSize(Size);
-
+	m_Text->SetText(Label);
+	UpdateSize();
 	return this;
 }
 
-const char* Checkbox::GetText() const
+const char* Checkbox::GetLabel() const
 {
 	return m_Text->GetText();
 }
@@ -140,6 +136,12 @@ void Checkbox::Update()
 	m_Text->SetPosition(TexCoords.GetSize().X + 12.0f, GetSize().Y * 0.5f - m_Text->GetSize().Y * 0.5f);
 }
 
+void Checkbox::OnLoad(const Json& Root)
+{
+	m_Text->OnLoad(Root["Label"]);
+	UpdateSize();
+}
+
 bool Checkbox::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 {
 	switch (m_State)
@@ -164,6 +166,14 @@ void Checkbox::OnMouseLeave()
 {
 	m_Hovered = false;
 	Invalidate();
+}
+
+void Checkbox::UpdateSize()
+{
+	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
+	const Vector2 Padding = GetWindow()->GetTheme()->GetConstant(Theme::Vector2Constants::TextSelectable_Padding);
+	Vector2 Size(TexCoords.GetSize().X + m_Text->GetSize().X, m_Text->GetSize().Y + Padding.Y * 2.0f);
+	SetSize(Size);
 }
 
 }

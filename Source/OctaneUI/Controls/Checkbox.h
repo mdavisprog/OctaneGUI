@@ -46,8 +46,8 @@ public:
 	Checkbox(Window* InWindow);
 	virtual ~Checkbox();
 
-	Checkbox* SetText(const char* InText);
-	const char* GetText() const;
+	Checkbox* SetLabel(const char* Label);
+	const char* GetLabel() const;
 
 	Checkbox* SetState(State InState);
 	State GetState() const;
@@ -58,11 +58,14 @@ public:
 	virtual const char* GetType() const override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
+	virtual void OnLoad(const Json& Root) override;
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseEnter() override;
 	virtual void OnMouseLeave() override;
 
 private:
+	void UpdateSize();
+
 	std::shared_ptr<Text> m_Text;
 	State m_State;
 	bool m_Hovered;
