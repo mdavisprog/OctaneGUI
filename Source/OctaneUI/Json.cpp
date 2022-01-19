@@ -329,6 +329,7 @@ const char* Json::ParseValue(const char* Stream, Json& Value)
 
 	const char* Ptr = Stream;
 	std::string Token;
+	bool ParseString = false;
 	while (*Ptr != '\0')
 	{
 		char Ch = *Ptr;
@@ -342,6 +343,11 @@ const char* Json::ParseValue(const char* Stream, Json& Value)
 		{
 			Ptr = ParseArray(++Ptr, Value);
 			break;
+		}
+		else if (Ch == '"')
+		{
+			ParseString = !ParseString;
+			Token += Ch;
 		}
 		else if (Ch == ',' || Ch == '}' || Ch == ']')
 		{
@@ -365,7 +371,7 @@ const char* Json::ParseValue(const char* Stream, Json& Value)
 
 			break;
 		}
-		else if (isalnum(Ch) || Ch == '"')
+		else if (isalnum(Ch) || ParseString)
 		{
 			Token += Ch;
 		}
