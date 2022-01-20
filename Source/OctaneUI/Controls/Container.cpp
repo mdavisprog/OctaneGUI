@@ -24,6 +24,7 @@ SOFTWARE.
 
 */
 
+#include "../Json.h"
 #include "../Paint.h"
 #include "../Theme.h"
 #include "Button.h"
@@ -32,6 +33,7 @@ SOFTWARE.
 #include "HorizontalContainer.h"
 #include "Image.h"
 #include "Panel.h"
+#include "Separator.h"
 #include "Text.h"
 #include "TextInput.h"
 #include "TextSelectable.h"
@@ -83,7 +85,7 @@ std::shared_ptr<Button> Container::AddButton(const char* Label)
 std::shared_ptr<Checkbox> Container::AddCheckbox(const char* Label)
 {
 	std::shared_ptr<Checkbox> Result = AddControl<Checkbox>(GetWindow());
-	Result->SetText(Label);
+	Result->SetLabel(Label);
 	return Result;
 }
 
@@ -117,6 +119,50 @@ std::shared_ptr<HorizontalContainer> Container::AddHorizontalContainer()
 std::shared_ptr<VerticalContainer> Container::AddVerticalContainer()
 {
 	return AddControl<VerticalContainer>(GetWindow());
+}
+
+std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
+{
+	std::shared_ptr<Control> Result;
+
+	if (Type == "Text")
+	{
+		Result = AddControl<Text>(GetWindow());
+	}
+	else if (Type == "TextSelectable")
+	{
+		Result = AddControl<TextSelectable>(GetWindow());
+	}
+	else if (Type == "Button")
+	{
+		Result = AddControl<Button>(GetWindow());
+	}
+	else if (Type == "Checkbox")
+	{
+		Result = AddControl<Checkbox>(GetWindow());
+	}
+	else if (Type == "Image")
+	{
+		Result = AddControl<Image>(GetWindow());
+	}
+	else if (Type == "Panel")
+	{
+		Result = AddControl<Panel>(GetWindow());
+	}
+	else if (Type == "Separator")
+	{
+		Result = AddControl<Separator>(GetWindow());
+	}
+	else if (Type == "HorizontalContainer")
+	{
+		Result = AddControl<HorizontalContainer>(GetWindow());
+	}
+	else if (Type == "VerticalContainer")
+	{
+		Result = AddControl<VerticalContainer>(GetWindow());
+	}
+
+	return Result;
 }
 
 Container* Container::InsertControl(const std::shared_ptr<Control>& Item, int Position)
@@ -240,6 +286,23 @@ void Container::OnPaint(Paint& Brush) const
 	for (const std::shared_ptr<Control>& Item : m_Controls)
 	{
 		Item->OnPaint(Brush);
+	}
+}
+
+void Container::OnLoad(const Json& Root)
+{
+	const Json& Controls = Root["Controls"];
+
+	for (int I = 0; I < Controls.GetCount(); I++)
+	{
+		const Json& Item = Controls[I];
+
+		std::string Type = Item["Type"].GetString();
+		std::shared_ptr<Control> NewControl = CreateControl(Type);
+		if (NewControl)
+		{
+			NewControl->OnLoad(Item);
+		}
 	}
 }
 

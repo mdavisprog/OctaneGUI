@@ -66,6 +66,7 @@ public:
 	std::shared_ptr<HorizontalContainer> AddHorizontalContainer();
 	std::shared_ptr<VerticalContainer> AddVerticalContainer();
 
+	std::shared_ptr<Control> CreateControl(const std::string& Type);
 	Container* InsertControl(const std::shared_ptr<Control>& Item, int Position = -1);
 	Container* RemoveControl(const std::shared_ptr<Control>& Item);
 	bool HasControl(const std::shared_ptr<Control>& Item) const;
@@ -77,6 +78,7 @@ public:
 
 	virtual const char* GetType() const override;
 	virtual void OnPaint(Paint& Brush) const override;
+	virtual void OnLoad(const Json& Root) override;
 
 protected:
 	bool ExpandSize(Vector2& Size) const;
