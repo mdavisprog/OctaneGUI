@@ -351,22 +351,25 @@ const char* Json::ParseValue(const char* Stream, Json& Value)
 		}
 		else if (Ch == ',' || Ch == '}' || Ch == ']')
 		{
-			std::string Lower = ToLower(Token);
-			if (Token.front() == '\"' && Token.back() == '\"')
+			if (!Token.empty())
 			{
-				Value = Token.substr(1, Token.length() - 2);
-			}
-			else if (Lower == "true")
-			{
-				Value = true;
-			}
-			else if (Lower == "false")
-			{
-				Value = false;
-			}
-			else if (Token.find_first_not_of("-.0123456789") == std::string::npos)
-			{
-				Value = std::stof(Token);
+				std::string Lower = ToLower(Token);
+				if (Token.front() == '\"' && Token.back() == '\"')
+				{
+					Value = Token.substr(1, Token.length() - 2);
+				}
+				else if (Lower == "true")
+				{
+					Value = true;
+				}
+				else if (Lower == "false")
+				{
+					Value = false;
+				}
+				else if (Token.find_first_not_of("-.0123456789") == std::string::npos)
+				{
+					Value = std::stof(Token);
+				}
 			}
 
 			break;
@@ -396,7 +399,11 @@ const char* Json::ParseArray(const char* Stream, Json& Root)
 	{
 		Json Value;
 		Ptr = ParseValue(Ptr, Value);
-		Root.m_Array.push_back(Value);
+
+		if (!Value.IsNull())
+		{
+			Root.m_Array.push_back(Value);
+		}
 
 		if (*Ptr == ']')
 		{
