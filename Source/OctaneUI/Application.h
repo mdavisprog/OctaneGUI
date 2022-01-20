@@ -38,6 +38,7 @@ namespace OctaneUI
 class Event;
 class Font;
 class Icons;
+class Json;
 class Theme;
 class VertexBuffer;
 class Window;
@@ -61,6 +62,7 @@ public:
 
 	std::shared_ptr<Window> GetMainWindow() const;
 	std::shared_ptr<Window> NewWindow(const char* Title, float Width, float Height);
+	std::shared_ptr<Window> NewWindow(const char* JsonStream);
 	std::shared_ptr<Theme> GetTheme() const;
 	std::shared_ptr<Icons> GetIcons() const;
 
@@ -73,7 +75,7 @@ public:
 
 private:
 	void OnPaint(Window* InWindow, const std::vector<VertexBuffer>& Buffers);
-	std::shared_ptr<Window> CreateWindow(const char* Title, const Vector2& Size);
+	std::shared_ptr<Window> CreateWindow(const Json& Root);
 	void DestroyWindow(const std::shared_ptr<Window>& Item);
 	void ProcessEvent(const std::shared_ptr<Window>& Item);
 

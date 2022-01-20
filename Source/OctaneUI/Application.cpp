@@ -29,6 +29,7 @@ SOFTWARE.
 #include "Event.h"
 #include "Font.h"
 #include "Icons.h"
+#include "Json.h"
 #include "Paint.h"
 #include "Texture.h"
 #include "Theme.h"
@@ -77,7 +78,7 @@ bool Application::Initialize(const char* Title)
 
 	m_Theme = std::make_shared<Theme>();
 
-	CreateWindow(Title, Vector2(1280, 720));
+	NewWindow(Title, 1280.0f, 720.0f);
 
 	m_Icons = std::make_shared<Icons>();
 	m_Icons->Initialize();
@@ -180,7 +181,17 @@ std::shared_ptr<Window> Application::GetMainWindow() const
 
 std::shared_ptr<Window> Application::NewWindow(const char* Title, float Width, float Height)
 {
-	return CreateWindow(Title, Vector2(Width, Height));
+	Json Root;
+	Root["Title"] = Title;
+	Root["Width"] = Width;
+	Root["Height"] = Height;
+
+	return CreateWindow(Root);
+}
+
+std::shared_ptr<Window> Application::NewWindow(const char* JsonStream)
+{
+	return CreateWindow(Json::Parse(JsonStream));
 }
 
 std::shared_ptr<Theme> Application::GetTheme() const
@@ -237,12 +248,11 @@ void Application::OnPaint(Window* InWindow, const std::vector<VertexBuffer>& Buf
 	}
 }
 
-std::shared_ptr<Window> Application::CreateWindow(const char* Title, const Vector2& Size)
+std::shared_ptr<Window> Application::CreateWindow(const Json& Root)
 {
 	std::shared_ptr<Window> Result = std::make_shared<Window>(this);
-	Result->SetTitle(Title);
 	Result->CreateContainer();
-	Result->SetSize(Size);
+	Result->Load(Root);
 	Result->SetOnPaint(std::bind(&Application::OnPaint, this, std::placeholders::_1, std::placeholders::_2));
 	m_Windows.push_back(Result);
 

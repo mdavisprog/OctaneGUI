@@ -43,6 +43,7 @@ class Application;
 class Container;
 class Control;
 class Icons;
+class Json;
 class MenuBar;
 class Paint;
 class Theme;
@@ -82,6 +83,8 @@ public:
 
 	void Update();
 	void DoPaint(Paint& Brush);
+
+	void Load(const Json& Root);
 
 	Window* SetOnPaint(OnPaintSignature Fn);
 

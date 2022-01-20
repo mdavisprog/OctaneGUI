@@ -27,6 +27,7 @@ SOFTWARE.
 #include "Application.h"
 #include "Controls/MenuBar.h"
 #include "Controls/VerticalContainer.h"
+#include "Json.h"
 #include "Paint.h"
 #include "Window.h"
 
@@ -281,6 +282,19 @@ void Window::DoPaint(Paint& Brush)
 		m_Repaint = false;
 		m_OnPaint(this, Brush.GetBuffers());
 	}
+}
+
+void Window::Load(const Json& Root)
+{
+	const std::string Title = Root["Title"].GetString();
+	float Width = Root["Width"].GetNumberOr(640.0f);
+	float Height = Root["Height"].GetNumberOr(480.0f);
+	const Json& Body = Root["Body"];
+
+	SetTitle(Title.c_str());
+	SetSize(Width, Height);
+
+	m_Body->OnLoad(Body);
 }
 
 Window* Window::SetOnPaint(OnPaintSignature Fn)
