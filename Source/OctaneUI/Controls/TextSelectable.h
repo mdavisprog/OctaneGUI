@@ -53,6 +53,7 @@ public:
 	virtual const char* GetType() const override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
+	virtual void OnLoad(const Json& Root) override;
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseEnter() override;
 	virtual void OnMouseLeave() override;
@@ -61,6 +62,8 @@ protected:
 	std::shared_ptr<Text> GetTextControl() const;
 
 private:
+	void UpdateSize();
+
 	bool m_Hovered;
 	bool m_Selected;
 	std::shared_ptr<Text> m_Text;

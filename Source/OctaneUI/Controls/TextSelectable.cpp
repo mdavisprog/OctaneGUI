@@ -24,6 +24,7 @@ SOFTWARE.
 
 */
 
+#include "../Json.h"
 #include "../Paint.h"
 #include "../Theme.h"
 #include "Text.h"
@@ -61,9 +62,7 @@ bool TextSelectable::IsSelected() const
 TextSelectable* TextSelectable::SetText(const char* Contents)
 {
 	m_Text->SetText(Contents);
-	const Vector2 Padding = GetTheme()->GetConstant(Theme::Vector2Constants::TextSelectable_Padding);
-	const Vector2 Size = m_Text->GetBounds().Expand(Padding).GetSize();
-	SetSize(Size);
+	UpdateSize();
 	return this;
 }
 
@@ -127,6 +126,12 @@ void TextSelectable::Update()
 	m_Text->SetPosition(Position);
 }
 
+void TextSelectable::OnLoad(const Json& Root)
+{
+	m_Text->OnLoad(Root["Label"]);
+	UpdateSize();
+}
+
 bool TextSelectable::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 {
 	if (m_OnPressed)
@@ -152,6 +157,13 @@ void TextSelectable::OnMouseLeave()
 std::shared_ptr<Text> TextSelectable::GetTextControl() const
 {
 	return m_Text;
+}
+
+void TextSelectable::UpdateSize()
+{
+	const Vector2 Padding = GetTheme()->GetConstant(Theme::Vector2Constants::TextSelectable_Padding);
+	const Vector2 Size = m_Text->GetBounds().Expand(Padding).GetSize();
+	SetSize(Size);
 }
 
 }
