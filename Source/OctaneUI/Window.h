@@ -84,6 +84,7 @@ public:
 	void Update();
 	void DoPaint(Paint& Brush);
 
+	void Load(const char* JsonStream);
 	void Load(const Json& Root);
 
 	Window* SetOnPaint(OnPaintSignature Fn);

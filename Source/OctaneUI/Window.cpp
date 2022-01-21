@@ -284,6 +284,11 @@ void Window::DoPaint(Paint& Brush)
 	}
 }
 
+void Window::Load(const char* JsonStream)
+{
+	Load(Json::Parse(JsonStream));
+}
+
 void Window::Load(const Json& Root)
 {
 	const std::string Title = Root["Title"].GetString();
