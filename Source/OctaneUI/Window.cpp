@@ -294,11 +294,14 @@ void Window::Load(const Json& Root)
 	const std::string Title = Root["Title"].GetString();
 	float Width = Root["Width"].GetNumberOr(640.0f);
 	float Height = Root["Height"].GetNumberOr(480.0f);
+
+	const Json& MB = Root["MenuBar"];
 	const Json& Body = Root["Body"];
 
 	SetTitle(Title.c_str());
 	SetSize(Width, Height);
 
+	m_MenuBar->OnLoad(MB);
 	m_Body->OnLoad(Body);
 }
 

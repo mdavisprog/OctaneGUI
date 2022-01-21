@@ -53,6 +53,7 @@ public:
 	virtual const char* GetType() const override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
+	virtual void OnLoad(const Json& Root) override;
 	virtual void OnMouseEnter() override;
 
 private:

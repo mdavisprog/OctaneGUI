@@ -39,12 +39,13 @@ public:
 	Menu(Window* InWindow);
 	virtual ~Menu();
 
-	Menu* AddItem(const char* Label, OnEmptySignature Fn);
+	Menu* AddItem(const char* Label, OnEmptySignature Fn = nullptr);
 	std::shared_ptr<MenuItem> GetItem(const char* Label) const;
 	Menu* AddSeparator();
 	Menu* Close();
 
 	virtual const char* GetType() const override;
+	virtual void OnLoad(const Json& Root) override;
 
 private:
 	typedef std::unordered_map<MenuItem*, OnEmptySignature> MenuItemMap;

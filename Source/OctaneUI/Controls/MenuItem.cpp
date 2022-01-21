@@ -24,6 +24,7 @@ SOFTWARE.
 
 */
 
+#include "../Json.h"
 #include "../Icons.h"
 #include "../Paint.h"
 #include "../Window.h"
@@ -145,6 +146,16 @@ void MenuItem::Update()
 		const Vector2 TextPosition = GetTextControl()->GetPosition();
 		const Vector2 CheckSize = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check).GetSize();
 		GetTextControl()->SetPosition(CheckSize.X + 12.0f, TextPosition.Y);
+	}
+}
+
+void MenuItem::OnLoad(const Json& Root)
+{
+	const Json& Items = Root["Items"];
+	if (!Items.IsNull())
+	{
+		const std::shared_ptr<Menu>& NewMenu = CreateMenu();
+		NewMenu->OnLoad(Root);
 	}
 }
 

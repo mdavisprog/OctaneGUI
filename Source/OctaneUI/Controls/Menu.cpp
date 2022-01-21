@@ -24,6 +24,7 @@ SOFTWARE.
 
 */
 
+#include "../Json.h"
 #include "../Paint.h"
 #include "../Theme.h"
 #include "Menu.h"
@@ -114,6 +115,22 @@ Menu* Menu::Close()
 const char* Menu::GetType() const
 {
 	return "Menu";
+}
+
+void Menu::OnLoad(const Json& Root)
+{
+	Container::OnLoad(Root);
+
+	const Json& Items = Root["Items"];
+	for (int I = 0; I < Items.GetCount(); I++)
+	{
+		const Json& Item = Items[I];
+
+		AddItem(Item["Text"].GetString());
+
+		const std::shared_ptr<MenuItem>& MI = m_Items.back();
+		MI->OnLoad(Item);
+	}
 }
 
 void Menu::Resize()

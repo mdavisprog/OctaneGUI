@@ -44,6 +44,7 @@ public:
 	void Close();
 
 	virtual const char* GetType() const override;
+	virtual void OnLoad(const Json& Root) override;
 
 private:
 	void OnHover(MenuItem* Hovered);

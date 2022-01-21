@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "../Font.h"
+#include "../Json.h"
 #include "../Theme.h"
 #include "../Window.h"
 #include "HorizontalContainer.h"
@@ -91,6 +92,21 @@ void MenuBar::Close()
 const char* MenuBar::GetType() const
 {
 	return "MenuBar";
+}
+
+void MenuBar::OnLoad(const Json& Root)
+{
+	const Json& Menus = Root["Items"];
+	for (int I = 0; I < Menus.GetCount(); I++)
+	{
+		const Json& Item = Menus[I];
+
+		std::shared_ptr<Menu> NewMenu = AddItem(Item["Text"].GetString());
+		if (NewMenu)
+		{
+			NewMenu->OnLoad(Item);
+		}
+	}
 }
 
 void MenuBar::OnHover(MenuItem* Hovered)
