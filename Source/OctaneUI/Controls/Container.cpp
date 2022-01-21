@@ -133,6 +133,10 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 	{
 		Result = AddControl<TextSelectable>(GetWindow());
 	}
+	else if (Type == "TextInput")
+	{
+		Result = AddControl<TextInput>(GetWindow());
+	}
 	else if (Type == "Button")
 	{
 		Result = AddControl<Button>(GetWindow());
