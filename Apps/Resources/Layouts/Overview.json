@@ -1,0 +1,43 @@
+{
+	"Title": "Overview",
+	"Width": 1280,
+	"Height": 720,
+	"Body": {
+		"Controls": [
+			{
+				"Type": "VerticalContainer",
+				"Controls": [
+					{
+						"Type": "Text",
+						"Text": "Hello"
+					},
+					{
+						"Type": "Button",
+						"Label": {
+							"Text": "OK"
+						}
+					},
+					{
+						"Type": "Checkbox",
+						"Label": {
+							"Text": "Checkbox"
+						}
+					},
+					{
+						"Type": "Image",
+						"Texture": "info.png"
+					},
+					{
+						"Type": "TextSelectable",
+						"Label": {
+							"Text": "Selectable"
+						}
+					},
+					{
+						"Type": "TextInput"
+					}
+				]
+			}
+		]
+	}
+}

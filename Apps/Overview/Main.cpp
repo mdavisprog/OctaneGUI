@@ -27,8 +27,24 @@ SOFTWARE.
 #include "Interface.h"
 #include "OctaneUI/OctaneUI.h"
 
+#include <fstream>
+#include <string>
+
 int main(int argc, char **argv)
 {
+	std::string Buffer;
+	std::ifstream File;
+	File.open("Overview.json");
+	if (File.is_open())
+	{
+		File.seekg(0, std::ios::end);
+		Buffer.resize(File.tellg());
+		File.seekg(0, std::ios::beg);
+
+		File.read(&Buffer[0], Buffer.size());
+		File.close();
+	}
+
 	OctaneUI::Application Application;
 	SFML::Initialize(Application);
 	Application.Initialize("OctaneUI");
@@ -36,8 +52,7 @@ int main(int argc, char **argv)
 	Application.GetMainWindow()->GetMenuBar()->AddItem("File")
 		->AddItem("New", [&]() -> void 
 		{
-			Application.NewWindow("Test", 640, 480)
-				->GetContainer()->AddText("Hello Test");
+			Application.NewWindow("{Title: \"Test\", Body: {Controls: [{Type: \"Text\", Text: \"Hello World\"}]}}");
 		})
 		->AddItem("Open", [=]() -> void {printf("Open\n");})
 		->AddSeparator()
@@ -50,10 +65,6 @@ int main(int argc, char **argv)
 	Application.GetMainWindow()->GetMenuBar()->AddItem("Help")
 		->AddItem("About", [=]() -> void {printf("About\n");});
 	
-	std::shared_ptr<OctaneUI::VerticalContainer> Container = Application.GetMainWindow()->GetContainer()->AddVerticalContainer();
-	Container->AddImage("info.png");
-	Container->AddText("Hello World");
-	Container->AddCheckbox("Checkbox");
-	Container->AddTextInput();
+	Application.GetMainWindow()->Load(Buffer.c_str());
 	return Application.Run();
 }
