@@ -128,6 +128,8 @@ void TextSelectable::Update()
 
 void TextSelectable::OnLoad(const Json& Root)
 {
+	Control::OnLoad(Root);
+
 	m_Text->OnLoad(Root["Label"]);
 	UpdateSize();
 }

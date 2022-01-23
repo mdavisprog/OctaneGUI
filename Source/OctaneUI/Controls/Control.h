@@ -85,6 +85,11 @@ public:
 	Control* SetExpand(Expand InExpand);
 	Expand GetExpand() const;
 
+	Control* SetID(const char* ID);
+	const char* GetID() const;
+	std::string GetFullID() const;
+	bool HasID() const;
+
 	bool Contains(const Vector2& Position) const;
 	Rect GetBounds() const;
 	Rect GetAbsoluteBounds() const;
@@ -120,6 +125,7 @@ private:
 	Control* m_Parent;
 	Rect m_Bounds;
 	Expand m_Expand;
+	std::string m_ID;
 	OnInvalidateSignature m_OnInvalidate;
 };
 

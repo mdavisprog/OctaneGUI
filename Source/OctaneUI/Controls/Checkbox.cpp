@@ -138,6 +138,8 @@ void Checkbox::Update()
 
 void Checkbox::OnLoad(const Json& Root)
 {
+	Control::OnLoad(Root);
+
 	m_Text->OnLoad(Root["Label"]);
 	UpdateSize();
 }

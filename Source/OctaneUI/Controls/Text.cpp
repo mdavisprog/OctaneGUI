@@ -74,6 +74,8 @@ void Text::OnPaint(Paint& Brush) const
 
 void Text::OnLoad(const Json& Root)
 {
+	Control::OnLoad(Root);
+
 	SetText(Root["Text"].GetString());
 }
 

@@ -121,6 +121,8 @@ void Button::Update()
 
 void Button::OnLoad(const Json& Root)
 {
+	Control::OnLoad(Root);
+
 	m_Label->OnLoad(Root["Label"]);
 	UpdateSize();
 }

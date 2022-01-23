@@ -295,6 +295,8 @@ void Container::OnPaint(Paint& Brush) const
 
 void Container::OnLoad(const Json& Root)
 {
+	Control::OnLoad(Root);
+
 	const Json& Controls = Root["Controls"];
 
 	for (int I = 0; I < Controls.GetCount(); I++)

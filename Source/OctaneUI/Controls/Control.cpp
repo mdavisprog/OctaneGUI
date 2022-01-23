@@ -24,6 +24,7 @@ SOFTWARE.
 
 */
 
+#include "../Json.h"
 #include "../Paint.h"
 #include "../Window.h"
 #include "Control.h"
@@ -36,6 +37,7 @@ Control::Control(Window* InWindow)
 	, m_Parent(nullptr)
 	, m_Bounds()
 	, m_Expand(Expand::None)
+	, m_ID("")
 	, m_OnInvalidate(nullptr)
 {
 }
@@ -115,6 +117,41 @@ Expand Control::GetExpand() const
 	return m_Expand;
 }
 
+Control* Control::SetID(const char* ID)
+{
+	m_ID = ID;
+	return this;
+}
+
+const char* Control::GetID() const
+{
+	return m_ID.c_str();
+}
+
+std::string Control::GetFullID() const
+{
+	std::string Result;
+
+	if (m_Parent != nullptr)
+	{
+		Result = m_Parent->GetFullID();
+	}
+
+	if (!Result.empty() && !m_ID.empty())
+	{
+		Result += ".";
+	}
+	
+	Result += m_ID;
+
+	return Result;
+}
+
+bool Control::HasID() const
+{
+	return !m_ID.empty();
+}
+
 bool Control::Contains(const Vector2& Position) const
 {
 	return GetAbsoluteBounds().Contains(Position);
@@ -189,6 +226,7 @@ void Control::OnUnfocused()
 
 void Control::OnLoad(const Json& Root)
 {
+	m_ID = Root["ID"].GetString();
 }
 
 void Control::OnKeyPressed(Keyboard::Key Key)

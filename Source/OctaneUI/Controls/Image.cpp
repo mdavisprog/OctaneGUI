@@ -87,6 +87,8 @@ void Image::OnPaint(Paint& Brush) const
 
 void Image::OnLoad(const Json& Root)
 {
+	Control::OnLoad(Root);
+
 	SetTexture(Root["Texture"].GetString());
 	
 	const Json& UVs = Root["UVs"];
