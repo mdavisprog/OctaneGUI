@@ -5,6 +5,7 @@ set(SOURCE
 	Controls/Checkbox.cpp
 	Controls/Container.cpp
 	Controls/Control.cpp
+	Controls/ControlList.cpp
 	Controls/HorizontalContainer.cpp
 	Controls/Image.cpp
 	Controls/Menu.cpp

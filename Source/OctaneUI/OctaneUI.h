@@ -31,6 +31,7 @@ SOFTWARE.
 #include "Controls/Button.h"
 #include "Controls/Container.h"
 #include "Controls/Control.h"
+#include "Controls/ControlList.h"
 #include "Controls/HorizontalContainer.h"
 #include "Controls/Image.h"
 #include "Controls/Menu.h"

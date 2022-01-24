@@ -42,6 +42,7 @@ namespace OctaneUI
 class Application;
 class Container;
 class Control;
+class ControlList;
 class Icons;
 class Json;
 class MenuBar;
@@ -85,6 +86,7 @@ public:
 	void DoPaint(Paint& Brush);
 
 	void Load(const char* JsonStream);
+	void Load(const char* JsonStream, ControlList& List);
 	void Load(const Json& Root);
 
 	Window* SetOnPaint(OnPaintSignature Fn);

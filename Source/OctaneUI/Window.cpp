@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "Application.h"
+#include "Controls/ControlList.h"
 #include "Controls/MenuBar.h"
 #include "Controls/VerticalContainer.h"
 #include "Json.h"
@@ -287,6 +288,19 @@ void Window::DoPaint(Paint& Brush)
 void Window::Load(const char* JsonStream)
 {
 	Load(Json::Parse(JsonStream));
+}
+
+void Window::Load(const char* JsonStream, ControlList& List)
+{
+	Load(Json::Parse(JsonStream));
+
+	std::vector<std::shared_ptr<Control>> Controls;
+	m_Body->GetControls(Controls);
+
+	for (const std::shared_ptr<Control>& Item : Controls)
+	{
+		List.AddControl(Item);
+	}
 }
 
 void Window::Load(const Json& Root)
