@@ -112,6 +112,21 @@ Menu* Menu::Close()
 	return this;
 }
 
+void Menu::GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const
+{
+	Items.insert(Items.end(), m_Items.begin(), m_Items.end());
+
+	for (const std::shared_ptr<MenuItem>& Item : m_Items)
+	{
+		const std::shared_ptr<Menu> ItemMenu = Item->GetMenu();
+
+		if (ItemMenu)
+		{
+			ItemMenu->GetMenuItems(Items);
+		}
+	}
+}
+
 const char* Menu::GetType() const
 {
 	return "Menu";

@@ -41,6 +41,7 @@ public:
 	virtual ~MenuBar();
 
 	std::shared_ptr<Menu> AddItem(const char* Label);
+	void GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const;
 	void Close();
 
 	virtual const char* GetType() const override;

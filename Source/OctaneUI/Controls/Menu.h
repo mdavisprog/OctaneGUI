@@ -44,6 +44,8 @@ public:
 	Menu* AddSeparator();
 	Menu* Close();
 
+	void GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const;
+
 	virtual const char* GetType() const override;
 	virtual void OnLoad(const Json& Root) override;
 

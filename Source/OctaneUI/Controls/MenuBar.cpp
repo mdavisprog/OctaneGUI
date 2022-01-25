@@ -78,6 +78,19 @@ std::shared_ptr<Menu> MenuBar::AddItem(const char* Label)
 	return Item->CreateMenu();
 }
 
+void MenuBar::GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const
+{
+	for (const std::shared_ptr<MenuItem>& Item : m_MenuItems)
+	{
+		const std::shared_ptr<Menu> ItemMenu = Item->GetMenu();
+
+		if (ItemMenu)
+		{
+			ItemMenu->GetMenuItems(Items);
+		}
+	}
+}
+
 void MenuBar::Close()
 {
 	if (m_Menu)
