@@ -149,6 +149,11 @@ int Application::Run()
 	return 0;
 }
 
+void Application::Quit()
+{
+	m_IsRunning = false;
+}
+
 std::shared_ptr<Font> Application::LoadFont(const char* Path)
 {
 	std::shared_ptr<Font> Result = std::make_shared<Font>();

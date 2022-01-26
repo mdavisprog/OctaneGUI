@@ -58,6 +58,7 @@ public:
 	void Shutdown();
 	void Update();
 	int Run();
+	void Quit();
 	std::shared_ptr<Font> LoadFont(const char* Path);
 
 	std::shared_ptr<Window> GetMainWindow() const;
