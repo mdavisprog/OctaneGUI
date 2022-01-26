@@ -49,22 +49,19 @@ int main(int argc, char **argv)
 	SFML::Initialize(Application);
 	Application.Initialize("OctaneUI");
 	Application.LoadFont("Roboto-Regular.ttf");
-	Application.GetMainWindow()->GetMenuBar()->AddItem("File")
-		->AddItem("New", [&]() -> void 
-		{
-			Application.NewWindow("{Title: \"Test\", Body: {Controls: [{Type: \"Text\", Text: \"Hello World\"}]}}");
-		})
-		->AddItem("Open", [=]() -> void {printf("Open\n");})
-		->AddSeparator()
-		->AddItem("Quit", [=]() -> void {printf("Quit\n");})
-		->GetItem("Open")->CreateMenu()
-			->AddItem("Open File", [=]() -> void {printf("Open File\n");})
-			->AddItem("Open Folder", [=]() -> void {printf("Open Folder\n");})
-			->GetItem("Open File")->SetChecked(true);
-
-	Application.GetMainWindow()->GetMenuBar()->AddItem("Help")
-		->AddItem("About", [=]() -> void {printf("About\n");});
 	
-	Application.GetMainWindow()->Load(Buffer.c_str());
+	OctaneUI::ControlList List;
+	Application.GetMainWindow()->Load(Buffer.c_str(), List);
+
+	List.ToMenuItem("File.Quit")->SetOnSelected([&](OctaneUI::MenuItem* Item) -> void
+	{
+		Application.Quit();
+	});
+
+	List.ToButton("OKBtn")->SetOnPressed([&]() -> void
+	{
+		printf("OK\n");
+	});
+
 	return Application.Run();
 }

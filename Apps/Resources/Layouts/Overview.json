@@ -2,6 +2,30 @@
 	"Title": "Overview",
 	"Width": 1280,
 	"Height": 720,
+	"MenuBar": {
+		"Items": [
+			{
+				"ID": "File",
+				"Text": "File",
+				"Items": [
+					{
+						"ID": "Quit",
+						"Text": "Quit"
+					}
+				]
+			},
+			{
+				"ID": "Help",
+				"Text": "Help",
+				"Items": [
+					{
+						"ID": "About",
+						"Text": "About"
+					}
+				]
+			}
+		]
+	},
 	"Body": {
 		"Controls": [
 			{
@@ -12,6 +36,7 @@
 						"Text": "Hello"
 					},
 					{
+						"ID": "OKBtn",
 						"Type": "Button",
 						"Label": {
 							"Text": "OK"
