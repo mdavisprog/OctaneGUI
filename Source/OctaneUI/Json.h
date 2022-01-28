@@ -92,6 +92,7 @@ private:
 	static const char* ParseValue(const char* Stream, Json& Value);
 	static const char* ParseArray(const char* Stream, Json& Root);
 	static const char* ParseObject(const char* Stream, Json& Root);
+	static Json ParseToken(const std::string& Token);
 
 	static const Json Invalid;
 

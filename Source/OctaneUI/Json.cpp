@@ -351,27 +351,8 @@ const char* Json::ParseValue(const char* Stream, Json& Value)
 		}
 		else if (Ch == ',' || Ch == '}' || Ch == ']')
 		{
-			if (!Token.empty())
-			{
-				std::string Lower = ToLower(Token);
-				if (Token.front() == '\"' && Token.back() == '\"')
-				{
-					Value = Token.substr(1, Token.length() - 2);
-				}
-				else if (Lower == "true")
-				{
-					Value = true;
-				}
-				else if (Lower == "false")
-				{
-					Value = false;
-				}
-				else if (Token.find_first_not_of("-.0123456789") == std::string::npos)
-				{
-					Value = std::stof(Token);
-				}
-			}
-
+			Value = ParseToken(Token);
+			Token = "";
 			break;
 		}
 		else if (isalnum(Ch) || ParseString)
@@ -380,6 +361,11 @@ const char* Json::ParseValue(const char* Stream, Json& Value)
 		}
 
 		Ptr++;
+	}
+
+	if (!Token.empty())
+	{
+		Value = ParseToken(Token);
 	}
 
 	return Ptr;
@@ -448,6 +434,36 @@ const char* Json::ParseObject(const char* Stream, Json& Root)
 	}
 
 	return Ptr;
+}
+
+Json Json::ParseToken(const std::string& Token)
+{
+	Json Result;
+
+	if (Token.empty())
+	{
+		return Result;
+	}
+
+	std::string Lower = ToLower(Token);
+	if (Token.front() == '\"' && Token.back() == '\"')
+	{
+		Result = Token.substr(1, Token.length() - 2);
+	}
+	else if (Lower == "true")
+	{
+		Result = true;
+	}
+	else if (Lower == "false")
+	{
+		Result = false;
+	}
+	else if (Token.find_first_not_of("-.0123456789") == std::string::npos)
+	{
+		Result = std::stof(Token);
+	}
+
+	return Result;
 }
 
 }
