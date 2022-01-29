@@ -32,6 +32,11 @@ void ControlList::AddControl(const std::shared_ptr<Control>& InControl)
 	m_Controls[InControl->GetFullID()] = InControl;
 }
 
+bool ControlList::Contains(const char* ID) const
+{
+	return m_Controls.find(ID) != m_Controls.end();
+}
+
 std::shared_ptr<Button> ControlList::ToButton(const char* ID) const
 {
 	return std::dynamic_pointer_cast<Button>(m_Controls.at(ID));

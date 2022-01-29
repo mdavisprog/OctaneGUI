@@ -26,6 +26,7 @@ public:
 	~ControlList();
 
 	void AddControl(const std::shared_ptr<Control>& InControl);
+	bool Contains(const char* ID) const;
 
 	std::shared_ptr<Button> ToButton(const char* ID) const;
 	std::shared_ptr<Checkbox> ToCheckbox(const char* ID) const;
