@@ -63,5 +63,7 @@ private:
 
 #define TEST_SUITE(Name, Cases) TestSuite Name(#Name, {Cases});
 #define TEST_CASE(Name, Fn) {#Name, [](OctaneUI::Application& Application) -> bool Fn},
+#define VERIFY(Condition) if (Condition == false) { return false; }
+#define VERIFYF(Condition, Message, ...) if (Condition == false) { printf(Message, ##__VA_ARGS__); return false; }
 
 }
