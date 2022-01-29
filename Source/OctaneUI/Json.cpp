@@ -355,7 +355,7 @@ const char* Json::ParseValue(const char* Stream, Json& Value)
 			Token = "";
 			break;
 		}
-		else if (isalnum(Ch) || ParseString)
+		else if (isalnum(Ch) || ParseString || Ch == '.' || Ch == '-')
 		{
 			Token += Ch;
 		}
