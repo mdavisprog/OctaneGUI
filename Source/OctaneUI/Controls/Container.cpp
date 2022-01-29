@@ -214,6 +214,13 @@ bool Container::HasControl(const std::shared_ptr<Control>& Item) const
 	return Iter != m_Controls.end();
 }
 
+void Container::ClearControls()
+{
+	m_Controls.clear();
+	m_UpdateLayout = true;
+	Invalidate(InvalidateType::Both);
+}
+
 Container* Container::Layout()
 {
 	if (m_UpdateLayout)

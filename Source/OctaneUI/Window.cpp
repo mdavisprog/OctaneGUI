@@ -325,6 +325,12 @@ void Window::Load(const Json& Root)
 	m_Body->OnLoad(Body);
 }
 
+void Window::Clear()
+{
+	m_MenuBar->ClearControls();
+	m_Body->ClearControls();
+}
+
 Window* Window::SetOnPaint(OnPaintSignature Fn)
 {
 	m_OnPaint = Fn;

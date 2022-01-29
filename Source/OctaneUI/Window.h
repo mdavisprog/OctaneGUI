@@ -88,6 +88,7 @@ public:
 	void Load(const char* JsonStream);
 	void Load(const char* JsonStream, ControlList& List);
 	void Load(const Json& Root);
+	void Clear();
 
 	Window* SetOnPaint(OnPaintSignature Fn);
 
