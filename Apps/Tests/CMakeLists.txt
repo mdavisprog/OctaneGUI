@@ -2,6 +2,7 @@ set(TARGET Tests)
 
 add_executable(
 	${TARGET}
+	Json.cpp
 	Main.cpp
 	TestSuite.cpp
 )
