@@ -40,16 +40,31 @@ void TestSuite::Run(OctaneUI::Application& Application)
 
 	printf("Running %llu test suites\n", s_Suites.size());
 
+	uint32_t Passed = 0;
+	uint32_t Failed = 0;
 	for (const TestSuite* TS : s_Suites)
 	{
-		printf("Running test suite '%s'\n", TS->m_Name.c_str());
+		printf("\nRunning test suite '%s'\n", TS->m_Name.c_str());
 
 		for (const std::pair<std::string, OnTestCaseSignature>& Item : TS->m_TestCases)
 		{
-			printf("   Running test case '%s'\n", Item.first.c_str());
 			bool Result = Item.second(Application);
+
+			if (Result)
+			{
+				Passed++;
+			}
+			else
+			{
+				printf("FAILED: '%s'\n", Item.first.c_str());
+				Failed++;
+			}
 		}
+
+		printf("Completed %llu tests. %d Passed %d Failed\n", TS->m_TestCases.size(), Passed, Failed);
 	}
+
+	printf("\nAll tests completed\n");
 }
 
 TestSuite::TestSuite(const char* Name, const TestCasesMap& TestCases)
