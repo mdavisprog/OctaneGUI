@@ -48,6 +48,7 @@ void TestSuite::Run(OctaneUI::Application& Application)
 
 		for (const std::pair<std::string, OnTestCaseSignature>& Item : TS->m_TestCases)
 		{
+			Application.GetMainWindow()->Clear();
 			bool Result = Item.second(Application);
 
 			if (Result)
