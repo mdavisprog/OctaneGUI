@@ -32,13 +32,13 @@ namespace Tests
 
 void TestSuite::Run(OctaneUI::Application& Application)
 {
-	if (s_Suites.size() == 0)
+	if (s_Suites->size() == 0)
 	{
 		printf("No tests to run.\n");
 		return;
 	}
 
-	printf("Running %lu test suites\n", s_Suites.size());
+	printf("Running %lu test suites\n", s_Suites->size());
 
 	uint32_t Passed = 0;
 	uint32_t Failed = 0;
@@ -66,13 +66,20 @@ void TestSuite::Run(OctaneUI::Application& Application)
 	}
 
 	printf("\nAll tests completed\n");
+
+	delete s_Suites;
 }
 
 TestSuite::TestSuite(const char* Name, const TestCasesMap& TestCases)
 	: m_Name(Name)
 	, m_TestCases(TestCases)
 {
-	s_Suites.push_back(this);
+	if (s_Suites == nullptr)
+	{
+		s_Suites = new std::vector<TestSuite*>();
+	}
+
+	s_Suites->push_back(this);
 }
 
 TestSuite::~TestSuite()
@@ -84,6 +91,6 @@ TestSuite::TestSuite()
 {
 }
 
-std::vector<TestSuite*> TestSuite::s_Suites;
+std::vector<TestSuite*>* TestSuite::s_Suites = nullptr;
 
 }

@@ -55,7 +55,9 @@ public:
 private:
 	TestSuite();
 
-	static std::vector<TestSuite*> s_Suites;
+	// Need to make this allocated on the heap due to static initialization order.
+	// Would like to register test suites differently but will be use this method for now.
+	static std::vector<TestSuite*>* s_Suites;
 
 	std::string m_Name;
 	TestCasesMap m_TestCases;
