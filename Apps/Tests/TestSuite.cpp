@@ -38,7 +38,7 @@ void TestSuite::Run(OctaneUI::Application& Application)
 		return;
 	}
 
-	printf("Running %llu test suites\n", s_Suites.size());
+	printf("Running %lu test suites\n", s_Suites.size());
 
 	uint32_t Passed = 0;
 	uint32_t Failed = 0;
@@ -62,7 +62,7 @@ void TestSuite::Run(OctaneUI::Application& Application)
 			}
 		}
 
-		printf("Completed %llu tests. %d Passed %d Failed\n", TS->m_TestCases.size(), Passed, Failed);
+		printf("Completed %lu tests. %d Passed %d Failed\n", TS->m_TestCases.size(), Passed, Failed);
 	}
 
 	printf("\nAll tests completed\n");
