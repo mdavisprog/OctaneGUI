@@ -18,6 +18,7 @@ set(SOURCE
 	Controls/TextSelectable.cpp
 	Controls/VerticalContainer.cpp
 	Application.cpp
+	Class.cpp
 	Color.cpp
 	Event.cpp
 	Font.cpp
