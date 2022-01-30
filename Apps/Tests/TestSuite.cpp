@@ -39,7 +39,7 @@ void TestSuite::Run(OctaneUI::Application& Application)
 		return;
 	}
 
-	printf("Running %lu test suites\n", s_Suites->size());
+	printf("Running %d test suites\n", (int)s_Suites->size());
 
 	for (const TestSuite* TS : *s_Suites)
 	{
@@ -63,7 +63,7 @@ void TestSuite::Run(OctaneUI::Application& Application)
 			}
 		}
 
-		printf("Completed %lu tests. %d Passed %d Failed\n", TS->m_TestCases.size(), Passed, Failed);
+		printf("Completed %d tests. %d Passed %d Failed\n", (int)TS->m_TestCases.size(), Passed, Failed);
 	}
 
 	printf("\nAll tests completed\n");
