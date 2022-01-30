@@ -34,6 +34,7 @@ void TestSuite::Run(OctaneUI::Application& Application)
 {
 	if (s_Suites->size() == 0)
 	{
+		delete s_Suites;
 		printf("No tests to run.\n");
 		return;
 	}
