@@ -92,7 +92,7 @@ private:
 	template<class T, typename ...TArgs>
 	std::shared_ptr<T> AddControl(TArgs... Args)
 	{
-		std::shared_ptr<T> Result = std::make_shared<T>(Args...);
+		std::shared_ptr<T> Result = std::make_shared<T>(GetWindow(), Args...);
 		InsertControl(Result);
 		return Result;
 	}

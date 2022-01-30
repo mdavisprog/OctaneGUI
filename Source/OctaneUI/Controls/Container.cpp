@@ -57,48 +57,48 @@ Container::~Container()
 
 std::shared_ptr<Text> Container::AddText(const char* Label)
 {
-	std::shared_ptr<Text> Result = AddControl<Text>(GetWindow());
+	std::shared_ptr<Text> Result = AddControl<Text>();
 	Result->SetText(Label);
 	return Result;
 }
 
 std::shared_ptr<TextInput> Container::AddTextInput()
 {
-	std::shared_ptr<TextInput> Result = AddControl<TextInput>(GetWindow());
+	std::shared_ptr<TextInput> Result = AddControl<TextInput>();
 	return Result;
 }
 
 std::shared_ptr<TextSelectable> Container::AddTextSelectable(const char* Label)
 {
-	std::shared_ptr<TextSelectable> Result = AddControl<TextSelectable>(GetWindow());
+	std::shared_ptr<TextSelectable> Result = AddControl<TextSelectable>();
 	Result->SetText(Label);
 	return Result;
 }
 
 std::shared_ptr<Button> Container::AddButton(const char* Label)
 {
-	std::shared_ptr<Button> Result = AddControl<Button>(GetWindow());
+	std::shared_ptr<Button> Result = AddControl<Button>();
 	Result->SetLabel(Label);
 	return Result;
 }
 
 std::shared_ptr<Checkbox> Container::AddCheckbox(const char* Label)
 {
-	std::shared_ptr<Checkbox> Result = AddControl<Checkbox>(GetWindow());
+	std::shared_ptr<Checkbox> Result = AddControl<Checkbox>();
 	Result->SetLabel(Label);
 	return Result;
 }
 
 std::shared_ptr<Image> Container::AddImage(const char* Path)
 {
-	std::shared_ptr<Image> Result = AddControl<Image>(GetWindow());
+	std::shared_ptr<Image> Result = AddControl<Image>();
 	Result->SetTexture(Path);
 	return Result;
 }
 
 std::shared_ptr<Panel> Container::AddPanel()
 {
-	return AddControl<Panel>(GetWindow());
+	return AddControl<Panel>();
 }
 
 bool Container::ShouldUpdateLayout() const
@@ -108,17 +108,17 @@ bool Container::ShouldUpdateLayout() const
 
 std::shared_ptr<Container> Container::AddContainer()
 {
-	return AddControl<Container>(GetWindow());
+	return AddControl<Container>();
 }
 
 std::shared_ptr<HorizontalContainer> Container::AddHorizontalContainer()
 {
-	return AddControl<HorizontalContainer>(GetWindow());
+	return AddControl<HorizontalContainer>();
 }
 
 std::shared_ptr<VerticalContainer> Container::AddVerticalContainer()
 {
-	return AddControl<VerticalContainer>(GetWindow());
+	return AddControl<VerticalContainer>();
 }
 
 std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
@@ -127,43 +127,43 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 
 	if (Type == "Text")
 	{
-		Result = AddControl<Text>(GetWindow());
+		Result = AddControl<Text>();
 	}
 	else if (Type == "TextSelectable")
 	{
-		Result = AddControl<TextSelectable>(GetWindow());
+		Result = AddControl<TextSelectable>();
 	}
 	else if (Type == "TextInput")
 	{
-		Result = AddControl<TextInput>(GetWindow());
+		Result = AddControl<TextInput>();
 	}
 	else if (Type == "Button")
 	{
-		Result = AddControl<Button>(GetWindow());
+		Result = AddControl<Button>();
 	}
 	else if (Type == "Checkbox")
 	{
-		Result = AddControl<Checkbox>(GetWindow());
+		Result = AddControl<Checkbox>();
 	}
 	else if (Type == "Image")
 	{
-		Result = AddControl<Image>(GetWindow());
+		Result = AddControl<Image>();
 	}
 	else if (Type == "Panel")
 	{
-		Result = AddControl<Panel>(GetWindow());
+		Result = AddControl<Panel>();
 	}
 	else if (Type == "Separator")
 	{
-		Result = AddControl<Separator>(GetWindow());
+		Result = AddControl<Separator>();
 	}
 	else if (Type == "HorizontalContainer")
 	{
-		Result = AddControl<HorizontalContainer>(GetWindow());
+		Result = AddControl<HorizontalContainer>();
 	}
 	else if (Type == "VerticalContainer")
 	{
-		Result = AddControl<VerticalContainer>(GetWindow());
+		Result = AddControl<VerticalContainer>();
 	}
 
 	return Result;
