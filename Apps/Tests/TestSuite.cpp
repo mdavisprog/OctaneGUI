@@ -40,12 +40,12 @@ void TestSuite::Run(OctaneUI::Application& Application)
 
 	printf("Running %lu test suites\n", s_Suites->size());
 
-	uint32_t Passed = 0;
-	uint32_t Failed = 0;
-	for (const TestSuite* TS : s_Suites)
+	for (const TestSuite* TS : *s_Suites)
 	{
 		printf("\nRunning test suite '%s'\n", TS->m_Name.c_str());
 
+		uint32_t Passed = 0;
+		uint32_t Failed = 0;
 		for (const std::pair<std::string, OnTestCaseSignature>& Item : TS->m_TestCases)
 		{
 			Application.GetMainWindow()->Clear();
