@@ -34,7 +34,7 @@ TEST_SUITE(Button,
 
 TEST_CASE(Press,
 {
-	const char* Json = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [{\"Type\": \"Button\", \"ID\": \"Button\", \"Label\": {\"Text\": \"Button\"}}]}}";
+	const char* Json = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [{\"Type\": \"Button\", \"ID\": \"Button\", \"Text\": {\"Text\": \"Button\"}}]}}";
 	OctaneUI::ControlList List;
 	Application.GetMainWindow()->Load(Json, List);
 	Application.GetMainWindow()->Update();

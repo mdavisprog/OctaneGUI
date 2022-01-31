@@ -146,7 +146,7 @@ void MenuItem::Update()
 
 void MenuItem::OnLoad(const Json& Root)
 {
-	// No need to use TextSelectable::OnLoad as we don't want to override the label
+	// No need to use TextSelectable::OnLoad as we don't want to override the
 	// text, which is set by the owning Menu class.
 	Control::OnLoad(Root);
 

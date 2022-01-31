@@ -48,8 +48,8 @@ public:
 	Checkbox(Window* InWindow);
 	virtual ~Checkbox();
 
-	Checkbox* SetLabel(const char* Label);
-	const char* GetLabel() const;
+	Checkbox* SetText(const char* InText);
+	const char* GetText() const;
 
 	Checkbox* SetState(State InState);
 	State GetState() const;

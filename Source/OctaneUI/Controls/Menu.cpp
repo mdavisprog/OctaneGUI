@@ -52,12 +52,12 @@ Menu::~Menu()
 {
 }
 
-Menu* Menu::AddItem(const char* Label, OnEmptySignature Fn)
+Menu* Menu::AddItem(const char* InText, OnEmptySignature Fn)
 {
 	std::shared_ptr<MenuItem> Item = std::make_shared<MenuItem>(GetWindow());
 	Item->SetOnHover(std::bind(&Menu::OnHovered, this, std::placeholders::_1))
 		->SetOnSelected(std::bind(&Menu::OnSelected, this, std::placeholders::_1))
-		->SetText(Label)
+		->SetText(InText)
 		->SetExpand(Expand::Width);
 	
 	m_Container->InsertControl(Item);
@@ -69,11 +69,11 @@ Menu* Menu::AddItem(const char* Label, OnEmptySignature Fn)
 	return this;
 }
 
-std::shared_ptr<MenuItem> Menu::GetItem(const char* Label) const
+std::shared_ptr<MenuItem> Menu::GetItem(const char* InText) const
 {
 	std::shared_ptr<MenuItem> Result;
 
-	const std::string Value = Label;
+	const std::string Value = InText;
 	for (const std::shared_ptr<MenuItem>& Item : m_Items)
 	{
 		if (Value == Item->GetText())

@@ -55,14 +55,14 @@ MenuBar::~MenuBar()
 {
 }
 
-std::shared_ptr<Menu> MenuBar::AddItem(const char* Label)
+std::shared_ptr<Menu> MenuBar::AddItem(const char* InText)
 {
 	std::shared_ptr<MenuItem> Item = std::make_shared<MenuItem>(GetWindow());
 	Item->SetIsMenuBar(true)
 		->SetOnHover(std::bind(&MenuBar::OnHover, this, std::placeholders::_1))
 		->SetOnSelected(std::bind(&MenuBar::OnSelected, this, std::placeholders::_1))
 		->SetAlignment(HorizontalAlignment::Center)
-		->SetText(Label)
+		->SetText(InText)
 		->SetExpand(Expand::Height);
 	m_Container->InsertControl(Item);
 

@@ -41,8 +41,8 @@ public:
 	Menu(Window* InWindow);
 	virtual ~Menu();
 
-	Menu* AddItem(const char* Label, OnEmptySignature Fn = nullptr);
-	std::shared_ptr<MenuItem> GetItem(const char* Label) const;
+	Menu* AddItem(const char* InText, OnEmptySignature Fn = nullptr);
+	std::shared_ptr<MenuItem> GetItem(const char* InText) const;
 	Menu* AddSeparator();
 	Menu* Close();
 

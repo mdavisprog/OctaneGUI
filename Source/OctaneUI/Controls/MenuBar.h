@@ -42,7 +42,7 @@ public:
 	MenuBar(Window* InWindow);
 	virtual ~MenuBar();
 
-	std::shared_ptr<Menu> AddItem(const char* Label);
+	std::shared_ptr<Menu> AddItem(const char* InText);
 	void GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const;
 	void Close();
 

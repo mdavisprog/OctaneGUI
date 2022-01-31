@@ -37,8 +37,8 @@ Button::Button(Window* InWindow)
 	: Control(InWindow)
 	, m_State(State::None)
 {
-	m_Label = std::make_shared<Text>(InWindow);
-	m_Label->SetParent(this);
+	m_Text = std::make_shared<Text>(InWindow);
+	m_Text->SetParent(this);
 }
 
 Button::~Button()
@@ -73,16 +73,16 @@ Button* Button::SetExpand(Expand InExpand)
 	return this;
 }
 
-Button* Button::SetLabel(const char* Label)
+Button* Button::SetText(const char* InText)
 {
-	m_Label->SetText(Label);
+	m_Text->SetText(InText);
 	UpdateSize();
 	return this;
 }
 
-const char* Button::GetLabel() const
+const char* Button::GetText() const
 {
-	return m_Label->GetText();
+	return m_Text->GetText();
 }
 
 Button* Button::SetOnPressed(OnEmptySignature Fn)
@@ -104,21 +104,21 @@ void Button::OnPaint(Paint& Brush) const
 	}
 
 	Brush.Rectangle(GetAbsoluteBounds(), BackgroundColor);
-	m_Label->OnPaint(Brush);
+	m_Text->OnPaint(Brush);
 }
 
 void Button::Update()
 {
 	const Vector2 Size = GetSize() * 0.5f;
-	const Vector2 LabelSize = m_Label->GetSize() * 0.5f;
-	m_Label->SetPosition(Size - LabelSize);
+	const Vector2 TextSize = m_Text->GetSize() * 0.5f;
+	m_Text->SetPosition(Size - TextSize);
 }
 
 void Button::OnLoad(const Json& Root)
 {
 	Control::OnLoad(Root);
 
-	m_Label->OnLoad(Root["Label"]);
+	m_Text->OnLoad(Root["Text"]);
 	UpdateSize();
 }
 
@@ -173,7 +173,7 @@ void Button::OnMouseLeave()
 void Button::UpdateSize()
 {
 	Vector2 Padding = GetTheme()->GetConstant(Theme::Vector2Constants::Button_Padding);
-	Vector2 Size = m_Label->GetSize() + Padding * 2.0f;
+	Vector2 Size = m_Text->GetSize() + Padding * 2.0f;
 	SetSize(Size);
 	Update();
 }

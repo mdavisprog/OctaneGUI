@@ -125,7 +125,7 @@ void TextSelectable::OnLoad(const Json& Root)
 {
 	Control::OnLoad(Root);
 
-	m_Text->OnLoad(Root["Label"]);
+	m_Text->OnLoad(Root["Text"]);
 	UpdateSize();
 }
 

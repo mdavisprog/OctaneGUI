@@ -55,11 +55,11 @@ public:
 	Container(Window* InWindow);
 	virtual ~Container();
 
-	std::shared_ptr<Text> AddText(const char* Label);
+	std::shared_ptr<Text> AddText(const char* InText);
 	std::shared_ptr<TextInput> AddTextInput();
-	std::shared_ptr<TextSelectable> AddTextSelectable(const char* Label);
-	std::shared_ptr<Button> AddButton(const char* Label);
-	std::shared_ptr<Checkbox> AddCheckbox(const char* Label);
+	std::shared_ptr<TextSelectable> AddTextSelectable(const char* InText);
+	std::shared_ptr<Button> AddButton(const char* InText);
+	std::shared_ptr<Checkbox> AddCheckbox(const char* InText);
 	std::shared_ptr<Image> AddImage(const char* Path);
 	std::shared_ptr<Panel> AddPanel();
 	bool ShouldUpdateLayout() const;

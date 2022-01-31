@@ -50,8 +50,8 @@ public:
 
 	Button* SetExpand(Expand InExpand);
 
-	Button* SetLabel(const char* Label);
-	const char* GetLabel() const;
+	Button* SetText(const char* InText);
+	const char* GetText() const;
 
 	Button* SetOnPressed(OnEmptySignature Fn);
 
@@ -74,7 +74,7 @@ private:
 	void UpdateSize();
 
 	State m_State;
-	std::shared_ptr<Text> m_Label;
+	std::shared_ptr<Text> m_Text;
 	OnEmptySignature m_OnPressed;
 };
 

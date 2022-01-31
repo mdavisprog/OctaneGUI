@@ -38,13 +38,13 @@
 					{
 						"ID": "OKBtn",
 						"Type": "Button",
-						"Label": {
+						"Text": {
 							"Text": "OK"
 						}
 					},
 					{
 						"Type": "Checkbox",
-						"Label": {
+						"Text": {
 							"Text": "Checkbox"
 						}
 					},
@@ -54,7 +54,7 @@
 					},
 					{
 						"Type": "TextSelectable",
-						"Label": {
+						"Text": {
 							"Text": "Selectable"
 						}
 					},

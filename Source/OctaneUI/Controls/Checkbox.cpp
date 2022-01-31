@@ -49,14 +49,14 @@ Checkbox::~Checkbox()
 {
 }
 
-Checkbox* Checkbox::SetLabel(const char* Label)
+Checkbox* Checkbox::SetText(const char* InText)
 {
-	m_Text->SetText(Label);
+	m_Text->SetText(InText);
 	UpdateSize();
 	return this;
 }
 
-const char* Checkbox::GetLabel() const
+const char* Checkbox::GetText() const
 {
 	return m_Text->GetText();
 }
@@ -135,7 +135,7 @@ void Checkbox::OnLoad(const Json& Root)
 {
 	Control::OnLoad(Root);
 
-	m_Text->OnLoad(Root["Label"]);
+	m_Text->OnLoad(Root["Text"]);
 	UpdateSize();
 }
 

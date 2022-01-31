@@ -55,10 +55,10 @@ Container::~Container()
 	m_Controls.clear();
 }
 
-std::shared_ptr<Text> Container::AddText(const char* Label)
+std::shared_ptr<Text> Container::AddText(const char* InText)
 {
 	std::shared_ptr<Text> Result = AddControl<Text>();
-	Result->SetText(Label);
+	Result->SetText(InText);
 	return Result;
 }
 
@@ -68,24 +68,24 @@ std::shared_ptr<TextInput> Container::AddTextInput()
 	return Result;
 }
 
-std::shared_ptr<TextSelectable> Container::AddTextSelectable(const char* Label)
+std::shared_ptr<TextSelectable> Container::AddTextSelectable(const char* InText)
 {
 	std::shared_ptr<TextSelectable> Result = AddControl<TextSelectable>();
-	Result->SetText(Label);
+	Result->SetText(InText);
 	return Result;
 }
 
-std::shared_ptr<Button> Container::AddButton(const char* Label)
+std::shared_ptr<Button> Container::AddButton(const char* InText)
 {
 	std::shared_ptr<Button> Result = AddControl<Button>();
-	Result->SetLabel(Label);
+	Result->SetText(InText);
 	return Result;
 }
 
-std::shared_ptr<Checkbox> Container::AddCheckbox(const char* Label)
+std::shared_ptr<Checkbox> Container::AddCheckbox(const char* InText)
 {
 	std::shared_ptr<Checkbox> Result = AddControl<Checkbox>();
-	Result->SetLabel(Label);
+	Result->SetText(InText);
 	return Result;
 }
 
