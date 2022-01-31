@@ -40,11 +40,6 @@ Panel::~Panel()
 {
 }
 
-const char* Panel::GetType() const
-{
-	return "Panel";
-}
-
 void Panel::OnPaint(Paint& Brush) const
 {
 	const Color Background = Brush.GetTheme()->GetColor(Theme::Colors::Panel);

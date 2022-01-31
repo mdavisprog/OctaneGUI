@@ -27,6 +27,7 @@ SOFTWARE.
 #pragma once
 
 #include "../CallbackDefs.h"
+#include "../Class.h"
 #include "../Keyboard.h"
 #include "../Mouse.h"
 #include "../Rect.h"
@@ -64,8 +65,10 @@ enum class VerticalAlignment : uint8_t
 	Bottom
 };
 
-class Control
+class Control : public Class
 {
+	CLASS(Control)
+
 public:
 	Control(Window* InWindow);
 	virtual ~Control();
@@ -100,7 +103,6 @@ public:
 	Control* SetOnInvalidate(OnInvalidateSignature Fn);
 	void Invalidate(InvalidateType Type = InvalidateType::Paint);
 
-	virtual const char* GetType() const;
 	virtual void OnPaint(Paint& Brush) const;
 	virtual void Update();
 	virtual void OnFocused();

@@ -35,6 +35,8 @@ class Text;
 
 class TextSelectable : public Control
 {
+	CLASS(TextSelectable)
+
 public:
 	TextSelectable(Window* InWindow);
 	virtual ~TextSelectable();
@@ -50,7 +52,6 @@ public:
 
 	TextSelectable* SetOnPressed(OnTextSelectableSignature Fn);
 
-	virtual const char* GetType() const override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
 	virtual void OnLoad(const Json& Root) override;

@@ -62,11 +62,6 @@ const char* Text::GetText() const
 	return m_Contents.c_str();
 }
 
-const char* Text::GetType() const
-{
-	return "Text";
-}
-
 void Text::OnPaint(Paint& Brush) const
 {
 	Brush.Text(GetAbsolutePosition(), m_Contents, Color(255, 255, 255, 255));

@@ -100,11 +100,6 @@ MenuItem* MenuItem::SetOnSelected(OnMenuItemSignature Fn)
 	return this;
 }
 
-const char* MenuItem::GetType() const
-{
-	return "MenuItem";
-}
-
 void MenuItem::OnPaint(Paint& Brush) const
 {
 	TextSelectable::OnPaint(Brush);

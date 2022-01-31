@@ -91,11 +91,6 @@ Button* Button::SetOnPressed(OnEmptySignature Fn)
 	return this;
 }
 
-const char* Button::GetType() const
-{
-	return "Button";
-}
-
 void Button::OnPaint(Paint& Brush) const
 {
 	std::shared_ptr<Theme> TheTheme = GetTheme();

@@ -89,11 +89,6 @@ TextSelectable* TextSelectable::SetOnPressed(OnTextSelectableSignature Fn)
 	return this;
 }
 
-const char* TextSelectable::GetType() const
-{
-	return "TextSelectable";
-}
-
 void TextSelectable::OnPaint(Paint& Brush) const
 {
 	if (m_Hovered || m_Selected)

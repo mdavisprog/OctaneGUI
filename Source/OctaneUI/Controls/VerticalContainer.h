@@ -33,11 +33,11 @@ namespace OctaneUI
 
 class VerticalContainer : public Container
 {
+	CLASS(VerticalContainer)
+
 public:
 	VerticalContainer(Window* InWindow);
 	virtual ~VerticalContainer();
-
-	virtual const char* GetType() const override;
 
 protected:
 	virtual Vector2 CalculateSize(const std::vector<std::shared_ptr<Control>>& Controls) const override;

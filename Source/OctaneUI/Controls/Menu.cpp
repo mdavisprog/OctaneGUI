@@ -127,11 +127,6 @@ void Menu::GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const
 	}
 }
 
-const char* Menu::GetType() const
-{
-	return "Menu";
-}
-
 void Menu::OnLoad(const Json& Root)
 {
 	Container::OnLoad(Root);

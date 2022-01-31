@@ -125,43 +125,43 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 {
 	std::shared_ptr<Control> Result;
 
-	if (Type == "Text")
+	if (Type == Text::TypeName())
 	{
 		Result = AddControl<Text>();
 	}
-	else if (Type == "TextSelectable")
+	else if (Type == TextSelectable::TypeName())
 	{
 		Result = AddControl<TextSelectable>();
 	}
-	else if (Type == "TextInput")
+	else if (Type == TextInput::TypeName())
 	{
 		Result = AddControl<TextInput>();
 	}
-	else if (Type == "Button")
+	else if (Type == Button::TypeName())
 	{
 		Result = AddControl<Button>();
 	}
-	else if (Type == "Checkbox")
+	else if (Type == Checkbox::TypeName())
 	{
 		Result = AddControl<Checkbox>();
 	}
-	else if (Type == "Image")
+	else if (Type == Image::TypeName())
 	{
 		Result = AddControl<Image>();
 	}
-	else if (Type == "Panel")
+	else if (Type == Panel::TypeName())
 	{
 		Result = AddControl<Panel>();
 	}
-	else if (Type == "Separator")
+	else if (Type == Separator::TypeName())
 	{
 		Result = AddControl<Separator>();
 	}
-	else if (Type == "HorizontalContainer")
+	else if (Type == HorizontalContainer::TypeName())
 	{
 		Result = AddControl<HorizontalContainer>();
 	}
-	else if (Type == "VerticalContainer")
+	else if (Type == VerticalContainer::TypeName())
 	{
 		Result = AddControl<VerticalContainer>();
 	}
@@ -285,11 +285,6 @@ void Container::GetControls(std::vector<std::shared_ptr<Control>>& Controls) con
 			Controls.push_back(Item);
 		}
 	}
-}
-
-const char* Container::GetType() const
-{
-	return "Container";
 }
 
 void Container::OnPaint(Paint& Brush) const

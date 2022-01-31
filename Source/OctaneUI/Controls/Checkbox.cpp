@@ -93,11 +93,6 @@ bool Checkbox::IsTriState() const
 	return m_TriState;
 }
 
-const char* Checkbox::GetType() const
-{
-	return "Checkbox";
-}
-
 void Checkbox::OnPaint(Paint& Brush) const
 {
 	std::shared_ptr<Theme> TheTheme = GetTheme();

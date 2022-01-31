@@ -39,11 +39,6 @@ HorizontalContainer::~HorizontalContainer()
 {
 }
 
-const char* HorizontalContainer::GetType() const
-{
-	return "HorizontalContainer";
-}
-
 Vector2 HorizontalContainer::CalculateSize(const std::vector<std::shared_ptr<Control>>& Controls) const
 {
 	Vector2 Result;

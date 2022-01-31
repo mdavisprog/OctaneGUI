@@ -37,6 +37,8 @@ class Paint;
 
 class Text : public Control
 {
+	CLASS(Text)
+
 public:
 	Text(Window* InWindow);
 	virtual ~Text();
@@ -44,7 +46,6 @@ public:
 	Text* SetText(const char* InContents);
 	const char* GetText() const;
 
-	virtual const char* GetType() const override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
 

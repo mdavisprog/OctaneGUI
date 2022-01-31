@@ -35,6 +35,8 @@ class Texture;
 
 class Image : public Control
 {
+	CLASS(Image)
+
 public:
 	Image(Window* InWindow);
 	virtual ~Image();
@@ -43,7 +45,6 @@ public:
 	Image* SetTexture(const std::shared_ptr<Texture>& InTexture);
 	Image* SetUVs(const Rect& UVs);
 
-	virtual const char* GetType() const override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
 

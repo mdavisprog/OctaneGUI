@@ -70,11 +70,6 @@ Image* Image::SetUVs(const Rect& UVs)
 	return this;
 }
 
-const char* Image::GetType() const
-{
-	return "Image";
-}
-
 void Image::OnPaint(Paint& Brush) const
 {
 	if (!m_Texture)

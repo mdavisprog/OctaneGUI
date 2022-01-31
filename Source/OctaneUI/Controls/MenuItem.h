@@ -35,6 +35,8 @@ class Menu;
 
 class MenuItem : public TextSelectable
 {
+	CLASS(MenuItem)
+
 public:
 	MenuItem(Window* InWindow);
 	virtual ~MenuItem();
@@ -50,7 +52,6 @@ public:
 	MenuItem* SetOnHover(OnMenuItemSignature Fn);
 	MenuItem* SetOnSelected(OnMenuItemSignature Fn);
 
-	virtual const char* GetType() const override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
 	virtual void OnLoad(const Json& Root) override;

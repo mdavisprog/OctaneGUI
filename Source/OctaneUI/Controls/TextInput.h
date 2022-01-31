@@ -35,6 +35,8 @@ class Text;
 
 class TextInput : public Control
 {
+	CLASS(TextInput)
+
 public:
 	TextInput(Window* InWindow);
 	virtual ~TextInput();
@@ -42,7 +44,6 @@ public:
 	TextInput* SetText(const char* InText);
 	const char* GetText() const;
 
-	virtual const char* GetType() const override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
 	virtual void OnFocused() override;

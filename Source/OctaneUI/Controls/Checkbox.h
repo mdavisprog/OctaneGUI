@@ -35,6 +35,8 @@ class Text;
 
 class Checkbox : public Control
 {
+	CLASS(Checkbox)
+
 public:
 	enum class State : uint8_t
 	{
@@ -55,7 +57,6 @@ public:
 	Checkbox* SetTriState(bool IsTriState);
 	bool IsTriState() const;
 
-	virtual const char* GetType() const override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
 	virtual void OnLoad(const Json& Root) override;

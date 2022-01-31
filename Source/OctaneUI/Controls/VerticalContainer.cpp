@@ -39,11 +39,6 @@ VerticalContainer::~VerticalContainer()
 {
 }
 
-const char* VerticalContainer::GetType() const
-{
-	return "VerticalContainer";
-}
-
 Vector2 VerticalContainer::CalculateSize(const std::vector<std::shared_ptr<Control>>& Controls) const
 {
 	Vector2 Result;

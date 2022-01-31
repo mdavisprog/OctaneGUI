@@ -33,6 +33,8 @@ namespace OctaneUI
 
 class Separator : public Control
 {
+	CLASS(Separator)
+
 public:
 	Separator(Window* InWindow);
 	virtual ~Separator();

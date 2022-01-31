@@ -60,11 +60,6 @@ const char* TextInput::GetText() const
 	return m_Text->GetText();
 }
 
-const char* TextInput::GetType() const
-{
-	return "TextInput";
-}
-
 void TextInput::OnPaint(Paint& Brush) const
 {
 	Rect Bounds = GetAbsoluteBounds();

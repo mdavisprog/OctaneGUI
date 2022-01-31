@@ -102,11 +102,6 @@ void MenuBar::Close()
 	m_Menu = nullptr;
 }
 
-const char* MenuBar::GetType() const
-{
-	return "MenuBar";
-}
-
 void MenuBar::OnLoad(const Json& Root)
 {
 	Container::OnLoad(Root);

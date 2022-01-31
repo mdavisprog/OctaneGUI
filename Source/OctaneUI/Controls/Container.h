@@ -49,6 +49,8 @@ class VerticalContainer;
 
 class Container : public Control
 {
+	CLASS(Container)
+
 public:
 	Container(Window* InWindow);
 	virtual ~Container();
@@ -77,7 +79,6 @@ public:
 	std::weak_ptr<Control> GetControl(const Vector2& Point) const;
 	void GetControls(std::vector<std::shared_ptr<Control>>& Controls) const;
 
-	virtual const char* GetType() const override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
 

@@ -35,6 +35,8 @@ class MenuItem;
 
 class Menu : public Container
 {
+	CLASS(Menu)
+
 public:
 	Menu(Window* InWindow);
 	virtual ~Menu();
@@ -46,7 +48,6 @@ public:
 
 	void GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const;
 
-	virtual const char* GetType() const override;
 	virtual void OnLoad(const Json& Root) override;
 
 private:

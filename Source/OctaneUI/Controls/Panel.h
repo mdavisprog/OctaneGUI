@@ -35,11 +35,12 @@ class Paint;
 
 class Panel : public Control
 {
+	CLASS(Panel)
+
 public:
 	Panel(Window* InWindow);
 	virtual ~Panel();
 
-	virtual const char* GetType() const override;
 	virtual void OnPaint(Paint& Brush) const override;
 };
 

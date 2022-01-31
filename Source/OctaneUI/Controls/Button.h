@@ -36,6 +36,8 @@ class Text;
 
 class Button : public Control
 {
+	CLASS(Button)
+
 public:
 	Button(Window* InWindow);
 	virtual ~Button();
@@ -53,7 +55,6 @@ public:
 
 	Button* SetOnPressed(OnEmptySignature Fn);
 
-	virtual const char* GetType() const override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
 	virtual void OnLoad(const Json& Root) override;

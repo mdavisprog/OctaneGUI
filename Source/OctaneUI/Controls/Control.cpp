@@ -33,7 +33,8 @@ namespace OctaneUI
 {
 
 Control::Control(Window* InWindow)
-	: m_Window(InWindow)
+	: Class()
+	, m_Window(InWindow)
 	, m_Parent(nullptr)
 	, m_Bounds()
 	, m_Expand(Expand::None)
@@ -201,11 +202,6 @@ void Control::Invalidate(InvalidateType Type)
 	{
 		m_OnInvalidate(this, Type);
 	}
-}
-
-const char* Control::GetType() const
-{
-	return "Control";
 }
 
 void Control::OnPaint(Paint& Brush) const
