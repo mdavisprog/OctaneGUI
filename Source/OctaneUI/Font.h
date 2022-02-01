@@ -62,12 +62,14 @@ public:
 
 	uint32_t GetID() const;
 	float GetSize() const;
+	Vector2 GetSpaceSize() const;
 
 private:
 	std::vector<Glyph> m_Glyphs;
 	float m_Size;
 	float m_Ascent;
 	float m_Descent;
+	Vector2 m_SpaceSize;
 	std::shared_ptr<Texture> m_Texture;
 };
 

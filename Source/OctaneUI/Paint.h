@@ -53,7 +53,7 @@ public:
 	void Text(const Vector2& Position, const std::string& Contents, const Color& Col);
 	void Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_ptr<Texture>& InTexture, const Color& Col);
 
-	void PushClip(const Rect& Clip);
+	void PushClip(const Rect& Bounds, const Vector2& Offset);
 	void PopClip();
 
 	const std::vector<VertexBuffer>& GetBuffers() const;
@@ -68,7 +68,7 @@ private:
 
 	std::vector<VertexBuffer> m_Buffers;
 	std::shared_ptr<Theme> m_Theme;
-	std::vector<Rect> m_ClipStack;
+	std::vector<ClipRegion> m_ClipStack;
 };
 
 }

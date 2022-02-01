@@ -37,6 +37,7 @@ TextInput::TextInput(Window* InWindow)
 	: Control(InWindow)
 	, m_Position(0)
 	, m_Focused(false)
+	, m_Offset()
 {
 	m_Text = std::make_shared<Text>(InWindow);
 	m_Text->SetParent(this);
@@ -70,16 +71,15 @@ void TextInput::OnPaint(Paint& Brush) const
 		Brush.RectangleOutline(Bounds, Color(0, 0, 255, 255));
 	}
 
-	Brush.PushClip(GetAbsoluteBounds());
+	Brush.PushClip(GetAbsoluteBounds(), m_Offset);
 	m_Text->OnPaint(Brush);
 
 	if (m_Focused)
 	{
-		const std::string Sub = std::string(m_Text->GetText()).substr(0, m_Position);
-		const Vector2 Size = GetTheme()->GetFont()->Measure(Sub);
+		const Vector2 Size = GetPositionLocation();
 
-		const Vector2 Start = m_Text->GetAbsolutePosition() + Vector2(Size.X, 0.0f);
-		const Vector2 End = Start + Vector2(0.0f, GetTheme()->GetFont()->GetSize());
+		const Vector2 Start = m_Text->GetAbsolutePosition() + Vector2(Size.X, -5.0f);
+		const Vector2 End = Start + Vector2(0.0f, GetTheme()->GetFont()->GetSize() - 5.0f);
 		Brush.Line(Start, End, Color(255, 255, 255, 255));
 	}
 
@@ -131,8 +131,8 @@ void TextInput::OnText(uint32_t Code)
 
 	std::string Contents = m_Text->GetText();
 	Contents.insert(Contents.begin() + m_Position, (int8_t)Code);
-	m_Position++;
 	SetText(Contents.c_str());
+	MovePosition(1);
 }
 
 void TextInput::Backspace()
@@ -144,8 +144,8 @@ void TextInput::Backspace()
 
 	std::string Contents = m_Text->GetText();
 	Contents.erase(Contents.begin() + (m_Position - 1));
-	m_Position--;
 	SetText(Contents.c_str());
+	MovePosition(-1);
 }
 
 void TextInput::MovePosition(int32_t Count)
@@ -160,7 +160,26 @@ void TextInput::MovePosition(int32_t Count)
 
 	m_Position += Count;
 	m_Position = std::min<uint32_t>(m_Position, std::string(m_Text->GetText()).size());
+
+	Vector2 Position = GetPositionLocation();
+	Vector2 Max = m_Offset + Vector2(GetSize().X, 0.0f);
+
+	if (Position.X < m_Offset.X)
+	{
+		m_Offset.X = Position.X;
+	}
+	else if (Position.X >= Max.X)
+	{
+		m_Offset.X = Position.X - GetSize().X + GetTheme()->GetFont()->GetSpaceSize().X;
+	}
+
 	Invalidate();
+}
+
+Vector2 TextInput::GetPositionLocation() const
+{
+	const std::string Sub = std::string(m_Text->GetText()).substr(0, m_Position);
+	return GetTheme()->GetFont()->Measure(Sub);
 }
 
 }

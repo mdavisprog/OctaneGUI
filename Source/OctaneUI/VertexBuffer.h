@@ -26,7 +26,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "Rect.h"
+#include "ClipRegion.h"
 #include "Vertex.h"
 
 #include <vector>
@@ -56,15 +56,15 @@ public:
 	void IncOffset(uint32_t Amount);
 	uint32_t GetOffset() const;
 
-	void SetClip(const Rect& Clip);
-	Rect GetClip() const;
+	void SetClip(const ClipRegion& Clip);
+	const ClipRegion& GetClip() const;
 
 private:
 	std::vector<Vertex> m_Vertices;
 	std::vector<uint32_t> m_Indices;
 	uint32_t m_TextureID;
 	uint32_t m_Offset;
-	Rect m_Clip;
+	ClipRegion m_Clip;
 };
 
 }

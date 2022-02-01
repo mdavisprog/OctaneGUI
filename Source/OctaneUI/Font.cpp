@@ -48,6 +48,7 @@ Font::Font()
 	: m_Size(0.0f)
 	, m_Ascent(0.0f)
 	, m_Descent(0.0f)
+	, m_SpaceSize()
 	, m_Texture(nullptr)
 {
 }
@@ -121,6 +122,8 @@ bool Font::Load(const char* Path, float Size)
 		m_Glyphs.push_back(Item);
 	}
 
+	m_SpaceSize = Measure(" ");
+
 	return true;
 }
 
@@ -188,6 +191,11 @@ uint32_t Font::GetID() const
 float Font::GetSize() const
 {
 	return m_Size;
+}
+
+Vector2 Font::GetSpaceSize() const
+{
+	return m_SpaceSize;
 }
 
 }

@@ -32,6 +32,7 @@ namespace OctaneUI
 VertexBuffer::VertexBuffer()
 	: m_TextureID(0)
 	, m_Offset(0)
+	, m_Clip()
 {
 }
 
@@ -94,12 +95,12 @@ uint32_t VertexBuffer::GetOffset() const
 	return m_Offset;
 }
 
-void VertexBuffer::SetClip(const Rect& Clip)
+void VertexBuffer::SetClip(const ClipRegion& Clip)
 {
 	m_Clip = Clip;
 }
 
-Rect VertexBuffer::GetClip() const
+const ClipRegion& VertexBuffer::GetClip() const
 {
 	return m_Clip;
 }

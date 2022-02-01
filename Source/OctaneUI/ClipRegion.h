@@ -26,31 +26,25 @@ SOFTWARE.
 
 #pragma once
 
-#include "Application.h"
-#include "Color.h"
-#include "Controls/Button.h"
-#include "Controls/Container.h"
-#include "Controls/Control.h"
-#include "Controls/ControlList.h"
-#include "Controls/HorizontalContainer.h"
-#include "Controls/Image.h"
-#include "Controls/Menu.h"
-#include "Controls/MenuBar.h"
-#include "Controls/MenuItem.h"
-#include "Controls/Panel.h"
-#include "Controls/Text.h"
-#include "Controls/TextSelectable.h"
-#include "Controls/VerticalContainer.h"
-#include "ClipRegion.h"
-#include "Event.h"
-#include "Font.h"
-#include "Json.h"
-#include "Keyboard.h"
-#include "Mouse.h"
-#include "Paint.h"
 #include "Rect.h"
-#include "Theme.h"
-#include "Vector2.h"
-#include "Vertex.h"
-#include "VertexBuffer.h"
-#include "Window.h"
+
+namespace OctaneUI
+{
+
+class ClipRegion
+{
+public:
+	ClipRegion();
+	ClipRegion(const Rect& Bounds, const Vector2& Offset);
+	~ClipRegion();
+
+	Rect GetBounds() const;
+	Vector2 GetSize() const;
+	Vector2 GetOffset() const;
+
+private:
+	Rect m_Bounds;
+	Vector2 m_Offset;
+};
+
+}

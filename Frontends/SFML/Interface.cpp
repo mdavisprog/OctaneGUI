@@ -205,7 +205,7 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 			}
 		}
 
-		const OctaneUI::Rect Clip = Buffer.GetClip();
+		const OctaneUI::ClipRegion& Clip = Buffer.GetClip();
 		const OctaneUI::Vector2 ClipSize = Clip.GetSize();
 		if (!ClipSize.IsZero())
 		{
@@ -216,8 +216,11 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 			BackBuffer->display();
 
 			sf::Sprite Sprite(BackBuffer->getTexture());
-			Sprite.setTextureRect(sf::IntRect((int)Clip.Min.X, (int)Clip.Min.Y, (int)ClipSize.X, (int)ClipSize.Y));
-			Sprite.setPosition(Clip.Min.X, Clip.Min.Y);
+
+			OctaneUI::Rect Bounds = Clip.GetBounds();
+			OctaneUI::Vector2 Offset = Clip.GetOffset();
+			Sprite.setTextureRect(sf::IntRect((int)(Bounds.Min.X + Offset.X), (int)(Bounds.Min.Y + Offset.Y), (int)ClipSize.X, (int)ClipSize.Y));
+			Sprite.setPosition(Bounds.Min.X, Bounds.Min.Y);
 			Item.Renderer->draw(Sprite, RenderStates);
 		}
 		else

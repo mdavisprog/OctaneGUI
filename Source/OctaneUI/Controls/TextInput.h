@@ -55,10 +55,12 @@ public:
 private:
 	void Backspace();
 	void MovePosition(int32_t Count);
+	Vector2 GetPositionLocation() const;
 
 	std::shared_ptr<Text> m_Text;
 	uint32_t m_Position;
 	bool m_Focused;
+	Vector2 m_Offset;
 };
 
 }

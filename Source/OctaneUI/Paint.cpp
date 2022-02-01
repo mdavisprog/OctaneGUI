@@ -108,9 +108,9 @@ void Paint::Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_p
 	AddTriangles(Bounds, TexCoords, Col, Buffer);
 }
 
-void Paint::PushClip(const Rect& Clip)
+void Paint::PushClip(const Rect& Bounds, const Vector2& Offset)
 {
-	m_ClipStack.push_back(Clip);
+	m_ClipStack.emplace_back(Bounds, Offset);
 }
 
 void Paint::PopClip()
