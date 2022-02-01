@@ -113,6 +113,8 @@ void TextInput::OnKeyPressed(Keyboard::Key Key)
 	case Keyboard::Key::Backspace: Backspace(); break;
 	case Keyboard::Key::Left: MovePosition(-1); break;
 	case Keyboard::Key::Right: MovePosition(1); break;
+	case Keyboard::Key::Home: MovePosition(-m_Text->Length()); break;
+	case Keyboard::Key::End: MovePosition(m_Text->Length()); break;
 	default: break;
 	}
 }
@@ -152,9 +154,11 @@ void TextInput::MovePosition(int32_t Count)
 {
 	if (Count < 0)
 	{
-		if (m_Position == 0)
+		int32_t Result = (int32_t)m_Position + Count;
+
+		if (Result < 0)
 		{
-			Count = 0;
+			Count = -m_Position;
 		}
 	}
 

@@ -45,6 +45,7 @@ public:
 
 	Text* SetText(const char* InContents);
 	const char* GetText() const;
+	uint32_t Length() const;
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;

@@ -38,6 +38,8 @@ public:
 		Backspace,
 		Left,
 		Right,
+		Home,
+		End,
 	};
 };
 

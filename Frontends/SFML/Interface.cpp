@@ -56,6 +56,8 @@ OctaneUI::Keyboard::Key GetKeyCode(sf::Keyboard::Key Key)
 	case sf::Keyboard::Backspace: return OctaneUI::Keyboard::Key::Backspace;
 	case sf::Keyboard::Left: return OctaneUI::Keyboard::Key::Left;
 	case sf::Keyboard::Right: return OctaneUI::Keyboard::Key::Right;
+	case sf::Keyboard::Home: return OctaneUI::Keyboard::Key::Home;
+	case sf::Keyboard::End: return OctaneUI::Keyboard::Key::End;
 	default: break;
 	}
 
