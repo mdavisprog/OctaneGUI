@@ -110,7 +110,8 @@ void TextInput::OnKeyPressed(Keyboard::Key Key)
 {
 	switch (Key)
 	{
-	case Keyboard::Key::Backspace: Backspace(); break;
+	case Keyboard::Key::Backspace: Delete(-1); break;
+	case Keyboard::Key::Delete: Delete(1); break;
 	case Keyboard::Key::Left: MovePosition(-1); break;
 	case Keyboard::Key::Right: MovePosition(1); break;
 	case Keyboard::Key::Home: MovePosition(-m_Text->Length()); break;
@@ -137,17 +138,22 @@ void TextInput::OnText(uint32_t Code)
 	MovePosition(1);
 }
 
-void TextInput::Backspace()
+void TextInput::Delete(int32_t Range)
 {
-	if (m_Position == 0)
-	{
-		return;
-	}
+	int32_t Min = std::min<int32_t>(m_Position, m_Position + (int32_t)Range);
+	Min = std::max<int32_t>(0, Min);
+
+	int32_t Max = std::max<int32_t>(m_Position, m_Position + (int32_t)Range);
+	Max = std::min<int32_t>(m_Text->Length(), Max);
 
 	std::string Contents = m_Text->GetText();
-	Contents.erase(Contents.begin() + (m_Position - 1));
+	Contents.erase(Contents.begin() + (uint32_t)Min, Contents.begin() + (uint32_t)Max);
+
 	SetText(Contents.c_str());
-	MovePosition(-1);
+
+	// Only move the cursor if deleting characters to the left of the cursor.
+	int32_t Move = std::min<int32_t>(Range, 0);
+	MovePosition(Move);
 }
 
 void TextInput::MovePosition(int32_t Count)

@@ -53,7 +53,7 @@ public:
 	virtual void OnText(uint32_t Code) override;
 
 private:
-	void Backspace();
+	void Delete(int32_t Range);
 	void MovePosition(int32_t Count);
 	Vector2 GetPositionLocation() const;
 
