@@ -27,6 +27,7 @@ SOFTWARE.
 #pragma once
 
 #include "CallbackDefs.h"
+#include "Keyboard.h"
 #include "Vector2.h"
 
 #include <memory>
@@ -66,6 +67,7 @@ public:
 	std::shared_ptr<Window> NewWindow(const char* JsonStream);
 	std::shared_ptr<Theme> GetTheme() const;
 	std::shared_ptr<Icons> GetIcons() const;
+	bool IsKeyPressed(Keyboard::Key Key) const;
 
 	Application& SetOnCreateWindow(OnWindowSignature Fn);
 	Application& SetOnDestroyWindow(OnWindowSignature Fn);
@@ -84,6 +86,7 @@ private:
 	std::shared_ptr<Theme> m_Theme;
 	std::shared_ptr<Icons> m_Icons;
 	bool m_IsRunning;
+	std::vector<Keyboard::Key> m_PressedKeys;
 	OnWindowSignature m_OnCreateWindow;
 	OnWindowSignature m_OnDestroyWindow;
 	OnWindowPaintSignature m_OnPaint;

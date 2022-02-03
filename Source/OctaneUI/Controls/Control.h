@@ -99,6 +99,7 @@ public:
 	Window* GetWindow() const;
 	Vector2 GetMousePosition() const;
 	std::shared_ptr<Theme> GetTheme() const;
+	bool IsKeyPressed(Keyboard::Key Key) const;
 
 	Control* SetOnInvalidate(OnInvalidateSignature Fn);
 	void Invalidate(InvalidateType Type = InvalidateType::Paint);

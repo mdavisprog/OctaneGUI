@@ -209,6 +209,11 @@ std::shared_ptr<Icons> Application::GetIcons() const
 	return m_Icons;
 }
 
+bool Application::IsKeyPressed(Keyboard::Key Key) const
+{
+	return std::find(m_PressedKeys.begin(), m_PressedKeys.end(), Key) != m_PressedKeys.end();
+}
+
 Application& Application::SetOnCreateWindow(OnWindowSignature Fn)
 {
 	m_OnCreateWindow = Fn;
@@ -313,12 +318,25 @@ void Application::ProcessEvent(const std::shared_ptr<Window>& Item)
 		break;
 	
 	case Event::Type::KeyPressed:
-		Item->OnKeyPressed(E.GetData().m_Key.m_Code);
-		break;
+		{
+			Keyboard::Key Code = E.GetData().m_Key.m_Code;
+			Item->OnKeyPressed(Code);
+			if (std::find(m_PressedKeys.begin(), m_PressedKeys.end(), Code) == m_PressedKeys.end())
+			{
+				m_PressedKeys.push_back(Code);
+			}
+		} break;
 	
 	case Event::Type::KeyReleased:
-		Item->OnKeyReleased(E.GetData().m_Key.m_Code);
-		break;
+		{
+			Keyboard::Key Code = E.GetData().m_Key.m_Code;
+			Item->OnKeyReleased(Code);
+			std::vector<Keyboard::Key>::iterator Iter = std::remove(m_PressedKeys.begin(), m_PressedKeys.end(), Code);
+			if (Iter != m_PressedKeys.end())
+			{
+				m_PressedKeys.erase(Iter);
+			}
+		} break;
 
 	case Event::Type::MouseMoved:
 		Item->OnMouseMove(E.GetData().m_MouseMove.m_Position);

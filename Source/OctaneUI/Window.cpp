@@ -265,6 +265,11 @@ Vector2 Window::GetMousePosition() const
 	return m_MousePosition;
 }
 
+bool Window::IsKeyPressed(Keyboard::Key Key) const
+{
+	return m_Application->IsKeyPressed(Key);
+}
+
 void Window::Update()
 {
 	if (m_Container->ShouldUpdateLayout())

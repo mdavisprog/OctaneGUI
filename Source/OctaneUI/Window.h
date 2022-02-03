@@ -81,6 +81,7 @@ public:
 	std::shared_ptr<Theme> GetTheme() const;
 	std::shared_ptr<Icons> GetIcons() const;
 	Vector2 GetMousePosition() const;
+	bool IsKeyPressed(Keyboard::Key Key) const;
 
 	void Update();
 	void DoPaint(Paint& Brush);

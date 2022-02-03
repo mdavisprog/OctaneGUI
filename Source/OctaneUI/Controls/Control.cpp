@@ -190,6 +190,11 @@ std::shared_ptr<Theme> Control::GetTheme() const
 	return m_Window->GetTheme();
 }
 
+bool Control::IsKeyPressed(Keyboard::Key Key) const
+{
+	return m_Window->IsKeyPressed(Key);
+}
+
 Control* Control::SetOnInvalidate(OnInvalidateSignature Fn)
 {
 	m_OnInvalidate = Fn;
