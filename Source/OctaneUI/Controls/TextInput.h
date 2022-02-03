@@ -54,11 +54,14 @@ public:
 
 private:
 	void Delete(int32_t Range);
-	void MovePosition(int32_t Count);
+	void MovePosition(int32_t Count, bool UseAnchor = false);
 	Vector2 GetPositionLocation() const;
+	bool IsShiftPressed() const;
+	int32_t GetRangeOr(int32_t Value) const;
 
 	std::shared_ptr<Text> m_Text;
 	uint32_t m_Position;
+	uint32_t m_Anchor;
 	bool m_Focused;
 	Vector2 m_Offset;
 };

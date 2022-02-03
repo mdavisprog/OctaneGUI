@@ -41,6 +41,8 @@ public:
 		Right,
 		Home,
 		End,
+		LeftShift,
+		RightShift,
 	};
 };
 
