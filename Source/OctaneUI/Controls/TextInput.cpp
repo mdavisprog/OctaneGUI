@@ -64,12 +64,14 @@ const char* TextInput::GetText() const
 
 void TextInput::OnPaint(Paint& Brush) const
 {
+	std::shared_ptr<Theme> TheTheme = GetTheme();
+
 	Rect Bounds = GetAbsoluteBounds();
-	Brush.Rectangle(Bounds, Color(64, 64, 64, 255));
+	Brush.Rectangle(Bounds, TheTheme->GetColor(Theme::Colors::TextInput_Background));
 
 	if (m_Focused)
 	{
-		Brush.RectangleOutline(Bounds, Color(0, 0, 255, 255));
+		Brush.RectangleOutline(Bounds, TheTheme->GetColor(Theme::Colors::TextInput_FocusedOutline));
 	}
 
 	Brush.PushClip(GetAbsoluteBounds(), m_Offset);
@@ -81,7 +83,7 @@ void TextInput::OnPaint(Paint& Brush) const
 
 		const Vector2 Start = m_Text->GetAbsolutePosition() + Vector2(Size.X, -5.0f);
 		const Vector2 End = Start + Vector2(0.0f, GetTheme()->GetFont()->GetSize() - 5.0f);
-		Brush.Line(Start, End, Color(255, 255, 255, 255));
+		Brush.Line(Start, End, TheTheme->GetColor(Theme::Colors::TextInput_Cursor));
 	}
 
 	if (m_Anchor != -1 && m_Anchor != m_Position)
@@ -101,7 +103,7 @@ void TextInput::OnPaint(Paint& Brush) const
 		SelectBounds.Max = SelectBounds.Min + Vector2(Size.X + GetTheme()->GetFont()->GetSpaceSize().X, GetTheme()->GetFont()->GetSize());
 		SelectBounds.Move(GetAbsolutePosition());
 
-		Brush.Rectangle(SelectBounds, Color(72, 101, 129, 130));
+		Brush.Rectangle(SelectBounds, TheTheme->GetColor(Theme::Colors::TextInput_Selection));
 	}
 
 	Brush.PopClip();

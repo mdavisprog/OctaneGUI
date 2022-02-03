@@ -48,6 +48,10 @@ public:
 		Button_Hovered,
 		Button_Pressed,
 		TextSelectable_Hovered,
+		TextInput_Background,
+		TextInput_FocusedOutline,
+		TextInput_Cursor,
+		TextInput_Selection,
 		Panel,
 		PanelOutline,
 		Separator
