@@ -151,6 +151,12 @@ void Window::OnMouseMove(const Vector2& Position)
 			Current->OnMouseEnter();
 		}
 	}
+
+	if (!m_Focus.expired())
+	{
+		std::shared_ptr<Control> Focused = m_Focus.lock();
+		Focused->OnMouseMove(Position);
+	}
 }
 
 void Window::OnMousePressed(const Vector2& Position, Mouse::Button MouseButton)
