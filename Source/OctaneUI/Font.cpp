@@ -164,16 +164,32 @@ Vector2 Font::Measure(const std::string& Text) const
 {
 	Vector2 Result;
 
-	Vector2 Position;
 	for (char Ch : Text)
 	{
-		int32_t CodePoint = Ch - 32;
-		Rect Vertices, TexCoords;
-		Draw(CodePoint, Position, Vertices, TexCoords);
-		Result.Y = std::max<float>(Result.Y, Vertices.Height());
+		const Vector2 Size = Measure(Ch);
+		Result.X += Size.X;
+		Result.Y = Size.Y;
 	}
 
+	return Result;
+}
+
+Vector2 Font::Measure(char Ch) const
+{
+	// TODO: Refactor how we match the character index with the glyph in the array.
+	int32_t CodePoint = Ch - 32;
+	return Measure(CodePoint);
+}
+
+Vector2 Font::Measure(int32_t CodePoint) const
+{
+	Vector2 Result;
+
+	Vector2 Position;
+	Rect Vertices, TexCoords;
+	Draw(CodePoint, Position, Vertices, TexCoords);
 	Result.X = Position.X;
+	Result.Y = std::max<float>(Result.Y, Vertices.Height());
 
 	return Result;
 }
