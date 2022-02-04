@@ -199,15 +199,26 @@ void Window::OnMousePressed(const Vector2& Position, Mouse::Button MouseButton)
 
 void Window::OnMouseReleased(const Vector2& Position, Mouse::Button MouseButton)
 {
+	std::shared_ptr<Control> Hovered;
+	std::shared_ptr<Control> Focused;
+
 	if (!m_Hovered.expired())
 	{
-		std::shared_ptr<Control> Hovered = m_Hovered.lock();
-		Hovered->OnMouseReleased(Position, MouseButton);
+		Hovered = m_Hovered.lock();
 	}
 
 	if (!m_Focus.expired())
 	{
-		std::shared_ptr<Control> Focused = m_Focus.lock();
+		Focused = m_Focus.lock();
+	}
+
+	if (Hovered && Hovered != Focused)
+	{
+		Hovered->OnMouseReleased(Position, MouseButton);
+	}
+
+	if (Focused)
+	{
 		Focused->OnMouseReleased(Position, MouseButton);
 	}
 }
