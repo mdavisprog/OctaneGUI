@@ -38,6 +38,7 @@ TextInput::TextInput(Window* InWindow)
 	, m_Position(0)
 	, m_Anchor(-1)
 	, m_Focused(false)
+	, m_Drag(false)
 	, m_Offset()
 {
 	m_Text = std::make_shared<Text>(InWindow);
@@ -135,35 +136,36 @@ void TextInput::OnKeyPressed(Keyboard::Key Key)
 	{
 	case Keyboard::Key::Backspace: Delete(GetRangeOr(-1)); break;
 	case Keyboard::Key::Delete: Delete(GetRangeOr(1)); break;
-	case Keyboard::Key::Left: MovePosition(-1, true); break;
-	case Keyboard::Key::Right: MovePosition(1, true); break;
-	case Keyboard::Key::Home: MovePosition(-m_Text->Length(), true); break;
-	case Keyboard::Key::End: MovePosition(m_Text->Length(), true); break;
+	case Keyboard::Key::Left: MovePosition(-1, IsShiftPressed()); break;
+	case Keyboard::Key::Right: MovePosition(1, IsShiftPressed()); break;
+	case Keyboard::Key::Home: MovePosition(-m_Text->Length(), IsShiftPressed()); break;
+	case Keyboard::Key::End: MovePosition(m_Text->Length(), IsShiftPressed()); break;
 	default: break;
+	}
+}
+
+void TextInput::OnMouseMove(const Vector2& Position)
+{
+	if (m_Drag)
+	{
+		uint32_t Pos = GetPosition(Position);
+		MovePosition(Pos - m_Position, true);
 	}
 }
 
 bool TextInput::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 {
-	Vector2 Offset;
-	const std::string Contents = m_Text->GetText();
-	int Pos = 0;
-	for (char Ch : Contents)
-	{
-		const Vector2 Size = GetTheme()->GetFont()->Measure(Ch);
-		Offset.X += Size.X;
-
-		if (Position.X + m_Offset.X <= Offset.X)
-		{
-			break;
-		}
-
-		Pos++;
-	}
-
+	uint32_t Pos = GetPosition(Position);
 	MovePosition(Pos - m_Position);
+	m_Anchor = m_Position;
+	m_Drag = true;
 
 	return true;
+}
+
+void TextInput::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
+{
+	m_Drag = false;
 }
 
 void TextInput::OnText(uint32_t Code)
@@ -199,7 +201,7 @@ void TextInput::Delete(int32_t Range)
 
 void TextInput::MovePosition(int32_t Count, bool UseAnchor)
 {
-	if (IsShiftPressed() && UseAnchor)
+	if (UseAnchor)
 	{
 		if (m_Anchor == -1)
 		{
@@ -222,7 +224,7 @@ void TextInput::MovePosition(int32_t Count, bool UseAnchor)
 	}
 
 	m_Position += Count;
-	m_Position = std::min<uint32_t>(m_Position, std::string(m_Text->GetText()).size());
+	m_Position = std::min<uint32_t>(m_Position, m_Text->Length());
 
 	Vector2 Position = GetPositionLocation();
 	Vector2 Max = m_Offset + Vector2(GetSize().X, 0.0f);
@@ -243,6 +245,27 @@ Vector2 TextInput::GetPositionLocation() const
 {
 	const std::string Sub = std::string(m_Text->GetText()).substr(0, m_Position);
 	return GetTheme()->GetFont()->Measure(Sub);
+}
+
+uint32_t TextInput::GetPosition(const Vector2& Position) const
+{
+	Vector2 Offset;
+	const std::string Contents = m_Text->GetText();
+	uint32_t Pos = 0;
+	for (char Ch : Contents)
+	{
+		const Vector2 Size = GetTheme()->GetFont()->Measure(Ch);
+		Offset.X += Size.X;
+
+		if (Position.X + m_Offset.X <= Offset.X)
+		{
+			break;
+		}
+
+		Pos++;
+	}
+
+	return Pos;
 }
 
 bool TextInput::IsShiftPressed() const

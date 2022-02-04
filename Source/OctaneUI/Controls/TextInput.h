@@ -49,13 +49,16 @@ public:
 	virtual void OnFocused() override;
 	virtual void OnUnfocused() override;
 	virtual void OnKeyPressed(Keyboard::Key Key) override;
+	virtual void OnMouseMove(const Vector2& Position) override;
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
+	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnText(uint32_t Code) override;
 
 private:
 	void Delete(int32_t Range);
 	void MovePosition(int32_t Count, bool UseAnchor = false);
 	Vector2 GetPositionLocation() const;
+	uint32_t GetPosition(const Vector2& Position) const;
 	bool IsShiftPressed() const;
 	int32_t GetRangeOr(int32_t Value) const;
 
@@ -63,6 +66,7 @@ private:
 	uint32_t m_Position;
 	uint32_t m_Anchor;
 	bool m_Focused;
+	bool m_Drag;
 	Vector2 m_Offset;
 };
 
