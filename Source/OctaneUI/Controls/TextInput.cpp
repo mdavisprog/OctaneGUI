@@ -145,6 +145,24 @@ void TextInput::OnKeyPressed(Keyboard::Key Key)
 
 bool TextInput::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 {
+	Vector2 Offset;
+	const std::string Contents = m_Text->GetText();
+	int Pos = 0;
+	for (char Ch : Contents)
+	{
+		const Vector2 Size = GetTheme()->GetFont()->Measure(Ch);
+		Offset.X += Size.X;
+
+		if (Position.X + m_Offset.X <= Offset.X)
+		{
+			break;
+		}
+
+		Pos++;
+	}
+
+	MovePosition(Pos - m_Position);
+
 	return true;
 }
 
