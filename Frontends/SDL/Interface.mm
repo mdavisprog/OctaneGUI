@@ -148,6 +148,19 @@ id<MTLTexture> GetTexture(uint32_t ID)
 	return nullptr;
 }
 
+OctaneUI::Mouse::Button GetMouseButton(uint8_t Button)
+{
+	switch (Button)
+	{
+	case SDL_BUTTON_RIGHT: return OctaneUI::Mouse::Button::Right;
+	case SDL_BUTTON_MIDDLE: return OctaneUI::Mouse::Button::Middle;
+	case SDL_BUTTON_LEFT:
+	default: break;
+	}
+
+	return OctaneUI::Mouse::Button::Left;
+}
+
 void DestroyWindow(const Container& InContainer)
 {
 	SDL_DestroyWindow(InContainer.Window);
@@ -293,6 +306,17 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 		switch (Event.type)
 		{
 		case SDL_QUIT: return OctaneUI::Event(OctaneUI::Event::Type::WindowClosed);
+		case SDL_MOUSEMOTION: return OctaneUI::Event(
+			OctaneUI::Event::MouseMove(Event.motion.x, Event.motion.y)
+		);
+		case SDL_MOUSEBUTTONDOWN: return OctaneUI::Event(
+			OctaneUI::Event::Type::MousePressed,
+			OctaneUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y)
+		);
+		case SDL_MOUSEBUTTONUP: return OctaneUI::Event(
+			OctaneUI::Event::Type::MouseReleased,
+			OctaneUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y)
+		);
 		default: break;
 		}
 	}
