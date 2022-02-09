@@ -34,6 +34,7 @@ SOFTWARE.
 
 #include <functional>
 #include <memory>
+#include <string>
 
 namespace OctaneUI
 {
