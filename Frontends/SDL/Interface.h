@@ -24,48 +24,18 @@ SOFTWARE.
 
 */
 
-#include "Interface.h"
-#include "OctaneUI/OctaneUI.h"
+#pragma once
 
-#include <fstream>
-#include <string>
-
-int main(int argc, char **argv)
+namespace OctaneUI
 {
-	std::string Buffer;
-	std::ifstream File;
-	File.open("Overview.json");
-	if (File.is_open())
-	{
-		File.seekg(0, std::ios::end);
-		Buffer.resize(File.tellg());
-		File.seekg(0, std::ios::beg);
 
-		File.read(&Buffer[0], Buffer.size());
-		File.close();
-	}
+class Application;
 
-	OctaneUI::Application Application;
-#if __APPLE__
-	SDL::Initialize(Application);
-#else
-	SFML::Initialize(Application);
-#endif
-	Application.Initialize("OctaneUI");
-	Application.LoadFont("Roboto-Regular.ttf");
-	
-	OctaneUI::ControlList List;
-	Application.GetMainWindow()->Load(Buffer.c_str(), List);
+}
 
-	List.ToMenuItem("File.Quit")->SetOnSelected([&](OctaneUI::MenuItem* Item) -> void
-	{
-		Application.Quit();
-	});
+namespace SDL
+{
 
-	List.ToButton("OKBtn")->SetOnPressed([&]() -> void
-	{
-		printf("OK\n");
-	});
+void Initialize(OctaneUI::Application& Application);
 
-	return Application.Run();
 }

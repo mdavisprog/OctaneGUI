@@ -1,1 +1,5 @@
-add_subdirectory(SFML)
+if(APPLE)
+    add_subdirectory(SDL)
+else()
+    add_subdirectory(SFML)
+endif()
