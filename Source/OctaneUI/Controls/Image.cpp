@@ -77,7 +77,13 @@ void Image::OnPaint(Paint& Brush) const
 		return;
 	}
 
-	Brush.Image(GetAbsoluteBounds(), m_UVs, m_Texture, Color(255, 255, 255, 255));
+	const Vector2 Size = m_Texture->GetSize();
+	const Rect TexCoords(
+		m_UVs.Min / Size,
+		m_UVs.Max / Size
+	);
+
+	Brush.Image(GetAbsoluteBounds(), TexCoords, m_Texture, Color(255, 255, 255, 255));
 }
 
 void Image::OnLoad(const Json& Root)
