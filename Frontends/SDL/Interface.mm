@@ -306,17 +306,31 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 		switch (Event.type)
 		{
 		case SDL_QUIT: return OctaneUI::Event(OctaneUI::Event::Type::WindowClosed);
+
 		case SDL_MOUSEMOTION: return OctaneUI::Event(
 			OctaneUI::Event::MouseMove(Event.motion.x, Event.motion.y)
 		);
+
 		case SDL_MOUSEBUTTONDOWN: return OctaneUI::Event(
 			OctaneUI::Event::Type::MousePressed,
 			OctaneUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y)
 		);
+
 		case SDL_MOUSEBUTTONUP: return OctaneUI::Event(
 			OctaneUI::Event::Type::MouseReleased,
 			OctaneUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y)
 		);
+
+		case SDL_WINDOWEVENT:
+		{
+			switch (Event.window.event)
+			{
+			case SDL_WINDOWEVENT_RESIZED: return OctaneUI::Event(
+				OctaneUI::Event::WindowResized((float)Event.window.data1, (float)Event.window.data2)
+			);
+			}
+		}
+
 		default: break;
 		}
 	}
