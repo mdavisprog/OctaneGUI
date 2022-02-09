@@ -327,6 +327,9 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 		SDL_GetRendererOutputSize(Item.Renderer, &Width, &Height);
 		Layer.drawableSize = CGSizeMake(Width, Height);
 
+		OctaneUI::Vector2 WindowSize = Window->GetSize();
+		OctaneUI::Vector2 Scale((float)Width / WindowSize.X, (float)Height / WindowSize.Y);
+
 		[Encoder setCullMode:MTLCullModeNone];
 		[Encoder setDepthStencilState:g_DepthStencil];
 
@@ -334,8 +337,8 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 		{
 			.originX = 0.0,
 			.originY = 0.0,
-			.width = (double)Width,
-			.height = (double)Height,
+			.width = (double)(WindowSize.X * Scale.X),
+			.height = (double)(WindowSize.Y * Scale.Y),
 			.znear = 0.0,
 			.zfar = 1.0
 		};
@@ -345,9 +348,9 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 		float PosY = 0.0f;
 
 		float L = PosX;
-		float R = PosX + (float)Width;
+		float R = PosX + WindowSize.X;
 		float T = PosY;
-		float B = PosY + (float)Height;
+		float B = PosY + WindowSize.Y;
 		float Near = Viewport.znear;
 		float Far = Viewport.zfar;
 		const float Ortho[4][4] =
