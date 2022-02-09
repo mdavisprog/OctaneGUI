@@ -127,7 +127,7 @@ bool Font::Load(const char* Path, float Size)
 	return true;
 }
 
-bool Font::Draw(int32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoords, bool NormalizeTexCoords) const
+bool Font::Draw(int32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoords) const
 {
 	if (Char < 0 || Char >= m_Glyphs.size())
 	{
@@ -144,16 +144,8 @@ bool Font::Draw(int32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoords
 	Vertices.Min = Vector2((float)X, (float)Y);
 	Vertices.Max = Vertices.Min + ItemSize;
 
-	if (NormalizeTexCoords)
-	{
-		TexCoords.Min = Item.m_Min * InvertedSize;
-		TexCoords.Max = Item.m_Max * InvertedSize;
-	}
-	else
-	{
-		TexCoords.Min = Item.m_Min;
-		TexCoords.Max = Item.m_Max;
-	}
+	TexCoords.Min = Item.m_Min * InvertedSize;
+	TexCoords.Max = Item.m_Max * InvertedSize;
 
 	Position += Item.m_Advance;
 	
