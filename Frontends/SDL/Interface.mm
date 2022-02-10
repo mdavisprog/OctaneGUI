@@ -317,7 +317,9 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 		return OctaneUI::Event(OctaneUI::Event::Type::WindowClosed);
 	}
 
+	std::vector<SDL_Event> EventsToPush;
 	const Container& Item = Windows[Window];
+	const uint32_t WindowID = SDL_GetWindowID(Item.Window);
 	SDL_Event Event;
 	while (SDL_PollEvent(&Event))
 	{
@@ -325,46 +327,89 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 		{
 		case SDL_QUIT: return OctaneUI::Event(OctaneUI::Event::Type::WindowClosed);
 
-		case SDL_KEYDOWN: return OctaneUI::Event(
-			OctaneUI::Event::Type::KeyPressed,
-			OctaneUI::Event::Key(GetKey(Event.key.keysym.sym))
-		);
+		case SDL_KEYDOWN:
+		case SDL_KEYUP:
+		{
+			if (WindowID != Event.key.windowID)
+			{
+				EventsToPush.push_back(Event);
+				break;
+			}
 
-		case SDL_KEYUP: return OctaneUI::Event(
-			OctaneUI::Event::Type::KeyReleased,
-			OctaneUI::Event::Key(GetKey(Event.key.keysym.sym))
-		);
+			return OctaneUI::Event(
+				Event.key.type == SDL_KEYDOWN ? OctaneUI::Event::Type::KeyPressed : OctaneUI::Event::Type::KeyReleased,
+				OctaneUI::Event::Key(GetKey(Event.key.keysym.sym))
+			);
+		}
+		
+		case SDL_MOUSEMOTION:
+		{
+			if (WindowID != Event.motion.windowID)
+			{
+				EventsToPush.push_back(Event);
+				break;
+			}
 
-		case SDL_MOUSEMOTION: return OctaneUI::Event(
-			OctaneUI::Event::MouseMove(Event.motion.x, Event.motion.y)
-		);
+			return OctaneUI::Event(
+				OctaneUI::Event::MouseMove(Event.motion.x, Event.motion.y)
+			);
+		}
 
-		case SDL_MOUSEBUTTONDOWN: return OctaneUI::Event(
-			OctaneUI::Event::Type::MousePressed,
-			OctaneUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y)
-		);
+		case SDL_MOUSEBUTTONDOWN:
+		case SDL_MOUSEBUTTONUP:
+		{
+			if (WindowID != Event.button.windowID)
+			{
+				EventsToPush.push_back(Event);
+				break;
+			}
 
-		case SDL_MOUSEBUTTONUP: return OctaneUI::Event(
-			OctaneUI::Event::Type::MouseReleased,
-			OctaneUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y)
-		);
+			return OctaneUI::Event(
+				Event.button.type == SDL_MOUSEBUTTONDOWN ? OctaneUI::Event::Type::MousePressed : OctaneUI::Event::Type::MouseReleased,
+				OctaneUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y)
+			);
+		}
 
-		case SDL_TEXTINPUT: return OctaneUI::Event(
-			OctaneUI::Event::Text(*(uint32_t*)Event.text.text)
-		);
+		case SDL_TEXTINPUT: 
+		{
+			if (WindowID != Event.text.windowID)
+			{
+				EventsToPush.push_back(Event);
+				break;
+			}
+
+			return OctaneUI::Event(
+				OctaneUI::Event::Text(*(uint32_t*)Event.text.text)
+			);
+		}
 
 		case SDL_WINDOWEVENT:
 		{
+			if (WindowID != Event.window.windowID)
+			{
+				EventsToPush.push_back(Event);
+				break;
+			}
+
 			switch (Event.window.event)
 			{
 			case SDL_WINDOWEVENT_RESIZED: return OctaneUI::Event(
 				OctaneUI::Event::WindowResized((float)Event.window.data1, (float)Event.window.data2)
+			);
+
+			case SDL_WINDOWEVENT_CLOSE: return OctaneUI::Event(
+				OctaneUI::Event::Event::Type::WindowClosed
 			);
 			}
 		}
 
 		default: break;
 		}
+	}
+
+	for (SDL_Event& Value : EventsToPush)
+	{
+		SDL_PushEvent(&Value);
 	}
 
 	return OctaneUI::Event(OctaneUI::Event::Type::None);
