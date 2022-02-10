@@ -452,6 +452,37 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 		size_t IndexOffset = 0;
 		for (const OctaneUI::VertexBuffer& Item : Buffers)
 		{
+			MTLScissorRect Scissor =
+			{
+				.x = 0,
+				.y = 0,
+				.width = (NSUInteger)(WindowSize.X * Scale.X),
+				.height = (NSUInteger)(WindowSize.Y * Scale.Y)
+			};
+
+			const OctaneUI::ClipRegion& Clip = Item.GetClip();
+			if (Clip.IsValid())
+			{
+				OctaneUI::Vector2 Min = (Clip.GetBounds().Min /*- Clip.GetOffset()*/) * Scale;
+				OctaneUI::Vector2 Max = (Clip.GetBounds().Max /*- Clip.GetOffset()*/) * Scale;
+
+				Min.X = std::max<float>(Min.X, 0.0f);
+				Min.Y = std::max<float>(Min.Y, 0.0f);
+				Max.X = std::min<float>(Max.X, WindowSize.X * Scale.X);
+				Max.Y = std::min<float>(Max.Y, WindowSize.Y * Scale.Y);
+
+				OctaneUI::Vector2 ClipSize = Max - Min;
+				Scissor =
+				{
+					.x = (NSUInteger)Min.X,
+					.y = (NSUInteger)Min.Y,
+					.width = (NSUInteger)ClipSize.X,
+					.height = (NSUInteger)ClipSize.Y
+				};
+			}
+
+			[Encoder setScissorRect:Scissor];
+
 			// TODO: Investigate a way to have a single MTLRenderPipelineState.
 			// These are split up into two states for how we sample a texture in the fragment
 			// for one pipeline and only use the vertex color for the other.
