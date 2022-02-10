@@ -110,7 +110,7 @@ void Checkbox::OnPaint(Paint& Brush) const
 		const Vector2 Position = BoxPosition + BoxSize * 0.5f - TexCoords.GetSize() * 0.5f;
 		Brush.Image(
 			Rect(Position, Position + TexCoords.GetSize()),
-			TexCoords,
+			GetWindow()->GetIcons()->GetUVsNormalized(Icons::Type::Check),
 			GetWindow()->GetIcons()->GetTexture(),
 			Color(255, 255, 255, 255)
 		);

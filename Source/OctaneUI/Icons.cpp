@@ -106,4 +106,14 @@ Rect Icons::GetUVs(Type InType) const
 	return m_UVs[(int)InType];
 }
 
+Rect Icons::GetUVsNormalized(Type InType) const
+{
+	const Rect& UVs = m_UVs[(int)InType];
+	const Vector2 Size = m_Texture->GetSize();
+	return Rect(
+		UVs.Min / Size,
+		UVs.Max / Size	
+	);
+}
+
 }

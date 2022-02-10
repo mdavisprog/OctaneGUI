@@ -52,6 +52,7 @@ public:
 	void Initialize();
 	std::shared_ptr<Texture> GetTexture() const;
 	Rect GetUVs(Type InType) const;
+	Rect GetUVsNormalized(Type InType) const;
 
 private:
 	std::shared_ptr<Texture> m_Texture;
