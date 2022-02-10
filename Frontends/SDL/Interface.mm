@@ -148,6 +148,24 @@ id<MTLTexture> GetTexture(uint32_t ID)
 	return nullptr;
 }
 
+OctaneUI::Keyboard::Key GetKey(SDL_Keycode Code)
+{
+	switch (Code)
+	{
+	case SDLK_BACKSPACE: return OctaneUI::Keyboard::Key::Backspace;
+	case SDLK_DELETE: return OctaneUI::Keyboard::Key::Delete;
+	case SDLK_LEFT: return OctaneUI::Keyboard::Key::Left;
+	case SDLK_RIGHT: return OctaneUI::Keyboard::Key::Right;
+	case SDLK_HOME: return OctaneUI::Keyboard::Key::Home;
+	case SDLK_END: return OctaneUI::Keyboard::Key::End;
+	case SDLK_LSHIFT: return OctaneUI::Keyboard::Key::LeftShift;
+	case SDLK_RSHIFT: return OctaneUI::Keyboard::Key::RightShift;
+	default: break;
+	}
+
+	return OctaneUI::Keyboard::Key::None;
+}
+
 OctaneUI::Mouse::Button GetMouseButton(uint8_t Button)
 {
 	switch (Button)
@@ -306,6 +324,16 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 		switch (Event.type)
 		{
 		case SDL_QUIT: return OctaneUI::Event(OctaneUI::Event::Type::WindowClosed);
+
+		case SDL_KEYDOWN: return OctaneUI::Event(
+			OctaneUI::Event::Type::KeyPressed,
+			OctaneUI::Event::Key(GetKey(Event.key.keysym.sym))
+		);
+
+		case SDL_KEYUP: return OctaneUI::Event(
+			OctaneUI::Event::Type::KeyReleased,
+			OctaneUI::Event::Key(GetKey(Event.key.keysym.sym))
+		);
 
 		case SDL_MOUSEMOTION: return OctaneUI::Event(
 			OctaneUI::Event::MouseMove(Event.motion.x, Event.motion.y)
