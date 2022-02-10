@@ -102,7 +102,7 @@ void TextInput::OnPaint(Paint& Brush) const
 		Rect SelectBounds;
 		SelectBounds.Min = Vector2(MinSize.X, 0.0f);
 		SelectBounds.Max = SelectBounds.Min + Vector2(Size.X + GetTheme()->GetFont()->GetSpaceSize().X, GetTheme()->GetFont()->GetSize());
-		SelectBounds.Move(GetAbsolutePosition());
+		SelectBounds.Move(m_Text->GetAbsolutePosition());
 
 		Brush.Rectangle(SelectBounds, TheTheme->GetColor(Theme::Colors::TextInput_Selection));
 	}
@@ -238,6 +238,8 @@ void TextInput::MovePosition(int32_t Count, bool UseAnchor)
 		m_Offset.X = Position.X - GetSize().X + GetTheme()->GetFont()->GetSpaceSize().X;
 	}
 
+	const Vector2 TextPos = m_Text->GetPosition();
+	m_Text->SetPosition(-m_Offset.X, TextPos.Y);
 	Invalidate();
 }
 
