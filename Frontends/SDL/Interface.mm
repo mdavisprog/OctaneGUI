@@ -321,6 +321,10 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 			OctaneUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y)
 		);
 
+		case SDL_TEXTINPUT: return OctaneUI::Event(
+			OctaneUI::Event::Text(*(uint32_t*)Event.text.text)
+		);
+
 		case SDL_WINDOWEVENT:
 		{
 			switch (Event.window.event)
