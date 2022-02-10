@@ -41,6 +41,7 @@ public:
 	Rect GetBounds() const;
 	Vector2 GetSize() const;
 	Vector2 GetOffset() const;
+	bool IsValid() const;
 
 private:
 	Rect m_Bounds;

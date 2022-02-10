@@ -60,4 +60,9 @@ Vector2 ClipRegion::GetOffset() const
 	return m_Offset;
 }
 
+bool ClipRegion::IsValid() const
+{
+	return m_Bounds.GetSize().X > 0.0f && m_Bounds.GetSize().Y > 0.0f;
+}
+
 }
