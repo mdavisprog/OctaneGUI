@@ -183,6 +183,19 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 		const std::vector<OctaneUI::Vertex>& Vertices = Buffer.GetVertices();
 		const std::vector<uint32_t>& Indices = Buffer.GetIndices();
 		sf::VertexArray Array(sf::Triangles, Indices.size());
+		sf::Texture* Texture = nullptr;
+
+		if (Buffer.GetTextureID() > 0)
+		{
+			for (sf::Texture* Value : Textures)
+			{
+				if (Value->getNativeHandle() == Buffer.GetTextureID())
+				{
+					Texture = Value;
+					break;
+				}
+			}
+		}
 
 		for (size_t I = 0; I < Indices.size(); I++)
 		{
@@ -191,24 +204,21 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 			OctaneUI::Vector2 Position = Vertex.Position;
 			OctaneUI::Vector2 TexCoords = Vertex.TexCoords;
 			OctaneUI::Color Color = Vertex.Col;
+
+			if (Texture != nullptr)
+			{
+				// Convert from normalized coordintaes to pixel space.
+				TexCoords.X *= Texture->getSize().x;
+				TexCoords.Y *= Texture->getSize().y;
+			}
+
 			Array[I].position = sf::Vector2f(Position.X, Position.Y);
 			Array[I].texCoords = sf::Vector2f(TexCoords.X, TexCoords.Y);
 			Array[I].color = sf::Color(Color.R, Color.G, Color.B, Color.A);
 		}
 
 		sf::RenderStates RenderStates;
-
-		if (Buffer.GetTextureID() > 0)
-		{
-			for (const sf::Texture* Texture : Textures)
-			{
-				if (Texture->getNativeHandle() == Buffer.GetTextureID())
-				{
-					RenderStates.texture = Texture;
-					break;
-				}
-			}
-		}
+		RenderStates.texture = Texture;
 
 		const OctaneUI::ClipRegion& Clip = Buffer.GetClip();
 		const OctaneUI::Vector2 ClipSize = Clip.GetSize();
