@@ -69,6 +69,11 @@ Vector2 Rect::GetCenter() const
 	return Min + GetSize() * 0.5f;
 }
 
+bool Rect::IsZero() const
+{
+	return Width() == 0.0f && Height() == 0.0f;
+}
+
 bool Rect::Contains(float X, float Y) const
 {
 	return Contains(Vector2(X, Y));
