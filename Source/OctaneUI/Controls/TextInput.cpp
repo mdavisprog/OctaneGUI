@@ -175,6 +175,12 @@ void TextInput::OnText(uint32_t Code)
 		return;
 	}
 
+	// Check for delete character.
+	if (Code == 127)
+	{
+		return;
+	}
+
 	std::string Contents = m_Text->GetText();
 	Contents.insert(Contents.begin() + m_Position, (int8_t)Code);
 	SetText(Contents.c_str());
