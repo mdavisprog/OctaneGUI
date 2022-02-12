@@ -24,34 +24,56 @@ SOFTWARE.
 
 */
 
-#pragma once
-
-#include "Application.h"
-#include "Color.h"
-#include "Controls/Button.h"
-#include "Controls/Container.h"
-#include "Controls/Control.h"
-#include "Controls/ControlList.h"
-#include "Controls/HorizontalContainer.h"
-#include "Controls/Image.h"
-#include "Controls/Menu.h"
-#include "Controls/MenuBar.h"
-#include "Controls/MenuItem.h"
-#include "Controls/Panel.h"
-#include "Controls/Text.h"
-#include "Controls/TextSelectable.h"
-#include "Controls/VerticalContainer.h"
-#include "ClipRegion.h"
 #include "DrawCommand.h"
-#include "Event.h"
-#include "Font.h"
-#include "Json.h"
-#include "Keyboard.h"
-#include "Mouse.h"
-#include "Paint.h"
-#include "Rect.h"
-#include "Theme.h"
-#include "Vector2.h"
-#include "Vertex.h"
-#include "VertexBuffer.h"
-#include "Window.h"
+
+namespace OctaneUI
+{
+
+DrawCommand::DrawCommand(uint32_t VertexOffset, uint32_t IndexOffset, uint32_t IndexCount, uint32_t TextureID, Rect Clip)
+    : m_VertexOffset(VertexOffset)
+    , m_IndexOffset(IndexOffset)
+    , m_IndexCount(IndexCount)
+    , m_TextureID(TextureID)
+    , m_Clip(Clip)
+{
+}
+
+uint32_t DrawCommand::VertexOffset() const
+{
+    return m_VertexOffset;
+}
+
+uint32_t DrawCommand::IndexOffset() const
+{
+    return m_IndexOffset;
+}
+
+uint32_t DrawCommand::IndexCount() const
+{
+    return m_IndexCount;
+}
+
+uint32_t DrawCommand::TextureID() const
+{
+    return m_TextureID;
+}
+
+Rect DrawCommand::Clip() const
+{
+    return m_Clip;
+}
+
+DrawCommand::DrawCommand()
+    : m_VertexOffset(0)
+    , m_IndexOffset(0)
+    , m_IndexCount(0)
+    , m_TextureID(0)
+    , m_Clip()
+{
+}
+
+DrawCommand::~DrawCommand()
+{
+}
+
+}

@@ -26,32 +26,33 @@ SOFTWARE.
 
 #pragma once
 
-#include "Application.h"
-#include "Color.h"
-#include "Controls/Button.h"
-#include "Controls/Container.h"
-#include "Controls/Control.h"
-#include "Controls/ControlList.h"
-#include "Controls/HorizontalContainer.h"
-#include "Controls/Image.h"
-#include "Controls/Menu.h"
-#include "Controls/MenuBar.h"
-#include "Controls/MenuItem.h"
-#include "Controls/Panel.h"
-#include "Controls/Text.h"
-#include "Controls/TextSelectable.h"
-#include "Controls/VerticalContainer.h"
-#include "ClipRegion.h"
-#include "DrawCommand.h"
-#include "Event.h"
-#include "Font.h"
-#include "Json.h"
-#include "Keyboard.h"
-#include "Mouse.h"
-#include "Paint.h"
 #include "Rect.h"
-#include "Theme.h"
-#include "Vector2.h"
-#include "Vertex.h"
-#include "VertexBuffer.h"
-#include "Window.h"
+
+#include <cstdint>
+
+namespace OctaneUI
+{
+
+class DrawCommand
+{
+public:
+    DrawCommand(uint32_t VertexOffset, uint32_t IndexOffset, uint32_t IndexCount, uint32_t TextureID, Rect Clip);
+    ~DrawCommand();
+
+    uint32_t VertexOffset() const;
+    uint32_t IndexOffset() const;
+    uint32_t IndexCount() const;
+    uint32_t TextureID() const;
+    Rect Clip() const;
+
+private:
+    DrawCommand();
+
+    uint32_t m_VertexOffset;
+    uint32_t m_IndexOffset;
+    uint32_t m_IndexCount;
+    uint32_t m_TextureID;
+    Rect m_Clip;
+};
+
+}

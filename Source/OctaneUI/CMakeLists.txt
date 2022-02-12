@@ -21,6 +21,7 @@ set(SOURCE
 	Class.cpp
 	ClipRegion.cpp
 	Color.cpp
+	DrawCommand.cpp
 	Event.cpp
 	Font.cpp
 	Icons.cpp
