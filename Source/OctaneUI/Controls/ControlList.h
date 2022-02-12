@@ -6,18 +6,7 @@
 
 namespace OctaneUI
 {
-
-class Button;
-class Checkbox;
-class Container;
 class Control;
-class Image;
-class Menu;
-class MenuBar;
-class MenuItem;
-class Text;
-class TextInput;
-class TextSelectable;
 
 class ControlList
 {
@@ -28,17 +17,10 @@ public:
 	void AddControl(const std::shared_ptr<Control>& InControl);
 	bool Contains(const char* ID) const;
 
-	std::shared_ptr<Button> ToButton(const char* ID) const;
-	std::shared_ptr<Checkbox> ToCheckbox(const char* ID) const;
-	std::shared_ptr<Container> ToContainer(const char* ID) const;
-	std::shared_ptr<Control> ToControl(const char* ID) const;
-	std::shared_ptr<Image> ToImage(const char* ID) const;
-	std::shared_ptr<Menu> ToMenu(const char* ID) const;
-	std::shared_ptr<MenuBar> ToMenuBar(const char* ID) const;
-	std::shared_ptr<MenuItem> ToMenuItem(const char* ID) const;
-	std::shared_ptr<Text> ToText(const char* ID) const;
-	std::shared_ptr<TextInput> ToTextInput(const char* ID) const;
-	std::shared_ptr<TextSelectable> ToTextSelectable(const char* ID) const;
+	template<class T> std::shared_ptr<T> To(const char* ID) const
+	{
+		return std::dynamic_pointer_cast<T>(m_Controls.at(ID));
+	}
 
 private:
 	typedef std::unordered_map<std::string, std::shared_ptr<Control>> Map;

@@ -42,12 +42,12 @@ TEST_CASE(Press,
 	VERIFY(List.Contains("Button"))
 
 	bool Pressed = false;
-	List.ToButton("Button")->SetOnPressed([&]()
+	List.To<OctaneUI::Button>("Button")->SetOnPressed([&]()
 	{
 		Pressed = true;
 	});
 
-	OctaneUI::Vector2 Position = List.ToButton("Button")->GetAbsoluteBounds().GetCenter();
+	OctaneUI::Vector2 Position = List.To<OctaneUI::Button>("Button")->GetAbsoluteBounds().GetCenter();
 
 	Application.GetMainWindow()->OnMouseMove(Position);
 	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);

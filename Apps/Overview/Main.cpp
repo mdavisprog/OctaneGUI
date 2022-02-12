@@ -57,12 +57,13 @@ int main(int argc, char **argv)
 	OctaneUI::ControlList List;
 	Application.GetMainWindow()->Load(Buffer.c_str(), List);
 
-	List.ToMenuItem("File.Quit")->SetOnSelected([&](OctaneUI::MenuItem* Item) -> void
+	List.To<OctaneUI::MenuItem>("File.Quit")->SetOnSelected([&](OctaneUI::MenuItem* Item) -> void
 	{
 		Application.Quit();
 	});
 
 	List.ToButton("OKBtn")->SetOnPressed([&]() -> void
+	List.To<OctaneUI::Button>("OKBtn")->SetOnPressed([&]() -> void
 	{
 		printf("OK\n");
 	});
