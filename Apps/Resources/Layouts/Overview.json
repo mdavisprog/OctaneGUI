@@ -46,7 +46,8 @@
 						"Type": "Checkbox",
 						"Text": {
 							"Text": "Checkbox"
-						}
+						},
+						"TriState": true
 					},
 					{
 						"Type": "Image",
