@@ -74,7 +74,7 @@ uint32_t VertexBuffer::GetIndexCount() const
 
 DrawCommand& VertexBuffer::PushCommand(uint32_t IndexCount, uint32_t TextureID, Rect Clip)
 {
-	m_Commands.emplace_back(m_Vertices.size(), m_Indices.size(), IndexCount, TextureID, Clip);
+	m_Commands.emplace_back((uint32_t)m_Vertices.size(), (uint32_t)m_Indices.size(), IndexCount, TextureID, Clip);
 	return m_Commands.back();
 }
 
