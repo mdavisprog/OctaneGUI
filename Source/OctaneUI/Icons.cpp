@@ -47,22 +47,22 @@ void Icons::Initialize()
 		return;
 	}
 
-	const uint32_t Width = 23;
+	const uint32_t Width = 26;
 	const uint32_t Height = 12;
 	const char* Data =
-	"x                    x "
-	"x.x                 x.x"
-	"x..x               x.x "
-	"x...x             x.x  "
-	"x....x           x.x   "
-	"x.....x         x.x    "
-	"x......x x     x.x     "
-	"x.....x x.x   x.x      "
-	"x....x   x.x x.x       "
-	"x...x     x.x.x        "
-	"x..x       x.x         "
-	"x.x         x          "
-	"x                      ";
+	"x                     xx  "
+	"x.x                  x..x "
+	"x..x                x..x  "
+	"x...x              x..x   "
+	"x....x            x..x    "
+	"x.....x          x..x     "
+	"x......x xx     x..x      "
+	"x.....x x..x   x..x       "
+	"x....x   x..x x..x        "
+	"x...x     x..x..x         "
+	"x..x       x...x          "
+	"x.x         xxx           "
+	"x                         ";
 
 	std::vector<uint8_t> Buffer;
 	Buffer.resize(Width * Height * 4);
@@ -93,7 +93,7 @@ void Icons::Initialize()
 	m_Texture = Texture::Load(Buffer, Width, Height);
 
 	m_UVs[(int)Type::Expand] = Rect(0.0f, 0.0f, 8.0f, 12.0f);
-	m_UVs[(int)Type::Check] = Rect(8.0f, 0.0f, 23.0f, 12.0f);
+	m_UVs[(int)Type::Check] = Rect(8.0f, 0.0f, 26.0f, 12.0f);
 }
 
 std::shared_ptr<Texture> Icons::GetTexture() const
