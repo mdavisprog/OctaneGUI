@@ -100,8 +100,8 @@ void TextInput::OnPaint(Paint& Brush) const
 		const Vector2 Size = GetTheme()->GetFont()->Measure(Selected);
 
 		Rect SelectBounds;
-		SelectBounds.Min = Vector2(MinSize.X, 0.0f);
-		SelectBounds.Max = SelectBounds.Min + Vector2(Size.X + GetTheme()->GetFont()->GetSpaceSize().X, GetTheme()->GetFont()->GetSize());
+		SelectBounds.Min = Vector2(MinSize.X, -5.0f);
+		SelectBounds.Max = SelectBounds.Min + Vector2(Size.X, GetTheme()->GetFont()->GetSize() - 5.0f);
 		SelectBounds.Move(m_Text->GetAbsolutePosition());
 
 		Brush.Rectangle(SelectBounds, TheTheme->GetColor(Theme::Colors::TextInput_Selection));
