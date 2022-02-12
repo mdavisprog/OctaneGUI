@@ -30,9 +30,6 @@ namespace OctaneUI
 {
 
 VertexBuffer::VertexBuffer()
-	: m_TextureID(0)
-	, m_Offset(0)
-	, m_Clip()
 {
 }
 
@@ -75,34 +72,15 @@ uint32_t VertexBuffer::GetIndexCount() const
 	return m_Indices.size();
 }
 
-void VertexBuffer::SetTextureID(uint32_t TextureID)
+DrawCommand& VertexBuffer::PushCommand(uint32_t IndexCount, uint32_t TextureID, Rect Clip)
 {
-	m_TextureID = TextureID;
+	m_Commands.emplace_back(m_Vertices.size(), m_Indices.size(), IndexCount, TextureID, Clip);
+	return m_Commands.back();
 }
 
-uint32_t VertexBuffer::GetTextureID() const
+const std::vector<DrawCommand>& VertexBuffer::Commands() const
 {
-	return m_TextureID;
-}
-
-void VertexBuffer::IncOffset(uint32_t Amount)
-{
-	m_Offset += Amount;
-}
-
-uint32_t VertexBuffer::GetOffset() const
-{
-	return m_Offset;
-}
-
-void VertexBuffer::SetClip(const ClipRegion& Clip)
-{
-	m_Clip = Clip;
-}
-
-const ClipRegion& VertexBuffer::GetClip() const
-{
-	return m_Clip;
+	return m_Commands;
 }
 
 }

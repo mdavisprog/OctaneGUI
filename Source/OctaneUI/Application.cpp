@@ -250,7 +250,7 @@ Application& Application::SetOnExit(OnEmptySignature Fn)
 	return *this;
 }
 
-void Application::OnPaint(Window* InWindow, const std::vector<VertexBuffer>& Buffers)
+void Application::OnPaint(Window* InWindow, const VertexBuffer& Buffers)
 {
 	if (m_OnPaint)
 	{

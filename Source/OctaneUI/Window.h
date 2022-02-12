@@ -53,7 +53,7 @@ class VertexBuffer;
 class Window
 {
 public:
-	typedef std::function<void(Window*, const std::vector<VertexBuffer>&)> OnPaintSignature;
+	typedef std::function<void(Window*, const VertexBuffer&)> OnPaintSignature;
 
 	Window(Application* InApplication);
 	virtual ~Window();

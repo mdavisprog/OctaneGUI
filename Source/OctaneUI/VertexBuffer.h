@@ -26,7 +26,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "ClipRegion.h"
+#include "DrawCommand.h"
 #include "Vertex.h"
 
 #include <vector>
@@ -50,21 +50,13 @@ public:
 	uint32_t GetVertexCount() const;
 	uint32_t GetIndexCount() const;
 
-	void SetTextureID(uint32_t TextureID);
-	uint32_t GetTextureID() const;
-
-	void IncOffset(uint32_t Amount);
-	uint32_t GetOffset() const;
-
-	void SetClip(const ClipRegion& Clip);
-	const ClipRegion& GetClip() const;
+	DrawCommand& PushCommand(uint32_t IndexCount, uint32_t TextureID, Rect Clip);
+	const std::vector<DrawCommand>& Commands() const;
 
 private:
 	std::vector<Vertex> m_Vertices;
 	std::vector<uint32_t> m_Indices;
-	uint32_t m_TextureID;
-	uint32_t m_Offset;
-	ClipRegion m_Clip;
+	std::vector<DrawCommand> m_Commands;
 };
 
 }

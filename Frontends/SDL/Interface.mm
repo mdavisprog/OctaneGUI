@@ -415,7 +415,7 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 	return OctaneUI::Event(OctaneUI::Event::Type::None);
 }
 
-void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>& Buffers)
+void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& VertexBuffer)
 {
 	if (Windows.find(Window) == Windows.end())
 	{
@@ -482,20 +482,13 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 
 		// TODO: Callback should give a buffer object that contains the full list of vertices and indices,
 		// and a vector of draw commands to issue.
-		std::vector<OctaneUI::Vertex> Vertices;
-		std::vector<uint32_t> Indices;
-		for (const OctaneUI::VertexBuffer& Item : Buffers)
-		{
-			Vertices.insert(Vertices.end(), Item.GetVertices().begin(), Item.GetVertices().end());
-			Indices.insert(Indices.end(), Item.GetIndices().begin(), Item.GetIndices().end());
-		}
+		const std::vector<OctaneUI::Vertex>& Vertices = VertexBuffer.GetVertices();
+		const std::vector<uint32_t>& Indices = VertexBuffer.GetIndices();
 
 		memcpy(g_VertexBuffer.contents, Vertices.data(), Vertices.size() * sizeof(OctaneUI::Vertex));
 		memcpy(g_IndexBuffer.contents, Indices.data(), Indices.size() * sizeof(uint32_t));
 
-		size_t VertexOffset = 0;
-		size_t IndexOffset = 0;
-		for (const OctaneUI::VertexBuffer& Item : Buffers)
+		for (const OctaneUI::DrawCommand& Command : VertexBuffer.Commands())
 		{
 			MTLScissorRect Scissor =
 			{
@@ -505,18 +498,18 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 				.height = (NSUInteger)(WindowSize.Y * Scale.Y)
 			};
 
-			const OctaneUI::ClipRegion& Clip = Item.GetClip();
-			if (Clip.IsValid())
+			const OctaneUI::Rect Clip = Command.Clip();
+			if (!Clip.IsZero())
 			{
-				OctaneUI::Vector2 Min = (Clip.GetBounds().Min /*- Clip.GetOffset()*/) * Scale;
-				OctaneUI::Vector2 Max = (Clip.GetBounds().Max /*- Clip.GetOffset()*/) * Scale;
+				OctaneUI::Vector2 Min = Clip.Min * Scale;
+				OctaneUI::Vector2 Max = Clip.Max * Scale;
 
 				Min.X = std::max<float>(Min.X, 0.0f);
 				Min.Y = std::max<float>(Min.Y, 0.0f);
 				Max.X = std::min<float>(Max.X, WindowSize.X * Scale.X);
 				Max.Y = std::min<float>(Max.Y, WindowSize.Y * Scale.Y);
 
-				OctaneUI::Vector2 ClipSize = Max - Min;
+				const OctaneUI::Vector2 ClipSize = Max - Min;
 				Scissor =
 				{
 					.x = (NSUInteger)Min.X,
@@ -531,7 +524,7 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 			// TODO: Investigate a way to have a single MTLRenderPipelineState.
 			// These are split up into two states for how we sample a texture in the fragment
 			// for one pipeline and only use the vertex color for the other.
-			id<MTLTexture> Texture = GetTexture(Item.GetTextureID());
+			id<MTLTexture> Texture = GetTexture(Command.TextureID());
 			if (Texture)
 			{
 				[Encoder setRenderPipelineState:g_RenderPipelineTextured];
@@ -542,17 +535,14 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 				[Encoder setRenderPipelineState:g_RenderPipeline];
 			}
 
-			[Encoder setVertexBufferOffset:VertexOffset atIndex:0];
+			[Encoder setVertexBufferOffset:Command.VertexOffset() * sizeof(OctaneUI::Vertex) atIndex:0];
 			[Encoder
 				drawIndexedPrimitives:MTLPrimitiveTypeTriangle
-				indexCount:Item.GetIndices().size()
+				indexCount:Command.IndexCount()
 				indexType:MTLIndexTypeUInt32
 				indexBuffer:g_IndexBuffer
-				indexBufferOffset:IndexOffset
+				indexBufferOffset:Command.IndexOffset() * sizeof(uint32_t)
 			];
-
-			VertexOffset += Item.GetVertices().size() * sizeof(OctaneUI::Vertex);
-			IndexOffset += Item.GetIndices().size() * sizeof(uint32_t);
 		}
 
 		[Encoder endEncoding];

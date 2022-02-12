@@ -75,7 +75,7 @@ void TextInput::OnPaint(Paint& Brush) const
 		Brush.RectangleOutline(Bounds, TheTheme->GetColor(Theme::Colors::TextInput_FocusedOutline));
 	}
 
-	Brush.PushClip(GetAbsoluteBounds(), m_Offset);
+	Brush.PushClip(GetAbsoluteBounds());
 	m_Text->OnPaint(Brush);
 
 	if (m_Focused)

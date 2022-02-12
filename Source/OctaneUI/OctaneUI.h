@@ -41,7 +41,6 @@ SOFTWARE.
 #include "Controls/Text.h"
 #include "Controls/TextSelectable.h"
 #include "Controls/VerticalContainer.h"
-#include "ClipRegion.h"
 #include "DrawCommand.h"
 #include "Event.h"
 #include "Font.h"

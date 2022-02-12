@@ -19,7 +19,6 @@ set(SOURCE
 	Controls/VerticalContainer.cpp
 	Application.cpp
 	Class.cpp
-	ClipRegion.cpp
 	Color.cpp
 	DrawCommand.cpp
 	Event.cpp

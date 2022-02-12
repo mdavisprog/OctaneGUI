@@ -48,7 +48,7 @@ class Application
 {
 public:
 	typedef std::function<void(Window*)> OnWindowSignature;
-	typedef std::function<void(Window*, const std::vector<VertexBuffer>&)> OnWindowPaintSignature;
+	typedef std::function<void(Window*, const VertexBuffer&)> OnWindowPaintSignature;
 	typedef std::function<Event(Window*)> OnWindowEventSignature;
 	typedef std::function<uint32_t(const std::vector<uint8_t>&, uint32_t, uint32_t)> OnLoadTextureSignature;
 
@@ -77,7 +77,7 @@ public:
 	Application& SetOnExit(OnEmptySignature Fn);
 
 private:
-	void OnPaint(Window* InWindow, const std::vector<VertexBuffer>& Buffers);
+	void OnPaint(Window* InWindow, const VertexBuffer& Buffer);
 	std::shared_ptr<Window> CreateWindow(const Json& Root);
 	void DestroyWindow(const std::shared_ptr<Window>& Item);
 	void ProcessEvent(const std::shared_ptr<Window>& Item);

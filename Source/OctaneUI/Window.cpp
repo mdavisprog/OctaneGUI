@@ -304,7 +304,7 @@ void Window::DoPaint(Paint& Brush)
 		m_Container->OnPaint(Brush);
 		m_Popup.OnPaint(Brush);
 		m_Repaint = false;
-		m_OnPaint(this, Brush.GetBuffers());
+		m_OnPaint(this, Brush.GetBuffer());
 	}
 }
 

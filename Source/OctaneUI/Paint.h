@@ -53,22 +53,22 @@ public:
 	void Text(const Vector2& Position, const std::string& Contents, const Color& Col);
 	void Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_ptr<Texture>& InTexture, const Color& Col);
 
-	void PushClip(const Rect& Bounds, const Vector2& Offset);
+	void PushClip(const Rect& Bounds);
 	void PopClip();
 
-	const std::vector<VertexBuffer>& GetBuffers() const;
+	const VertexBuffer& GetBuffer() const;
 	std::shared_ptr<Theme> GetTheme() const;
 
 private:
-	void AddLine(const Vector2& Start, const Vector2& End, const Color& Col, float Thickness, VertexBuffer& Buffer) const;
-	void AddTriangles(const Rect& Vertices, const Color& Col, VertexBuffer& Buffer) const;
-	void AddTriangles(const Rect& Vertices, const Rect& TexCoords, const Color& Col, VertexBuffer& Buffer) const;
-	void AddTriangleIndices(VertexBuffer& Buffer) const;
-	VertexBuffer& CreateBuffer();
+	void AddLine(const Vector2& Start, const Vector2& End, const Color& Col, float Thickness, uint32_t IndexOffset = 0);
+	void AddTriangles(const Rect& Vertices, const Color& Col, uint32_t IndexOffset = 0);
+	void AddTriangles(const Rect& Vertices, const Rect& TexCoords, const Color& Col, uint32_t IndexOffset = 0);
+	void AddTriangleIndices(uint32_t Offset);
+	DrawCommand& PushCommand(uint32_t IndexCount, uint32_t TextureID);
 
-	std::vector<VertexBuffer> m_Buffers;
 	std::shared_ptr<Theme> m_Theme;
-	std::vector<ClipRegion> m_ClipStack;
+	std::vector<Rect> m_ClipStack;
+	VertexBuffer m_Buffer;
 };
 
 }

@@ -35,7 +35,8 @@ namespace OctaneUI
 {
 
 Paint::Paint()
-	: m_Theme(nullptr)
+	: m_Buffer()
+	, m_Theme(nullptr)
 {
 }
 
@@ -50,14 +51,14 @@ Paint::~Paint()
 
 void Paint::Line(const Vector2& Start, const Vector2& End, const Color& Col, float Thickness)
 {
-	VertexBuffer& Buffer = CreateBuffer();
-	AddLine(Start, End, Col, Thickness, Buffer);
+	PushCommand(6, 0);
+	AddLine(Start, End, Col, Thickness);
 }
 
 void Paint::Rectangle(const Rect& Bounds, const Color& Col)
 {
-	VertexBuffer& Buffer = CreateBuffer();
-	AddTriangles(Bounds, Col, Buffer);
+	PushCommand(6, 0);
+	AddTriangles(Bounds, Col);
 }
 
 void Paint::RectangleOutline(const Rect& Bounds, const Color& Col, float Thickness)
@@ -65,11 +66,11 @@ void Paint::RectangleOutline(const Rect& Bounds, const Color& Col, float Thickne
 	const Vector2 TopRight(Bounds.Min + Vector2(Bounds.GetSize().X, 0.0f));
 	const Vector2 BottomLeft(Bounds.Min + Vector2(0.0f, Bounds.GetSize().Y));
 
-	VertexBuffer& Buffer = CreateBuffer();
-	AddLine(Bounds.Min, TopRight, Col, Thickness, Buffer);
-	AddLine(TopRight, Bounds.Max, Col, Thickness, Buffer);
-	AddLine(Bounds.Max, BottomLeft, Col, Thickness, Buffer);
-	AddLine(BottomLeft, Bounds.Min, Col, Thickness, Buffer);
+	PushCommand(6 * 4, 0);
+	AddLine(Bounds.Min, TopRight, Col, Thickness, 0);
+	AddLine(TopRight, Bounds.Max, Col, Thickness, 4);
+	AddLine(Bounds.Max, BottomLeft, Col, Thickness, 8);
+	AddLine(BottomLeft, Bounds.Min, Col, Thickness, 12);
 }
 
 void Paint::Text(const Vector2& Position, const std::string& Contents, const Color& Col)
@@ -80,18 +81,17 @@ void Paint::Text(const Vector2& Position, const std::string& Contents, const Col
 		return;
 	}
 
-	VertexBuffer& Buffer = CreateBuffer();
-	Buffer.SetTextureID(ThemeFont->GetID());
-
+	PushCommand(6 * Contents.length(), ThemeFont->GetID());
 	Vector2 Pos = Position;
+	uint32_t Offset = 0;
 	for (char Char : Contents)
 	{
 		Rect Vertices;
 		Rect TexCoords;
 
 		ThemeFont->Draw((int32_t)Char - 32, Pos, Vertices, TexCoords);
-		AddTriangles(Vertices, TexCoords, Col, Buffer);
-		Buffer.IncOffset(4);
+		AddTriangles(Vertices, TexCoords, Col, Offset);
+		Offset += 4;
 	}
 }
 
@@ -102,15 +102,13 @@ void Paint::Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_p
 		return;
 	}
 
-	VertexBuffer& Buffer = CreateBuffer();
-	Buffer.SetTextureID(InTexture->GetID());
-
-	AddTriangles(Bounds, TexCoords, Col, Buffer);
+	PushCommand(6, InTexture->GetID());
+	AddTriangles(Bounds, TexCoords, Col);
 }
 
-void Paint::PushClip(const Rect& Bounds, const Vector2& Offset)
+void Paint::PushClip(const Rect& Bounds)
 {
-	m_ClipStack.emplace_back(Bounds, Offset);
+	m_ClipStack.push_back(Bounds);
 }
 
 void Paint::PopClip()
@@ -118,9 +116,9 @@ void Paint::PopClip()
 	m_ClipStack.pop_back();
 }
 
-const std::vector<VertexBuffer>& Paint::GetBuffers() const
+const VertexBuffer& Paint::GetBuffer() const
 {
-	return m_Buffers;
+	return m_Buffer;
 }
 
 std::shared_ptr<Theme> Paint::GetTheme() const
@@ -128,64 +126,52 @@ std::shared_ptr<Theme> Paint::GetTheme() const
 	return m_Theme;
 }
 
-void Paint::AddLine(const Vector2& Start, const Vector2& End, const Color& Col, float Thickness, VertexBuffer& Buffer) const
+void Paint::AddLine(const Vector2& Start, const Vector2& End, const Color& Col, float Thickness, uint32_t Offset)
 {
 	const Vector2 Direction = (End - Start).Unit();
 	const float HalfThickness = Thickness * 0.5f;
 
-	Buffer.AddVertex(Start + Vector2(-Direction.Y, Direction.X) * HalfThickness, Col);
-	Buffer.AddVertex(End + Vector2(-Direction.Y, Direction.X) * HalfThickness, Col);
-	Buffer.AddVertex(End + Vector2(Direction.Y, -Direction.X) * HalfThickness, Col);
-	Buffer.AddVertex(Start + Vector2(Direction.Y, -Direction.X) * HalfThickness, Col);
+	m_Buffer.AddVertex(Start + Vector2(-Direction.Y, Direction.X) * HalfThickness, Col);
+	m_Buffer.AddVertex(End + Vector2(-Direction.Y, Direction.X) * HalfThickness, Col);
+	m_Buffer.AddVertex(End + Vector2(Direction.Y, -Direction.X) * HalfThickness, Col);
+	m_Buffer.AddVertex(Start + Vector2(Direction.Y, -Direction.X) * HalfThickness, Col);
 
-	AddTriangleIndices(Buffer);
-
-	Buffer.IncOffset(4);
+	AddTriangleIndices(Offset);
 }
 
-void Paint::AddTriangles(const Rect& Vertices, const Color& Col, VertexBuffer& Buffer) const
+void Paint::AddTriangles(const Rect& Vertices, const Color& Col, uint32_t Offset)
 {
-	Buffer.AddVertex(Vertices.Min, Col);
-	Buffer.AddVertex(Vector2(Vertices.Max.X, Vertices.Min.Y), Col);
-	Buffer.AddVertex(Vertices.Max, Col);
-	Buffer.AddVertex(Vector2(Vertices.Min.X, Vertices.Max.Y), Col);
+	m_Buffer.AddVertex(Vertices.Min, Col);
+	m_Buffer.AddVertex(Vector2(Vertices.Max.X, Vertices.Min.Y), Col);
+	m_Buffer.AddVertex(Vertices.Max, Col);
+	m_Buffer.AddVertex(Vector2(Vertices.Min.X, Vertices.Max.Y), Col);
 
-	AddTriangleIndices(Buffer);
+	AddTriangleIndices(Offset);
 }
 
-void Paint::AddTriangles(const Rect& Vertices, const Rect& TexCoords, const Color& Col, VertexBuffer& Buffer) const
+void Paint::AddTriangles(const Rect& Vertices, const Rect& TexCoords, const Color& Col, uint32_t Offset)
 {
-	Buffer.AddVertex(Vertices.Min, TexCoords.Min, Col);
-	Buffer.AddVertex(Vector2(Vertices.Max.X, Vertices.Min.Y), Vector2(TexCoords.Max.X, TexCoords.Min.Y), Col);
-	Buffer.AddVertex(Vertices.Max, TexCoords.Max, Col);
-	Buffer.AddVertex(Vector2(Vertices.Min.X, Vertices.Max.Y), Vector2(TexCoords.Min.X, TexCoords.Max.Y), Col);
+	m_Buffer.AddVertex(Vertices.Min, TexCoords.Min, Col);
+	m_Buffer.AddVertex(Vector2(Vertices.Max.X, Vertices.Min.Y), Vector2(TexCoords.Max.X, TexCoords.Min.Y), Col);
+	m_Buffer.AddVertex(Vertices.Max, TexCoords.Max, Col);
+	m_Buffer.AddVertex(Vector2(Vertices.Min.X, Vertices.Max.Y), Vector2(TexCoords.Min.X, TexCoords.Max.Y), Col);
 
-	AddTriangleIndices(Buffer);
+	AddTriangleIndices(Offset);
 }
 
-void Paint::AddTriangleIndices(VertexBuffer& Buffer) const
+void Paint::AddTriangleIndices(uint32_t Offset)
 {
-	const uint32_t Offset = Buffer.GetOffset();
-
-	Buffer.AddIndex(Offset);
-	Buffer.AddIndex(Offset + 1);
-	Buffer.AddIndex(Offset + 2);
-	Buffer.AddIndex(Offset);
-	Buffer.AddIndex(Offset + 2);
-	Buffer.AddIndex(Offset + 3);
+	m_Buffer.AddIndex(Offset);
+	m_Buffer.AddIndex(Offset + 1);
+	m_Buffer.AddIndex(Offset + 2);
+	m_Buffer.AddIndex(Offset);
+	m_Buffer.AddIndex(Offset + 2);
+	m_Buffer.AddIndex(Offset + 3);
 }
 
-VertexBuffer& Paint::CreateBuffer()
+DrawCommand& Paint::PushCommand(uint32_t IndexCount, uint32_t TextureID)
 {
-	m_Buffers.emplace_back();
-	VertexBuffer& Buffer = m_Buffers[m_Buffers.size() - 1];
-
-	if (!m_ClipStack.empty())
-	{
-		Buffer.SetClip(m_ClipStack.back());
-	}
-
-	return Buffer;
+	return m_Buffer.PushCommand(IndexCount, TextureID, !m_ClipStack.empty() ? m_ClipStack.back() : Rect());
 }
 
 }

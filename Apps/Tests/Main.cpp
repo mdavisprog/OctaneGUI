@@ -42,7 +42,7 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 	return OctaneUI::Event(OctaneUI::Event::Type::WindowClosed);
 }
 
-void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>& Buffers)
+void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& Buffers)
 {
 }
 
