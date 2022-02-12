@@ -275,14 +275,12 @@ void Container::GetControls(std::vector<std::shared_ptr<Control>>& Controls) con
 {
 	for (const std::shared_ptr<Control>& Item : m_Controls)
 	{
+		Controls.push_back(Item);
+
 		const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
 		if (ItemContainer)
 		{
 			ItemContainer->GetControls(Controls);
-		}
-		else
-		{
-			Controls.push_back(Item);
 		}
 	}
 }
