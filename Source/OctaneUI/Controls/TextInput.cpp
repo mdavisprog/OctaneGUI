@@ -82,7 +82,7 @@ void TextInput::OnPaint(Paint& Brush) const
 	{
 		const Vector2 Size = GetPositionLocation();
 
-		const Vector2 Start = m_Text->GetAbsolutePosition() + Vector2(Size.X, -5.0f);
+		const Vector2 Start = m_Text->GetAbsolutePosition() + Vector2(std::max<float>(Size.X, 2.0f), -5.0f);
 		const Vector2 End = Start + Vector2(0.0f, GetTheme()->GetFont()->GetSize() - 5.0f);
 		Brush.Line(Start, End, TheTheme->GetColor(Theme::Colors::TextInput_Cursor));
 	}
