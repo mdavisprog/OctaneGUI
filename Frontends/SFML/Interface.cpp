@@ -168,7 +168,7 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 	return OctaneUI::Event(OctaneUI::Event::Type::None);
 }
 
-void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>& Buffers)
+void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& Buffer)
 {
 	if (Windows.find(Window) == Windows.end())
 	{
@@ -178,18 +178,20 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 	Container& Item = Windows[Window];
 
 	Item.Renderer->clear();
-	for (const OctaneUI::VertexBuffer& Buffer : Buffers)
+
+	const std::vector<OctaneUI::Vertex>& Vertices = Buffer.GetVertices();
+	const std::vector<uint32_t>& Indices = Buffer.GetIndices();
+
+	for (const OctaneUI::DrawCommand& Command : Buffer.Commands())
 	{
-		const std::vector<OctaneUI::Vertex>& Vertices = Buffer.GetVertices();
-		const std::vector<uint32_t>& Indices = Buffer.GetIndices();
-		sf::VertexArray Array(sf::Triangles, Indices.size());
+		sf::VertexArray Array(sf::Triangles, Command.IndexCount());
 		sf::Texture* Texture = nullptr;
 
-		if (Buffer.GetTextureID() > 0)
+		if (Command.TextureID() > 0)
 		{
 			for (sf::Texture* Value : Textures)
 			{
-				if (Value->getNativeHandle() == Buffer.GetTextureID())
+				if (Value->getNativeHandle() == Command.TextureID())
 				{
 					Texture = Value;
 					break;
@@ -197,10 +199,10 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 			}
 		}
 
-		for (size_t I = 0; I < Indices.size(); I++)
+		for (size_t I = 0; I < Command.IndexCount(); I++)
 		{
-			uint32_t Index = Indices[I];
-			const OctaneUI::Vertex& Vertex = Vertices[Index];
+			uint32_t Index = Indices[I + Command.IndexOffset()];
+			const OctaneUI::Vertex& Vertex = Vertices[Index + Command.VertexOffset()];
 			OctaneUI::Vector2 Position = Vertex.Position;
 			OctaneUI::Vector2 TexCoords = Vertex.TexCoords;
 			OctaneUI::Color Color = Vertex.Col;
@@ -220,8 +222,8 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 		sf::RenderStates RenderStates;
 		RenderStates.texture = Texture;
 
-		const OctaneUI::ClipRegion& Clip = Buffer.GetClip();
-		if (Clip.IsValid())
+		const OctaneUI::Rect Clip = Command.Clip();
+		if (!Clip.IsZero())
 		{
 			sf::RenderTexture* BackBuffer = Item.BackBuffer;
 
@@ -231,10 +233,9 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 
 			sf::Sprite Sprite(BackBuffer->getTexture());
 
-			const OctaneUI::Rect Bounds = Clip.GetBounds();
 			const OctaneUI::Vector2 ClipSize = Clip.GetSize();
-			Sprite.setTextureRect(sf::IntRect((int)(Bounds.Min.X), (int)(Bounds.Min.Y), (int)ClipSize.X, (int)ClipSize.Y));
-			Sprite.setPosition(Bounds.Min.X, Bounds.Min.Y);
+			Sprite.setTextureRect(sf::IntRect((int)(Clip.Min.X), (int)(Clip.Min.Y), (int)ClipSize.X, (int)ClipSize.Y));
+			Sprite.setPosition(Clip.Min.X, Clip.Min.Y);
 			Item.Renderer->draw(Sprite, RenderStates);
 		}
 		else
@@ -242,6 +243,7 @@ void OnPaint(OctaneUI::Window* Window, const std::vector<OctaneUI::VertexBuffer>
 			Item.Renderer->draw(Array, RenderStates);
 		}
 	}
+
 	Item.Renderer->display();
 }
 
