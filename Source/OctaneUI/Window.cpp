@@ -316,19 +316,7 @@ void Window::Load(const char* JsonStream)
 void Window::Load(const char* JsonStream, ControlList& List)
 {
 	Load(Json::Parse(JsonStream));
-
-	std::vector<std::shared_ptr<MenuItem>> MenuItems;
-	m_MenuBar->GetMenuItems(MenuItems);
-
-	std::vector<std::shared_ptr<Control>> Controls;
-	m_Body->GetControls(Controls);
-
-	Controls.insert(Controls.end(), MenuItems.begin(), MenuItems.end());
-
-	for (const std::shared_ptr<Control>& Item : Controls)
-	{
-		List.AddControl(Item);
-	}
+	Populate(List);
 }
 
 void Window::Load(const Json& Root)
@@ -347,6 +335,12 @@ void Window::Load(const Json& Root)
 	m_Body->OnLoad(Body);
 }
 
+void Window::Load(const Json& Root, ControlList& List)
+{
+	Load(Root);
+	Populate(List);
+}
+
 void Window::Clear()
 {
 	m_MenuBar->ClearControls();
@@ -361,6 +355,25 @@ Window* Window::SetOnPaint(OnPaintSignature Fn)
 
 Window::Window()
 {
+}
+
+void Window::Populate(ControlList& List) const
+{
+	std::vector<std::shared_ptr<MenuItem>> MenuItems;
+	m_MenuBar->GetMenuItems(MenuItems);
+
+	std::vector<std::shared_ptr<Control>> Controls;
+	m_Body->GetControls(Controls);
+
+	Controls.insert(Controls.end(), MenuItems.begin(), MenuItems.end());
+
+	for (const std::shared_ptr<Control>& Item : Controls)
+	{
+		if (Item->HasID())
+		{
+			List.AddControl(Item);
+		}
+	}
 }
 
 }

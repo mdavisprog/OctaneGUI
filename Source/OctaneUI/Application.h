@@ -36,6 +36,7 @@ SOFTWARE.
 namespace OctaneUI
 {
 
+class ControlList;
 class Event;
 class Font;
 class Icons;
@@ -65,6 +66,7 @@ public:
 	std::shared_ptr<Window> GetMainWindow() const;
 	std::shared_ptr<Window> NewWindow(const char* Title, float Width, float Height);
 	std::shared_ptr<Window> NewWindow(const char* JsonStream);
+	std::shared_ptr<Window> NewWindow(const char* JsonStream, ControlList& List);
 	std::shared_ptr<Theme> GetTheme() const;
 	std::shared_ptr<Icons> GetIcons() const;
 	bool IsKeyPressed(Keyboard::Key Key) const;
@@ -78,7 +80,7 @@ public:
 
 private:
 	void OnPaint(Window* InWindow, const VertexBuffer& Buffer);
-	std::shared_ptr<Window> CreateWindow(const Json& Root);
+	std::shared_ptr<Window> CreateWindow(const Json& Root, ControlList& List);
 	void DestroyWindow(const std::shared_ptr<Window>& Item);
 	void ProcessEvent(const std::shared_ptr<Window>& Item);
 

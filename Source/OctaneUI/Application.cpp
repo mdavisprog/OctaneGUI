@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "Application.h"
 #include "Controls/Container.h"
+#include "Controls/ControlList.h"
 #include "Event.h"
 #include "Font.h"
 #include "Icons.h"
@@ -191,12 +192,19 @@ std::shared_ptr<Window> Application::NewWindow(const char* Title, float Width, f
 	Root["Width"] = Width;
 	Root["Height"] = Height;
 
-	return CreateWindow(Root);
+	ControlList List;
+	return CreateWindow(Root, List);
 }
 
 std::shared_ptr<Window> Application::NewWindow(const char* JsonStream)
 {
-	return CreateWindow(Json::Parse(JsonStream));
+	ControlList List;
+	return CreateWindow(Json::Parse(JsonStream), List);
+}
+
+std::shared_ptr<Window> Application::NewWindow(const char* JsonStream, ControlList& List)
+{
+	return CreateWindow(Json::Parse(JsonStream), List);
 }
 
 std::shared_ptr<Theme> Application::GetTheme() const
@@ -258,11 +266,11 @@ void Application::OnPaint(Window* InWindow, const VertexBuffer& Buffers)
 	}
 }
 
-std::shared_ptr<Window> Application::CreateWindow(const Json& Root)
+std::shared_ptr<Window> Application::CreateWindow(const Json& Root, ControlList& List)
 {
 	std::shared_ptr<Window> Result = std::make_shared<Window>(this);
 	Result->CreateContainer();
-	Result->Load(Root);
+	Result->Load(Root, List);
 	Result->SetOnPaint(std::bind(&Application::OnPaint, this, std::placeholders::_1, std::placeholders::_2));
 	m_Windows.push_back(Result);
 

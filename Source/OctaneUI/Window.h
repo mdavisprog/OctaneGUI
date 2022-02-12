@@ -89,12 +89,15 @@ public:
 	void Load(const char* JsonStream);
 	void Load(const char* JsonStream, ControlList& List);
 	void Load(const Json& Root);
+	void Load(const Json& Root, ControlList& List);
 	void Clear();
 
 	Window* SetOnPaint(OnPaintSignature Fn);
 
 private:
 	Window();
+
+	void Populate(ControlList& List) const;
 
 	Application* m_Application;
 	std::string m_Title;
