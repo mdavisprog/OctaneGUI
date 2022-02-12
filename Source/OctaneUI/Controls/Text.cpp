@@ -76,7 +76,7 @@ void Text::OnLoad(const Json& Root)
 {
 	Control::OnLoad(Root);
 
-	SetText(Root["Text"].GetString());
+	SetText(Root["Text"].String());
 }
 
 bool Text::IsFixedSize() const

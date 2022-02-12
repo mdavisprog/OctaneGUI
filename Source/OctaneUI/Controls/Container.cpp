@@ -301,11 +301,11 @@ void Container::OnLoad(const Json& Root)
 
 	const Json& Controls = Root["Controls"];
 
-	for (int I = 0; I < Controls.GetCount(); I++)
+	for (int I = 0; I < Controls.Count(); I++)
 	{
 		const Json& Item = Controls[I];
 
-		std::string Type = Item["Type"].GetString();
+		std::string Type = Item["Type"].String();
 		std::shared_ptr<Control> NewControl = CreateControl(Type);
 		if (NewControl)
 		{

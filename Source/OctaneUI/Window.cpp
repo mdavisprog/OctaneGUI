@@ -333,9 +333,9 @@ void Window::Load(const char* JsonStream, ControlList& List)
 
 void Window::Load(const Json& Root)
 {
-	const std::string Title = Root["Title"].GetString();
-	float Width = Root["Width"].GetNumberOr(640.0f);
-	float Height = Root["Height"].GetNumberOr(480.0f);
+	const std::string Title = Root["Title"].String();
+	float Width = Root["Width"].Number(640.0f);
+	float Height = Root["Height"].Number(480.0f);
 
 	const Json& MB = Root["MenuBar"];
 	const Json& Body = Root["Body"];

@@ -61,13 +61,10 @@ public:
 	bool IsObject() const;
 	bool IsString() const;
 
-	bool GetBoolean() const;
-	bool GetBooleanOr(bool Default) const;
-	float GetNumber() const;
-	float GetNumberOr(float Default) const;
-	const char* GetString() const;
-	const char* GetStringOr(const char* Default) const;
-	unsigned int GetCount() const;
+	bool Boolean(bool Default = false) const;
+	float Number(float Default = 0.0f) const;
+	const char* String(const char* Default = "") const;
+	unsigned int Count() const;
 
 	Json& operator=(bool Value);
 	Json& operator=(float Value);

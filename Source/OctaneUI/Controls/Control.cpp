@@ -227,7 +227,7 @@ void Control::OnUnfocused()
 
 void Control::OnLoad(const Json& Root)
 {
-	m_ID = Root["ID"].GetString();
+	m_ID = Root["ID"].String();
 }
 
 void Control::OnKeyPressed(Keyboard::Key Key)

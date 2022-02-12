@@ -136,7 +136,7 @@ void Checkbox::OnLoad(const Json& Root)
 	Control::OnLoad(Root);
 
 	m_Text->OnLoad(Root["Text"]);
-	SetTriState(Root["TriState"].GetBooleanOr(false));
+	SetTriState(Root["TriState"].Boolean(false));
 	UpdateSize();
 }
 

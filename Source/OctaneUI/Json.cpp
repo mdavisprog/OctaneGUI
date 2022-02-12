@@ -106,12 +106,7 @@ bool Json::IsString() const
 	return m_Type == Type::String;
 }
 
-bool Json::GetBoolean() const
-{
-	return m_Data.Bool();
-}
-
-bool Json::GetBooleanOr(bool Default) const
+bool Json::Boolean(bool Default) const
 {
 	if (!IsBoolean())
 	{
@@ -121,12 +116,7 @@ bool Json::GetBooleanOr(bool Default) const
 	return m_Data.Bool();
 }
 
-float Json::GetNumber() const
-{
-	return m_Data.Float();
-}
-
-float Json::GetNumberOr(float Default) const
+float Json::Number(float Default) const
 {
 	if (!IsNumber())
 	{
@@ -136,12 +126,7 @@ float Json::GetNumberOr(float Default) const
 	return m_Data.Float();
 }
 
-const char* Json::GetString() const
-{
-	return m_Data.String();
-}
-
-const char* Json::GetStringOr(const char* Default) const
+const char* Json::String(const char* Default) const
 {
 	if (!IsString())
 	{
@@ -151,7 +136,7 @@ const char* Json::GetStringOr(const char* Default) const
 	return m_Data.String();
 }
 
-unsigned int Json::GetCount() const
+unsigned int Json::Count() const
 {
 	return m_Array.size();
 }
@@ -273,16 +258,16 @@ std::string Json::ToString() const
 	}
 	else if (IsBoolean())
 	{
-		Result = GetBoolean() ? "true" : "false";
+		Result = Boolean() ? "true" : "false";
 	}
 	else if (IsNumber())
 	{
-		Result = std::to_string(GetNumber());
+		Result = std::to_string(Number());
 	}
 	else
 	{
 		Result += "\"";
-		Result += GetString();
+		Result += String();
 		Result += "\"";
 	}
 

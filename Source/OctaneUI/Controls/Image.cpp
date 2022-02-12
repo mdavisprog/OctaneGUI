@@ -90,16 +90,16 @@ void Image::OnLoad(const Json& Root)
 {
 	Control::OnLoad(Root);
 
-	SetTexture(Root["Texture"].GetString());
+	SetTexture(Root["Texture"].String());
 	
 	const Json& UVs = Root["UVs"];
 	if (!UVs.IsNull())
 	{
 		const Rect Value(
-			UVs["Left"].GetNumber(),
-			UVs["Top"].GetNumber(),
-			UVs["Right"].GetNumber(),
-			UVs["Bottom"].GetNumber()
+			UVs["Left"].Number(),
+			UVs["Top"].Number(),
+			UVs["Right"].Number(),
+			UVs["Bottom"].Number()
 		);
 
 		SetUVs(Value);

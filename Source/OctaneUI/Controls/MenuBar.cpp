@@ -107,11 +107,11 @@ void MenuBar::OnLoad(const Json& Root)
 	Container::OnLoad(Root);
 
 	const Json& Menus = Root["Items"];
-	for (int I = 0; I < Menus.GetCount(); I++)
+	for (int I = 0; I < Menus.Count(); I++)
 	{
 		const Json& Item = Menus[I];
 
-		std::shared_ptr<Menu> NewMenu = AddItem(Item["Text"].GetString());
+		std::shared_ptr<Menu> NewMenu = AddItem(Item["Text"].String());
 		if (NewMenu)
 		{
 			NewMenu->OnLoad(Item);

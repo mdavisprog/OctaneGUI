@@ -132,11 +132,11 @@ void Menu::OnLoad(const Json& Root)
 	Container::OnLoad(Root);
 
 	const Json& Items = Root["Items"];
-	for (int I = 0; I < Items.GetCount(); I++)
+	for (int I = 0; I < Items.Count(); I++)
 	{
 		const Json& Item = Items[I];
 
-		AddItem(Item["Text"].GetString());
+		AddItem(Item["Text"].String());
 
 		const std::shared_ptr<MenuItem>& MI = m_Items.back();
 		MI->OnLoad(Item);

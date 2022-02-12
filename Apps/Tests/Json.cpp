@@ -53,64 +53,64 @@ TEST_CASE(IsArray,
 TEST_CASE(IsBoolean,
 {
 	OctaneUI::Json Root = OctaneUI::Json::Parse("true");
-	return Root.IsBoolean() && Root.GetBoolean() == true;
+	return Root.IsBoolean() && Root.Boolean() == true;
 })
 
 TEST_CASE(IsNumber,
 {
 	OctaneUI::Json Root = OctaneUI::Json::Parse("1.0");
-	return Root.IsNumber() && Root.GetNumber() == 1.0f;
+	return Root.IsNumber() && Root.Number() == 1.0f;
 })
 
 TEST_CASE(IsString,
 {
 	OctaneUI::Json Root = OctaneUI::Json::Parse("\"String\"");
-	return Root.IsString() && std::string(Root.GetString()) == "String";
+	return Root.IsString() && std::string(Root.String()) == "String";
 })
 
 TEST_CASE(BooleanArray,
 {
 	OctaneUI::Json Root = OctaneUI::Json::Parse("[true, false, false]");
-	VERIFYF(Root.GetCount() == 3, "Incorrect number of elements: %d\n", Root.GetCount())
-	VERIFY(Root[0u].GetBoolean() == true)
-	VERIFY(Root[1u].GetBoolean() == false)
-	VERIFY(Root[2u].GetBoolean() == false)
+	VERIFYF(Root.Count() == 3, "Incorrect number of elements: %d\n", Root.Count())
+	VERIFY(Root[0u].Boolean() == true)
+	VERIFY(Root[1u].Boolean() == false)
+	VERIFY(Root[2u].Boolean() == false)
 	return true;
 })
 
 TEST_CASE(NumberArray,
 {
 	OctaneUI::Json Root = OctaneUI::Json::Parse("[3.14, -1.0, 42]");
-	VERIFYF(Root.GetCount() == 3, "Incorrect number of elements: %d\n", Root.GetCount())
-	VERIFY(Root[0u].GetNumber() == 3.14f)
-	VERIFY(Root[1u].GetNumber() == -1.0f)
-	VERIFY(Root[2u].GetNumber() == 42.0f)
+	VERIFYF(Root.Count() == 3, "Incorrect number of elements: %d\n", Root.Count())
+	VERIFY(Root[0u].Number() == 3.14f)
+	VERIFY(Root[1u].Number() == -1.0f)
+	VERIFY(Root[2u].Number() == 42.0f)
 	return true;
 })
 
 TEST_CASE(StringArray,
 {
 	OctaneUI::Json Root = OctaneUI::Json::Parse("[\"Apple\", \"Orange\", \"Banana\"]");
-	VERIFYF(Root.GetCount() == 3, "Incorrect number of elements: %d\n", Root.GetCount())
-	VERIFY(std::string(Root[0u].GetString()) == "Apple")
-	VERIFY(std::string(Root[1u].GetString()) == "Orange")
-	VERIFY(std::string(Root[2u].GetString()) == "Banana")
+	VERIFYF(Root.Count() == 3, "Incorrect number of elements: %d\n", Root.Count())
+	VERIFY(std::string(Root[0u].String()) == "Apple")
+	VERIFY(std::string(Root[1u].String()) == "Orange")
+	VERIFY(std::string(Root[2u].String()) == "Banana")
 	return true;
 })
 
 TEST_CASE(ObjectArray,
 {
 	OctaneUI::Json Root = OctaneUI::Json::Parse("[{\"Key\": \"One\"}, {\"Key\": \"Two\"}, {\"Key\": \"Three\"}]");
-	VERIFYF(Root.GetCount() == 3, "Incorrect number of objects: %d\n", Root.GetCount())
+	VERIFYF(Root.Count() == 3, "Incorrect number of objects: %d\n", Root.Count())
 
 	const OctaneUI::Json& One = Root[0u];
-	VERIFY(std::string(One["Key"].GetString()) == "One")
+	VERIFY(std::string(One["Key"].String()) == "One")
 
 	const OctaneUI::Json& Two = Root[1u];
-	VERIFY(std::string(Two["Key"].GetString()) == "Two")
+	VERIFY(std::string(Two["Key"].String()) == "Two")
 
 	const OctaneUI::Json& Three = Root[2u];
-	VERIFY(std::string(Three["Key"].GetString()) == "Three")
+	VERIFY(std::string(Three["Key"].String()) == "Three")
 
 	return true;
 })
@@ -119,13 +119,13 @@ TEST_CASE(Object,
 {
 	OctaneUI::Json Root = OctaneUI::Json::Parse("{\"Number\": 1, \"Boolean\": true, \"String\": \"Hello World\"}");
 
-	float Number = Root["Number"].GetNumber();
+	float Number = Root["Number"].Number();
 	VERIFYF(Number == 1.0f, "Number field is incorrect: %f\n", Number)
 
-	bool Boolean = Root["Boolean"].GetBoolean();
+	bool Boolean = Root["Boolean"].Boolean();
 	VERIFYF(Boolean == true, "Boolean field is incorrect\n")
 
-	std::string String = Root["String"].GetString();
+	std::string String = Root["String"].String();
 	VERIFYF(String == "Hello World", "String field is incorrect: %s\n", String.c_str())
 
 	VERIFYF(Root["Invalid"].IsNull(), "Invalid field should not exist!\n")
@@ -138,7 +138,7 @@ TEST_CASE(SubObject,
 	OctaneUI::Json Root = OctaneUI::Json::Parse("{\"Sub\": {\"Value\": 255}}");
 	const OctaneUI::Json& Sub = Root["Sub"];
 	VERIFYF(Sub.IsObject(), "Sub value is not an object!\n")
-	const float Value = Sub["Value"].GetNumber();
+	const float Value = Sub["Value"].Number();
 	VERIFYF(Value == 255.0f, "Value %f != 255\n", Value)
 	return true;
 })
