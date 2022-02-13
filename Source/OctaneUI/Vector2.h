@@ -38,6 +38,7 @@ public:
 	Vector2();
 	Vector2(float InX, float InY);
 
+	Vector2 operator-() const;
 	Vector2 operator+(const Vector2& Other) const;
 	Vector2 operator-(const Vector2& Other) const;
 	Vector2 operator*(const Vector2& Other) const;
