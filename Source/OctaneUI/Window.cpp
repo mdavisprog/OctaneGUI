@@ -125,8 +125,6 @@ void Window::OnKeyReleased(Keyboard::Key Key)
 void Window::OnMouseMove(const Vector2& Position)
 {
 	m_MousePosition = Position;
-	m_Container->OnMouseMove(Position);
-	m_Popup.OnMouseMove(Position);
 
 	std::weak_ptr<Control> Hovered = m_Popup.GetControl(Position);
 
@@ -150,6 +148,11 @@ void Window::OnMouseMove(const Vector2& Position)
 		{
 			Current->OnMouseEnter();
 		}
+	}
+
+	if (Current)
+	{
+		Current->OnMouseMove(Position);
 	}
 
 	if (!m_Focus.expired())
