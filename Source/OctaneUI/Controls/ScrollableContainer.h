@@ -26,30 +26,26 @@ SOFTWARE.
 
 #pragma once
 
-#include <functional>
+#include "Container.h"
 
 namespace OctaneUI
 {
 
-class Container;
-class Control;
-class MenuItem;
 class ScrollBar;
-class TextSelectable;
 
-enum class InvalidateType : unsigned char
+class ScrollableContainer : public Container
 {
-	Layout,
-	Paint,
-	Both
-};
+	CLASS(ScrollableContainer)
 
-typedef std::function<void()> OnEmptySignature;
-typedef std::function<void(Container*)> OnContainerSignature;
-typedef std::function<void(Control*)> OnControlSignature;
-typedef std::function<void(Control*, InvalidateType)> OnInvalidateSignature;
-typedef std::function<void(MenuItem*)> OnMenuItemSignature;
-typedef std::function<void(ScrollBar*)> onScrollBarSignature;
-typedef std::function<void(TextSelectable*)> OnTextSelectableSignature;
+public:
+	ScrollableContainer(Window* InWindow);
+
+protected:
+	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const override;
+
+private:
+	std::shared_ptr<ScrollBar> m_HorizontalSB;
+	std::shared_ptr<ScrollBar> m_VerticalSB;
+};
 
 }

@@ -26,30 +26,38 @@ SOFTWARE.
 
 #pragma once
 
-#include <functional>
+#include "Control.h"
 
 namespace OctaneUI
 {
 
-class Container;
-class Control;
-class MenuItem;
-class ScrollBar;
-class TextSelectable;
-
-enum class InvalidateType : unsigned char
+class ScrollBar : public Control
 {
-	Layout,
-	Paint,
-	Both
-};
+	CLASS(ScrollBar)
 
-typedef std::function<void()> OnEmptySignature;
-typedef std::function<void(Container*)> OnContainerSignature;
-typedef std::function<void(Control*)> OnControlSignature;
-typedef std::function<void(Control*, InvalidateType)> OnInvalidateSignature;
-typedef std::function<void(MenuItem*)> OnMenuItemSignature;
-typedef std::function<void(ScrollBar*)> onScrollBarSignature;
-typedef std::function<void(TextSelectable*)> OnTextSelectableSignature;
+public:
+	ScrollBar(Window* InWindow, Orientation InOrientation);
+
+	ScrollBar* SetSpace(float Space);
+	ScrollBar* SetOnDrag(onScrollBarSignature Fn);
+	float Offset() const;
+
+	virtual void OnPaint(Paint& Brush) const override;
+	virtual void OnMouseMove(const Vector2& Position) override;
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
+	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
+	virtual void OnMouseLeave() override;
+
+private:
+	Rect GetHandleBounds() const;
+
+	Orientation m_Orientation { Orientation::Horizontal };
+	float m_Space { 0.0f };
+	float m_Offset { 0.0f };
+	bool m_Hovered { false };
+	bool m_Drag { false };
+	Vector2 m_DragAnchor { Vector2() };
+	onScrollBarSignature m_OnDrag { nullptr };
+};
 
 }

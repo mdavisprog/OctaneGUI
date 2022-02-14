@@ -66,6 +66,12 @@ enum class VerticalAlignment : uint8_t
 	Bottom
 };
 
+enum class Orientation : uint8_t
+{
+	Horizontal,
+	Vertical
+};
+
 class Control : public Class
 {
 	CLASS(Control)

@@ -38,6 +38,8 @@ SOFTWARE.
 #include "Controls/MenuBar.h"
 #include "Controls/MenuItem.h"
 #include "Controls/Panel.h"
+#include "Controls/ScrollableContainer.h"
+#include "Controls/ScrollBar.h"
 #include "Controls/Text.h"
 #include "Controls/TextSelectable.h"
 #include "Controls/VerticalContainer.h"

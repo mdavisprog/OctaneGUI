@@ -33,6 +33,7 @@ SOFTWARE.
 #include "HorizontalContainer.h"
 #include "Image.h"
 #include "Panel.h"
+#include "ScrollableContainer.h"
 #include "Separator.h"
 #include "Text.h"
 #include "TextInput.h"
@@ -160,6 +161,10 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 	else if (Type == HorizontalContainer::TypeName())
 	{
 		Result = AddControl<HorizontalContainer>();
+	}
+	else if (Type == ScrollableContainer::TypeName())
+	{
+		Result = AddControl<ScrollableContainer>();
 	}
 	else if (Type == VerticalContainer::TypeName())
 	{
