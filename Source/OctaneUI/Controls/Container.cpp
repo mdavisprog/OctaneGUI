@@ -227,7 +227,6 @@ Container* Container::Layout()
 	{
 		Vector2 Size = CalculateSize(m_Controls);
 		SetSize(Size);
-		PlaceControls(m_Controls);
 
 		for (const std::shared_ptr<Control>& Item : m_Controls)
 		{
@@ -238,6 +237,7 @@ Container* Container::Layout()
 			}
 		}
 
+		PlaceControls(m_Controls);
 		m_UpdateLayout = false;
 	}
 
