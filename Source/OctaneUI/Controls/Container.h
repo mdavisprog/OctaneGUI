@@ -83,6 +83,7 @@ public:
 	virtual void OnLoad(const Json& Root) override;
 
 protected:
+	void InvalidateLayout();
 	bool ExpandSize(Vector2& Size) const;
 	Vector2 GetPotentialSize(int& ExpandedControls) const;
 

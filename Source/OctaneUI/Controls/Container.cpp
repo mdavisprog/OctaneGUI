@@ -312,6 +312,12 @@ void Container::OnLoad(const Json& Root)
 	}
 }
 
+void Container::InvalidateLayout()
+{
+	m_UpdateLayout = true;
+	Invalidate(InvalidateType::Layout);
+}
+
 bool Container::ExpandSize(Vector2& Size) const
 {
 	Control* Parent = GetParent();
