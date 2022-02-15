@@ -76,7 +76,7 @@ public:
 
 	Container* Layout();
 
-	std::weak_ptr<Control> GetControl(const Vector2& Point) const;
+	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const;
 	void GetControls(std::vector<std::shared_ptr<Control>>& Controls) const;
 
 	virtual void OnPaint(Paint& Brush) const override;
