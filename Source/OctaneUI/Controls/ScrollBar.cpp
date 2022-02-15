@@ -81,8 +81,8 @@ void ScrollBar::OnPaint(Paint& Brush) const
 {
 	if (m_HandleSize > 0.0f)
 	{
-		Brush.Rectangle(GetAbsoluteBounds(), Color(48, 48, 48, 255));
-		Brush.Rectangle(HandleBounds(), (m_Hovered || m_Drag) ? Color(96, 96, 96, 255) : Color(64, 64, 64, 255));
+		Brush.Rectangle(GetAbsoluteBounds(), GetTheme()->GetColor(Theme::Colors::ScrollBar));
+		Brush.Rectangle(HandleBounds(), (m_Hovered || m_Drag) ? GetTheme()->GetColor(Theme::Colors::ScrollBar_HandleHovered) :GetTheme()->GetColor(Theme::Colors::ScrollBar_Handle));
 	}
 }
 

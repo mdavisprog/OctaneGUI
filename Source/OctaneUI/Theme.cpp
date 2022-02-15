@@ -94,6 +94,9 @@ void Theme::InitializeDefault()
 	m_Colors[Colors::Panel] = Color(33, 33, 33, 255);
 	m_Colors[Colors::PanelOutline] = Color(0, 0, 0, 255);
 	m_Colors[Colors::Separator] = Color(48, 48, 48, 255);
+	m_Colors[Colors::ScrollBar] = Color(48, 48, 48, 255);
+	m_Colors[Colors::ScrollBar_Handle] = Color(64, 64, 64, 255);
+	m_Colors[Colors::ScrollBar_HandleHovered] = Color(96, 96, 96, 255);
 
 	m_FloatConstants[FloatConstants::Separator_Thickness] = 1.5f;
 	m_FloatConstants[FloatConstants::Separator_Margins] = 8.0f;

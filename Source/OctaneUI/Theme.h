@@ -54,7 +54,10 @@ public:
 		TextInput_Selection,
 		Panel,
 		PanelOutline,
-		Separator
+		Separator,
+		ScrollBar,
+		ScrollBar_Handle,
+		ScrollBar_HandleHovered
 	};
 
 	enum class FloatConstants
