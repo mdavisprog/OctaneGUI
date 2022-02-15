@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "../Paint.h"
+#include "../Theme.h"
 #include "ScrollableContainer.h"
 #include "ScrollBar.h"
 
@@ -37,44 +38,101 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 	SetExpand(Expand::Both);
 
 	m_HorizontalSB = std::make_shared<ScrollBar>(InWindow, Orientation::Horizontal);
-	m_HorizontalSB->SetOnDrag([this](ScrollBar*) -> void {
-		SetPosition({-m_HorizontalSB->Offset(), GetPosition().Y});
+	m_HorizontalSB->SetOnDrag([this](ScrollBar*) -> void
+	{
+		const float SBSize = GetTheme()->GetConstant(Theme::FloatConstants::ScrollBar_Size);
+		const float Size = m_ContentSize.X - GetSize().X + (m_VerticalSB->HasHandle() ? SBSize : 0.0f);
+		SetPosition({-m_HorizontalSB->OffsetPct() * Size, GetPosition().Y});
 		InvalidateLayout();
 	});
 	InsertControl(m_HorizontalSB);
 
 	m_VerticalSB = std::make_shared<ScrollBar>(InWindow, Orientation::Vertical);
-	m_VerticalSB->SetOnDrag([this](ScrollBar*) -> void {
-		SetPosition({GetPosition().X, -m_VerticalSB->Offset()});
+	m_VerticalSB->SetOnDrag([this](ScrollBar*) -> void
+	{
+		const float SBSize = GetTheme()->GetConstant(Theme::FloatConstants::ScrollBar_Size);
+		const float Size = m_ContentSize.Y - GetSize().Y + (m_HorizontalSB->HasHandle() ? SBSize : 0.0f);
+		SetPosition({GetPosition().X, -m_VerticalSB->OffsetPct() * Size});
 		InvalidateLayout();
 	});
 	InsertControl(m_VerticalSB);
+}
+
+std::weak_ptr<Control> ScrollableContainer::GetControl(const Vector2& Point) const
+{
+	if (m_HorizontalSB->Contains(Point))
+	{
+		return m_HorizontalSB;
+	}
+
+	if (m_VerticalSB->Contains(Point))
+	{
+		return m_VerticalSB;
+	}
+
+	return Container::GetControl(Point);
+}
+
+void ScrollableContainer::Update()
+{
+	std::vector<std::shared_ptr<Control>> Controls;
+	GetControls(Controls);
+
+	m_ContentSize = GetContentSize(Controls);
+}
+
+void ScrollableContainer::OnPaint(Paint& Brush) const
+{
+	std::vector<std::shared_ptr<Control>> Controls;
+	GetControls(Controls);
+
+	for (const std::shared_ptr<Control>& Item : Controls)
+	{
+		if (Item != m_HorizontalSB && Item != m_VerticalSB)
+		{
+			Item->OnPaint(Brush);
+		}
+	}
+
+	m_HorizontalSB->OnPaint(Brush);
+	m_VerticalSB->OnPaint(Brush);
 }
 
 void ScrollableContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
 {
 	Container::PlaceControls(Controls);
 
-	Vector2 MaxSize;
+	const Vector2 ContentSize = GetContentSize(Controls);
+	const Vector2 Size = GetSize();
+	const Vector2 Overflow = ContentSize - Size;
+	const float SBSize = GetTheme()->GetConstant(Theme::FloatConstants::ScrollBar_Size);
+
+	m_HorizontalSB
+		->SetHandleSize(Overflow.X > 0.0f ? Size.X - Overflow.X : 0.0f)
+		->SetPosition({-GetPosition().X, -GetPosition().Y + Size.Y - SBSize})
+		->SetSize({Size.X, SBSize});
+
+	m_VerticalSB
+		->SetHandleSize(Overflow.Y > 0.0f ? Size.Y - Overflow.Y : 0.0f)
+		->SetPosition({-GetPosition().X + Size.X - SBSize, -GetPosition().Y})
+		->SetSize({SBSize, Size.Y - (m_HorizontalSB->HasHandle() ? SBSize : 0.0f)});
+}
+
+Vector2 ScrollableContainer::GetContentSize(const std::vector<std::shared_ptr<Control>>& Controls) const
+{
+	Vector2 Result;
+
 	for (const std::shared_ptr<Control>& Item : Controls)
 	{
 		if (Item != m_HorizontalSB && Item != m_VerticalSB)
 		{
 			const Vector2 Size = Item->GetSize();
-			MaxSize.X = std::max<float>(MaxSize.X, Size.X);
-			MaxSize.Y = std::max<float>(MaxSize.Y, Size.Y);
+			Result.X = std::max<float>(Result.X, Size.X);
+			Result.Y = std::max<float>(Result.Y, Size.Y);
 		}
 	}
 
-	const Vector2 Size = GetSize();
-	const Vector2 Offset = MaxSize - Size;
-	m_HorizontalSB->SetPosition(m_HorizontalSB->Offset(), Size.Y - 20.0f);
-	m_HorizontalSB->SetSize(Size.X, 20.0f);
-	m_HorizontalSB->SetSpace(Offset.X);
-
-	m_VerticalSB->SetPosition(Size.X - 20.0f, m_VerticalSB->Offset());
-	m_VerticalSB->SetSize(20.0f, Size.Y);
-	m_VerticalSB->SetSpace(Offset.Y);
+	return Result;
 }
 
 }

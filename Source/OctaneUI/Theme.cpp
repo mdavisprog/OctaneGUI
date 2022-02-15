@@ -98,6 +98,8 @@ void Theme::InitializeDefault()
 	m_FloatConstants[FloatConstants::Separator_Thickness] = 1.5f;
 	m_FloatConstants[FloatConstants::Separator_Margins] = 8.0f;
 	m_FloatConstants[FloatConstants::Menu_RightPadding] = 60.0f;
+	m_FloatConstants[FloatConstants::ScrollBar_Size] = 15.0f;
+	m_FloatConstants[FloatConstants::ScrollBar_HandleMinSize] = 10.0f;
 
 	m_Vector2Constants[Vector2Constants::Button_Padding] = Vector2(12.0f, 6.0f);
 	m_Vector2Constants[Vector2Constants::TextSelectable_Padding] = Vector2(8.0f, 6.0f);

@@ -40,12 +40,20 @@ class ScrollableContainer : public Container
 public:
 	ScrollableContainer(Window* InWindow);
 
+	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
+
+	virtual void Update() override;
+	virtual void OnPaint(Paint& Brush) const override;
+
 protected:
 	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const override;
 
 private:
+	Vector2 GetContentSize(const std::vector<std::shared_ptr<Control>>& Controls) const;
+
 	std::shared_ptr<ScrollBar> m_HorizontalSB;
 	std::shared_ptr<ScrollBar> m_VerticalSB;
+	Vector2 m_ContentSize { Vector2() };
 };
 
 }

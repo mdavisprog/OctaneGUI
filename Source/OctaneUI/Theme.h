@@ -62,6 +62,8 @@ public:
 		Separator_Thickness,
 		Separator_Margins,
 		Menu_RightPadding,
+		ScrollBar_Size,
+		ScrollBar_HandleMinSize,
 	};
 
 	enum class Vector2Constants

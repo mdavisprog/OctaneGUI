@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "../Paint.h"
+#include "../Theme.h"
 #include "ScrollBar.h"
 
 namespace OctaneUI
@@ -36,9 +37,16 @@ ScrollBar::ScrollBar(Window* InWindow, Orientation InOrientation)
 {
 }
 
-ScrollBar* ScrollBar::SetSpace(float Space)
+ScrollBar* ScrollBar::SetHandleSize(float HandleSize)
 {
-	m_Space = std::max<float>(0.0f, Space);
+	// TODO: Not really a fan of how this is done. Look into something better.
+	m_HandleSize = 0.0f;
+	if (HandleSize != 0.0f)
+	{
+		const float Min = GetTheme()->GetConstant(Theme::FloatConstants::ScrollBar_HandleMinSize);
+		m_HandleSize = std::max<float>(Min, HandleSize);
+	}
+
 	return this;
 }
 
@@ -53,18 +61,34 @@ float ScrollBar::Offset() const
 	return m_Offset;
 }
 
+float ScrollBar::OffsetPct() const
+{
+	if (m_HandleSize <= 0.0f)
+	{
+		return 0.0f;
+	}
+
+	float Max = m_Orientation == Orientation::Horizontal ? GetSize().X : GetSize().Y;
+	return m_Offset / (Max - m_HandleSize);
+}
+
+bool ScrollBar::HasHandle() const
+{
+	return m_HandleSize > 0.0f;
+}
+
 void ScrollBar::OnPaint(Paint& Brush) const
 {
-	if (m_Space > 0.0f)
+	if (m_HandleSize > 0.0f)
 	{
 		Brush.Rectangle(GetAbsoluteBounds(), Color(48, 48, 48, 255));
-		Brush.Rectangle(GetHandleBounds(), (m_Hovered || m_Drag) ? Color(96, 96, 96, 255) : Color(64, 64, 64, 255));
+		Brush.Rectangle(HandleBounds(), (m_Hovered || m_Drag) ? Color(96, 96, 96, 255) : Color(64, 64, 64, 255));
 	}
 }
 
 void ScrollBar::OnMouseMove(const Vector2& Position)
 {
-	bool Hovered = GetHandleBounds().Contains(Position);
+	bool Hovered = HandleBounds().Contains(Position);
 	
 	if (Hovered != m_Hovered)
 	{
@@ -74,18 +98,22 @@ void ScrollBar::OnMouseMove(const Vector2& Position)
 
 	if (m_Drag)
 	{
+		float Max = 0.0f;
 		if (m_Orientation == Orientation::Horizontal)
 		{
 			m_Offset += Position.X - m_DragAnchor.X;
+			Max = GetSize().X;
 		}
 		else
 		{
 			m_Offset += Position.Y - m_DragAnchor.Y;
+			Max = GetSize().Y;
 		}
 
 		m_DragAnchor = Position;
+
 		m_Offset = std::max<float>(m_Offset, 0.0f);
-		m_Offset = std::min<float>(m_Offset, m_Space);
+		m_Offset = std::min<float>(m_Offset, Max - m_HandleSize);
 
 		if (m_OnDrag)
 		{
@@ -120,7 +148,7 @@ void ScrollBar::OnMouseLeave()
 	Invalidate();
 }
 
-Rect ScrollBar::GetHandleBounds() const
+Rect ScrollBar::HandleBounds() const
 {
 	Rect Result;
 
@@ -128,12 +156,12 @@ Rect ScrollBar::GetHandleBounds() const
 	if (m_Orientation == Orientation::Horizontal)
 	{
 		const Vector2 Position = GetAbsolutePosition() + Vector2(m_Offset, 0.0f);
-		Result = Rect(Position, Position + Vector2(Size.X - m_Space, Size.Y));
+		Result = Rect(Position, Position + Vector2(m_HandleSize, Size.Y));
 	}
 	else
 	{
 		const Vector2 Position = GetAbsolutePosition() + Vector2(0.0f, m_Offset);
-		Result = Rect(Position, Position + Vector2(Size.X , Size.Y - m_Space));
+		Result = Rect(Position, Position + Vector2(Size.X , m_HandleSize));
 	}
 
 	return Result;
