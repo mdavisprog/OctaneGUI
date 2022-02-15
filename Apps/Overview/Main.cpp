@@ -62,7 +62,6 @@ int main(int argc, char **argv)
 		Application.Quit();
 	});
 
-	List.ToButton("OKBtn")->SetOnPressed([&]() -> void
 	List.To<OctaneUI::Button>("OKBtn")->SetOnPressed([&]() -> void
 	{
 		printf("OK\n");
