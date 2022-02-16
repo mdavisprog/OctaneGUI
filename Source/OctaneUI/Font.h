@@ -47,10 +47,10 @@ public:
 	public:
 		Glyph();
 
-		Vector2 m_Min;
-		Vector2 m_Max;
-		Vector2 m_Offset;
-		Vector2 m_Advance;
+		Vector2 m_Min {};
+		Vector2 m_Max {};
+		Vector2 m_Offset {};
+		Vector2 m_Advance {};
 	};
 
 	Font();
@@ -62,17 +62,19 @@ public:
 	Vector2 Measure(char Ch) const;
 	Vector2 Measure(int32_t CodePoint) const;
 
-	uint32_t GetID() const;
-	float GetSize() const;
-	Vector2 GetSpaceSize() const;
+	uint32_t ID() const;
+	float Size() const;
+	float Ascent() const;
+	float Descent() const;
+	Vector2 SpaceSize() const;
 
 private:
 	std::vector<Glyph> m_Glyphs;
-	float m_Size;
-	float m_Ascent;
-	float m_Descent;
-	Vector2 m_SpaceSize;
-	std::shared_ptr<Texture> m_Texture;
+	float m_Size { 0.0f };
+	float m_Ascent { 0.0f };
+	float m_Descent { 0.0f };
+	Vector2 m_SpaceSize {};
+	std::shared_ptr<Texture> m_Texture { nullptr };
 };
 
 }

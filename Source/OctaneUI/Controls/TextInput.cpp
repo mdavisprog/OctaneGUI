@@ -43,8 +43,9 @@ TextInput::TextInput(Window* InWindow)
 {
 	m_Text = std::make_shared<Text>(InWindow);
 	m_Text->SetParent(this);
+	m_Text->SetPosition({3.0f, 0.0f});
 
-	SetSize({100.0f, GetTheme()->GetFont()->GetSize()});
+	SetSize({100.0f, GetTheme()->GetFont()->Size()});
 }
 
 TextInput::~TextInput()
@@ -81,9 +82,8 @@ void TextInput::OnPaint(Paint& Brush) const
 	if (m_Focused)
 	{
 		const Vector2 Size = GetPositionLocation();
-
-		const Vector2 Start = m_Text->GetAbsolutePosition() + Vector2(std::max<float>(Size.X, 2.0f), -5.0f);
-		const Vector2 End = Start + Vector2(0.0f, GetTheme()->GetFont()->GetSize() - 5.0f);
+		const Vector2 Start = m_Text->GetAbsolutePosition() + Vector2(std::max<float>(Size.X, 2.0f), 0.0f);
+		const Vector2 End = Start + Vector2(0.0f, GetTheme()->GetFont()->Size());
 		Brush.Line(Start, End, TheTheme->GetColor(Theme::Colors::TextInput_Cursor));
 	}
 
@@ -100,22 +100,14 @@ void TextInput::OnPaint(Paint& Brush) const
 		const Vector2 Size = GetTheme()->GetFont()->Measure(Selected);
 
 		Rect SelectBounds;
-		SelectBounds.Min = Vector2(MinSize.X, -5.0f);
-		SelectBounds.Max = SelectBounds.Min + Vector2(Size.X, GetTheme()->GetFont()->GetSize() - 5.0f);
+		SelectBounds.Min = Vector2(MinSize.X, 0.0f);
+		SelectBounds.Max = SelectBounds.Min + Vector2(Size.X, GetTheme()->GetFont()->Size());
 		SelectBounds.Move(m_Text->GetAbsolutePosition());
 
 		Brush.Rectangle(SelectBounds, TheTheme->GetColor(Theme::Colors::TextInput_Selection));
 	}
 
 	Brush.PopClip();
-}
-
-void TextInput::Update()
-{
-	const float Height = GetTheme()->GetFont()->GetSize();
-	const Vector2 Size = GetSize();
-	const Vector2 Position(3.0f, Size.Y * 0.5f - Height * 0.25f);
-	m_Text->SetPosition(Position);
 }
 
 void TextInput::OnFocused()
@@ -241,7 +233,7 @@ void TextInput::MovePosition(int32_t Count, bool UseAnchor)
 	}
 	else if (Position.X >= Max.X)
 	{
-		m_Offset.X = Position.X - GetSize().X + GetTheme()->GetFont()->GetSpaceSize().X;
+		m_Offset.X = Position.X - GetSize().X + GetTheme()->GetFont()->SpaceSize().X;
 	}
 
 	const Vector2 TextPos = m_Text->GetPosition();

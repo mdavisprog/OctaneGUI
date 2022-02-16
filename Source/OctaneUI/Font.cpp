@@ -37,19 +37,10 @@ namespace OctaneUI
 {
 
 Font::Glyph::Glyph()
-	: m_Min()
-	, m_Max()
-	, m_Offset()
-	, m_Advance()
 {
 }
 
 Font::Font()
-	: m_Size(0.0f)
-	, m_Ascent(0.0f)
-	, m_Descent(0.0f)
-	, m_SpaceSize()
-	, m_Texture(nullptr)
 {
 }
 
@@ -160,7 +151,7 @@ Vector2 Font::Measure(const std::string& Text) const
 	{
 		const Vector2 Size = Measure(Ch);
 		Result.X += Size.X;
-		Result.Y = Size.Y;
+		Result.Y = std::max<float>(Result.Y, Size.Y);
 	}
 
 	return Result;
@@ -186,7 +177,7 @@ Vector2 Font::Measure(int32_t CodePoint) const
 	return Result;
 }
 
-uint32_t Font::GetID() const
+uint32_t Font::ID() const
 {
 	if (!m_Texture)
 	{
@@ -196,12 +187,22 @@ uint32_t Font::GetID() const
 	return m_Texture->GetID();
 }
 
-float Font::GetSize() const
+float Font::Size() const
 {
 	return m_Size;
 }
 
-Vector2 Font::GetSpaceSize() const
+float Font::Ascent() const
+{
+	return m_Ascent;
+}
+
+float Font::Descent() const
+{
+	return m_Descent;
+}
+
+Vector2 Font::SpaceSize() const
 {
 	return m_SpaceSize;
 }

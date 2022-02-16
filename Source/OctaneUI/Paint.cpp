@@ -81,7 +81,7 @@ void Paint::Text(const Vector2& Position, const std::string& Contents, const Col
 		return;
 	}
 
-	PushCommand(6 * Contents.length(), ThemeFont->GetID());
+	PushCommand(6 * Contents.length(), ThemeFont->ID());
 	Vector2 Pos = Position;
 	uint32_t Offset = 0;
 	for (char Char : Contents)

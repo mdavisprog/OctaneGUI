@@ -69,7 +69,7 @@ std::shared_ptr<Menu> MenuBar::AddItem(const char* InText)
 	if (m_MenuItems.size() == 0)
 	{
 		const Vector2 Padding = GetTheme()->GetConstant(Theme::Vector2Constants::MenuBar_Padding);
-		SetSize(Vector2(0.0f, GetTheme()->GetFont()->GetSize()));
+		SetSize(Vector2(0.0f, GetTheme()->GetFont()->Size()));
 	}
 
 	m_MenuItems.push_back(Item);

@@ -45,7 +45,6 @@ public:
 	const char* GetText() const;
 
 	virtual void OnPaint(Paint& Brush) const override;
-	virtual void Update() override;
 	virtual void OnFocused() override;
 	virtual void OnUnfocused() override;
 	virtual void OnKeyPressed(Keyboard::Key Key) override;

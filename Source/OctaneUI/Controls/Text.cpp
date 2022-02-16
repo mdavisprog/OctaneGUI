@@ -35,7 +35,6 @@ namespace OctaneUI
 
 Text::Text(Window* InWindow)
 	: Control(InWindow)
-	, m_Contents("")
 {
 }
 
@@ -50,8 +49,8 @@ Text* Text::SetText(const char* InContents)
 	std::shared_ptr<Font> ThemeFont = GetTheme()->GetFont();
 	if (ThemeFont)
 	{
-		Vector2 Size = ThemeFont->Measure(m_Contents);
-		SetSize(Size);
+		m_ContentSize = ThemeFont->Measure(m_Contents);
+		SetSize({m_ContentSize.X, ThemeFont->Size()});
 	}
 
 	return this;
@@ -69,7 +68,8 @@ uint32_t Text::Length() const
 
 void Text::OnPaint(Paint& Brush) const
 {
-	Brush.Text(GetAbsolutePosition(), m_Contents, Color(255, 255, 255, 255));
+	const Vector2 Position = GetAbsolutePosition() + Vector2(0.0f, GetTheme()->GetFont()->Size() * 0.5f - m_ContentSize.Y * 0.5f);
+	Brush.Text(Position.Floor(), m_Contents, Color(255, 255, 255, 255));
 }
 
 void Text::OnLoad(const Json& Root)

@@ -54,7 +54,8 @@ protected:
 	virtual bool IsFixedSize() const override;
 
 private:
-	std::string m_Contents;
+	std::string m_Contents {};
+	Vector2 m_ContentSize {};
 };
 
 }
