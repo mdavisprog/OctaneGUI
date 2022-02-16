@@ -34,7 +34,10 @@ namespace OctaneUI
 struct Color
 {
 public:
-	uint8_t R, G, B, A;
+	uint8_t R { 0 };
+	uint8_t G { 0 };
+	uint8_t B { 0 };
+	uint8_t A { 0 };
 
 	Color();
 	Color(uint8_t InR, uint8_t InG, uint8_t InB, uint8_t InA);
