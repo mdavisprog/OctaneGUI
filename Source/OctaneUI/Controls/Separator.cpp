@@ -36,7 +36,7 @@ Separator::Separator(Window* InWindow)
 	, m_OnHover(nullptr)
 {
 	SetExpand(Expand::Width);
-	SetSize(0.0f, 16.0f);
+	SetSize({0.0f, 16.0f});
 }
 
 Separator::~Separator()

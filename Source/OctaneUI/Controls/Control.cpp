@@ -47,11 +47,6 @@ Control::~Control()
 {
 }
 
-Control* Control::SetPosition(float X, float Y)
-{
-	return SetPosition(Vector2(X, Y));
-}
-
 Control* Control::SetPosition(const Vector2& Position)
 {
 	m_Bounds.SetPosition(Position);
@@ -72,11 +67,6 @@ Vector2 Control::GetAbsolutePosition() const
 	}
 
 	return m_Parent->GetAbsolutePosition() + GetPosition();
-}
-
-Control* Control::SetSize(float Width, float Height)
-{
-	return SetSize(Vector2(Width, Height));
 }
 
 Control* Control::SetSize(const Vector2& Size)

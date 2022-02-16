@@ -44,7 +44,7 @@ TextInput::TextInput(Window* InWindow)
 	m_Text = std::make_shared<Text>(InWindow);
 	m_Text->SetParent(this);
 
-	SetSize(100.0f, GetTheme()->GetFont()->GetSize());
+	SetSize({100.0f, GetTheme()->GetFont()->GetSize()});
 }
 
 TextInput::~TextInput()
@@ -245,7 +245,7 @@ void TextInput::MovePosition(int32_t Count, bool UseAnchor)
 	}
 
 	const Vector2 TextPos = m_Text->GetPosition();
-	m_Text->SetPosition(-m_Offset.X, TextPos.Y);
+	m_Text->SetPosition({-m_Offset.X, TextPos.Y});
 	Invalidate();
 }
 

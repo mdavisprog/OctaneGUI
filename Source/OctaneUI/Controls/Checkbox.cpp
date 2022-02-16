@@ -128,7 +128,7 @@ void Checkbox::OnPaint(Paint& Brush) const
 void Checkbox::Update()
 {
 	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
-	m_Text->SetPosition(TexCoords.GetSize().X + 12.0f, GetSize().Y * 0.5f - m_Text->GetSize().Y * 0.5f);
+	m_Text->SetPosition({TexCoords.GetSize().X + 12.0f, GetSize().Y * 0.5f - m_Text->GetSize().Y * 0.5f});
 }
 
 void Checkbox::OnLoad(const Json& Root)

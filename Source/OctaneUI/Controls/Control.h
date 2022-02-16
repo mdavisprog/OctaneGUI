@@ -80,12 +80,10 @@ public:
 	Control(Window* InWindow);
 	virtual ~Control();
 
-	Control* SetPosition(float X, float Y);
 	Control* SetPosition(const Vector2& Position);
 	Vector2 GetPosition() const;
 	Vector2 GetAbsolutePosition() const;
 
-	Control* SetSize(float Width, float Height);
 	Control* SetSize(const Vector2& Size);
 	Vector2 GetSize() const;
 

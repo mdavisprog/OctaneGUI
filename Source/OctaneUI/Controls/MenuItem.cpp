@@ -140,7 +140,7 @@ void MenuItem::Update()
 	{
 		const Vector2 TextPosition = GetTextControl()->GetPosition();
 		const Vector2 CheckSize = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check).GetSize();
-		GetTextControl()->SetPosition(CheckSize.X + 12.0f, TextPosition.Y);
+		GetTextControl()->SetPosition({CheckSize.X + 12.0f, TextPosition.Y});
 	}
 }
 
