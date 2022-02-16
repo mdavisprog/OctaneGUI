@@ -33,12 +33,6 @@ SOFTWARE.
 namespace OctaneUI
 {
 
-static const Vector2 IconsSize(3.0f, 3.0f);
-static const char* Icons =
-" x "
-" x "
-"xxx";
-
 Texture::OnLoadSignature Texture::s_OnLoad = nullptr;
 
 void Texture::SetOnLoad(OnLoadSignature Fn)
@@ -86,7 +80,6 @@ std::shared_ptr<Texture> Texture::Load(const char* Path)
 }
 
 Texture::Texture()
-	: m_ID(0)
 {
 }
 

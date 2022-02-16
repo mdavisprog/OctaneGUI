@@ -55,8 +55,8 @@ public:
 private:
 	static OnLoadSignature s_OnLoad;
 
-	uint32_t m_ID;
-	Vector2 m_Size;
+	uint32_t m_ID { 0 };
+	Vector2 m_Size {};
 };
 
 }
