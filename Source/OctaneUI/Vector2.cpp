@@ -34,8 +34,6 @@ namespace OctaneUI
 Vector2 Vector2::Zero;
 
 Vector2::Vector2()
-	: X(0.0f)
-	, Y(0.0f)
 {
 }
 

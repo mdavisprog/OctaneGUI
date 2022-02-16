@@ -32,8 +32,10 @@ namespace OctaneUI
 struct Vector2
 {
 public:
-	float X, Y;
 	static Vector2 Zero;
+
+	float X { 0.0f };
+	float Y { 0.0f };
 
 	Vector2();
 	Vector2(float InX, float InY);
