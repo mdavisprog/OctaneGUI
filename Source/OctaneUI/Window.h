@@ -61,7 +61,6 @@ public:
 	void SetTitle(const char* Title);
 	const char* GetTitle() const;
 
-	void SetSize(float Width, float Height);
 	void SetSize(Vector2 Size);
 	Vector2 GetSize() const;
 
@@ -99,19 +98,19 @@ private:
 
 	void Populate(ControlList& List) const;
 
-	Application* m_Application;
-	std::string m_Title;
-	Vector2 m_MousePosition;
-	Rect m_Bounds;
-	std::shared_ptr<Container> m_Container;
-	std::shared_ptr<MenuBar> m_MenuBar;
-	std::shared_ptr<Container> m_Body;
-	bool m_Repaint;
-	std::weak_ptr<Control> m_Focus;
-	std::weak_ptr<Control> m_Hovered;
-	Popup m_Popup;
+	Application* m_Application { nullptr };
+	std::string m_Title {};
+	Vector2 m_MousePosition {};
+	Rect m_Bounds {};
+	std::shared_ptr<Container> m_Container { nullptr };
+	std::shared_ptr<MenuBar> m_MenuBar { nullptr };
+	std::shared_ptr<Container> m_Body { nullptr };
+	bool m_Repaint { false };
+	std::weak_ptr<Control> m_Focus {};
+	std::weak_ptr<Control> m_Hovered {};
+	Popup m_Popup {};
 
-	OnPaintSignature m_OnPaint;
+	OnPaintSignature m_OnPaint { nullptr };
 };
 
 }

@@ -38,17 +38,6 @@ namespace OctaneUI
 
 Window::Window(Application* InApplication)
 	: m_Application(InApplication)
-	, m_Title()
-	, m_MousePosition()
-	, m_Bounds()
-	, m_Container(nullptr)
-	, m_MenuBar(nullptr)
-	, m_Body(nullptr)
-	, m_Repaint(false)
-	, m_Focus()
-	, m_Hovered()
-	, m_Popup()
-	, m_OnPaint(nullptr)
 {
 	m_Popup.SetOnInvalidate([=](Control* Focus, InvalidateType Type) -> void
 	{
@@ -77,11 +66,6 @@ void Window::SetTitle(const char* Title)
 const char* Window::GetTitle() const
 {
 	return m_Title.c_str();
-}
-
-void Window::SetSize(float Width, float Height)
-{
-	SetSize(Vector2(Width, Height));
 }
 
 void Window::SetSize(Vector2 Size)
@@ -332,7 +316,7 @@ void Window::Load(const Json& Root)
 	const Json& Body = Root["Body"];
 
 	SetTitle(Title.c_str());
-	SetSize(Width, Height);
+	SetSize({Width, Height});
 
 	m_MenuBar->OnLoad(MB);
 	m_Body->OnLoad(Body);
