@@ -79,6 +79,21 @@ Vector2 Window::GetSize() const
 	return m_Bounds.Max - m_Bounds.Min;
 }
 
+void Window::SetID(const char* ID)
+{
+	m_ID = ID;
+}
+
+const char* Window::ID() const
+{
+	return m_ID.c_str();
+}
+
+bool Window::HasID() const
+{
+	return !m_ID.empty();
+}
+
 void Window::SetPopup(const std::shared_ptr<Container>& Popup, bool Modal)
 {
 	m_Popup.Open(Popup, Modal);
@@ -308,6 +323,7 @@ void Window::Load(const char* JsonStream, ControlList& List)
 
 void Window::Load(const Json& Root)
 {
+	m_ID = Root["ID"].String();
 	const std::string Title = Root["Title"].String();
 	float Width = Root["Width"].Number(640.0f);
 	float Height = Root["Height"].Number(480.0f);

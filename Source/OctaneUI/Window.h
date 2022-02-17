@@ -64,6 +64,10 @@ public:
 	void SetSize(Vector2 Size);
 	Vector2 GetSize() const;
 
+	void SetID(const char* ID);
+	const char* ID() const;
+	bool HasID() const;
+
 	void SetPopup(const std::shared_ptr<Container>& Popup, bool Modal = false);
 
 	void OnKeyPressed(Keyboard::Key Key);
@@ -100,6 +104,7 @@ private:
 
 	Application* m_Application { nullptr };
 	std::string m_Title {};
+	std::string m_ID {};
 	Vector2 m_MousePosition {};
 	Rect m_Bounds {};
 	std::shared_ptr<Container> m_Container { nullptr };
