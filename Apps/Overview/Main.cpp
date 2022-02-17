@@ -51,12 +51,11 @@ int main(int argc, char **argv)
 #else
 	SFML::Initialize(Application);
 #endif
-	Application.Initialize("OctaneUI");
-	Application.LoadFont("Roboto-Regular.ttf");
-	
-	OctaneUI::ControlList List;
-	Application.GetMainWindow()->Load(Buffer.c_str(), List);
 
+	std::unordered_map<std::string, OctaneUI::ControlList> WindowControls;
+	Application.Initialize(Buffer.c_str(), WindowControls);
+	
+	const OctaneUI::ControlList& List = WindowControls["Main"];
 	List.To<OctaneUI::MenuItem>("File.Quit")->SetOnSelected([&](OctaneUI::MenuItem* Item) -> void
 	{
 		Application.Quit();

@@ -37,6 +37,7 @@ SOFTWARE.
 #include "Window.h"
 
 #include <algorithm>
+#include <cassert>
 #include <chrono>
 #include <thread>
 
@@ -44,30 +45,8 @@ namespace OctaneUI
 {
 
 Application::Application()
-	: m_Theme(nullptr)
-	, m_Icons(nullptr)
-	, m_IsRunning(false)
-	, m_OnCreateWindow(nullptr)
-	, m_OnDestroyWindow(nullptr)
-	, m_OnPaint(nullptr)
-	, m_OnEvent(nullptr)
-	, m_OnLoadTexture(nullptr)
-	, m_OnExit(nullptr)
 {
-}
-
-Application::~Application()
-{
-}
-
-bool Application::Initialize(const char* Title)
-{
-	if (m_Windows.size() > 0)
-	{
-		return true;
-	}
-
-	Texture::SetOnLoad([=](const std::vector<uint8_t>& Data, uint32_t Width, uint32_t Height) -> uint32_t
+	Texture::SetOnLoad([this](const std::vector<uint8_t>& Data, uint32_t Width, uint32_t Height) -> uint32_t
 	{
 		if (m_OnLoadTexture)
 		{
@@ -76,15 +55,62 @@ bool Application::Initialize(const char* Title)
 
 		return 0;
 	});
+}
 
-	m_Theme = std::make_shared<Theme>();
+Application::~Application()
+{
+}
+
+bool Application::Initialize(const char* Title)
+{
+	if (!Initialize())
+	{
+		Shutdown();
+		return false;
+	}
 
 	NewWindow(Title, 1280.0f, 720.0f);
 
-	m_Icons = std::make_shared<Icons>();
-	m_Icons->Initialize();
+	return true;
+}
 
-	m_IsRunning = true;
+bool Application::Initialize(const char* JsonStream, std::unordered_map<std::string, ControlList>& WindowControls)
+{
+	if (!Initialize())
+	{
+		Shutdown();
+		return false;
+	}
+
+	const Json Root = Json::Parse(JsonStream);
+
+	if (Root.IsNull())
+	{
+		Shutdown();
+		return false;
+	}
+
+	const Json& Windows = Root["Windows"];
+	if (!Windows.IsArray())
+	{
+		Shutdown();
+		return false;
+	}
+
+	const char* FontPath = Root["Font"].String();
+	float FontSize = Root["FontSize"].Number(16.0f);
+	LoadFont(FontPath, FontSize);
+
+	for (int I = 0; I < Windows.Count(); I++)
+	{
+		ControlList List;
+		std::shared_ptr<Window> Result = CreateWindow(Windows[I], List);
+		assert(Result->HasID());
+
+		WindowControls[Result->ID()] = List;
+	}
+
+	assert(WindowControls.find("Main") != WindowControls.end());
 
 	return true;
 }
@@ -155,11 +181,11 @@ void Application::Quit()
 	m_IsRunning = false;
 }
 
-std::shared_ptr<Font> Application::LoadFont(const char* Path)
+std::shared_ptr<Font> Application::LoadFont(const char* Path, float Size)
 {
 	std::shared_ptr<Font> Result = std::make_shared<Font>();
 
-	bool Success = Result->Load(Path, 24.0f);
+	bool Success = Result->Load(Path, Size);
 	if (Success)
 	{
 		if (m_Theme)
@@ -369,6 +395,23 @@ void Application::ProcessEvent(const std::shared_ptr<Window>& Item)
 	case Event::Type::None:
 	default: break;
 	}
+}
+
+bool Application::Initialize()
+{
+	if (m_IsRunning)
+	{
+		return true;
+	}
+
+	m_Theme = std::make_shared<Theme>();
+
+	m_Icons = std::make_shared<Icons>();
+	m_Icons->Initialize();
+
+	m_IsRunning = true;
+
+	return true;
 }
 
 }

@@ -31,6 +31,7 @@ SOFTWARE.
 #include "Vector2.h"
 
 #include <memory>
+#include <unordered_map>
 #include <vector>
 
 namespace OctaneUI
@@ -57,11 +58,12 @@ public:
 	virtual ~Application();
 
 	bool Initialize(const char* Title);
+	bool Initialize(const char* JsonStream, std::unordered_map<std::string, ControlList>& WindowControls);
 	void Shutdown();
 	void Update();
 	int Run();
 	void Quit();
-	std::shared_ptr<Font> LoadFont(const char* Path);
+	std::shared_ptr<Font> LoadFont(const char* Path, float Size);
 
 	std::shared_ptr<Window> GetMainWindow() const;
 	std::shared_ptr<Window> NewWindow(const char* Title, float Width, float Height);
@@ -83,18 +85,19 @@ private:
 	std::shared_ptr<Window> CreateWindow(const Json& Root, ControlList& List);
 	void DestroyWindow(const std::shared_ptr<Window>& Item);
 	void ProcessEvent(const std::shared_ptr<Window>& Item);
+	bool Initialize();
 
 	std::vector<std::shared_ptr<Window>> m_Windows;
-	std::shared_ptr<Theme> m_Theme;
-	std::shared_ptr<Icons> m_Icons;
-	bool m_IsRunning;
+	std::shared_ptr<Theme> m_Theme { nullptr };
+	std::shared_ptr<Icons> m_Icons { nullptr };
+	bool m_IsRunning { false };
 	std::vector<Keyboard::Key> m_PressedKeys;
-	OnWindowSignature m_OnCreateWindow;
-	OnWindowSignature m_OnDestroyWindow;
-	OnWindowPaintSignature m_OnPaint;
-	OnWindowEventSignature m_OnEvent;
-	OnLoadTextureSignature m_OnLoadTexture;
-	OnEmptySignature m_OnExit;
+	OnWindowSignature m_OnCreateWindow { nullptr };
+	OnWindowSignature m_OnDestroyWindow { nullptr };
+	OnWindowPaintSignature m_OnPaint { nullptr };
+	OnWindowEventSignature m_OnEvent { nullptr };
+	OnLoadTextureSignature m_OnLoadTexture { nullptr };
+	OnEmptySignature m_OnExit { nullptr };
 };
 
 }

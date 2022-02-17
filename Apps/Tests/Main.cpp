@@ -73,7 +73,7 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	if (!Application.LoadFont("Roboto-Regular.ttf"))
+	if (!Application.LoadFont("Roboto-Regular.ttf", 24.0f))
 	{
 		printf("Application failed to load font.\n");
 		return 1;

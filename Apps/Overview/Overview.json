@@ -1,69 +1,76 @@
 {
-	"Title": "Overview",
-	"Width": 1280,
-	"Height": 720,
-	"MenuBar": {
-		"Items": [
-			{
-				"ID": "File",
-				"Text": "File",
+	"Font": "Roboto-Regular.ttf",
+	"FontSize": 24,
+	"Windows": [
+		{
+			"ID": "Main",
+			"Title": "Overview",
+			"Width": 1280,
+			"Height": 720,
+			"MenuBar": {
 				"Items": [
 					{
-						"ID": "Quit",
-						"Text": "Quit"
+						"ID": "File",
+						"Text": "File",
+						"Items": [
+							{
+								"ID": "Quit",
+								"Text": "Quit"
+							}
+						]
+					},
+					{
+						"ID": "Help",
+						"Text": "Help",
+						"Items": [
+							{
+								"ID": "About",
+								"Text": "About"
+							}
+						]
 					}
 				]
 			},
-			{
-				"ID": "Help",
-				"Text": "Help",
-				"Items": [
-					{
-						"ID": "About",
-						"Text": "About"
-					}
-				]
-			}
-		]
-	},
-	"Body": {
-		"Controls": [
-			{
-				"Type": "VerticalContainer",
+			"Body": {
 				"Controls": [
 					{
-						"Type": "Text",
-						"Text": "Hello"
-					},
-					{
-						"ID": "OKBtn",
-						"Type": "Button",
-						"Text": {
-							"Text": "OK"
-						}
-					},
-					{
-						"Type": "Checkbox",
-						"Text": {
-							"Text": "Checkbox"
-						},
-						"TriState": true
-					},
-					{
-						"Type": "Image",
-						"Texture": "info.png"
-					},
-					{
-						"Type": "TextSelectable",
-						"Text": {
-							"Text": "Selectable"
-						}
-					},
-					{
-						"Type": "TextInput"
+						"Type": "VerticalContainer",
+						"Controls": [
+							{
+								"Type": "Text",
+								"Text": "Hello"
+							},
+							{
+								"ID": "OKBtn",
+								"Type": "Button",
+								"Text": {
+									"Text": "OK"
+								}
+							},
+							{
+								"Type": "Checkbox",
+								"Text": {
+									"Text": "Checkbox"
+								},
+								"TriState": true
+							},
+							{
+								"Type": "Image",
+								"Texture": "info.png"
+							},
+							{
+								"Type": "TextSelectable",
+								"Text": {
+									"Text": "Selectable"
+								}
+							},
+							{
+								"Type": "TextInput"
+							}
+						]
 					}
 				]
 			}
-		]
-	}
+		}
+	]
 }
