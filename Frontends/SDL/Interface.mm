@@ -291,12 +291,6 @@ void OnCreateWindow(OctaneUI::Window* Window)
 	Container& Item = Windows[Window];
 	Item.Window = Instance;
 	Item.Renderer = Renderer;
-
-	if (g_Device == nullptr)
-	{
-		g_Device = Layer.device;
-		InitializeDevice(g_Device);
-	}
 }
 
 void OnDestroyWindow(OctaneUI::Window* Window)
@@ -597,6 +591,11 @@ void Initialize(OctaneUI::Application& Application)
 	}
 
 	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "metal");
+
+	// This will retrieve the default GPU. There is an API to retrieve other
+	// GPUs but will look into this API if needed.
+	g_Device = MTLCreateSystemDefaultDevice();
+	InitializeDevice(g_Device);
 
 	Application.SetOnCreateWindow(OnCreateWindow);
 	Application.SetOnDestroyWindow(OnDestroyWindow);
