@@ -69,6 +69,7 @@ public:
 	std::shared_ptr<Window> NewWindow(const char* Title, float Width, float Height);
 	std::shared_ptr<Window> NewWindow(const char* JsonStream);
 	std::shared_ptr<Window> NewWindow(const char* JsonStream, ControlList& List);
+	bool DisplayWindow(const char* ID) const;
 	std::shared_ptr<Theme> GetTheme() const;
 	std::shared_ptr<Icons> GetIcons() const;
 	bool IsKeyPressed(Keyboard::Key Key) const;
@@ -87,7 +88,7 @@ private:
 	void ProcessEvent(const std::shared_ptr<Window>& Item);
 	bool Initialize();
 
-	std::vector<std::shared_ptr<Window>> m_Windows;
+	std::unordered_map<std::string, std::shared_ptr<Window>> m_Windows;
 	std::shared_ptr<Theme> m_Theme { nullptr };
 	std::shared_ptr<Icons> m_Icons { nullptr };
 	bool m_IsRunning { false };

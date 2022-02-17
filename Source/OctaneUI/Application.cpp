@@ -110,7 +110,8 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
 		WindowControls[Result->ID()] = List;
 	}
 
-	assert(WindowControls.find("Main") != WindowControls.end());
+	assert(m_Windows.find("Main") != WindowControls.end());
+	DisplayWindow("Main");
 
 	return true;
 }
@@ -119,9 +120,9 @@ void Application::Shutdown()
 {
 	if (m_OnDestroyWindow)
 	{
-		for (const std::shared_ptr<Window>& Item : m_Windows)
+		for (auto& Item : m_Windows)
 		{
-			m_OnDestroyWindow(Item.get());
+			m_OnDestroyWindow(Item.second.get());
 		}
 	}
 
@@ -138,15 +139,21 @@ void Application::Shutdown()
 
 void Application::Update()
 {
-	for (const std::shared_ptr<Window>& Item : m_Windows)
+	for (auto& Item : m_Windows)
 	{
-		Item->Update();
+		if (Item.second->IsVisible())
+		{
+			Item.second->Update();
+		}
 	}
 
-	for (const std::shared_ptr<Window>& Item : m_Windows)
+	for (auto& Item : m_Windows)
 	{
-		Paint Brush(m_Theme);
-		Item->DoPaint(Brush);
+		if (Item.second->IsVisible())
+		{
+			Paint Brush(m_Theme);
+			Item.second->DoPaint(Brush);
+		}
 	}
 }
 
@@ -158,13 +165,16 @@ int Application::Run()
 		{
 			Update();
 
-			for (const std::shared_ptr<Window>& Item : m_Windows)
+			for (auto& Item : m_Windows)
 			{
-				ProcessEvent(Item);
-
-				if (!m_IsRunning)
+				if (Item.second->IsVisible())
 				{
-					break;
+					ProcessEvent(Item.second);
+
+					if (!m_IsRunning)
+					{
+						break;
+					}
 				}
 			}
 
@@ -208,7 +218,7 @@ std::shared_ptr<Window> Application::GetMainWindow() const
 		return nullptr;
 	}
 
-	return m_Windows[0];
+	return m_Windows.at("Main");
 }
 
 std::shared_ptr<Window> Application::NewWindow(const char* Title, float Width, float Height)
@@ -231,6 +241,29 @@ std::shared_ptr<Window> Application::NewWindow(const char* JsonStream)
 std::shared_ptr<Window> Application::NewWindow(const char* JsonStream, ControlList& List)
 {
 	return CreateWindow(Json::Parse(JsonStream), List);
+}
+
+bool Application::DisplayWindow(const char* ID) const
+{
+	auto& It = m_Windows.find(ID);
+	if (It == m_Windows.end())
+	{
+		return false;
+	}
+
+	if (It->second->IsVisible())
+	{
+		return true;
+	}
+
+	if (m_OnCreateWindow != nullptr)
+	{
+		m_OnCreateWindow(It->second.get());
+	}
+
+	It->second->SetVisible(true);
+
+	return true;
 }
 
 std::shared_ptr<Theme> Application::GetTheme() const
@@ -298,25 +331,15 @@ std::shared_ptr<Window> Application::CreateWindow(const Json& Root, ControlList&
 	Result->CreateContainer();
 	Result->Load(Root, List);
 	Result->SetOnPaint(std::bind(&Application::OnPaint, this, std::placeholders::_1, std::placeholders::_2));
-	m_Windows.push_back(Result);
-
-	if (m_OnCreateWindow)
-	{
-		m_OnCreateWindow(Result.get());
-	}
+	assert(Result->HasID());
+	m_Windows[Result->ID()] = Result;
 
 	return Result;
 }
 
 void Application::DestroyWindow(const std::shared_ptr<Window>& Item)
 {
-	if (!Item)
-	{
-		return;
-	}
-
-	auto Iter = std::find(m_Windows.begin(), m_Windows.end(), Item);
-	if (Iter == m_Windows.end())
+	if (!Item || !Item->IsVisible())
 	{
 		return;
 	}
@@ -326,7 +349,7 @@ void Application::DestroyWindow(const std::shared_ptr<Window>& Item)
 		m_OnDestroyWindow(Item.get());
 	}
 
-	m_Windows.erase(Iter);
+	Item->SetVisible(false);
 }
 
 void Application::ProcessEvent(const std::shared_ptr<Window>& Item)
@@ -341,7 +364,7 @@ void Application::ProcessEvent(const std::shared_ptr<Window>& Item)
 	switch (E.GetType())
 	{
 	case Event::Type::WindowClosed:
-		if (Item == m_Windows[0])
+		if (std::string(Item->ID()) == "Main")
 		{
 			m_IsRunning = false;
 		}
