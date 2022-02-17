@@ -71,6 +71,20 @@
 					}
 				]
 			}
+		},
+		{
+			"ID": "About",
+			"Title": "About",
+			"Width": 200,
+			"Height": 200,
+			"Body": {
+				"Controls": [
+					{
+						"Type": "Text",
+						"Text": "OctaneUI"
+					}
+				]
+			}
 		}
 	]
 }

@@ -61,6 +61,11 @@ int main(int argc, char **argv)
 		Application.Quit();
 	});
 
+	List.To<OctaneUI::MenuItem>("Help.About")->SetOnSelected([&](OctaneUI::MenuItem* Item) -> void
+	{
+		Application.DisplayWindow("About");
+	});
+
 	List.To<OctaneUI::Button>("OKBtn")->SetOnPressed([&]() -> void
 	{
 		printf("OK\n");
