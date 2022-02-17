@@ -94,6 +94,17 @@ bool Window::HasID() const
 	return !m_ID.empty();
 }
 
+void Window::SetVisible(bool Visible)
+{
+	m_Visible = Visible;
+	m_Repaint = Visible;
+}
+
+bool Window::IsVisible() const
+{
+	return m_Visible;
+}
+
 void Window::SetPopup(const std::shared_ptr<Container>& Popup, bool Modal)
 {
 	m_Popup.Open(Popup, Modal);

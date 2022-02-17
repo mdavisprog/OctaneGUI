@@ -68,6 +68,9 @@ public:
 	const char* ID() const;
 	bool HasID() const;
 
+	void SetVisible(bool Visible);
+	bool IsVisible() const;
+
 	void SetPopup(const std::shared_ptr<Container>& Popup, bool Modal = false);
 
 	void OnKeyPressed(Keyboard::Key Key);
@@ -114,6 +117,7 @@ private:
 	std::weak_ptr<Control> m_Focus {};
 	std::weak_ptr<Control> m_Hovered {};
 	Popup m_Popup {};
+	bool m_Visible { false };
 
 	OnPaintSignature m_OnPaint { nullptr };
 };
