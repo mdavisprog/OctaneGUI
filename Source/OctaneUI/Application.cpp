@@ -110,7 +110,7 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
 		WindowControls[Result->ID()] = List;
 	}
 
-	assert(m_Windows.find("Main") != WindowControls.end());
+	assert(m_Windows.find("Main") != m_Windows.end());
 	DisplayWindow("Main");
 
 	return true;
@@ -245,7 +245,7 @@ std::shared_ptr<Window> Application::NewWindow(const char* JsonStream, ControlLi
 
 bool Application::DisplayWindow(const char* ID) const
 {
-	auto& It = m_Windows.find(ID);
+	auto It = m_Windows.find(ID);
 	if (It == m_Windows.end())
 	{
 		return false;
