@@ -67,15 +67,9 @@ int main(int argc, char** argv)
 		.SetOnExit(OnExit);
 	
 	printf("Initializing UnitTests...\n");
-	if (!Application.Initialize("UnitTests"))
+	if (!Application.Initialize("UnitTests", "Roboto-Regular.ttf", 24.0f))
 	{
 		printf("Application failed to initialize.\n");
-		return 1;
-	}
-
-	if (!Application.LoadFont("Roboto-Regular.ttf", 24.0f))
-	{
-		printf("Application failed to load font.\n");
 		return 1;
 	}
 

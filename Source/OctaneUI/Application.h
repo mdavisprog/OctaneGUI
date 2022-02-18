@@ -58,7 +58,7 @@ public:
 	Application();
 	virtual ~Application();
 
-	bool Initialize(const char* Title);
+	bool Initialize(const char* Title, const char* FontPath, float FontSize);
 	bool Initialize(const char* JsonStream, std::unordered_map<std::string, ControlList>& WindowControls);
 	void Shutdown();
 	void Update();
@@ -67,7 +67,6 @@ public:
 	std::shared_ptr<Font> LoadFont(const char* Path, float Size);
 
 	std::shared_ptr<Window> GetMainWindow() const;
-	std::shared_ptr<Window> NewWindow(const char* ID, const char* Title, float Width, float Height);
 	std::shared_ptr<Window> NewWindow(const char* ID, const char* JsonStream);
 	std::shared_ptr<Window> NewWindow(const char* ID, const char* JsonStream, ControlList& List);
 	bool DisplayWindow(const char* ID) const;

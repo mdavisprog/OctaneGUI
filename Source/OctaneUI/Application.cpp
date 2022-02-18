@@ -40,6 +40,7 @@ SOFTWARE.
 #undef NDEBUG
 #include <cassert>
 #include <chrono>
+#include <sstream>
 #include <thread>
 
 namespace OctaneUI
@@ -62,17 +63,20 @@ Application::~Application()
 {
 }
 
-bool Application::Initialize(const char* Title)
+bool Application::Initialize(const char* Title, const char* FontPath, float FontSize)
 {
-	if (!Initialize())
-	{
-		Shutdown();
-		return false;
-	}
+	std::stringstream JsonStream;
+	JsonStream 
+		<< "{Font: \"" << FontPath << "\","
+		<< "FontSize: " << FontSize << ","
+		<< "Windows: {"
+			<< "Main: {Title: " << Title << ", "
+			<< "Width: 1280,"
+			<< "Height: 720}"
+		<< "}}";
 
-	NewWindow("Main", Title, 1280.0f, 720.0f);
-
-	return true;
+	std::unordered_map<std::string, ControlList> WindowControls;
+	return Initialize(JsonStream.str().c_str(), WindowControls);
 }
 
 bool Application::Initialize(const char* JsonStream, std::unordered_map<std::string, ControlList>& WindowControls)
@@ -218,17 +222,6 @@ std::shared_ptr<Window> Application::GetMainWindow() const
 	}
 
 	return m_Windows.at("Main");
-}
-
-std::shared_ptr<Window> Application::NewWindow(const char* ID, const char* Title, float Width, float Height)
-{
-	Json Root;
-	Root["Title"] = Title;
-	Root["Width"] = Width;
-	Root["Height"] = Height;
-
-	ControlList List;
-	return CreateWindow(ID, Root, List);
 }
 
 std::shared_ptr<Window> Application::NewWindow(const char* ID, const char* JsonStream)
