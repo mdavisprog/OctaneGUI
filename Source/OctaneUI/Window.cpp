@@ -334,7 +334,6 @@ void Window::Load(const char* JsonStream, ControlList& List)
 
 void Window::Load(const Json& Root)
 {
-	m_ID = Root["ID"].String();
 	const std::string Title = Root["Title"].String();
 	float Width = Root["Width"].Number(640.0f);
 	float Height = Root["Height"].Number(480.0f);

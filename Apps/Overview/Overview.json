@@ -1,9 +1,8 @@
 {
 	"Font": "Roboto-Regular.ttf",
 	"FontSize": 24,
-	"Windows": [
-		{
-			"ID": "Main",
+	"Windows": {
+		"Main": {
 			"Title": "Overview",
 			"Width": 1280,
 			"Height": 720,
@@ -72,8 +71,7 @@
 				]
 			}
 		},
-		{
-			"ID": "About",
+		"About": {
 			"Title": "About",
 			"Width": 200,
 			"Height": 200,
@@ -86,5 +84,5 @@
 				]
 			}
 		}
-	]
+	}
 }

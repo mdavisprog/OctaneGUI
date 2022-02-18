@@ -37,6 +37,7 @@ SOFTWARE.
 #include "Window.h"
 
 #include <algorithm>
+#undef NDEBUG
 #include <cassert>
 #include <chrono>
 #include <thread>
@@ -69,7 +70,7 @@ bool Application::Initialize(const char* Title)
 		return false;
 	}
 
-	NewWindow(Title, 1280.0f, 720.0f);
+	NewWindow("Main", Title, 1280.0f, 720.0f);
 
 	return true;
 }
@@ -91,7 +92,7 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
 	}
 
 	const Json& Windows = Root["Windows"];
-	if (!Windows.IsArray())
+	if (!Windows.IsObject())
 	{
 		Shutdown();
 		return false;
@@ -101,14 +102,12 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
 	float FontSize = Root["FontSize"].Number(16.0f);
 	LoadFont(FontPath, FontSize);
 
-	for (int I = 0; I < Windows.Count(); I++)
+	Windows.ForEach([&](const std::string& Key, const Json& Value) -> void
 	{
 		ControlList List;
-		std::shared_ptr<Window> Result = CreateWindow(Windows[I], List);
-		assert(Result->HasID());
-
-		WindowControls[Result->ID()] = List;
-	}
+		CreateWindow(Key.c_str(), Value, List);
+		WindowControls[Key] = List;
+	});
 
 	assert(m_Windows.find("Main") != m_Windows.end());
 	DisplayWindow("Main");
@@ -221,7 +220,7 @@ std::shared_ptr<Window> Application::GetMainWindow() const
 	return m_Windows.at("Main");
 }
 
-std::shared_ptr<Window> Application::NewWindow(const char* Title, float Width, float Height)
+std::shared_ptr<Window> Application::NewWindow(const char* ID, const char* Title, float Width, float Height)
 {
 	Json Root;
 	Root["Title"] = Title;
@@ -229,18 +228,18 @@ std::shared_ptr<Window> Application::NewWindow(const char* Title, float Width, f
 	Root["Height"] = Height;
 
 	ControlList List;
-	return CreateWindow(Root, List);
+	return CreateWindow(ID, Root, List);
 }
 
-std::shared_ptr<Window> Application::NewWindow(const char* JsonStream)
+std::shared_ptr<Window> Application::NewWindow(const char* ID, const char* JsonStream)
 {
 	ControlList List;
-	return CreateWindow(Json::Parse(JsonStream), List);
+	return CreateWindow(ID, Json::Parse(JsonStream), List);
 }
 
-std::shared_ptr<Window> Application::NewWindow(const char* JsonStream, ControlList& List)
+std::shared_ptr<Window> Application::NewWindow(const char* ID, const char* JsonStream, ControlList& List)
 {
-	return CreateWindow(Json::Parse(JsonStream), List);
+	return CreateWindow(ID, Json::Parse(JsonStream), List);
 }
 
 bool Application::DisplayWindow(const char* ID) const
@@ -325,15 +324,14 @@ void Application::OnPaint(Window* InWindow, const VertexBuffer& Buffers)
 	}
 }
 
-std::shared_ptr<Window> Application::CreateWindow(const Json& Root, ControlList& List)
+std::shared_ptr<Window> Application::CreateWindow(const char* ID, const Json& Root, ControlList& List)
 {
 	std::shared_ptr<Window> Result = std::make_shared<Window>(this);
 	Result->CreateContainer();
 	Result->Load(Root, List);
 	Result->SetOnPaint(std::bind(&Application::OnPaint, this, std::placeholders::_1, std::placeholders::_2));
-	assert(Result->HasID());
-	m_Windows[Result->ID()] = Result;
-
+	Result->SetID(ID);
+	m_Windows[ID] = Result;
 	return Result;
 }
 
