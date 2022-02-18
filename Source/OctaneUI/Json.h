@@ -28,6 +28,7 @@ SOFTWARE.
 
 #include "Variant.h"
 
+#include <functional>
 #include <map>
 #include <vector>
 
@@ -65,6 +66,8 @@ public:
 	float Number(float Default = 0.0f) const;
 	const char* String(const char* Default = "") const;
 	unsigned int Count() const;
+
+	void ForEach(std::function<void(const std::string&, const Json&)> Callback) const;
 
 	Json& operator=(bool Value);
 	Json& operator=(float Value);

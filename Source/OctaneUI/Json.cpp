@@ -141,6 +141,19 @@ unsigned int Json::Count() const
 	return m_Array.size();
 }
 
+void Json::ForEach(std::function<void(const std::string&, const Json&)> Callback) const
+{
+	if (Callback == nullptr)
+	{
+		return;
+	}
+
+	for (const std::pair<std::string, Json>& Item : m_Map)
+	{
+		Callback(Item.first, Item.second);
+	}
+}
+
 Json& Json::operator=(bool Value)
 {
 	m_Type = Type::Boolean;
