@@ -28,6 +28,7 @@ SOFTWARE.
 #include "OctaneUI/OctaneUI.h"
 #include "SDL.h"
 
+#include <cassert>
 #include <unordered_map>
 #include <vector>
 
@@ -46,10 +47,15 @@ public:
 	{}
 
 	~Container()
-	{}
+	{
+		VertexBuffer = nullptr;
+		IndexBuffer = nullptr;
+	}
 
 	SDL_Window* Window;
 	SDL_Renderer* Renderer;
+	id<MTLBuffer> VertexBuffer;
+	id<MTLBuffer> IndexBuffer;
 };
 
 struct TextureID
@@ -84,8 +90,6 @@ id<MTLCommandQueue> g_Queue;
 id<MTLDepthStencilState> g_DepthStencil;
 id<MTLRenderPipelineState> g_RenderPipelineTextured;
 id<MTLRenderPipelineState> g_RenderPipeline;
-id<MTLBuffer> g_VertexBuffer;
-id<MTLBuffer> g_IndexBuffer;
 MTLRenderPassDescriptor* g_RenderPass;
 
 // The rendering code path used in this implementation is copied from the DearImGui metal implementation
@@ -252,9 +256,6 @@ void InitializeDevice(id<MTLDevice> Device)
 	{
 		printf("Failed to initialize g_RenderPipeline MTLRenderPipelineState: %s\n", [Error.localizedDescription UTF8String]);
 	}
-
-	g_VertexBuffer = [g_Device newBufferWithLength:1024 * 1024 options:MTLResourceStorageModeShared];
-	g_IndexBuffer = [g_Device newBufferWithLength:1024 * 1024 options:MTLResourceStorageModeShared];
 }
 
 void OnCreateWindow(OctaneUI::Window* Window)
@@ -291,6 +292,8 @@ void OnCreateWindow(OctaneUI::Window* Window)
 	Container& Item = Windows[Window];
 	Item.Window = Instance;
 	Item.Renderer = Renderer;
+	Item.VertexBuffer = [g_Device newBufferWithLength:1024 * 5 options:MTLResourceStorageModeShared];
+	Item.IndexBuffer = [g_Device newBufferWithLength:1024 * 5 options:MTLResourceStorageModeShared];
 }
 
 void OnDestroyWindow(OctaneUI::Window* Window)
@@ -471,7 +474,7 @@ void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& VertexBuffe
 		};
 		[Encoder setVertexBytes:&Ortho length:sizeof(Ortho) atIndex:1];
 
-		[Encoder setVertexBuffer:g_VertexBuffer offset:0 atIndex:0];
+		[Encoder setVertexBuffer:Item.VertexBuffer offset:0 atIndex:0];
 		[Encoder setVertexBufferOffset:0 atIndex:0];
 
 		// TODO: Callback should give a buffer object that contains the full list of vertices and indices,
@@ -479,8 +482,14 @@ void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& VertexBuffe
 		const std::vector<OctaneUI::Vertex>& Vertices = VertexBuffer.GetVertices();
 		const std::vector<uint32_t>& Indices = VertexBuffer.GetIndices();
 
-		memcpy(g_VertexBuffer.contents, Vertices.data(), Vertices.size() * sizeof(OctaneUI::Vertex));
-		memcpy(g_IndexBuffer.contents, Indices.data(), Indices.size() * sizeof(uint32_t));
+		const size_t VertexBufferSize = Vertices.size() * sizeof(OctaneUI::Vertex);
+		const size_t IndexBufferSize = Indices.size() * sizeof(uint32_t);
+
+		assert(VertexBufferSize < Item.VertexBuffer.length);
+		assert(IndexBufferSize < Item.IndexBuffer.length);
+
+		memcpy(Item.VertexBuffer.contents, Vertices.data(), VertexBufferSize);
+		memcpy(Item.IndexBuffer.contents, Indices.data(), IndexBufferSize);
 
 		for (const OctaneUI::DrawCommand& Command : VertexBuffer.Commands())
 		{
@@ -534,7 +543,7 @@ void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& VertexBuffe
 				drawIndexedPrimitives:MTLPrimitiveTypeTriangle
 				indexCount:Command.IndexCount()
 				indexType:MTLIndexTypeUInt32
-				indexBuffer:g_IndexBuffer
+				indexBuffer:Item.IndexBuffer
 				indexBufferOffset:Command.IndexOffset() * sizeof(uint32_t)
 			];
 		}
