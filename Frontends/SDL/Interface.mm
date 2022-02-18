@@ -292,8 +292,8 @@ void OnCreateWindow(OctaneUI::Window* Window)
 	Container& Item = Windows[Window];
 	Item.Window = Instance;
 	Item.Renderer = Renderer;
-	Item.VertexBuffer = [g_Device newBufferWithLength:1024 * 5 options:MTLResourceStorageModeShared];
-	Item.IndexBuffer = [g_Device newBufferWithLength:1024 * 5 options:MTLResourceStorageModeShared];
+	Item.VertexBuffer = [g_Device newBufferWithLength:1024 * 1024 options:MTLResourceStorageModeShared];
+	Item.IndexBuffer = [g_Device newBufferWithLength:1024 * 1024 options:MTLResourceStorageModeShared];
 }
 
 void OnDestroyWindow(OctaneUI::Window* Window)
