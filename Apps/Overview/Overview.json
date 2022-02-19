@@ -41,7 +41,7 @@
 							},
 							{
 								"ID": "OKBtn",
-								"Type": "Button",
+								"Type": "TextButton",
 								"Text": {
 									"Text": "OK"
 								}

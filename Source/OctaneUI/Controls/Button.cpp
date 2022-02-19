@@ -24,65 +24,16 @@ SOFTWARE.
 
 */
 
-#include "../Json.h"
 #include "../Paint.h"
 #include "../Theme.h"
 #include "Button.h"
-#include "Text.h"
 
 namespace OctaneUI
 {
 
 Button::Button(Window* InWindow)
 	: Control(InWindow)
-	, m_State(State::None)
 {
-	m_Text = std::make_shared<Text>(InWindow);
-	m_Text->SetParent(this);
-}
-
-Button::~Button()
-{
-}
-
-Button* Button::SetPosition(float X, float Y)
-{
-	return SetPosition(Vector2(X, Y));
-}
-
-Button* Button::SetPosition(const Vector2& Position)
-{
-	Control::SetPosition(Position);
-	return this;
-}
-
-Button* Button::SetSize(float Width, float Height)
-{
-	return SetSize(Vector2(Width, Height));
-}
-
-Button* Button::SetSize(const Vector2& Size)
-{
-	Control::SetSize(Size);
-	return this;
-}
-
-Button* Button::SetExpand(Expand InExpand)
-{
-	Control::SetExpand(InExpand);
-	return this;
-}
-
-Button* Button::SetText(const char* InText)
-{
-	m_Text->SetText(InText);
-	UpdateSize();
-	return this;
-}
-
-const char* Button::GetText() const
-{
-	return m_Text->GetText();
 }
 
 Button* Button::SetOnPressed(OnEmptySignature Fn)
@@ -104,22 +55,6 @@ void Button::OnPaint(Paint& Brush) const
 	}
 
 	Brush.Rectangle(GetAbsoluteBounds(), BackgroundColor);
-	m_Text->OnPaint(Brush);
-}
-
-void Button::Update()
-{
-	const Vector2 Size = GetSize() * 0.5f;
-	const Vector2 TextSize = m_Text->GetSize() * 0.5f;
-	m_Text->SetPosition(Size - TextSize);
-}
-
-void Button::OnLoad(const Json& Root)
-{
-	Control::OnLoad(Root);
-
-	m_Text->OnLoad(Root["Text"]);
-	UpdateSize();
 }
 
 bool Button::OnMousePressed(const Vector2& Position, Mouse::Button Button)
@@ -168,14 +103,6 @@ void Button::OnMouseLeave()
 	}
 
 	Invalidate();
-}
-
-void Button::UpdateSize()
-{
-	Vector2 Padding = GetTheme()->GetConstant(Theme::Vector2Constants::Button_Padding);
-	Vector2 Size = m_Text->GetSize() + Padding * 2.0f;
-	SetSize(Size);
-	Update();
 }
 
 }

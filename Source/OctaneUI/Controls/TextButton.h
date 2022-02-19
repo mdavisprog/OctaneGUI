@@ -24,41 +24,33 @@ SOFTWARE.
 
 */
 
-#include "OctaneUI/OctaneUI.h"
-#include "TestSuite.h"
+#pragma once
 
-namespace Tests
+#include "Button.h"
+
+namespace OctaneUI
 {
 
-TEST_SUITE(Button,
+class Text;
 
-TEST_CASE(Press,
+class TextButton : public Button
 {
-	const char* Json = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [{\"Type\": \"TextButton\", \"ID\": \"Button\", \"Text\": {\"Text\": \"Button\"}}]}}";
-	OctaneUI::ControlList List;
-	Application.GetMainWindow()->Load(Json, List);
-	Application.GetMainWindow()->Update();
+	CLASS(TextButton)
 
-	VERIFY(List.Contains("Button"))
+public:
+	TextButton(Window* InWindow);
 
-	bool Pressed = false;
-	List.To<OctaneUI::Button>("Button")->SetOnPressed([&]()
-	{
-		Pressed = true;
-	});
+	Button* SetText(const char* InText);
+	const char* GetText() const;
 
-	OctaneUI::Vector2 Position = List.To<OctaneUI::Button>("Button")->GetAbsoluteBounds().GetCenter();
+	virtual void OnPaint(Paint& Brush) const override;
+	virtual void Update() override;
+	virtual void OnLoad(const Json& Root) override;
 
-	Application.GetMainWindow()->OnMouseMove(Position);
-	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
-	VERIFY(!Pressed)
+private:
+	void UpdateSize();
 
-	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
-	VERIFY(Pressed)
-
-	return true;
-})
-
-)
+	std::shared_ptr<Text> m_Text;
+};
 
 }

@@ -32,32 +32,16 @@ SOFTWARE.
 namespace OctaneUI
 {
 
-class Text;
-
 class Button : public Control
 {
 	CLASS(Button)
 
 public:
 	Button(Window* InWindow);
-	virtual ~Button();
-
-	Button* SetPosition(float X, float Y);
-	Button* SetPosition(const Vector2& Position);
-
-	Button* SetSize(float Width, float Height);
-	Button* SetSize(const Vector2& Position);
-
-	Button* SetExpand(Expand InExpand);
-
-	Button* SetText(const char* InText);
-	const char* GetText() const;
 
 	Button* SetOnPressed(OnEmptySignature Fn);
 
 	virtual void OnPaint(Paint& Brush) const override;
-	virtual void Update() override;
-	virtual void OnLoad(const Json& Root) override;
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseEnter() override;
@@ -71,11 +55,8 @@ private:
 		Pressed
 	};
 
-	void UpdateSize();
-
-	State m_State;
-	std::shared_ptr<Text> m_Text;
-	OnEmptySignature m_OnPressed;
+	State m_State { State::None };
+	OnEmptySignature m_OnPressed { nullptr };
 };
 
 }

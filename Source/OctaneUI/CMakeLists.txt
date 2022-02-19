@@ -16,6 +16,7 @@ set(SOURCE
 	Controls/ScrollBar.cpp
 	Controls/Separator.cpp
 	Controls/Text.cpp
+	Controls/TextButton.cpp
 	Controls/TextInput.cpp
 	Controls/TextSelectable.cpp
 	Controls/VerticalContainer.cpp

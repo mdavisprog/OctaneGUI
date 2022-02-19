@@ -27,7 +27,6 @@ SOFTWARE.
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Theme.h"
-#include "Button.h"
 #include "Checkbox.h"
 #include "Container.h"
 #include "HorizontalContainer.h"
@@ -36,6 +35,7 @@ SOFTWARE.
 #include "ScrollableContainer.h"
 #include "Separator.h"
 #include "Text.h"
+#include "TextButton.h"
 #include "TextInput.h"
 #include "TextSelectable.h"
 #include "VerticalContainer.h"
@@ -78,7 +78,7 @@ std::shared_ptr<TextSelectable> Container::AddTextSelectable(const char* InText)
 
 std::shared_ptr<Button> Container::AddButton(const char* InText)
 {
-	std::shared_ptr<Button> Result = AddControl<Button>();
+	std::shared_ptr<TextButton> Result = AddControl<TextButton>();
 	Result->SetText(InText);
 	return Result;
 }
@@ -126,50 +126,17 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 {
 	std::shared_ptr<Control> Result;
 
-	if (Type == Text::TypeName())
-	{
-		Result = AddControl<Text>();
-	}
-	else if (Type == TextSelectable::TypeName())
-	{
-		Result = AddControl<TextSelectable>();
-	}
-	else if (Type == TextInput::TypeName())
-	{
-		Result = AddControl<TextInput>();
-	}
-	else if (Type == Button::TypeName())
-	{
-		Result = AddControl<Button>();
-	}
-	else if (Type == Checkbox::TypeName())
-	{
-		Result = AddControl<Checkbox>();
-	}
-	else if (Type == Image::TypeName())
-	{
-		Result = AddControl<Image>();
-	}
-	else if (Type == Panel::TypeName())
-	{
-		Result = AddControl<Panel>();
-	}
-	else if (Type == Separator::TypeName())
-	{
-		Result = AddControl<Separator>();
-	}
-	else if (Type == HorizontalContainer::TypeName())
-	{
-		Result = AddControl<HorizontalContainer>();
-	}
-	else if (Type == ScrollableContainer::TypeName())
-	{
-		Result = AddControl<ScrollableContainer>();
-	}
-	else if (Type == VerticalContainer::TypeName())
-	{
-		Result = AddControl<VerticalContainer>();
-	}
+	if (Type == Text::TypeName()) { Result = AddControl<Text>(); }
+	else if (Type == TextButton::TypeName()) { Result = AddControl<TextButton>(); }
+	else if (Type == TextSelectable::TypeName()) { Result = AddControl<TextSelectable>(); }
+	else if (Type == TextInput::TypeName()) { Result = AddControl<TextInput>(); }
+	else if (Type == Checkbox::TypeName()) { Result = AddControl<Checkbox>(); }
+	else if (Type == Image::TypeName()) { Result = AddControl<Image>(); }
+	else if (Type == Panel::TypeName()) { Result = AddControl<Panel>(); }
+	else if (Type == Separator::TypeName()) { Result = AddControl<Separator>(); }
+	else if (Type == HorizontalContainer::TypeName()) { Result = AddControl<HorizontalContainer>(); }
+	else if (Type == ScrollableContainer::TypeName()) { Result = AddControl<ScrollableContainer>(); }
+	else if (Type == VerticalContainer::TypeName()) { Result = AddControl<VerticalContainer>(); }
 
 	return Result;
 }

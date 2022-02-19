@@ -24,41 +24,61 @@ SOFTWARE.
 
 */
 
-#include "OctaneUI/OctaneUI.h"
-#include "TestSuite.h"
+#include "../Json.h"
+#include "../Theme.h"
+#include "Text.h"
+#include "TextButton.h"
 
-namespace Tests
+namespace OctaneUI
 {
 
-TEST_SUITE(Button,
-
-TEST_CASE(Press,
+TextButton::TextButton(Window* InWindow)
+	: Button(InWindow)
 {
-	const char* Json = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [{\"Type\": \"TextButton\", \"ID\": \"Button\", \"Text\": {\"Text\": \"Button\"}}]}}";
-	OctaneUI::ControlList List;
-	Application.GetMainWindow()->Load(Json, List);
-	Application.GetMainWindow()->Update();
+	m_Text = std::make_shared<Text>(InWindow);
+	m_Text->SetParent(this);
+}
 
-	VERIFY(List.Contains("Button"))
+Button* TextButton::SetText(const char* InText)
+{
+	m_Text->SetText(InText);
+	UpdateSize();
+	return this;
+}
 
-	bool Pressed = false;
-	List.To<OctaneUI::Button>("Button")->SetOnPressed([&]()
-	{
-		Pressed = true;
-	});
+const char* TextButton::GetText() const
+{
+	return m_Text->GetText();
+}
 
-	OctaneUI::Vector2 Position = List.To<OctaneUI::Button>("Button")->GetAbsoluteBounds().GetCenter();
+void TextButton::OnPaint(Paint& Brush) const
+{
+	Button::OnPaint(Brush);
 
-	Application.GetMainWindow()->OnMouseMove(Position);
-	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
-	VERIFY(!Pressed)
+	m_Text->OnPaint(Brush);
+}
 
-	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
-	VERIFY(Pressed)
+void TextButton::Update()
+{
+	const Vector2 Size = GetSize() * 0.5f;
+	const Vector2 TextSize = m_Text->GetSize() * 0.5f;
+	m_Text->SetPosition(Size - TextSize);
+}
 
-	return true;
-})
+void TextButton::OnLoad(const Json& Root)
+{
+	Button::OnLoad(Root);
 
-)
+	m_Text->OnLoad(Root["Text"]);
+	UpdateSize();
+}
+
+void TextButton::UpdateSize()
+{
+	Vector2 Padding = GetTheme()->GetConstant(Theme::Vector2Constants::Button_Padding);
+	Vector2 Size = m_Text->GetSize() + Padding * 2.0f;
+	SetSize(Size);
+	Update();
+}
 
 }
