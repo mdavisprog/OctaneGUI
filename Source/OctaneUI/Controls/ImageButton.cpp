@@ -24,38 +24,59 @@ SOFTWARE.
 
 */
 
-#pragma once
+#include "../Json.h"
+#include "../Theme.h"
+#include "Image.h"
+#include "ImageButton.h"
 
-#include "Application.h"
-#include "Color.h"
-#include "Controls/Button.h"
-#include "Controls/Container.h"
-#include "Controls/Control.h"
-#include "Controls/ControlList.h"
-#include "Controls/HorizontalContainer.h"
-#include "Controls/Image.h"
-#include "Controls/ImageButton.h"
-#include "Controls/Menu.h"
-#include "Controls/MenuBar.h"
-#include "Controls/MenuItem.h"
-#include "Controls/Panel.h"
-#include "Controls/ScrollableContainer.h"
-#include "Controls/ScrollBar.h"
-#include "Controls/Text.h"
-#include "Controls/TextButton.h"
-#include "Controls/TextInput.h"
-#include "Controls/TextSelectable.h"
-#include "Controls/VerticalContainer.h"
-#include "DrawCommand.h"
-#include "Event.h"
-#include "Font.h"
-#include "Json.h"
-#include "Keyboard.h"
-#include "Mouse.h"
-#include "Paint.h"
-#include "Rect.h"
-#include "Theme.h"
-#include "Vector2.h"
-#include "Vertex.h"
-#include "VertexBuffer.h"
-#include "Window.h"
+namespace OctaneUI
+{
+
+ImageButton::ImageButton(Window* InWindow)
+	: Button(InWindow)
+{
+	m_Image = std::make_shared<Image>(InWindow);
+	m_Image->SetParent(this);
+}
+
+ImageButton* ImageButton::SetTexture(const char* Path)
+{
+	m_Image->SetTexture(Path);
+	UpdateSize();
+	return this;
+}
+
+ImageButton* ImageButton::SetTexture(const std::shared_ptr<Texture>& InTexture)
+{
+	m_Image->SetTexture(InTexture);
+	UpdateSize();
+	return this;
+}
+
+void ImageButton::OnPaint(Paint& Brush) const
+{
+	Button::OnPaint(Brush);
+
+	m_Image->OnPaint(Brush);
+}
+
+void ImageButton::Update()
+{
+	m_Image->SetPosition(GetSize() * 0.5f - m_Image->GetSize() * 0.5f);
+}
+
+void ImageButton::OnLoad(const Json& Root)
+{
+	Button::OnLoad(Root);
+
+	m_Image->OnLoad(Root["Image"]);
+	UpdateSize();
+}
+
+void ImageButton::UpdateSize()
+{
+	Vector2 Padding = GetTheme()->GetConstant(Theme::Vector2Constants::Button_Padding);
+	SetSize(m_Image->GetSize() + Padding * 2.0f);
+}
+
+}

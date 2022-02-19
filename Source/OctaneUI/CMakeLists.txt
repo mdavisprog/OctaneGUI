@@ -8,6 +8,7 @@ set(SOURCE
 	Controls/ControlList.cpp
 	Controls/HorizontalContainer.cpp
 	Controls/Image.cpp
+	Controls/ImageButton.cpp
 	Controls/Menu.cpp
 	Controls/MenuBar.cpp
 	Controls/MenuItem.cpp
