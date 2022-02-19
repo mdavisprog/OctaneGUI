@@ -78,7 +78,6 @@ void TextButton::UpdateSize()
 	Vector2 Padding = GetTheme()->GetConstant(Theme::Vector2Constants::Button_Padding);
 	Vector2 Size = m_Text->GetSize() + Padding * 2.0f;
 	SetSize(Size);
-	Update();
 }
 
 }
