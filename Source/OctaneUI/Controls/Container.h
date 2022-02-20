@@ -84,10 +84,10 @@ public:
 
 protected:
 	void InvalidateLayout();
-	bool ExpandSize(Vector2& Size) const;
 	Vector2 GetPotentialSize(int& ExpandedControls) const;
 
 	virtual Vector2 CalculateSize(const std::vector<std::shared_ptr<Control>>& Controls) const;
+	virtual Vector2 SuggestedSize() const;
 	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const;
 
 private:
@@ -99,6 +99,7 @@ private:
 		return Result;
 	}
 
+	Vector2 ExpandSize(const Vector2& Size, const Vector2& Max) const;
 	void OnInvalidate(Control* Focus, InvalidateType Type);
 
 	std::vector<std::shared_ptr<Control>> m_Controls;

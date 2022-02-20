@@ -50,8 +50,6 @@ Vector2 HorizontalContainer::CalculateSize(const std::vector<std::shared_ptr<Con
 		Result.Y = std::max<float>(Result.Y, Size.Y);
 	}
 
-	ExpandSize(Result);
-
 	return Result;
 }
 
@@ -60,6 +58,7 @@ void HorizontalContainer::PlaceControls(const std::vector<std::shared_ptr<Contro
 	int ExpandedControls = 0;
 	Vector2 Size = GetPotentialSize(ExpandedControls);
 	Size.Y = GetSize().Y;
+	Vector2 Position;
 	for (const std::shared_ptr<Control>& Item : Controls)
 	{
 		Vector2 ItemSize = Item->GetSize();
@@ -75,14 +74,8 @@ void HorizontalContainer::PlaceControls(const std::vector<std::shared_ptr<Contro
 		}
 
 		Item->SetSize(ItemSize);
-	}
-
-	Vector2 Position;
-	for (const std::shared_ptr<Control>& Item : Controls)
-	{
 		Item->SetPosition(Position);
-		Item->Update();
-		Position.X += Item->GetSize().X;
+		Position.X += ItemSize.X;
 	}
 }
 

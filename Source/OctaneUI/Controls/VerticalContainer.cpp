@@ -50,8 +50,6 @@ Vector2 VerticalContainer::CalculateSize(const std::vector<std::shared_ptr<Contr
 		Result.Y += Size.Y;
 	}
 
-	ExpandSize(Result);
-
 	return Result;
 }
 
@@ -60,6 +58,7 @@ void VerticalContainer::PlaceControls(const std::vector<std::shared_ptr<Control>
 	int ExpandedControls = 0;
 	Vector2 Size = GetPotentialSize(ExpandedControls);
 	Size.X = GetSize().X;
+	Vector2 Position;
 	for (const std::shared_ptr<Control>& Item : Controls)
 	{
 		Vector2 ItemSize = Item->GetSize();
@@ -75,14 +74,8 @@ void VerticalContainer::PlaceControls(const std::vector<std::shared_ptr<Control>
 		}
 
 		Item->SetSize(ItemSize);
-	}
-
-	Vector2 Position;
-	for (const std::shared_ptr<Control>& Item : Controls)
-	{
 		Item->SetPosition(Position);
-		Item->Update();
-		Position.Y += Item->GetSize().Y;
+		Position.Y += ItemSize.Y;
 	}
 }
 

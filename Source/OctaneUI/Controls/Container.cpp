@@ -199,19 +199,25 @@ Container* Container::Layout()
 {
 	if (m_UpdateLayout)
 	{
-		Vector2 Size = CalculateSize(m_Controls);
-		SetSize(Size);
-
 		for (const std::shared_ptr<Control>& Item : m_Controls)
 		{
 			const std::shared_ptr<Container> Child = std::dynamic_pointer_cast<Container>(Item);
 			if (Child)
 			{
+				Vector2 Size = Child->CalculateSize(m_Controls);
+				Size = Child->ExpandSize(Size, SuggestedSize());
+				Child->SetSize(Size);
 				Child->Layout();
 			}
 		}
 
 		PlaceControls(m_Controls);
+
+		for (const std::shared_ptr<Control>& Item : m_Controls)
+		{
+			Item->Update();
+		}
+
 		m_UpdateLayout = false;
 	}
 
@@ -292,27 +298,6 @@ void Container::InvalidateLayout()
 	Invalidate(InvalidateType::Layout);
 }
 
-bool Container::ExpandSize(Vector2& Size) const
-{
-	Control* Parent = GetParent();
-	if (Parent == nullptr)
-	{
-		Size = GetSize();
-		return false;
-	}
-
-	Expand Direction = GetExpand();
-	switch (Direction)
-	{
-	case Expand::Both: Size = Parent->GetSize(); break;
-	case Expand::Width: Size.X = Parent->GetSize().X; break;
-	case Expand::Height: Size.Y = Parent->GetSize().Y; break;
-	default: break;
-	}
-
-	return true;
-}
-
 Vector2 Container::GetPotentialSize(int& ExpandedControls) const
 {
 	Vector2 Result = GetSize();
@@ -339,9 +324,12 @@ Vector2 Container::GetPotentialSize(int& ExpandedControls) const
 
 Vector2 Container::CalculateSize(const std::vector<std::shared_ptr<Control>>& Controls) const
 {
-	Vector2 Result = GetSize();
-	ExpandSize(Result);
-	return Result;
+	return GetSize();
+}
+
+Vector2 Container::SuggestedSize() const
+{
+	return GetSize();
 }
 
 void Container::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
@@ -362,11 +350,22 @@ void Container::PlaceControls(const std::vector<std::shared_ptr<Control>>& Contr
 
 		Item->SetSize(ItemSize);
 	}
+}
 
-	for (const std::shared_ptr<Control>& Item : Controls)
+Vector2 Container::ExpandSize(const Vector2& Size, const Vector2& Max) const
+{
+	Vector2 Result = Size;
+
+	switch (GetExpand())
 	{
-		Item->Update();
+	case Expand::Both: Result = Max; break;
+	case Expand::Width: Result.X = Max.X; break;
+	case Expand::Height: Result.Y = Max.Y; break;
+	case Expand::None:
+	default: break;
 	}
+
+	return Result;
 }
 
 void Container::OnInvalidate(Control* Focus, InvalidateType Type)
