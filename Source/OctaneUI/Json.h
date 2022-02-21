@@ -48,12 +48,13 @@ public:
 		Array
 	};
 
+	static std::string ToLower(const std::string& Value);
+	static Json Parse(const char* Stream);
+
 	Json();
 	Json(Type InType);
 	Json(const Json& Other);
 	~Json();
-
-	static Json Parse(const char* Stream);
 
 	bool IsArray() const;
 	bool IsBoolean() const;

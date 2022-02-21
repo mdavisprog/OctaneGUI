@@ -31,7 +31,7 @@ SOFTWARE.
 namespace OctaneUI
 {
 
-std::string ToLower(const std::string& Value)
+std::string Json::ToLower(const std::string& Value)
 {
 	std::string Result;
 
@@ -40,6 +40,13 @@ std::string ToLower(const std::string& Value)
 		Result += std::tolower(Ch);
 	}
 
+	return Result;
+}
+
+Json Json::Parse(const char* Stream)
+{
+	Json Result;
+	ParseValue(Stream, Result);
 	return Result;
 }
 
@@ -67,13 +74,6 @@ Json::Json(const Json& Other)
 
 Json::~Json()
 {
-}
-
-Json Json::Parse(const char* Stream)
-{
-	Json Result;
-	ParseValue(Stream, Result);
-	return Result;
 }
 
 bool Json::IsArray() const
