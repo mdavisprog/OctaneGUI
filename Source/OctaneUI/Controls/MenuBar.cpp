@@ -117,6 +117,8 @@ void MenuBar::OnLoad(const Json& Root)
 			NewMenu->OnLoad(Item);
 		}
 	}
+
+	SetExpand(Expand::Width);
 }
 
 void MenuBar::OnHover(MenuItem* Hovered)

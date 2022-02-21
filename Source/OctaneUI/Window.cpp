@@ -254,7 +254,9 @@ void Window::OnText(uint32_t Code)
 void Window::CreateContainer()
 {
 	m_Container = std::make_shared<VerticalContainer>(this);
-	m_Container->SetOnInvalidate([=](Control* Focus, InvalidateType Type) -> void
+	m_Container
+		->SetExpand(Expand::Both)
+		->SetOnInvalidate([=](Control* Focus, InvalidateType Type) -> void
 		{
 			m_Repaint = true;
 		});
@@ -344,6 +346,9 @@ void Window::Load(const Json& Root)
 
 	m_MenuBar->OnLoad(MB);
 	m_Body->OnLoad(Body);
+
+	// Need to update the expansion type after OnLoad functions as it will be reset there.
+	m_Body->SetExpand(Expand::Both);
 }
 
 void Window::Load(const Json& Root, ControlList& List)

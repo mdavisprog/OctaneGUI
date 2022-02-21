@@ -32,6 +32,16 @@ SOFTWARE.
 namespace OctaneUI
 {
 
+Expand ToExpand(const std::string& Value)
+{
+	const std::string Lower = Json::ToLower(Value);
+	if (Lower == "width") { return Expand::Width; }
+	else if (Lower == "height") { return Expand::Height; }
+	else if (Lower == "both") { return Expand::Both; }
+
+	return Expand::None;
+}
+
 Control::Control(Window* InWindow)
 	: Class()
 	, m_Window(InWindow)
@@ -218,6 +228,7 @@ void Control::OnUnfocused()
 void Control::OnLoad(const Json& Root)
 {
 	m_ID = Root["ID"].String();
+	m_Expand = ToExpand(Root["Expand"].String());
 }
 
 void Control::OnKeyPressed(Keyboard::Key Key)

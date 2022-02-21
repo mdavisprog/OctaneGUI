@@ -140,6 +140,7 @@ void Menu::OnLoad(const Json& Root)
 
 		const std::shared_ptr<MenuItem>& MI = m_Items.back();
 		MI->OnLoad(Item);
+		MI->SetExpand(Expand::Width);
 	}
 }
 
