@@ -39,10 +39,12 @@ void TestSuite::Run(OctaneUI::Application& Application)
 		return;
 	}
 
+	OctaneUI::Clock Clock;
 	printf("Running %d test suites\n", (int)s_Suites->size());
 
 	for (const TestSuite* TS : *s_Suites)
 	{
+		OctaneUI::Clock TestClock;
 		printf("\nRunning test suite '%s'\n", TS->m_Name.c_str());
 
 		uint32_t Passed = 0;
@@ -63,10 +65,15 @@ void TestSuite::Run(OctaneUI::Application& Application)
 			}
 		}
 
-		printf("Completed %d tests. %d Passed %d Failed\n", (int)TS->m_TestCases.size(), Passed, Failed);
+		printf("Completed %d tests in %f seconds. %d Passed %d Failed\n", 
+			(int)TS->m_TestCases.size(),
+			TestClock.Measure(),
+			Passed,
+			Failed
+		);
 	}
 
-	printf("\nAll tests completed\n");
+	printf("\nAll tests completed in %f seconds.\n", Clock.Measure());
 
 	delete s_Suites;
 }
