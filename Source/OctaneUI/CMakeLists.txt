@@ -23,6 +23,7 @@ set(SOURCE
 	Controls/VerticalContainer.cpp
 	Application.cpp
 	Class.cpp
+	Clock.cpp
 	Color.cpp
 	DrawCommand.cpp
 	Event.cpp
