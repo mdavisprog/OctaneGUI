@@ -46,8 +46,6 @@ Window::Window(Application* InApplication)
 
 	m_Popup.SetOnClose([=](Container* Focus) -> void
 	{
-		std::vector<std::shared_ptr<Control>> Controls;
-		Focus->GetControls(Controls);
 		m_MenuBar->Close();
 		m_Repaint = true;
 	});
