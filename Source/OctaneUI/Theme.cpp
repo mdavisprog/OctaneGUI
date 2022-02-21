@@ -84,9 +84,9 @@ void Theme::InitializeDefault()
 {
 	m_Colors[Colors::Text] = Color(255, 255, 255, 255);
 	m_Colors[Colors::Button] = Color(48, 48, 48, 255);
-	m_Colors[Colors::Button_Hovered] = Color(130, 130, 130, 255);
-	m_Colors[Colors::Button_Pressed] = Color(84, 84, 84, 255);
-	m_Colors[Colors::TextSelectable_Hovered] = Color(130, 130, 130, 255);
+	m_Colors[Colors::Button_Hovered] = Color(48, 63, 169, 255);
+	m_Colors[Colors::Button_Pressed] = Color(98, 125, 152, 255);
+	m_Colors[Colors::TextSelectable_Hovered] = Color(48, 63, 169, 255);
 	m_Colors[Colors::TextInput_Background] = Color(64, 64, 64, 255);
 	m_Colors[Colors::TextInput_FocusedOutline] = Color(0, 0, 255, 255);
 	m_Colors[Colors::TextInput_Cursor] = Color(255, 255, 255, 255);
