@@ -26,22 +26,17 @@ SOFTWARE.
 
 #pragma once
 
-#include "Container.h"
+#include "BoxContainer.h"
 
 namespace OctaneUI
 {
 
-class VerticalContainer : public Container
+class VerticalContainer : public BoxContainer
 {
 	CLASS(VerticalContainer)
 
 public:
 	VerticalContainer(Window* InWindow);
-	virtual ~VerticalContainer();
-
-protected:
-	virtual Vector2 CalculateSize(const std::vector<std::shared_ptr<Control>>& Controls) const override;
-	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const override;
 };
 
 }

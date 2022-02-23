@@ -77,7 +77,9 @@ public:
 	Container* Layout();
 
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const;
+	// TODO: Rename to GetAllControls.
 	void GetControls(std::vector<std::shared_ptr<Control>>& Controls) const;
+	const std::vector<std::shared_ptr<Control>>& Controls() const;
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
@@ -86,8 +88,6 @@ protected:
 	void InvalidateLayout();
 	Vector2 GetPotentialSize(int& ExpandedControls) const;
 
-	virtual Vector2 CalculateSize(const std::vector<std::shared_ptr<Control>>& Controls) const;
-	virtual Vector2 SuggestedSize() const;
 	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const;
 
 private:
@@ -99,7 +99,6 @@ private:
 		return Result;
 	}
 
-	Vector2 ExpandSize(const Vector2& Size, const Vector2& Max) const;
 	void OnInvalidate(Control* Focus, InvalidateType Type);
 
 	std::vector<std::shared_ptr<Control>> m_Controls;

@@ -24,14 +24,39 @@ SOFTWARE.
 
 */
 
-#include "HorizontalContainer.h"
+#pragma once
+
+#include "Container.h"
+
+enum class Grow : uint8_t
+{
+	Begin,
+	Center,
+	End
+};
 
 namespace OctaneUI
 {
 
-HorizontalContainer::HorizontalContainer(Window* InWindow)
-	: BoxContainer(Orientation::Horizontal, InWindow)
+class BoxContainer : public Container
 {
-}
+	CLASS(BoxContainer)
+
+public:
+	BoxContainer(Orientation Orient, Window* InWindow);
+
+	BoxContainer* SetGrow(Grow Direction);
+	Grow GrowDirection() const;
+	Vector2 CalculateSize() const;
+
+	virtual void OnLoad(const Json& Root) override;
+
+protected:
+	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const override;
+
+private:
+	Grow m_Grow { Grow::Begin };
+	Orientation m_Orient { Orientation::Horizontal };
+};
 
 }

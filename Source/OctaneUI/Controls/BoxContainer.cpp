@@ -1,0 +1,285 @@
+/**
+
+MIT License
+
+Copyright (c) 2022 Mitchell Davis <mdavisprog@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+#include "../Json.h"
+#include "BoxContainer.h"
+
+namespace OctaneUI
+{
+
+static Grow ToGrow(const std::string& Value)
+{
+	const std::string Lower = Json::ToLower(Value);
+	if (Lower == "center")
+	{
+		return Grow::Center;
+	}
+	else if (Lower == "end")
+	{
+		return Grow::End;
+	}
+
+	return Grow::Begin;
+}
+
+BoxContainer::BoxContainer(Orientation Orient, Window* InWindow)
+	: Container(InWindow)
+	, m_Orient(Orient)
+{
+}
+
+BoxContainer* BoxContainer::SetGrow(Grow Direction)
+{
+	m_Grow = Direction;
+	Invalidate(InvalidateType::Layout);
+	return this;
+}
+
+Grow BoxContainer::GrowDirection() const
+{
+	return m_Grow;
+}
+
+Vector2 BoxContainer::CalculateSize() const
+{
+	Vector2 Result;
+
+	for (const std::shared_ptr<Control>& Item : Controls())
+	{
+		Vector2 Size = Item->GetSize();
+		const std::shared_ptr<BoxContainer>& Box = std::dynamic_pointer_cast<BoxContainer>(Item);
+		if (Box)
+		{
+			Size = Box->CalculateSize();
+		}
+
+		if (m_Orient == Orientation::Horizontal)
+		{
+			Result.X += Size.X;
+			Result.Y = std::max<float>(Result.Y, Size.Y);
+		}
+		else
+		{
+			Result.X = std::max<float>(Result.X, Size.X);
+			Result.Y += Size.Y;
+		}
+	}
+
+	return Result;
+}
+
+void BoxContainer::OnLoad(const Json& Root)
+{
+	Container::OnLoad(Root);
+
+	m_Grow = ToGrow(Root["Grow"].String());
+}
+
+void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
+{
+	const bool IsHorizontal = m_Orient == Orientation::Horizontal;
+
+	// 1. The first step is to determine the total available size by checking for each control's expansion type
+	//	  and shrinking the size if there are any controls that do not have an expansion type. Once this is
+	//	  determined, then a partition size is calculated to be given to each expanded control.
+	int ExpandW = 0;
+	int ExpandH = 0;
+	Vector2 AvailableSize = GetSize();
+	for (const std::shared_ptr<Control>& Item : Controls)
+	{
+		Vector2 Size = Item->GetSize();
+
+		const std::shared_ptr<BoxContainer>& ItemContainer = std::dynamic_pointer_cast<BoxContainer>(Item);
+		if (ItemContainer)
+		{
+			Size = ItemContainer->CalculateSize();
+		}
+
+		switch (Item->GetExpand())
+		{
+		case Expand::Both: ExpandW++; ExpandH++; break;
+		case Expand::Width:
+		{
+			if (IsHorizontal)
+			{
+				ExpandW++;
+			}
+			else
+			{
+				AvailableSize.Y -= Size.Y;
+			}
+		 } break;
+		case Expand::Height:
+		{
+			if (IsHorizontal)
+			{
+				AvailableSize.X -= Size.X;
+			}
+			else
+			{
+				ExpandH++;
+			}
+		 } break;
+		case Expand::None:
+		default:
+			if (IsHorizontal)
+			{
+				AvailableSize.X -= Size.X;
+			}
+			else
+			{
+				AvailableSize.Y -= Size.Y;
+			}
+			break;
+		}
+	}
+
+	ExpandW = std::max<int>(ExpandW, 1);
+	ExpandH = std::max<int>(ExpandH, 1);
+	Vector2 PartitionSize = IsHorizontal
+		? Vector2(AvailableSize.X / (float)ExpandW, AvailableSize.Y)
+		: Vector2(AvailableSize.X, AvailableSize.Y / (float)ExpandH);
+	
+	// 2. Resize each control by setting each control's size by the partition size if it has an expansion
+	//	  Type. The available size is then reduced by this partition size for the next control to use.
+	//	  TODO: Mayby check if AvailableSize is zero and size any left over controls to zero?
+	Vector2 TotalSize;
+	AvailableSize = GetSize();
+	for (const std::shared_ptr<Control>& Item : Controls)
+	{
+		Vector2 Size = Item->GetSize();
+
+		const std::shared_ptr<BoxContainer>& ItemContainer = std::dynamic_pointer_cast<BoxContainer>(Item);
+		if (ItemContainer)
+		{
+			Size = ItemContainer->CalculateSize();
+		}
+
+		switch(Item->GetExpand())
+		{
+		case Expand::Both:
+		{
+			if (IsHorizontal)
+			{
+				Size.X = PartitionSize.X;
+				Size.Y = GetSize().Y;
+			}
+			else
+			{
+				Size.X = GetSize().X;
+				Size.Y = PartitionSize.Y;
+			}
+		} break;
+		case Expand::Width:
+		{
+			if (IsHorizontal)
+			{
+				Size.X = PartitionSize.X;
+			}
+			else
+			{
+				Size.X = GetSize().X;
+			}
+		 } break;
+		case Expand::Height:
+		{
+			if (IsHorizontal)
+			{
+				Size.Y = GetSize().Y;
+			}
+			else
+			{
+				Size.Y = PartitionSize.Y;
+			}
+		 } break;
+		case Expand::None:
+		default: break;
+		}
+
+		Item->SetSize(Size);
+
+		if (IsHorizontal)
+		{
+			TotalSize.X += Size.X;
+			TotalSize.Y = std::max<float>(TotalSize.Y, Size.Y);
+			AvailableSize.X -= Size.X;
+		}
+		else
+		{
+			TotalSize.X = std::max<float>(TotalSize.X, Size.X);
+			TotalSize.Y += Size.Y;
+			AvailableSize.Y -= Size.Y;
+		}
+	}
+
+	// 3. Position each control based on this container's grow direction.
+	Vector2 Offset;
+	switch (m_Grow)
+	{
+	case Grow::Center:
+	{
+		if (IsHorizontal)
+		{
+			Offset.X = GetSize().X * 0.5f - TotalSize.X * 0.5f;
+		}
+		else
+		{
+			Offset.Y = GetSize().Y * 0.5f - TotalSize.Y * 0.5f;
+		}
+	} break;
+	case Grow::End:
+	{
+		if (IsHorizontal)
+		{
+			Offset.X = GetSize().X - TotalSize.X;
+		}
+		else
+		{
+			Offset.Y = GetSize().Y - TotalSize.Y;
+		}
+	} break;
+	case Grow::Begin:
+	default: break;
+	}
+
+	for (const std::shared_ptr<Control>& Item : Controls)
+	{
+		Vector2 Size = Item->GetSize();
+
+		Item->SetPosition(Offset);
+
+		if (IsHorizontal)
+		{
+			Offset.X += Size.X;
+		}
+		else
+		{
+			Offset.Y += Size.Y;
+		}
+	}
+}
+
+}

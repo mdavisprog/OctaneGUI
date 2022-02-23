@@ -201,19 +201,16 @@ Container* Container::Layout()
 {
 	if (m_UpdateLayout)
 	{
+		PlaceControls(m_Controls);
+		
 		for (const std::shared_ptr<Control>& Item : m_Controls)
 		{
 			const std::shared_ptr<Container> Child = std::dynamic_pointer_cast<Container>(Item);
 			if (Child)
 			{
-				Vector2 Size = Child->CalculateSize(m_Controls);
-				Size = Child->ExpandSize(Size, SuggestedSize());
-				Child->SetSize(Size);
 				Child->Layout();
 			}
 		}
-
-		PlaceControls(m_Controls);
 
 		for (const std::shared_ptr<Control>& Item : m_Controls)
 		{
@@ -265,6 +262,11 @@ void Container::GetControls(std::vector<std::shared_ptr<Control>>& Controls) con
 			ItemContainer->GetControls(Controls);
 		}
 	}
+}
+
+const std::vector<std::shared_ptr<Control>>& Container::Controls() const
+{
+	return m_Controls;
 }
 
 void Container::OnPaint(Paint& Brush) const
@@ -324,16 +326,6 @@ Vector2 Container::GetPotentialSize(int& ExpandedControls) const
 	return Result;
 }
 
-Vector2 Container::CalculateSize(const std::vector<std::shared_ptr<Control>>& Controls) const
-{
-	return GetSize();
-}
-
-Vector2 Container::SuggestedSize() const
-{
-	return GetSize();
-}
-
 void Container::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
 {
 	for (const std::shared_ptr<Control>& Item : Controls)
@@ -352,22 +344,6 @@ void Container::PlaceControls(const std::vector<std::shared_ptr<Control>>& Contr
 
 		Item->SetSize(ItemSize);
 	}
-}
-
-Vector2 Container::ExpandSize(const Vector2& Size, const Vector2& Max) const
-{
-	Vector2 Result = Size;
-
-	switch (GetExpand())
-	{
-	case Expand::Both: Result = Max; break;
-	case Expand::Width: Result.X = Max.X; break;
-	case Expand::Height: Result.Y = Max.Y; break;
-	case Expand::None:
-	default: break;
-	}
-
-	return Result;
 }
 
 void Container::OnInvalidate(Control* Focus, InvalidateType Type)

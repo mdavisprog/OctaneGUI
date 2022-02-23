@@ -41,7 +41,7 @@ public:
 	virtual void OnLoad(const Json& Root) override;
 
 protected:
-	virtual Vector2 SuggestedSize() const override;
+	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const override;
 
 private:
 	Rect m_Margins {};

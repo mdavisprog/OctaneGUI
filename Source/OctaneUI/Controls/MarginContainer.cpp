@@ -44,13 +44,26 @@ void MarginContainer::OnLoad(const Json& Root)
 	m_Margins.Min.Y = Root["Top"].Number();
 	m_Margins.Max.X = Root["Right"].Number();
 	m_Margins.Max.Y = Root["Bottom"].Number();
-
-	SetPosition({m_Margins.Min});
 }
 
-Vector2 MarginContainer::SuggestedSize() const
+void MarginContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
 {
-	return GetSize() - m_Margins.Max;
+	for (const std::shared_ptr<Control>& Item : Controls)
+	{
+		Vector2 Size = Item->GetSize();
+
+		switch (Item->GetExpand())
+		{
+		case Expand::Both: Size = GetSize() - m_Margins.Max; break;
+		case Expand::Width: Size.X = GetSize().X - m_Margins.Max.X; break;
+		case Expand::Height: Size.Y = GetSize().Y - m_Margins.Max.Y; break;
+		case Expand::None:
+		default: break;
+		}
+
+		Item->SetSize(Size);
+		Item->SetPosition(m_Margins.Min);
+	}
 }
 
 }

@@ -24,59 +24,14 @@ SOFTWARE.
 
 */
 
-#include "../Theme.h"
 #include "VerticalContainer.h"
 
 namespace OctaneUI
 {
 
 VerticalContainer::VerticalContainer(Window* InWindow)
-	: Container(InWindow)
+	: BoxContainer(Orientation::Vertical, InWindow)
 {
-}
-
-VerticalContainer::~VerticalContainer()
-{
-}
-
-Vector2 VerticalContainer::CalculateSize(const std::vector<std::shared_ptr<Control>>& Controls) const
-{
-	Vector2 Result;
-
-	for (const std::shared_ptr<Control>& Item : Controls)
-	{
-		const Vector2 Size = Item->GetSize();
-		Result.X = std::max<float>(Result.X, Size.X);
-		Result.Y += Size.Y;
-	}
-
-	return Result;
-}
-
-void VerticalContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
-{
-	int ExpandedControls = 0;
-	Vector2 Size = GetPotentialSize(ExpandedControls);
-	Size.X = GetSize().X;
-	Vector2 Position;
-	for (const std::shared_ptr<Control>& Item : Controls)
-	{
-		Vector2 ItemSize = Item->GetSize();
-		Expand Direction = Item->GetExpand();
-
-		switch (Direction)
-		{
-		case Expand::Both: ItemSize.X = Size.X; ItemSize.Y = Size.Y / (float)ExpandedControls; break;
-		case Expand::Width: ItemSize.X = Size.X; break;
-		case Expand::Height: ItemSize.Y = Size.Y / (float)ExpandedControls; break;
-		case Expand::None:
-		default: break;
-		}
-
-		Item->SetSize(ItemSize);
-		Item->SetPosition(Position);
-		Position.Y += ItemSize.Y;
-	}
 }
 
 }
