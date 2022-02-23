@@ -32,5 +32,21 @@ add_custom_command(
 	TARGET ${TARGET}
 	POST_BUILD 
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${FRONTEND_BIN_PATH} ${BIN_DIR}
-	COMMAND ${CMAKE_COMMAND} -E copy ${APP_FONT} ${APP_INFO_IMAGE} ${APP_THUMBS_UP_IMAGE} ${CMAKE_CURRENT_SOURCE_DIR}/Overview.json ${BIN_DIR}
+	COMMAND ${CMAKE_COMMAND} -E copy ${APP_FONT} ${APP_INFO_IMAGE} ${APP_THUMBS_UP_IMAGE} ${BIN_DIR}
+)
+
+add_custom_command(
+	OUTPUT ${BIN_DIR}/Overview.json
+	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/Overview.json ${BIN_DIR}
+	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/Overview.json
+)
+
+add_custom_target(
+	Overview_Json ALL
+	DEPENDS ${BIN_DIR}/Overview.json
+)
+
+add_dependencies(
+	${TARGET}
+	Overview_Json
 )
