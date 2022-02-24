@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "../Json.h"
+#include "BoxContainer.h"
 #include "MarginContainer.h"
 
 namespace OctaneUI
@@ -40,6 +41,8 @@ void MarginContainer::OnLoad(const Json& Root)
 {
 	Container::OnLoad(Root);
 
+	SetExpand(Expand::Both);
+
 	m_Margins.Min.X = Root["Left"].Number();
 	m_Margins.Min.Y = Root["Top"].Number();
 	m_Margins.Max.X = Root["Right"].Number();
@@ -52,11 +55,17 @@ void MarginContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>&
 	{
 		Vector2 Size = Item->GetSize();
 
+		const std::shared_ptr<BoxContainer>& Box = std::dynamic_pointer_cast<BoxContainer>(Item);
+		if (Box)
+		{
+			Size = Box->CalculateSize();
+		}
+
 		switch (Item->GetExpand())
 		{
-		case Expand::Both: Size = GetSize() - m_Margins.Max; break;
-		case Expand::Width: Size.X = GetSize().X - m_Margins.Max.X; break;
-		case Expand::Height: Size.Y = GetSize().Y - m_Margins.Max.Y; break;
+		case Expand::Both: Size = GetSize() - m_Margins.Min - m_Margins.Max; break;
+		case Expand::Width: Size.X = GetSize().X - m_Margins.Min.X - m_Margins.Max.X; break;
+		case Expand::Height: Size.Y = GetSize().Y - m_Margins.Min.Y - m_Margins.Max.Y; break;
 		case Expand::None:
 		default: break;
 		}
