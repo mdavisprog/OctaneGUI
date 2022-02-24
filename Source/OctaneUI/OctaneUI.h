@@ -29,6 +29,7 @@ SOFTWARE.
 #include "Application.h"
 #include "Clock.h"
 #include "Color.h"
+#include "Controls/BoxContainer.h"
 #include "Controls/Button.h"
 #include "Controls/Container.h"
 #include "Controls/Control.h"

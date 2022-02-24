@@ -28,15 +28,15 @@ SOFTWARE.
 
 #include "Container.h"
 
+namespace OctaneUI
+{
+
 enum class Grow : uint8_t
 {
 	Begin,
 	Center,
 	End
 };
-
-namespace OctaneUI
-{
 
 class BoxContainer : public Container
 {
