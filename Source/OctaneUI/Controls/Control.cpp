@@ -228,7 +228,11 @@ void Control::OnUnfocused()
 void Control::OnLoad(const Json& Root)
 {
 	m_ID = Root["ID"].String();
-	m_Expand = ToExpand(Root["Expand"].String());
+
+	if (!IsFixedSize())
+	{
+		m_Expand = ToExpand(Root["Expand"].String());
+	}
 }
 
 void Control::OnKeyPressed(Keyboard::Key Key)
