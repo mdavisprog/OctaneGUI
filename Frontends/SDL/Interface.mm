@@ -24,7 +24,7 @@ SOFTWARE.
 
 */
 
-#include "Interface.h"
+#include "../Interface.h"
 #include "OctaneUI/OctaneUI.h"
 #include "SDL.h"
 
@@ -35,7 +35,7 @@ SOFTWARE.
 #import <Metal/Metal.h>
 #import <QuartzCore/QuartzCore.h>
 
-namespace SDL
+namespace Interface
 {
 
 struct Container

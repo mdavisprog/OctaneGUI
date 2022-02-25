@@ -24,13 +24,13 @@ SOFTWARE.
 
 */
 
-#include "Interface.h"
-#include "SFML/Graphics.hpp"
+#include "../Interface.h"
 #include "OctaneUI/OctaneUI.h"
+#include "SFML/Graphics.hpp"
 
 #include <unordered_map>
 
-namespace SFML
+namespace Interface
 {
 
 class Container

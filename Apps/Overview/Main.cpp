@@ -46,11 +46,7 @@ int main(int argc, char **argv)
 	}
 
 	OctaneUI::Application Application;
-#if __APPLE__
-	SDL::Initialize(Application);
-#else
-	SFML::Initialize(Application);
-#endif
+	Interface::Initialize(Application);
 
 	std::unordered_map<std::string, OctaneUI::ControlList> WindowControls;
 	Application.Initialize(Buffer.c_str(), WindowControls);

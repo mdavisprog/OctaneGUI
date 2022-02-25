@@ -26,11 +26,16 @@ SOFTWARE.
 
 #pragma once
 
-#include "OctaneUI/OctaneUI.h"
-
-namespace SFML
+namespace OctaneUI
 {
 
-void Initialize(OctaneUI::Application& Application);
+class Application;
+
+}
+
+namespace Interface
+{
+
+void Initialize(OctaneUI::Application&);
 
 }
