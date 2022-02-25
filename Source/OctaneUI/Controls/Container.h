@@ -55,6 +55,14 @@ public:
 	Container(Window* InWindow);
 	virtual ~Container();
 
+	template<class T, typename ...TArgs>
+	std::shared_ptr<T> AddControl(TArgs... Args)
+	{
+		std::shared_ptr<T> Result = std::make_shared<T>(GetWindow(), Args...);
+		InsertControl(Result);
+		return Result;
+	}
+
 	std::shared_ptr<Text> AddText(const char* InText);
 	std::shared_ptr<TextInput> AddTextInput();
 	std::shared_ptr<TextSelectable> AddTextSelectable(const char* InText);
@@ -91,14 +99,6 @@ protected:
 	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const;
 
 private:
-	template<class T, typename ...TArgs>
-	std::shared_ptr<T> AddControl(TArgs... Args)
-	{
-		std::shared_ptr<T> Result = std::make_shared<T>(GetWindow(), Args...);
-		InsertControl(Result);
-		return Result;
-	}
-
 	void OnInvalidate(Control* Focus, InvalidateType Type);
 
 	std::vector<std::shared_ptr<Control>> m_Controls;
