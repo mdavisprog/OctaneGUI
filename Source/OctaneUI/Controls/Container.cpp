@@ -269,6 +269,11 @@ const std::vector<std::shared_ptr<Control>>& Container::Controls() const
 	return m_Controls;
 }
 
+Vector2 Container::DesiredSize() const
+{
+	return GetSize();
+}
+
 void Container::OnPaint(Paint& Brush) const
 {
 	for (const std::shared_ptr<Control>& Item : m_Controls)
@@ -302,35 +307,16 @@ void Container::InvalidateLayout()
 	Invalidate(InvalidateType::Layout);
 }
 
-Vector2 Container::GetPotentialSize(int& ExpandedControls) const
-{
-	Vector2 Result = GetSize();
-
-	ExpandedControls = 0;
-	for (const std::shared_ptr<Control>& Item : m_Controls)
-	{
-		const Vector2 Size = Item->GetSize();
-
-		switch (Item->GetExpand())
-		{
-		case Expand::Both:
-		case Expand::Width:
-		case Expand::Height: ExpandedControls++; break;
-		case Expand::None:
-		default: Result -= Size; break;
-		}
-	}
-
-	ExpandedControls = std::max<int>(ExpandedControls, 1);
-
-	return Result;
-}
-
 void Container::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
 {
 	for (const std::shared_ptr<Control>& Item : Controls)
 	{
 		Vector2 ItemSize = Item->GetSize();
+		const std::shared_ptr<Container> ItemContainer = std::dynamic_pointer_cast<Container>(Item);
+		if (ItemContainer)
+		{
+			ItemSize = ItemContainer->DesiredSize();
+		}
 		Expand Direction = Item->GetExpand();
 
 		switch (Direction)

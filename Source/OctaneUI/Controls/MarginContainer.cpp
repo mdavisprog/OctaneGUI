@@ -25,7 +25,6 @@ SOFTWARE.
 */
 
 #include "../Json.h"
-#include "BoxContainer.h"
 #include "MarginContainer.h"
 
 namespace OctaneUI
@@ -55,10 +54,10 @@ void MarginContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>&
 	{
 		Vector2 Size = Item->GetSize();
 
-		const std::shared_ptr<BoxContainer>& Box = std::dynamic_pointer_cast<BoxContainer>(Item);
-		if (Box)
+		const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
+		if (ItemContainer)
 		{
-			Size = Box->CalculateSize();
+			Size = ItemContainer->DesiredSize();
 		}
 
 		switch (Item->GetExpand())

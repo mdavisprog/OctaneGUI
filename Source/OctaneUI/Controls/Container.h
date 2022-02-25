@@ -80,13 +80,13 @@ public:
 	// TODO: Rename to GetAllControls.
 	void GetControls(std::vector<std::shared_ptr<Control>>& Controls) const;
 	const std::vector<std::shared_ptr<Control>>& Controls() const;
+	virtual Vector2 DesiredSize() const;
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
 
 protected:
 	void InvalidateLayout();
-	Vector2 GetPotentialSize(int& ExpandedControls) const;
 
 	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const;
 

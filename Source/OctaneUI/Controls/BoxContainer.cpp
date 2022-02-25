@@ -63,17 +63,17 @@ Grow BoxContainer::GrowDirection() const
 	return m_Grow;
 }
 
-Vector2 BoxContainer::CalculateSize() const
+Vector2 BoxContainer::DesiredSize() const
 {
 	Vector2 Result;
 
 	for (const std::shared_ptr<Control>& Item : Controls())
 	{
 		Vector2 Size = Item->GetSize();
-		const std::shared_ptr<BoxContainer>& Box = std::dynamic_pointer_cast<BoxContainer>(Item);
-		if (Box)
+		const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
+		if (ItemContainer)
 		{
-			Size = Box->CalculateSize();
+			Size = ItemContainer->DesiredSize();
 		}
 
 		if (m_Orient == Orientation::Horizontal)
@@ -112,10 +112,10 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 	{
 		Vector2 Size = Item->GetSize();
 
-		const std::shared_ptr<BoxContainer>& ItemContainer = std::dynamic_pointer_cast<BoxContainer>(Item);
+		const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
 		if (ItemContainer)
 		{
-			Size = ItemContainer->CalculateSize();
+			Size = ItemContainer->DesiredSize();
 		}
 
 		switch (Item->GetExpand())
@@ -172,10 +172,10 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 	{
 		Vector2 Size = Item->GetSize();
 
-		const std::shared_ptr<BoxContainer>& ItemContainer = std::dynamic_pointer_cast<BoxContainer>(Item);
+		const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
 		if (ItemContainer)
 		{
-			Size = ItemContainer->CalculateSize();
+			Size = ItemContainer->DesiredSize();
 		}
 
 		switch(Item->GetExpand())

@@ -47,7 +47,8 @@ public:
 
 	BoxContainer* SetGrow(Grow Direction);
 	Grow GrowDirection() const;
-	Vector2 CalculateSize() const;
+
+	virtual Vector2 DesiredSize() const override;
 
 	virtual void OnLoad(const Json& Root) override;
 
