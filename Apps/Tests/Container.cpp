@@ -27,6 +27,8 @@ SOFTWARE.
 #include "OctaneUI/OctaneUI.h"
 #include "TestSuite.h"
 
+#include <cmath>
+
 namespace Tests
 {
 
