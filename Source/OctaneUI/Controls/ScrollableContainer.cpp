@@ -60,31 +60,36 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 
 std::weak_ptr<Control> ScrollableContainer::GetControl(const Vector2& Point) const
 {
-	if (m_HorizontalSB->Contains(Point))
+	if (m_HorizontalSB->HasHandle() && m_HorizontalSB->Contains(Point))
 	{
 		return m_HorizontalSB;
 	}
 
-	if (m_VerticalSB->Contains(Point))
+	if (m_VerticalSB->HasHandle() && m_VerticalSB->Contains(Point))
 	{
 		return m_VerticalSB;
 	}
 
-	return Container::GetControl(Point);
+	if (TranslatedBounds().Contains(Point))
+	{
+		return Container::GetControl(Point);
+	}
+
+	return std::weak_ptr<Control>();
 }
 
 void ScrollableContainer::Update()
 {
-	std::vector<std::shared_ptr<Control>> Controls;
-	GetControls(Controls);
-
-	m_ContentSize = GetContentSize(Controls);
+	m_ContentSize = GetContentSize(Controls());
 }
 
 void ScrollableContainer::OnPaint(Paint& Brush) const
 {
 	std::vector<std::shared_ptr<Control>> Controls;
 	GetControls(Controls);
+
+	// Need to translate from scrolled space.
+	Brush.PushClip(TranslatedBounds());
 
 	for (const std::shared_ptr<Control>& Item : Controls)
 	{
@@ -93,6 +98,8 @@ void ScrollableContainer::OnPaint(Paint& Brush) const
 			Item->OnPaint(Brush);
 		}
 	}
+
+	Brush.PopClip();
 
 	m_HorizontalSB->OnPaint(Brush);
 	m_VerticalSB->OnPaint(Brush);
@@ -118,6 +125,12 @@ void ScrollableContainer::PlaceControls(const std::vector<std::shared_ptr<Contro
 		->SetSize({SBSize, Size.Y - (m_HorizontalSB->HasHandle() ? SBSize : 0.0f)});
 }
 
+Rect ScrollableContainer::TranslatedBounds() const
+{
+	const Vector2 Position = GetAbsolutePosition() - GetPosition();
+	return {Position, Position + GetSize()};
+}
+
 Vector2 ScrollableContainer::GetContentSize(const std::vector<std::shared_ptr<Control>>& Controls) const
 {
 	Vector2 Result;
@@ -126,7 +139,13 @@ Vector2 ScrollableContainer::GetContentSize(const std::vector<std::shared_ptr<Co
 	{
 		if (Item != m_HorizontalSB && Item != m_VerticalSB)
 		{
-			const Vector2 Size = Item->GetSize();
+			Vector2 Size = Item->GetSize();
+			const std::shared_ptr<Container> ItemContainer = std::dynamic_pointer_cast<Container>(Item);
+			if (ItemContainer)
+			{
+				Size = ItemContainer->DesiredSize();
+			}
+
 			Result.X = std::max<float>(Result.X, Size.X);
 			Result.Y = std::max<float>(Result.Y, Size.Y);
 		}

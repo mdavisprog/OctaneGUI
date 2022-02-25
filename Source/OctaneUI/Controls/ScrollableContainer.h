@@ -49,6 +49,7 @@ protected:
 	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const override;
 
 private:
+	Rect TranslatedBounds() const;
 	Vector2 GetContentSize(const std::vector<std::shared_ptr<Control>>& Controls) const;
 
 	std::shared_ptr<ScrollBar> m_HorizontalSB;
