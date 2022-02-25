@@ -10,6 +10,7 @@ set(SOURCE
 	Controls/HorizontalContainer.cpp
 	Controls/Image.cpp
 	Controls/ImageButton.cpp
+	Controls/ListBox.cpp
 	Controls/MarginContainer.cpp
 	Controls/Menu.cpp
 	Controls/MenuBar.cpp

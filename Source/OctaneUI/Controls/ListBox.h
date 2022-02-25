@@ -26,40 +26,28 @@ SOFTWARE.
 
 #pragma once
 
-#include "Application.h"
-#include "Clock.h"
-#include "Color.h"
-#include "Controls/BoxContainer.h"
-#include "Controls/Button.h"
-#include "Controls/Container.h"
-#include "Controls/Control.h"
-#include "Controls/ControlList.h"
-#include "Controls/HorizontalContainer.h"
-#include "Controls/Image.h"
-#include "Controls/ImageButton.h"
-#include "Controls/ListBox.h"
-#include "Controls/MarginContainer.h"
-#include "Controls/Menu.h"
-#include "Controls/MenuBar.h"
-#include "Controls/MenuItem.h"
-#include "Controls/Panel.h"
-#include "Controls/ScrollableContainer.h"
-#include "Controls/ScrollBar.h"
-#include "Controls/Text.h"
-#include "Controls/TextButton.h"
-#include "Controls/TextInput.h"
-#include "Controls/TextSelectable.h"
-#include "Controls/VerticalContainer.h"
-#include "DrawCommand.h"
-#include "Event.h"
-#include "Font.h"
-#include "Json.h"
-#include "Keyboard.h"
-#include "Mouse.h"
-#include "Paint.h"
-#include "Rect.h"
-#include "Theme.h"
-#include "Vector2.h"
-#include "Vertex.h"
-#include "VertexBuffer.h"
-#include "Window.h"
+#include "Container.h"
+
+namespace OctaneUI
+{
+
+class Panel;
+class ScrollableContainer;
+class VerticalContainer;
+
+class ListBox : public Container
+{
+	CLASS(ListBox)
+
+public:
+	ListBox(Window* InWindow);
+
+	virtual void OnLoad(const Json& Root) override;
+
+private:
+	std::shared_ptr<Panel> m_Panel;
+	std::shared_ptr<ScrollableContainer> m_Scrollable;
+	std::shared_ptr<VerticalContainer> m_List;
+};
+
+}

@@ -32,6 +32,7 @@ SOFTWARE.
 #include "HorizontalContainer.h"
 #include "Image.h"
 #include "ImageButton.h"
+#include "ListBox.h"
 #include "MarginContainer.h"
 #include "Panel.h"
 #include "ScrollableContainer.h"
@@ -135,6 +136,7 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 	else if (Type == Checkbox::TypeName()) { Result = AddControl<Checkbox>(); }
 	else if (Type == Image::TypeName()) { Result = AddControl<Image>(); }
 	else if (Type == ImageButton::TypeName()) { Result = AddControl<ImageButton>(); }
+	else if (Type == ListBox::TypeName()) { Result = AddControl<ListBox>(); }
 	else if (Type == Panel::TypeName()) { Result = AddControl<Panel>(); }
 	else if (Type == Separator::TypeName()) { Result = AddControl<Separator>(); }
 	else if (Type == HorizontalContainer::TypeName()) { Result = AddControl<HorizontalContainer>(); }

@@ -71,6 +71,25 @@
 							},
 							{
 								"Type": "TextInput"
+							},
+							{
+								"Type": "ListBox",
+								"Controls": [
+									{
+										"Type": "Text",
+										"Text": "This is a list box control."
+									},
+									{
+										"Type": "Text",
+										"Text": "Multiple items can be added to this control."
+									},
+									{
+										"Type": "TextSelectable",
+										"Text": {
+											"Text": "This is a TextSelectable control."
+										}
+									}
+								]
 							}
 						]
 					}

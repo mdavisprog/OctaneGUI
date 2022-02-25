@@ -24,42 +24,39 @@ SOFTWARE.
 
 */
 
-#pragma once
+#include "../Json.h"
+#include "ListBox.h"
+#include "Panel.h"
+#include "ScrollableContainer.h"
+#include "VerticalContainer.h"
 
-#include "Application.h"
-#include "Clock.h"
-#include "Color.h"
-#include "Controls/BoxContainer.h"
-#include "Controls/Button.h"
-#include "Controls/Container.h"
-#include "Controls/Control.h"
-#include "Controls/ControlList.h"
-#include "Controls/HorizontalContainer.h"
-#include "Controls/Image.h"
-#include "Controls/ImageButton.h"
-#include "Controls/ListBox.h"
-#include "Controls/MarginContainer.h"
-#include "Controls/Menu.h"
-#include "Controls/MenuBar.h"
-#include "Controls/MenuItem.h"
-#include "Controls/Panel.h"
-#include "Controls/ScrollableContainer.h"
-#include "Controls/ScrollBar.h"
-#include "Controls/Text.h"
-#include "Controls/TextButton.h"
-#include "Controls/TextInput.h"
-#include "Controls/TextSelectable.h"
-#include "Controls/VerticalContainer.h"
-#include "DrawCommand.h"
-#include "Event.h"
-#include "Font.h"
-#include "Json.h"
-#include "Keyboard.h"
-#include "Mouse.h"
-#include "Paint.h"
-#include "Rect.h"
-#include "Theme.h"
-#include "Vector2.h"
-#include "Vertex.h"
-#include "VertexBuffer.h"
-#include "Window.h"
+namespace OctaneUI
+{
+
+ListBox::ListBox(Window* InWindow)
+	: Container(InWindow)
+{
+	m_Panel = AddPanel();
+	m_Panel->SetExpand(Expand::Both);
+
+	m_Scrollable = AddControl<ScrollableContainer>();
+	m_Scrollable->SetExpand(Expand::Both);
+	
+	m_List = m_Scrollable->AddControl<VerticalContainer>();
+
+	SetSize({200.0f, 200.0f});
+}
+
+void ListBox::OnLoad(const Json& Root)
+{
+	Json Copy = Root;
+	Copy["Controls"] = Json();
+
+	Container::OnLoad(Copy);
+
+	Json List;
+	List["Controls"] = Root["Controls"];
+	m_List->OnLoad(List);
+}
+
+}
