@@ -32,7 +32,7 @@ SOFTWARE.
 namespace Tests
 {
 
-static void Load(OctaneUI::Application& Application, const char* JsonControls, OctaneUI::ControlList& List = OctaneUI::ControlList())
+static void Load(OctaneUI::Application& Application, const char* JsonControls, OctaneUI::ControlList& List)
 {
 	static const char* Base = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [";
 	std::string Json = Base;
