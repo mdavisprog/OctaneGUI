@@ -148,6 +148,8 @@ Container* Container::Layout()
 			const std::shared_ptr<Container> Child = std::dynamic_pointer_cast<Container>(Item);
 			if (Child)
 			{
+				// Child containers should be forced to update their layout if the parent has.
+				Child->InvalidateLayout();
 				Child->Layout();
 			}
 		}
@@ -274,8 +276,19 @@ void Container::PlaceControls(const std::vector<std::shared_ptr<Control>>& Contr
 
 void Container::OnInvalidate(Control* Focus, InvalidateType Type)
 {
-	m_UpdateLayout = Type == InvalidateType::Layout || Type == InvalidateType::Both || m_UpdateLayout;
-	Invalidate(Type);
+	const bool UpdateLayout = Type == InvalidateType::Layout || Type == InvalidateType::Both;
+	if (UpdateLayout)
+	{
+		if (m_UpdateLayout != UpdateLayout)
+		{
+			m_UpdateLayout = UpdateLayout;
+			Invalidate(Type);
+		}
+	}
+	else
+	{
+		Invalidate(Type);
+	}
 }
 
 }
