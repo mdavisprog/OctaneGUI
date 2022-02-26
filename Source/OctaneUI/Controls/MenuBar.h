@@ -31,8 +31,10 @@ SOFTWARE.
 namespace OctaneUI
 {
 
+class HorizontalContainer;
 class Menu;
 class MenuItem;
+class Panel;
 
 class MenuBar : public Container
 {
@@ -40,7 +42,6 @@ class MenuBar : public Container
 
 public:
 	MenuBar(Window* InWindow);
-	virtual ~MenuBar();
 
 	std::shared_ptr<Menu> AddItem(const char* InText);
 	void GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const;
@@ -53,11 +54,11 @@ private:
 	void OnSelected(MenuItem* Selected);
 	void Open(MenuItem* Item);
 
-	std::shared_ptr<Panel> m_Panel;
-	std::shared_ptr<HorizontalContainer> m_Container;
+	std::shared_ptr<Panel> m_Panel { nullptr };
+	std::shared_ptr<HorizontalContainer> m_Container { nullptr };
 	std::vector<std::shared_ptr<MenuItem>> m_MenuItems;
-	bool m_Open;
-	std::shared_ptr<Menu> m_Menu;
+	bool m_Open { false };
+	std::shared_ptr<Menu> m_Menu { nullptr };
 };
 
 }

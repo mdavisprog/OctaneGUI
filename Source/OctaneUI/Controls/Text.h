@@ -41,7 +41,6 @@ class Text : public Control
 
 public:
 	Text(Window* InWindow);
-	virtual ~Text();
 
 	Text* SetText(const char* InContents);
 	const char* GetText() const;

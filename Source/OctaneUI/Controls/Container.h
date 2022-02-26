@@ -30,22 +30,10 @@ SOFTWARE.
 #include "Control.h"
 
 #include <memory>
-#include <unordered_map>
 #include <vector>
 
 namespace OctaneUI
 {
-
-class Button;
-class Checkbox;
-class HorizontalContainer;
-class Image;
-class Panel;
-class Text;
-class TextInput;
-class TextSelectable;
-class Theme;
-class VerticalContainer;
 
 class Container : public Control
 {
@@ -63,18 +51,7 @@ public:
 		return Result;
 	}
 
-	std::shared_ptr<Text> AddText(const char* InText);
-	std::shared_ptr<TextInput> AddTextInput();
-	std::shared_ptr<TextSelectable> AddTextSelectable(const char* InText);
-	std::shared_ptr<Button> AddButton(const char* InText);
-	std::shared_ptr<Checkbox> AddCheckbox(const char* InText);
-	std::shared_ptr<Image> AddImage(const char* Path);
-	std::shared_ptr<Panel> AddPanel();
 	bool ShouldUpdateLayout() const;
-
-	std::shared_ptr<Container> AddContainer();
-	std::shared_ptr<HorizontalContainer> AddHorizontalContainer();
-	std::shared_ptr<VerticalContainer> AddVerticalContainer();
 
 	std::shared_ptr<Control> CreateControl(const std::string& Type);
 	Container* InsertControl(const std::shared_ptr<Control>& Item, int Position = -1);
@@ -102,7 +79,7 @@ private:
 	void OnInvalidate(Control* Focus, InvalidateType Type);
 
 	std::vector<std::shared_ptr<Control>> m_Controls;
-	bool m_UpdateLayout;
+	bool m_UpdateLayout { false };
 };
 
 }

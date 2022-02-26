@@ -28,10 +28,14 @@ SOFTWARE.
 
 #include "Container.h"
 
+#include <unordered_map>
+
 namespace OctaneUI
 {
 
+class Panel;
 class MenuItem;
+class VerticalContainer;
 
 class Menu : public Container
 {
@@ -39,7 +43,6 @@ class Menu : public Container
 
 public:
 	Menu(Window* InWindow);
-	virtual ~Menu();
 
 	Menu* AddItem(const char* InText, OnEmptySignature Fn = nullptr);
 	std::shared_ptr<MenuItem> GetItem(const char* InText) const;
@@ -59,11 +62,11 @@ private:
 	void OnSeparatorHovered(Control* Item);
 	void SetSelected(const std::shared_ptr<Menu>& InMenu, bool Selected) const;
 
-	std::shared_ptr<Panel> m_Panel;
+	std::shared_ptr<Panel> m_Panel { nullptr };
 	std::shared_ptr<VerticalContainer> m_Container;
 	std::vector<std::shared_ptr<MenuItem>> m_Items;
 	MenuItemMap m_Callbacks;
-	std::shared_ptr<Menu> m_Menu;
+	std::shared_ptr<Menu> m_Menu { nullptr };
 };
 
 }

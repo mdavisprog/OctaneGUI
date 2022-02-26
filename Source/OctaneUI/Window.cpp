@@ -264,7 +264,7 @@ void Window::CreateContainer()
 	m_MenuBar = std::make_shared<MenuBar>(this);
 	m_Container->InsertControl(m_MenuBar);
 	
-	m_Body = m_Container->AddContainer();
+	m_Body = m_Container->AddControl<Container>();
 	m_Body->SetExpand(Expand::Both);
 
 	m_Repaint = true;

@@ -45,9 +45,9 @@ public:
 	virtual void OnLoad(const Json& Root) override;
 
 private:
-	std::shared_ptr<Panel> m_Panel;
-	std::shared_ptr<ScrollableContainer> m_Scrollable;
-	std::shared_ptr<VerticalContainer> m_List;
+	std::shared_ptr<Panel> m_Panel { nullptr };
+	std::shared_ptr<ScrollableContainer> m_Scrollable { nullptr };
+	std::shared_ptr<VerticalContainer> m_List { nullptr };
 };
 
 }

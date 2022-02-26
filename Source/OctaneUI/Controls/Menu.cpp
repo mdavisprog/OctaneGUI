@@ -39,17 +39,12 @@ namespace OctaneUI
 
 Menu::Menu(Window* InWindow)
 	: Container(InWindow)
-	, m_Menu(nullptr)
 {
-	m_Panel = AddPanel();
+	m_Panel = AddControl<Panel>();
 	m_Panel->SetExpand(Expand::Both);
 
-	m_Container = AddVerticalContainer();
+	m_Container = AddControl<VerticalContainer>();
 	m_Container->SetExpand(Expand::Width);
-}
-
-Menu::~Menu()
-{
 }
 
 Menu* Menu::AddItem(const char* InText, OnEmptySignature Fn)

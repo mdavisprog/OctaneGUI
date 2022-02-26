@@ -38,10 +38,6 @@ Text::Text(Window* InWindow)
 {
 }
 
-Text::~Text()
-{
-}
-
 Text* Text::SetText(const char* InContents)
 {
 	m_Contents = InContents;

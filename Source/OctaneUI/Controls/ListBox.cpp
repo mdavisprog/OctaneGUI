@@ -36,7 +36,7 @@ namespace OctaneUI
 ListBox::ListBox(Window* InWindow)
 	: Container(InWindow)
 {
-	m_Panel = AddPanel();
+	m_Panel = AddControl<Panel>();
 	m_Panel->SetExpand(Expand::Both);
 
 	m_Scrollable = AddControl<ScrollableContainer>();

@@ -40,19 +40,14 @@ namespace OctaneUI
 
 MenuBar::MenuBar(Window* InWindow)
 	: Container(InWindow)
-	, m_Open(false)
 {
 	SetExpand(Expand::Width);
 
-	m_Panel = AddPanel();
+	m_Panel = AddControl<Panel>();
 	m_Panel->SetExpand(Expand::Both);
 
-	m_Container = AddHorizontalContainer();
+	m_Container = AddControl<HorizontalContainer>();
 	m_Container->SetExpand(Expand::Both);
-}
-
-MenuBar::~MenuBar()
-{
 }
 
 std::shared_ptr<Menu> MenuBar::AddItem(const char* InText)

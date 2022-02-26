@@ -26,7 +26,6 @@ SOFTWARE.
 
 #include "../Json.h"
 #include "../Paint.h"
-#include "../Theme.h"
 #include "Checkbox.h"
 #include "Container.h"
 #include "HorizontalContainer.h"
@@ -50,7 +49,6 @@ namespace OctaneUI
 
 Container::Container(Window* InWindow)
 	: Control(InWindow)
-	, m_UpdateLayout(false)
 {
 }
 
@@ -59,70 +57,9 @@ Container::~Container()
 	m_Controls.clear();
 }
 
-std::shared_ptr<Text> Container::AddText(const char* InText)
-{
-	std::shared_ptr<Text> Result = AddControl<Text>();
-	Result->SetText(InText);
-	return Result;
-}
-
-std::shared_ptr<TextInput> Container::AddTextInput()
-{
-	std::shared_ptr<TextInput> Result = AddControl<TextInput>();
-	return Result;
-}
-
-std::shared_ptr<TextSelectable> Container::AddTextSelectable(const char* InText)
-{
-	std::shared_ptr<TextSelectable> Result = AddControl<TextSelectable>();
-	Result->SetText(InText);
-	return Result;
-}
-
-std::shared_ptr<Button> Container::AddButton(const char* InText)
-{
-	std::shared_ptr<TextButton> Result = AddControl<TextButton>();
-	Result->SetText(InText);
-	return Result;
-}
-
-std::shared_ptr<Checkbox> Container::AddCheckbox(const char* InText)
-{
-	std::shared_ptr<Checkbox> Result = AddControl<Checkbox>();
-	Result->SetText(InText);
-	return Result;
-}
-
-std::shared_ptr<Image> Container::AddImage(const char* Path)
-{
-	std::shared_ptr<Image> Result = AddControl<Image>();
-	Result->SetTexture(Path);
-	return Result;
-}
-
-std::shared_ptr<Panel> Container::AddPanel()
-{
-	return AddControl<Panel>();
-}
-
 bool Container::ShouldUpdateLayout() const
 {
 	return m_UpdateLayout;
-}
-
-std::shared_ptr<Container> Container::AddContainer()
-{
-	return AddControl<Container>();
-}
-
-std::shared_ptr<HorizontalContainer> Container::AddHorizontalContainer()
-{
-	return AddControl<HorizontalContainer>();
-}
-
-std::shared_ptr<VerticalContainer> Container::AddVerticalContainer()
-{
-	return AddControl<VerticalContainer>();
 }
 
 std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
@@ -139,6 +76,7 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 	else if (Type == ListBox::TypeName()) { Result = AddControl<ListBox>(); }
 	else if (Type == Panel::TypeName()) { Result = AddControl<Panel>(); }
 	else if (Type == Separator::TypeName()) { Result = AddControl<Separator>(); }
+	else if (Type == Container::TypeName()) { Result = AddControl<Container>(); }
 	else if (Type == HorizontalContainer::TypeName()) { Result = AddControl<HorizontalContainer>(); }
 	else if (Type == MarginContainer::TypeName()) { Result = AddControl<MarginContainer>(); }
 	else if (Type == ScrollableContainer::TypeName()) { Result = AddControl<ScrollableContainer>(); }
