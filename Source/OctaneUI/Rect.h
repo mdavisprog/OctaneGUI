@@ -56,6 +56,8 @@ public:
 	Rect& SetPosition(float X, float Y);
 	Rect& SetPosition(const Vector2& Position);
 
+	Rect& SetSize(const Vector2& Size);
+
 	Rect& Expand(float Width, float Height);
 	Rect& Expand(const Vector2& Size);
 

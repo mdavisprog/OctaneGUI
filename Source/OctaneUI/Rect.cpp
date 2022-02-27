@@ -104,8 +104,14 @@ Rect& Rect::SetPosition(float X, float Y)
 Rect& Rect::SetPosition(const Vector2& Position)
 {
 	const Vector2 Size = GetSize();
-	Min = Vector2(std::floor(Position.X), std::floor(Position.Y));
+	Min = Position.Floor();
 	Max = Min + Size;
+	return *this;
+}
+
+Rect& Rect::SetSize(const Vector2& Size)
+{
+	Max = (Min + Size).Floor();
 	return *this;
 }
 
