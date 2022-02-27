@@ -73,6 +73,7 @@
 								"Type": "TextInput"
 							},
 							{
+								"ID": "List",
 								"Type": "ListBox",
 								"Controls": [
 									{

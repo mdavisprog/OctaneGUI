@@ -67,5 +67,10 @@ int main(int argc, char **argv)
 		printf("OK\n");
 	});
 
+	List.To<OctaneUI::ListBox>("List")->SetOnSelect([](int Index, std::weak_ptr<OctaneUI::Control>) -> void
+	{
+		printf("OnSelect: %d\n", Index);
+	});
+
 	return Application.Run();
 }
