@@ -31,6 +31,7 @@ SOFTWARE.
 namespace OctaneUI
 {
 
+class ListBoxInteraction;
 class Panel;
 class ScrollableContainer;
 class VerticalContainer;
@@ -42,12 +43,15 @@ class ListBox : public Container
 public:
 	ListBox(Window* InWindow);
 
+	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
+
 	virtual void OnLoad(const Json& Root) override;
 
 private:
 	std::shared_ptr<Panel> m_Panel { nullptr };
 	std::shared_ptr<ScrollableContainer> m_Scrollable { nullptr };
 	std::shared_ptr<VerticalContainer> m_List { nullptr };
+	std::shared_ptr<ListBoxInteraction> m_Interaction { nullptr };
 };
 
 }
