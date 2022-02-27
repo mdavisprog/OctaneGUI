@@ -58,6 +58,26 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 	InsertControl(m_VerticalSB);
 }
 
+bool ScrollableContainer::IsScrollBarVisible(const std::shared_ptr<Control>& Item) const
+{
+	if (m_HorizontalSB == Item)
+	{
+		return m_HorizontalSB->HasHandle();
+	}
+
+	if (m_VerticalSB == Item)
+	{
+		return m_VerticalSB->HasHandle();
+	}
+
+	return false;
+}
+
+Vector2 ScrollableContainer::ContentSize() const
+{
+	return m_ContentSize;
+}
+
 std::weak_ptr<Control> ScrollableContainer::GetControl(const Vector2& Point) const
 {
 	if (m_HorizontalSB->HasHandle() && m_HorizontalSB->Contains(Point))
@@ -72,6 +92,8 @@ std::weak_ptr<Control> ScrollableContainer::GetControl(const Vector2& Point) con
 
 	if (TranslatedBounds().Contains(Point))
 	{
+		// This still may return a scrollbar. Parent containers can check for scrollbar visibility
+		// with IsScrollBarVisible function.
 		return Container::GetControl(Point);
 	}
 

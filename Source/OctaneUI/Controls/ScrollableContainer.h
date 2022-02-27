@@ -40,6 +40,9 @@ class ScrollableContainer : public Container
 public:
 	ScrollableContainer(Window* InWindow);
 
+	bool IsScrollBarVisible(const std::shared_ptr<Control>& Item) const;
+	Vector2 ContentSize() const;
+
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 
 	virtual void Update() override;
