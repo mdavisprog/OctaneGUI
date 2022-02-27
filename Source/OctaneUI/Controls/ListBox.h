@@ -41,7 +41,12 @@ class ListBox : public Container
 	CLASS(ListBox)
 
 public:
+	typedef std::function<void(int, std::weak_ptr<Control>)> OnSelectSignature;
+
 	ListBox(Window* InWindow);
+
+	int Index() const;
+	ListBox* SetOnSelect(OnSelectSignature Fn);
 
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 
@@ -52,6 +57,7 @@ private:
 	std::shared_ptr<ScrollableContainer> m_Scrollable { nullptr };
 	std::shared_ptr<VerticalContainer> m_List { nullptr };
 	std::shared_ptr<ListBoxInteraction> m_Interaction { nullptr };
+	OnSelectSignature m_OnSelect { nullptr };
 };
 
 }

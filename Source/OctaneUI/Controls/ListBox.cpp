@@ -51,6 +51,17 @@ public:
 		m_List = List;
 	}
 
+	int Index() const
+	{
+		return m_Index;
+	}
+
+	ListBoxInteraction* SetOnSelect(ListBox::OnSelectSignature Fn)
+	{
+		m_OnSelect = Fn;
+		return this;
+	}
+
 	virtual void OnPaint(Paint& Brush) const override
 	{
 		if (m_List.expired() || (m_Hovered_Index == -1 && m_Index == -1))
@@ -128,6 +139,10 @@ public:
 		if (Button == Mouse::Button::Left)
 		{
 			m_Index = m_Hovered_Index;
+			if (m_OnSelect && !m_List.expired())
+			{
+				m_OnSelect(m_Index, m_List.lock()->Controls()[m_Index]);
+			}
 			Invalidate();
 		}
 
@@ -161,6 +176,7 @@ private:
 	std::weak_ptr<Container> m_List {};
 	int m_Index { -1 };
 	int m_Hovered_Index { -1 };
+	ListBox::OnSelectSignature m_OnSelect { nullptr };
 };
 
 ListBox::ListBox(Window* InWindow)
@@ -170,7 +186,15 @@ ListBox::ListBox(Window* InWindow)
 	m_Panel->SetExpand(Expand::Both);
 
 	m_Interaction = AddControl<ListBoxInteraction>();
-	m_Interaction->SetExpand(Expand::Both);
+	m_Interaction
+		->SetOnSelect([this](int Index, std::weak_ptr<Control> Item) -> void
+		{
+			if (m_OnSelect)
+			{
+				m_OnSelect(Index, Item);
+			}
+		})
+		->SetExpand(Expand::Both);
 
 	m_Scrollable = AddControl<ScrollableContainer>();
 	m_Scrollable->SetExpand(Expand::Both);
@@ -180,6 +204,17 @@ ListBox::ListBox(Window* InWindow)
 	m_Interaction->Initialize(m_Scrollable, m_List);
 
 	SetSize({200.0f, 200.0f});
+}
+
+int ListBox::Index() const
+{
+	return m_Interaction->Index();
+}
+
+ListBox* ListBox::SetOnSelect(OnSelectSignature Fn)
+{
+	m_OnSelect = Fn;
+	return this;
 }
 
 std::weak_ptr<Control> ListBox::GetControl(const Vector2& Point) const
