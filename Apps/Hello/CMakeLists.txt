@@ -30,7 +30,6 @@ set_target_properties(
 
 add_custom_command(
 	TARGET ${TARGET}
-	POST_BUILD 
-	COMMAND ${CMAKE_COMMAND} -E copy_directory ${FRONTEND_BIN_PATH} ${BIN_DIR}
-	COMMAND ${CMAKE_COMMAND} -E copy ${APP_FONT} ${BIN_DIR}
+	POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different ${APP_FONT} ${BIN_DIR}
 )
