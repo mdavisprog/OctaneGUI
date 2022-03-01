@@ -51,7 +51,6 @@ else()
 endif()
 
 set(FRONTEND_INCLUDE ${FRONTEND_INCLUDE} "${PROJECT_SOURCE_DIR}/Frontends")
-set(STB_INCLUDE "${PROJECT_SOURCE_DIR}/External/stb")
 set(OCTANEUI_INCLUDE "${PROJECT_SOURCE_DIR}/Source")
 
 add_subdirectory(Source/OctaneUI)

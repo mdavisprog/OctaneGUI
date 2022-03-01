@@ -27,7 +27,7 @@ SOFTWARE.
 #include "Font.h"
 #include "Rect.h"
 #define STB_TRUETYPE_IMPLEMENTATION
-#include "stb/stb_truetype.h"
+#include "External/stb/stb_truetype.h"
 #include "Texture.h"
 
 #include <cmath>
