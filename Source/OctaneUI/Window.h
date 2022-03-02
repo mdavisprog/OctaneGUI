@@ -49,6 +49,7 @@ class MenuBar;
 class Paint;
 class Theme;
 class VertexBuffer;
+class VerticalContainer;
 
 class Window
 {
@@ -110,7 +111,7 @@ private:
 	std::string m_ID {};
 	Vector2 m_MousePosition {};
 	Rect m_Bounds {};
-	std::shared_ptr<Container> m_Container { nullptr };
+	std::shared_ptr<VerticalContainer> m_Container { nullptr };
 	std::shared_ptr<MenuBar> m_MenuBar { nullptr };
 	std::shared_ptr<Container> m_Body { nullptr };
 	bool m_Repaint { false };

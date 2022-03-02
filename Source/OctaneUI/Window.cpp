@@ -255,6 +255,7 @@ void Window::CreateContainer()
 {
 	m_Container = std::make_shared<VerticalContainer>(this);
 	m_Container
+		->SetSpacing({0.0f, 0.0f})
 		->SetExpand(Expand::Both)
 		->SetOnInvalidate([=](Control* Focus, InvalidateType Type) -> void
 		{

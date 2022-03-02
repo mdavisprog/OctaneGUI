@@ -200,6 +200,7 @@ ListBox::ListBox(Window* InWindow)
 	m_Scrollable->SetExpand(Expand::Both);
 	
 	m_List = m_Scrollable->AddControl<VerticalContainer>();
+	m_List->SetSpacing({0.0f, 0.0f});
 
 	m_Interaction->Initialize(m_Scrollable, m_List);
 

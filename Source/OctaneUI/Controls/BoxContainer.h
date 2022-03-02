@@ -48,6 +48,9 @@ public:
 	BoxContainer* SetGrow(Grow Direction);
 	Grow GrowDirection() const;
 
+	BoxContainer* SetSpacing(const Vector2& Spacing);
+	Vector2 Spacing() const;
+
 	virtual Vector2 DesiredSize() const override;
 
 	virtual void OnLoad(const Json& Root) override;
@@ -58,6 +61,7 @@ protected:
 private:
 	Grow m_Grow { Grow::Begin };
 	Orientation m_Orient { Orientation::Horizontal };
+	Vector2 m_Spacing { 4.0f, 4.0f };
 };
 
 }

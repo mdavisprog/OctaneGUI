@@ -63,6 +63,17 @@ Grow BoxContainer::GrowDirection() const
 	return m_Grow;
 }
 
+BoxContainer* BoxContainer::SetSpacing(const Vector2& Spacing)
+{
+	m_Spacing = Spacing;
+	return this;
+}
+
+Vector2 BoxContainer::Spacing() const
+{
+	return m_Spacing;
+}
+
 Vector2 BoxContainer::DesiredSize() const
 {
 	Vector2 Result;
@@ -105,9 +116,11 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 	// 1. The first step is to determine the total available size by checking for each control's expansion type
 	//	  and shrinking the size if there are any controls that do not have an expansion type. Once this is
 	//	  determined, then a partition size is calculated to be given to each expanded control.
+	//	  The total amount of spacing that will be occupied will need to be subtracted from the available size as well.
 	int ExpandW = 0;
 	int ExpandH = 0;
-	Vector2 AvailableSize = GetSize();
+	const Vector2 TotalSpacing = m_Spacing * (float)(Controls.size() > 0 ? Controls.size() - 1 : 0);
+	Vector2 AvailableSize = GetSize() - TotalSpacing;
 	for (const std::shared_ptr<Control>& Item : Controls)
 	{
 		Vector2 Size = Item->GetSize();
@@ -166,7 +179,7 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 	// 2. Resize each control by setting each control's size by the partition size if it has an expansion
 	//	  Type. The available size is then reduced by this partition size for the next control to use.
 	//	  TODO: Mayby check if AvailableSize is zero and size any left over controls to zero?
-	Vector2 TotalSize;
+	Vector2 TotalSize = TotalSpacing;
 	AvailableSize = GetSize();
 	for (const std::shared_ptr<Control>& Item : Controls)
 	{
@@ -273,11 +286,11 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 
 		if (IsHorizontal)
 		{
-			Offset.X += Size.X;
+			Offset.X += Size.X + m_Spacing.X;
 		}
 		else
 		{
-			Offset.Y += Size.Y;
+			Offset.Y += Size.Y + m_Spacing.Y;
 		}
 	}
 }
