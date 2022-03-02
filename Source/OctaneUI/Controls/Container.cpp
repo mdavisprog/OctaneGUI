@@ -165,6 +165,12 @@ Container* Container::Layout()
 	return this;
 }
 
+void Container::InvalidateLayout()
+{
+	m_UpdateLayout = true;
+	Invalidate(InvalidateType::Layout);
+}
+
 std::weak_ptr<Control> Container::GetControl(const Vector2& Point) const
 {
 	std::weak_ptr<Control> Result;
@@ -241,12 +247,6 @@ void Container::OnLoad(const Json& Root)
 			NewControl->OnLoad(Item);
 		}
 	}
-}
-
-void Container::InvalidateLayout()
-{
-	m_UpdateLayout = true;
-	Invalidate(InvalidateType::Layout);
 }
 
 void Container::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const

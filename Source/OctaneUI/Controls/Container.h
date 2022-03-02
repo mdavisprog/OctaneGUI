@@ -60,6 +60,7 @@ public:
 	void ClearControls();
 
 	Container* Layout();
+	void InvalidateLayout();
 
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const;
 	// TODO: Rename to GetAllControls.
@@ -71,8 +72,6 @@ public:
 	virtual void OnLoad(const Json& Root) override;
 
 protected:
-	void InvalidateLayout();
-
 	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const;
 
 private:
