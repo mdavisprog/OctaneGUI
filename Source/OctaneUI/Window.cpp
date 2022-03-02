@@ -70,6 +70,7 @@ void Window::SetSize(Vector2 Size)
 {
 	m_Bounds.Max = m_Bounds.Min + Size;
 	m_Container->SetSize(m_Bounds.GetSize());
+	m_Container->InvalidateLayout();
 }
 
 Vector2 Window::GetSize() const
