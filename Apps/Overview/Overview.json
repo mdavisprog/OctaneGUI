@@ -40,11 +40,24 @@
 								"Text": "Hello"
 							},
 							{
-								"ID": "OKBtn",
-								"Type": "TextButton",
-								"Text": {
-									"Text": "OK"
-								}
+								"Type": "HorizontalContainer",
+								"Controls": [
+									{
+										"ID": "OKBtn",
+										"Type": "TextButton",
+										"Text": {
+											"Text": "OK"
+										}
+									},
+									{
+										"ID": "DisabledBtn",
+										"Type": "TextButton",
+										"Disabled": true,
+										"Text": {
+											"Text": "Disabled"
+										}
+									}
+								]
 							},
 							{
 								"Type": "ImageButton",
