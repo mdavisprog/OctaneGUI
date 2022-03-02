@@ -73,7 +73,7 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	Tests::TestSuite::Run(Application);
+	Tests::TestSuite::Run(Application, argc, argv);
 
 	// This should return immediately with stubbed functions.
 	return Application.Run();

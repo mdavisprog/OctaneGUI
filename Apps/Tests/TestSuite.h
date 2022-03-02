@@ -47,19 +47,21 @@ public:
 	typedef std::function<bool(OctaneUI::Application&)> OnTestCaseSignature;
 	typedef std::map<std::string, OnTestCaseSignature> TestCasesMap;
 
-	static void Run(OctaneUI::Application& Application);
+	static void Run(OctaneUI::Application& Application, int Argc, char** Argv);
 
 	TestSuite(const char* Name, const TestCasesMap& TestCases);
 	~TestSuite();
 
 private:
+	static bool Run(OctaneUI::Application& Application, const TestSuite& Suite);
+
 	TestSuite();
 
 	// Need to make this allocated on the heap due to static initialization order.
 	// Would like to register test suites differently but will be using this method for now.
 	static std::vector<TestSuite*>* s_Suites;
 
-	std::string m_Name;
+	std::string m_Name {};
 	TestCasesMap m_TestCases;
 };
 

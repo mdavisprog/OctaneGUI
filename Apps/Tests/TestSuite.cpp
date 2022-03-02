@@ -30,7 +30,7 @@ SOFTWARE.
 namespace Tests
 {
 
-void TestSuite::Run(OctaneUI::Application& Application)
+void TestSuite::Run(OctaneUI::Application& Application, int Argc, char** Argv)
 {
 	if (s_Suites->size() == 0)
 	{
@@ -39,41 +39,41 @@ void TestSuite::Run(OctaneUI::Application& Application)
 		return;
 	}
 
-	OctaneUI::Clock Clock;
-	printf("Running %d test suites\n", (int)s_Suites->size());
-
-	for (const TestSuite* TS : *s_Suites)
+	std::string SuiteName;
+	if (Argc == 2)
 	{
-		OctaneUI::Clock TestClock;
-		printf("\nRunning test suite '%s'\n", TS->m_Name.c_str());
+		SuiteName = Argv[1];
+	}
 
-		uint32_t Passed = 0;
-		uint32_t Failed = 0;
-		for (const std::pair<std::string, OnTestCaseSignature>& Item : TS->m_TestCases)
+	if (!SuiteName.empty())
+	{
+		bool Found = false;
+		for (const TestSuite* TS : *s_Suites)
 		{
-			Application.GetMainWindow()->Clear();
-			bool Result = Item.second(Application);
-
-			if (Result)
+			if (SuiteName == TS->m_Name)
 			{
-				Passed++;
-			}
-			else
-			{
-				printf("FAILED: '%s'\n", Item.first.c_str());
-				Failed++;
+				Run(Application, *TS);
+				Found = true;
+				break;
 			}
 		}
 
-		printf("Completed %d tests in %f seconds. %d Passed %d Failed\n", 
-			(int)TS->m_TestCases.size(),
-			TestClock.Measure(),
-			Passed,
-			Failed
-		);
+		if (!Found)
+		{
+			printf("Failed to find test suite '%s'.\n", SuiteName.c_str());
+		}
 	}
+	else
+	{
+		OctaneUI::Clock Clock;
+		printf("Running %d test suites\n", (int)s_Suites->size());
+		for (const TestSuite* TS : *s_Suites)
+		{
+			Run(Application, *TS);
+		}
 
-	printf("\nAll tests completed in %f seconds.\n", Clock.Measure());
+		printf("\nAll tests completed in %f seconds.\n", Clock.Measure());
+	}
 
 	delete s_Suites;
 }
@@ -94,8 +94,40 @@ TestSuite::~TestSuite()
 {
 }
 
+bool TestSuite::Run(OctaneUI::Application& Application, const TestSuite& Suite)
+{
+	OctaneUI::Clock Clock;
+	printf("\nRunning test suite '%s'\n", Suite.m_Name.c_str());
+
+	uint32_t Passed = 0;
+	uint32_t Failed = 0;
+	for (const std::pair<std::string, OnTestCaseSignature>& Item : Suite.m_TestCases)
+	{
+		Application.GetMainWindow()->Clear();
+		bool Result = Item.second(Application);
+
+		if (Result)
+		{
+			Passed++;
+		}
+		else
+		{
+			printf("FAILED: '%s'\n", Item.first.c_str());
+			Failed++;
+		}
+	}
+
+	printf("Completed %d tests in %f seconds. %d Passed %d Failed\n", 
+		(int)Suite.m_TestCases.size(),
+		Clock.Measure(),
+		Passed,
+		Failed
+	);
+
+	return true;
+}
+
 TestSuite::TestSuite()
-	: m_Name("")
 {
 }
 
