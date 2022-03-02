@@ -41,7 +41,11 @@ public:
 
 	Button* SetOnPressed(OnEmptySignature Fn);
 
+	void SetDisabled(bool Disabled);
+	bool IsDisabled() const;
+
 	virtual void OnPaint(Paint& Brush) const override;
+	virtual void OnLoad(const Json& Root) override;
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseEnter() override;
@@ -57,6 +61,7 @@ private:
 
 	State m_State { State::None };
 	OnEmptySignature m_OnPressed { nullptr };
+	bool m_Disabled { false };
 };
 
 }

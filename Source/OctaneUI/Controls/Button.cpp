@@ -24,6 +24,7 @@ SOFTWARE.
 
 */
 
+#include "../Json.h"
 #include "../Paint.h"
 #include "../Theme.h"
 #include "Button.h"
@@ -42,6 +43,16 @@ Button* Button::SetOnPressed(OnEmptySignature Fn)
 	return this;
 }
 
+void Button::SetDisabled(bool Disabled)
+{
+	m_Disabled = Disabled;
+}
+
+bool Button::IsDisabled() const
+{
+	return m_Disabled;
+}
+
 void Button::OnPaint(Paint& Brush) const
 {
 	std::shared_ptr<Theme> TheTheme = GetTheme();
@@ -55,6 +66,13 @@ void Button::OnPaint(Paint& Brush) const
 	}
 
 	Brush.Rectangle(GetAbsoluteBounds(), BackgroundColor);
+}
+
+void Button::OnLoad(const Json& Root)
+{
+	Control::OnLoad(Root);
+
+	m_Disabled = Root["Disabled"].Boolean();
 }
 
 bool Button::OnMousePressed(const Vector2& Position, Mouse::Button Button)
@@ -81,12 +99,21 @@ void Button::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 		}
 	}
 
-	m_State = Hovered ? State::Hovered : State::None;
-	Invalidate();
+	State NewState = Hovered ? State::Hovered : State::None;
+	if (m_State != NewState)
+	{
+		m_State = NewState;
+		Invalidate();
+	}
 }
 
 void Button::OnMouseEnter()
 {
+	if (m_Disabled)
+	{
+		return;
+	}
+
 	if (m_State != State::Pressed)
 	{
 		m_State = State::Hovered;
@@ -97,6 +124,11 @@ void Button::OnMouseEnter()
 
 void Button::OnMouseLeave()
 {
+	if (m_Disabled)
+	{
+		return;
+	}
+
 	if (m_State != State::Pressed)
 	{
 		m_State = State::None;
