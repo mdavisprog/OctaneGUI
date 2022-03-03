@@ -37,7 +37,7 @@ static void Load(OctaneUI::Application& Application, const char* JsonControls, O
 	static const char* Base = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [";
 	std::string Json = Base;
 	Json += JsonControls;
-	Json += "]}";
+	Json += "]}}";
 	Application.GetMainWindow()->Load(Json.c_str(), List);
 	Application.GetMainWindow()->Update();
 }
