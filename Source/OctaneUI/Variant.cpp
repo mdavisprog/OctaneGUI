@@ -32,13 +32,47 @@ namespace OctaneUI
 {
 
 Variant::Variant()
-	: m_Type(Type::Null)
-	, m_Data()
 {
+}
+
+Variant::Variant(bool Value)
+	: m_Type(Type::Bool)
+{
+	m_Data.Bool = Value;
+}
+
+Variant::Variant(int Value)
+	: m_Type(Type::Int)
+{
+	m_Data.Int = Value;
+}
+
+Variant::Variant(float Value)
+	: m_Type(Type::Float)
+{
+	m_Data.Float = Value;
+}
+
+Variant::Variant(const char* Value)
+	: m_Type(Type::String)
+{
+	m_String = Value;
+}
+
+Variant::Variant(const std::string& Value)
+	: m_Type(Type::String)
+{
+	m_String = Value;
+}
+
+Variant::Variant(const Variant& Other)
+{
+	Copy(Other);
 }
 
 Variant::~Variant()
 {
+	Clear();
 }
 
 Variant& Variant::operator=(bool Value)
@@ -73,6 +107,12 @@ Variant& Variant::operator=(const std::string& Value)
 {
 	m_Type = Type::String;
 	m_String = Value;
+	return *this;
+}
+
+Variant& Variant::operator=(const Variant& Value)
+{
+	Copy(Value);
 	return *this;
 }
 
@@ -124,6 +164,28 @@ bool Variant::IsString() const
 Variant::Type Variant::GetType() const
 {
 	return m_Type;
+}
+
+void Variant::Copy(const Variant& Other)
+{
+	Clear();
+	m_Type = Other.m_Type;
+	switch (m_Type)
+	{
+	case Type::Bool: m_Data.Bool = Other.Bool();
+	case Type::Int: m_Data.Int = Other.Int();
+	case Type::Float: m_Data.Float = Other.Float();
+	case Type::String: m_String = Other.String();
+	case Type::Null:
+	default: break;
+	}
+}
+
+void Variant::Clear()
+{
+	m_Type = Type::Null;
+	m_String.clear();
+	std::memset(&m_Data, 0, sizeof(m_Data));
 }
 
 }

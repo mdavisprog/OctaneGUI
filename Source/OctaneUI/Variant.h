@@ -44,6 +44,12 @@ public:
 	};
 
 	Variant();
+	Variant(bool);
+	Variant(int);
+	Variant(float);
+	Variant(const char*);
+	Variant(const std::string&);
+	Variant(const Variant&);
 	~Variant();
 
 	Variant& operator=(bool Value);
@@ -51,6 +57,7 @@ public:
 	Variant& operator=(float Value);
 	Variant& operator=(const char* Value);
 	Variant& operator=(const std::string& Value);
+	Variant& operator=(const Variant& Value);
 
 	bool Bool() const;
 	int Int() const;
@@ -73,8 +80,11 @@ private:
 		float Float;
 	};
 
-	Type m_Type;
-	Data m_Data;
+	void Copy(const Variant&);
+	void Clear();
+
+	Type m_Type { Type::Null };
+	Data m_Data {};
 	std::string m_String;
 };
 
