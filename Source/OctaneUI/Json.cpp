@@ -299,7 +299,7 @@ const char* Json::ParseKey(const char* Stream, std::string& Key)
 	const char* Ptr = Stream;
 	while (*Ptr != '\0')
 	{
-		char Ch = *Ptr;
+		unsigned char Ch = *Ptr;
 
 		if (std::isalnum(Ch))
 		{
@@ -330,7 +330,7 @@ const char* Json::ParseValue(const char* Stream, Json& Value)
 	bool ParseString = false;
 	while (*Ptr != '\0')
 	{
-		char Ch = *Ptr;
+		unsigned char Ch = *Ptr;
 
 		if (Ch == '{')
 		{
