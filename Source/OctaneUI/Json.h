@@ -26,10 +26,9 @@ SOFTWARE.
 
 #pragma once
 
-#include "Variant.h"
-
 #include <functional>
 #include <map>
+#include <string>
 #include <vector>
 
 namespace OctaneUI
@@ -53,9 +52,15 @@ public:
 
 	Json();
 	Json(Type InType);
+	Json(bool Value);
+	Json(float Value);
+	Json(const char* Value);
+	Json(const std::string& Value);
 	Json(const Json& Other);
+	Json(Json&& Other);
 	~Json();
 
+	Type GetType() const;
 	bool IsArray() const;
 	bool IsBoolean() const;
 	bool IsNull() const;
@@ -75,6 +80,7 @@ public:
 	Json& operator=(const char* Value);
 	Json& operator=(const std::string& Value);
 	Json& operator=(const Json& Other);
+	Json& operator=(Json&& Other);
 
 	Json& operator[](const char* Key);
 	Json& operator[](const std::string& Key);
@@ -87,6 +93,13 @@ public:
 	std::string ToString() const;
 
 private:
+	union Data
+	{
+		bool Bool;
+		float Number;
+		std::string* String;
+	};
+
 	typedef std::map<std::string, Json> Map;
 
 	static const char* ParseKey(const char* Stream, std::string& Key);
@@ -97,8 +110,14 @@ private:
 
 	static const Json Invalid;
 
-	Type m_Type;
-	Variant m_Data;
+	void Set(const char* Value);
+	void Clear();
+
+	void Copy(const Json& Other);
+	void Move(Json&& Other);
+
+	Type m_Type { Type::Null };
+	Data m_Data {};
 	Map m_Map;
 	std::vector<Json> m_Array;
 };

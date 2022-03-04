@@ -27,6 +27,7 @@ SOFTWARE.
 #include "Json.h"
 
 #include <cctype>
+#include <utility>
 
 namespace OctaneUI
 {
@@ -54,26 +55,59 @@ const Json Json::Invalid;
 
 Json::Json()
 	: m_Type(Type::Null)
-	, m_Data()
 {
+	Clear();
 }
 
 Json::Json(Type InType)
 	: m_Type(InType)
-	, m_Data()
 {
+	memset(&m_Data, 0, sizeof(m_Data));
+}
+
+Json::Json(bool Value)
+	: m_Type(Type::Boolean)
+{
+	m_Data.Bool = Value;
+}
+
+Json::Json(float Value)
+	: m_Type(Type::Number)
+{
+	m_Data.Number = Value;
+}
+
+Json::Json(const char* Value)
+	: m_Type(Type::String)
+{
+	Set(Value);
+}
+
+Json::Json(const std::string& Value)
+	: m_Type(Type::String)
+{
+	Set(Value.c_str());
 }
 
 Json::Json(const Json& Other)
-	: m_Type(Other.m_Type)
-	, m_Data(Other.m_Data)
-	, m_Map(Other.m_Map)
-	, m_Array(Other.m_Array)
 {
+	Clear();
+	Copy(Other);
+}
+
+Json::Json(Json&& Other)
+{
+	Move(std::move(Other));
 }
 
 Json::~Json()
 {
+	Clear();
+}
+
+Json::Type Json::GetType() const
+{
+	return m_Type;
 }
 
 bool Json::IsArray() const
@@ -113,7 +147,7 @@ bool Json::Boolean(bool Default) const
 		return Default;
 	}
 
-	return m_Data.Bool();
+	return m_Data.Bool;
 }
 
 float Json::Number(float Default) const
@@ -123,7 +157,7 @@ float Json::Number(float Default) const
 		return Default;
 	}
 
-	return m_Data.Float();
+	return m_Data.Number;
 }
 
 const char* Json::String(const char* Default) const
@@ -133,7 +167,12 @@ const char* Json::String(const char* Default) const
 		return Default;
 	}
 
-	return m_Data.String();
+	if (m_Data.String == nullptr)
+	{
+		return "";
+	}
+
+	return m_Data.String->c_str();
 }
 
 unsigned int Json::Count() const
@@ -156,38 +195,43 @@ void Json::ForEach(std::function<void(const std::string&, const Json&)> Callback
 
 Json& Json::operator=(bool Value)
 {
+	Clear();
 	m_Type = Type::Boolean;
-	m_Data = Value;
+	m_Data.Bool = Value;
 	return *this;
 }
 
 Json& Json::operator=(float Value)
 {
+	Clear();
 	m_Type = Type::Number;
-	m_Data = Value;
+	m_Data.Number = Value;
 	return *this;
 }
 
 Json& Json::operator=(const char* Value)
 {
 	m_Type = Type::String;
-	m_Data = Value;
+	Set(Value);
 	return *this;
 }
 
 Json& Json::operator=(const std::string& Value)
 {
 	m_Type = Type::String;
-	m_Data = Value;
+	Set(Value.c_str());
 	return *this;
 }
 
 Json& Json::operator=(const Json& Other)
 {
-	m_Type = Other.m_Type;
-	m_Data = Other.m_Data;
-	m_Array = Other.m_Array;
-	m_Map = Other.m_Map;
+	Copy(Other);
+	return *this;
+}
+
+Json& Json::operator=(Json&& Other)
+{
+	Move(std::move(Other));
 	return *this;
 }
 
@@ -386,7 +430,7 @@ const char* Json::ParseArray(const char* Stream, Json& Root)
 
 		if (!Value.IsNull())
 		{
-			Root.m_Array.push_back(Value);
+			Root.m_Array.push_back(std::move(Value));
 		}
 
 		if (*Ptr == ']')
@@ -419,7 +463,7 @@ const char* Json::ParseObject(const char* Stream, Json& Root)
 		{
 			Json Value;
 			Ptr = ParseValue(++Ptr, Value);
-			Root[Key] = Value;
+			Root[Key] = std::move(Value);
 		}
 
 		if (*Ptr == '}')
@@ -462,6 +506,74 @@ Json Json::ParseToken(const std::string& Token)
 	}
 
 	return Result;
+}
+
+void Json::Set(const char* Value)
+{
+	if (m_Data.String == nullptr)
+	{
+		m_Data.String = new std::string();
+	}
+
+	*m_Data.String = Value;
+}
+
+void Json::Clear()
+{
+	if (IsString())
+	{
+		if (m_Data.String != nullptr)
+		{
+			delete m_Data.String;
+		}
+	}
+
+	m_Type = Type::Null;
+	m_Map.clear();
+	m_Array.clear();
+	memset(&m_Data, 0, sizeof(m_Data));
+}
+
+void Json::Copy(const Json& Other)
+{
+	m_Type = Other.m_Type;
+	m_Map = Other.m_Map;
+	m_Array = Other.m_Array;
+
+	switch (m_Type)
+	{
+	case Type::Boolean: m_Data.Bool = Other.Boolean(); break;
+	case Type::Number: m_Data.Number = Other.Number(); break;
+	case Type::String: Set(Other.String()); break;
+	case Type::Object:
+	case Type::Array:
+	case Type::Null:
+	default: break;
+	}
+}
+
+void Json::Move(Json&& Other)
+{
+	if (this == &Other)
+	{
+		return;
+	}
+
+	Clear();
+	m_Type = std::exchange(Other.m_Type, Type::Null);
+	m_Map = std::move(Other.m_Map);
+	m_Array = std::move(Other.m_Array);
+
+	switch (m_Type)
+	{
+	case Type::Boolean: m_Data.Bool = std::exchange(Other.m_Data.Bool, false); break;
+	case Type::Number: m_Data.Number = std::exchange(Other.m_Data.Number, 0.0f); break;
+	case Type::String: m_Data.String = std::exchange(Other.m_Data.String, nullptr); break;
+	case Type::Object:
+	case Type::Array:
+	case Type::Null:
+	default: break;
+	}
 }
 
 }
