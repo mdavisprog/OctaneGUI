@@ -64,6 +64,15 @@ Json::Json(Type InType)
 	: m_Type(InType)
 {
 	memset(&m_Data, 0, sizeof(m_Data));
+
+	if (IsString())
+	{
+		Set("");
+	}
+	else if (IsArray())
+	{
+		m_Data.Array = new std::vector<Json>();
+	}
 }
 
 Json::Json(bool Value)
@@ -178,7 +187,12 @@ const char* Json::String(const char* Default) const
 
 unsigned int Json::Count() const
 {
-	return m_Array.size();
+	if (!IsArray())
+	{
+		return 0;
+	}
+
+	return m_Data.Array->size();
 }
 
 void Json::ForEach(std::function<void(const std::string&, const Json&)> Callback) const
@@ -212,6 +226,7 @@ Json& Json::operator=(float Value)
 
 Json& Json::operator=(const char* Value)
 {
+	Clear();
 	m_Type = Type::String;
 	Set(Value);
 	return *this;
@@ -219,6 +234,7 @@ Json& Json::operator=(const char* Value)
 
 Json& Json::operator=(const std::string& Value)
 {
+	Clear();
 	m_Type = Type::String;
 	Set(Value.c_str());
 	return *this;
@@ -248,7 +264,7 @@ Json& Json::operator[](const std::string& Key)
 
 Json& Json::operator[](unsigned int Index)
 {
-	return m_Array[Index];
+	return (*m_Data.Array)[Index];
 }
 
 const Json& Json::operator[](const char* Key) const
@@ -273,7 +289,7 @@ const Json& Json::operator[](const std::string& Key) const
 
 const Json& Json::operator[](unsigned int Index) const
 {
-	return m_Array[Index];
+	return (*m_Data.Array)[Index];
 }
 
 std::string Json::ToString() const
@@ -283,13 +299,13 @@ std::string Json::ToString() const
 	if (IsArray())
 	{
 		Result += "[";
-		for (const Json& Item : m_Array)
+		for (const Json& Item : *m_Data.Array)
 		{
 			Result += Item.ToString();
 			Result += ", ";
 		}
 
-		if (m_Array.size() > 0)
+		if (m_Data.Array->size() > 0)
 		{
 			Result.erase(Result.length() - 2);
 		}
@@ -431,7 +447,7 @@ const char* Json::ParseArray(const char* Stream, Json& Root)
 
 		if (!Value.IsNull())
 		{
-			Root.m_Array.push_back(std::move(Value));
+			Root.m_Data.Array->push_back(std::move(Value));
 		}
 
 		if (*Ptr == ']')
@@ -528,10 +544,16 @@ void Json::Clear()
 			delete m_Data.String;
 		}
 	}
+	else if (IsArray())
+	{
+		if (m_Data.Array != nullptr)
+		{
+			delete m_Data.Array;
+		}
+	}
 
 	m_Type = Type::Null;
 	m_Map.clear();
-	m_Array.clear();
 	memset(&m_Data, 0, sizeof(m_Data));
 }
 
@@ -539,15 +561,22 @@ void Json::Copy(const Json& Other)
 {
 	m_Type = Other.m_Type;
 	m_Map = Other.m_Map;
-	m_Array = Other.m_Array;
 
 	switch (m_Type)
 	{
 	case Type::Boolean: m_Data.Bool = Other.Boolean(); break;
 	case Type::Number: m_Data.Number = Other.Number(); break;
 	case Type::String: Set(Other.String()); break;
-	case Type::Object:
+	case Type::Object: break;
 	case Type::Array:
+	{
+		if (m_Data.Array == nullptr)
+		{
+			m_Data.Array = new std::vector<Json>();
+		}
+
+		*m_Data.Array = *Other.m_Data.Array;
+	} break;
 	case Type::Null:
 	default: break;
 	}
@@ -563,15 +592,14 @@ void Json::Move(Json&& Other)
 	Clear();
 	m_Type = std::exchange(Other.m_Type, Type::Null);
 	m_Map = std::move(Other.m_Map);
-	m_Array = std::move(Other.m_Array);
 
 	switch (m_Type)
 	{
 	case Type::Boolean: m_Data.Bool = std::exchange(Other.m_Data.Bool, false); break;
 	case Type::Number: m_Data.Number = std::exchange(Other.m_Data.Number, 0.0f); break;
 	case Type::String: m_Data.String = std::exchange(Other.m_Data.String, nullptr); break;
-	case Type::Object:
-	case Type::Array:
+	case Type::Object: break;
+	case Type::Array: m_Data.Array = std::exchange(Other.m_Data.Array, nullptr); break;
 	case Type::Null:
 	default: break;
 	}

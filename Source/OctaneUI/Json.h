@@ -98,6 +98,7 @@ private:
 		bool Bool;
 		float Number;
 		std::string* String;
+		std::vector<Json>* Array;
 	};
 
 	typedef std::map<std::string, Json> Map;
@@ -119,7 +120,6 @@ private:
 	Type m_Type { Type::Null };
 	Data m_Data {};
 	Map m_Map;
-	std::vector<Json> m_Array;
 };
 
 }
