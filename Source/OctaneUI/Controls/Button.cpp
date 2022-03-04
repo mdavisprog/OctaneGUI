@@ -89,6 +89,11 @@ bool Button::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 
 void Button::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 {
+	if (m_Disabled)
+	{
+		return;
+	}
+
 	const bool Hovered = Contains(Position);
 
 	if (m_State == State::Pressed && Hovered)
