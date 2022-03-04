@@ -50,6 +50,9 @@ public:
 	static std::string ToLower(const std::string& Value);
 	static Json Parse(const char* Stream);
 
+	// TODO: Maybe not allow declaring a Null type due to no memory allocation
+	// 		 for retrieving values from array/string/object? Or memory allocation could
+	// 		 be handled better?
 	Json();
 	Json(Type InType);
 	Json(bool Value);

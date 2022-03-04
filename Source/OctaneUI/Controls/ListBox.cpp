@@ -242,7 +242,7 @@ void ListBox::OnLoad(const Json& Root)
 
 	Container::OnLoad(Copy);
 
-	Json List;
+	Json List(Json::Type::Object);
 	List["Controls"] = Root["Controls"];
 	m_List->OnLoad(List);
 }
