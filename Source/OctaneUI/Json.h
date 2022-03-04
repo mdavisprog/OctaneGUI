@@ -93,15 +93,16 @@ public:
 	std::string ToString() const;
 
 private:
+	typedef std::map<std::string, Json> Map;
+
 	union Data
 	{
 		bool Bool;
 		float Number;
 		std::string* String;
 		std::vector<Json>* Array;
+		Map* Object;
 	};
-
-	typedef std::map<std::string, Json> Map;
 
 	static const char* ParseKey(const char* Stream, std::string& Key);
 	static const char* ParseValue(const char* Stream, Json& Value);
@@ -119,7 +120,6 @@ private:
 
 	Type m_Type { Type::Null };
 	Data m_Data {};
-	Map m_Map;
 };
 
 }
