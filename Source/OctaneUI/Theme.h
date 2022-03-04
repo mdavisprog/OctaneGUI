@@ -44,6 +44,7 @@ public:
 	enum class Colors
 	{
 		Text,
+		Text_Disabled,
 		Button,
 		Button_Hovered,
 		Button_Pressed,
@@ -78,6 +79,42 @@ public:
 		MenuBar_Padding
 	};
 
+	class ColorOverride
+	{
+	public:
+		ColorOverride(const std::shared_ptr<Theme>& InTheme, Colors Key, Color Value);
+		~ColorOverride();
+	
+	private:
+		std::shared_ptr<Theme> m_Theme;
+		Colors m_Key;
+		Color m_Restore;
+	};
+
+	class FloatOverride
+	{
+	public:
+		FloatOverride(const std::shared_ptr<Theme>& InTheme, FloatConstants Key, float Value);
+		~FloatOverride();
+
+	private:
+		std::shared_ptr<Theme> m_Theme;
+		FloatConstants m_Key;
+		float m_Restore;
+	};
+
+	class Vector2Override
+	{
+	public:
+		Vector2Override(const std::shared_ptr<Theme>& InTheme, Vector2Constants Key, const Vector2& Value);
+		~Vector2Override();
+	
+	private:
+		std::shared_ptr<Theme> m_Theme;
+		Vector2Constants m_Key;
+		Vector2 m_Restore;
+	};
+
 	Theme();
 	~Theme();
 
@@ -95,7 +132,7 @@ private:
 
 	void InitializeDefault();
 
-	std::shared_ptr<Font> m_Font;
+	std::shared_ptr<Font> m_Font { nullptr };
 	ColorMap m_Colors;
 	FloatMap m_FloatConstants;
 	Vector2Map m_Vector2Constants;

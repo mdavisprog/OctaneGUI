@@ -30,8 +30,64 @@ SOFTWARE.
 namespace OctaneUI
 {
 
+Theme::ColorOverride::ColorOverride(const std::shared_ptr<Theme>& InTheme, Colors Key, Color Value)
+	: m_Theme(InTheme)
+	, m_Key(Key)
+{
+	if (m_Theme)
+	{
+		m_Restore = m_Theme->GetColor(m_Key);
+		m_Theme->m_Colors[m_Key] = Value;
+	}
+}
+
+Theme::ColorOverride::~ColorOverride()
+{
+	if (m_Theme)
+	{
+		m_Theme->m_Colors[m_Key] = m_Restore;
+	}
+}
+
+Theme::FloatOverride::FloatOverride(const std::shared_ptr<Theme>& InTheme, FloatConstants Key, float Value)
+	: m_Theme(InTheme)
+	, m_Key(Key)
+{
+	if (m_Theme)
+	{
+		m_Restore = m_Theme->GetConstant(m_Key);
+		m_Theme->m_FloatConstants[m_Key] = Value;
+	}
+}
+
+Theme::FloatOverride::~FloatOverride()
+{
+	if (m_Theme)
+	{
+		m_Theme->m_FloatConstants[m_Key] = m_Restore;
+	}
+}
+
+Theme::Vector2Override::Vector2Override(const std::shared_ptr<Theme>& InTheme, Vector2Constants Key, const Vector2& Value)
+	: m_Theme(InTheme)
+	, m_Key(Key)
+{
+	if (m_Theme)
+	{
+		m_Restore = m_Theme->GetConstant(m_Key);
+		m_Theme->m_Vector2Constants[m_Key] = Value;
+	}
+}
+
+Theme::Vector2Override::~Vector2Override()
+{
+	if (m_Theme)
+	{
+		m_Theme->m_Vector2Constants[m_Key] = m_Restore;
+	}
+}
+
 Theme::Theme()
-	: m_Font(nullptr)
 {
 	InitializeDefault();
 }
@@ -83,6 +139,7 @@ Vector2 Theme::GetConstant(Vector2Constants Index) const
 void Theme::InitializeDefault()
 {
 	m_Colors[Colors::Text] = Color(255, 255, 255, 255);
+	m_Colors[Colors::Text_Disabled] = Color(105, 105, 105, 255);
 	m_Colors[Colors::Button] = Color(48, 48, 48, 255);
 	m_Colors[Colors::Button_Hovered] = Color(48, 63, 169, 255);
 	m_Colors[Colors::Button_Pressed] = Color(98, 125, 152, 255);
