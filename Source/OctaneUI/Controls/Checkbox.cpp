@@ -117,8 +117,11 @@ void Checkbox::OnPaint(Paint& Brush) const
 	}
 	else if (m_State == State::Intermediate)
 	{
-		Rect Inner = Rect(BoxPosition, BoxPosition + BoxSize);
-		Inner.Shrink(5.0f, 5.0f);
+		const Vector2 Shrink = {3.0f, 3.0f};
+		Rect Inner = Rect(
+			BoxPosition + Shrink,
+			BoxPosition + BoxSize - Shrink
+		);
 		Brush.Rectangle(Inner, TheTheme->GetColor(Theme::Colors::Button_Hovered));
 	}
 
