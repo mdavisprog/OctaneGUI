@@ -55,6 +55,11 @@ void TextButton::OnPaint(Paint& Brush) const
 {
 	Button::OnPaint(Brush);
 
+	Theme::ColorOverride Override(
+		IsDisabled() ? GetTheme() : nullptr,
+		Theme::Colors::Text,
+		GetTheme()->GetColor(Theme::Colors::Text_Disabled)
+	);
 	m_Text->OnPaint(Brush);
 }
 
