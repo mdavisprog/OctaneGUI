@@ -33,81 +33,88 @@
 			"Body": {
 				"Controls": [
 					{
-						"Type": "VerticalContainer",
+						"Type": "MarginContainer",
+						"Left": 8,
+						"Top": 8,
 						"Controls": [
 							{
-								"Type": "Text",
-								"Text": "Hello"
-							},
-							{
-								"Type": "HorizontalContainer",
-								"Controls": [
-									{
-										"ID": "OKBtn",
-										"Type": "TextButton",
-										"Text": {
-											"Text": "OK"
-										}
-									},
-									{
-										"ID": "DisabledBtn",
-										"Type": "TextButton",
-										"Disabled": true,
-										"Text": {
-											"Text": "Disabled"
-										}
-									}
-								]
-							},
-							{
-								"Type": "HorizontalContainer",
-								"Controls": [
-									{
-										"Type": "ImageButton",
-										"Image": {
-											"Texture": "thumbs_up.png"
-										}
-									},
-									{
-										"Type": "ImageButton",
-										"Disabled": true,
-										"Image": {
-											"Texture": "thumbs_up.png"
-										}
-									}
-								]
-							},
-							{
-								"Type": "Checkbox",
-								"Text": {
-									"Text": "Checkbox"
-								},
-								"TriState": true
-							},
-							{
-								"Type": "Image",
-								"Texture": "info.png"
-							},
-							{
-								"Type": "TextSelectable",
-								"Text": {
-									"Text": "Selectable"
-								}
-							},
-							{
-								"Type": "TextInput"
-							},
-							{
-								"ID": "List",
-								"Type": "ListBox",
+								"Type": "VerticalContainer",
 								"Controls": [
 									{
 										"Type": "Text",
-										"Text": "This is a list box control."
+										"Text": "Hello"
 									},
 									{
-										"Type": "Text",
-										"Text": "Multiple items can be added to this control."
+										"Type": "HorizontalContainer",
+										"Controls": [
+											{
+												"ID": "OKBtn",
+												"Type": "TextButton",
+												"Text": {
+													"Text": "OK"
+												}
+											},
+											{
+												"ID": "DisabledBtn",
+												"Type": "TextButton",
+												"Disabled": true,
+												"Text": {
+													"Text": "Disabled"
+												}
+											}
+										]
+									},
+									{
+										"Type": "HorizontalContainer",
+										"Controls": [
+											{
+												"Type": "ImageButton",
+												"Image": {
+													"Texture": "thumbs_up.png"
+												}
+											},
+											{
+												"Type": "ImageButton",
+												"Disabled": true,
+												"Image": {
+													"Texture": "thumbs_up.png"
+												}
+											}
+										]
+									},
+									{
+										"Type": "Checkbox",
+										"Text": {
+											"Text": "Checkbox"
+										},
+										"TriState": true
+									},
+									{
+										"Type": "Image",
+										"Texture": "info.png"
+									},
+									{
+										"Type": "TextSelectable",
+										"Text": {
+											"Text": "Selectable"
+										}
+									},
+									{
+										"Type": "TextInput"
+									},
+									{
+										"ID": "List",
+										"Type": "ListBox",
+										"Controls": [
+											{
+												"Type": "Text",
+												"Text": "This is a list box control."
+											},
+											{
+												"Type": "Text",
+												"Text": "Multiple items can be added to this control."
+											}
+										]
 									}
 								]
 							}
