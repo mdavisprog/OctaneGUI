@@ -62,7 +62,9 @@ void ImageButton::OnPaint(Paint& Brush) const
 
 void ImageButton::Update()
 {
-	m_Image->SetPosition(GetSize() * 0.5f - m_Image->GetSize() * 0.5f);
+	m_Image
+		->SetTint(IsDisabled() ? GetTheme()->GetColor(Theme::Colors::Text_Disabled) : Color::White)
+		->SetPosition(GetSize() * 0.5f - m_Image->GetSize() * 0.5f);
 }
 
 void ImageButton::OnLoad(const Json& Root)
