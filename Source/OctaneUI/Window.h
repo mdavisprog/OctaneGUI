@@ -47,6 +47,7 @@ class Icons;
 class Json;
 class MenuBar;
 class Paint;
+class TextureCache;
 class Theme;
 class VertexBuffer;
 class VerticalContainer;
@@ -87,6 +88,7 @@ public:
 	std::shared_ptr<MenuBar> GetMenuBar() const;
 	std::shared_ptr<Theme> GetTheme() const;
 	std::shared_ptr<Icons> GetIcons() const;
+	TextureCache& TextureCache() const;
 	Vector2 GetMousePosition() const;
 	bool IsKeyPressed(Keyboard::Key Key) const;
 

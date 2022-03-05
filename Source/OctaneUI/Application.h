@@ -28,6 +28,7 @@ SOFTWARE.
 
 #include "CallbackDefs.h"
 #include "Keyboard.h"
+#include "TextureCache.h"
 #include "Vector2.h"
 
 #include <memory>
@@ -72,6 +73,7 @@ public:
 	bool DisplayWindow(const char* ID) const;
 	std::shared_ptr<Theme> GetTheme() const;
 	std::shared_ptr<Icons> GetIcons() const;
+	TextureCache& GetTextureCache();
 	bool IsKeyPressed(Keyboard::Key Key) const;
 
 	Application& SetOnCreateWindow(OnWindowSignature Fn);
@@ -93,6 +95,7 @@ private:
 	std::shared_ptr<Icons> m_Icons { nullptr };
 	bool m_IsRunning { false };
 	std::vector<Keyboard::Key> m_PressedKeys;
+	TextureCache m_TextureCache {};
 	OnWindowSignature m_OnCreateWindow { nullptr };
 	OnWindowSignature m_OnDestroyWindow { nullptr };
 	OnWindowPaintSignature m_OnPaint { nullptr };

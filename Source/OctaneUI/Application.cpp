@@ -268,6 +268,11 @@ std::shared_ptr<Icons> Application::GetIcons() const
 	return m_Icons;
 }
 
+TextureCache& Application::GetTextureCache()
+{
+	return m_TextureCache;
+}
+
 bool Application::IsKeyPressed(Keyboard::Key Key) const
 {
 	return std::find(m_PressedKeys.begin(), m_PressedKeys.end(), Key) != m_PressedKeys.end();

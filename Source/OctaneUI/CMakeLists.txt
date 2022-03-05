@@ -37,6 +37,7 @@ set(SOURCE
 	Popup.cpp
 	Rect.cpp
 	Texture.cpp
+	TextureCache.cpp
 	Theme.cpp
 	Variant.cpp
 	Vector2.cpp

@@ -292,6 +292,11 @@ std::shared_ptr<Icons> Window::GetIcons() const
 	return m_Application->GetIcons();
 }
 
+TextureCache& Window::TextureCache() const
+{
+	return m_Application->GetTextureCache();
+}
+
 Vector2 Window::GetMousePosition() const
 {
 	return m_MousePosition;
