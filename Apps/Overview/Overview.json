@@ -60,10 +60,22 @@
 								]
 							},
 							{
-								"Type": "ImageButton",
-								"Image": {
-									"Texture": "thumbs_up.png"
-								}
+								"Type": "HorizontalContainer",
+								"Controls": [
+									{
+										"Type": "ImageButton",
+										"Image": {
+											"Texture": "thumbs_up.png"
+										}
+									},
+									{
+										"Type": "ImageButton",
+										"Disabled": true,
+										"Image": {
+											"Texture": "thumbs_up.png"
+										}
+									}
+								]
 							},
 							{
 								"Type": "Checkbox",
