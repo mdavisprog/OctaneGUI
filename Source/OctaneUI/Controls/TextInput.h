@@ -61,12 +61,11 @@ private:
 	bool IsShiftPressed() const;
 	int32_t GetRangeOr(int32_t Value) const;
 
-	std::shared_ptr<Text> m_Text;
-	uint32_t m_Position;
-	uint32_t m_Anchor;
-	bool m_Focused;
-	bool m_Drag;
-	Vector2 m_Offset;
+	std::shared_ptr<Text> m_Text { nullptr };
+	uint32_t m_Position { 0 };
+	uint32_t m_Anchor { (uint32_t)-1 };
+	bool m_Focused { false };
+	bool m_Drag { false };
 };
 
 }

@@ -35,11 +35,6 @@ namespace OctaneUI
 
 TextInput::TextInput(Window* InWindow)
 	: Control(InWindow)
-	, m_Position(0)
-	, m_Anchor(-1)
-	, m_Focused(false)
-	, m_Drag(false)
-	, m_Offset()
 {
 	m_Text = std::make_shared<Text>(InWindow);
 	m_Text->SetParent(this);
@@ -224,20 +219,21 @@ void TextInput::MovePosition(int32_t Count, bool UseAnchor)
 	m_Position += Count;
 	m_Position = std::min<uint32_t>(m_Position, m_Text->Length());
 
+	Vector2 Offset = -m_Text->GetPosition();
 	Vector2 Position = GetPositionLocation();
-	Vector2 Max = m_Offset + Vector2(GetSize().X, 0.0f);
+	Vector2 Max = Offset + Vector2(GetSize().X, 0.0f);
 
-	if (Position.X < m_Offset.X)
+	if (Position.X < Offset.X)
 	{
-		m_Offset.X = Position.X;
+		Offset.X = Position.X;
 	}
 	else if (Position.X >= Max.X)
 	{
-		m_Offset.X = Position.X - GetSize().X + GetTheme()->GetFont()->SpaceSize().X;
+		Offset.X = Position.X - GetSize().X + GetTheme()->GetFont()->SpaceSize().X;
 	}
 
 	const Vector2 TextPos = m_Text->GetPosition();
-	m_Text->SetPosition({-m_Offset.X, TextPos.Y});
+	m_Text->SetPosition({-Offset.X, TextPos.Y});
 	Invalidate();
 }
 
@@ -257,7 +253,7 @@ uint32_t TextInput::GetPosition(const Vector2& Position) const
 		const Vector2 Size = GetTheme()->GetFont()->Measure(Ch);
 		Offset.X += Size.X;
 
-		if (Position.X + m_Offset.X <= Offset.X)
+		if (Position.X + m_Text->GetPosition().X <= Offset.X)
 		{
 			break;
 		}
