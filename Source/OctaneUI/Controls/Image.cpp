@@ -27,6 +27,8 @@ SOFTWARE.
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Texture.h"
+#include "../TextureCache.h"
+#include "../Window.h"
 #include "Image.h"
 
 namespace OctaneUI
@@ -46,7 +48,7 @@ Image* Image::SetTexture(const char* Path)
 {
 	if (!m_Texture)
 	{
-		m_Texture = Texture::Load(Path);
+		m_Texture = GetWindow()->TextureCache().Load(Path);
 
 		if (m_Texture)
 		{
