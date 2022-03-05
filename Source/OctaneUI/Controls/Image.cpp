@@ -36,7 +36,6 @@ namespace OctaneUI
 
 Image::Image(Window* InWindow)
 	: Control(InWindow)
-	, m_Texture(nullptr)
 {
 }
 
@@ -72,6 +71,12 @@ Image* Image::SetUVs(const Rect& UVs)
 	return this;
 }
 
+Image* Image::SetTint(const Color& Tint)
+{
+	m_Tint = Tint;
+	return this;
+}
+
 void Image::OnPaint(Paint& Brush) const
 {
 	if (!m_Texture)
@@ -85,7 +90,7 @@ void Image::OnPaint(Paint& Brush) const
 		m_UVs.Max / Size
 	);
 
-	Brush.Image(GetAbsoluteBounds(), TexCoords, m_Texture, Color(255, 255, 255, 255));
+	Brush.Image(GetAbsoluteBounds(), TexCoords, m_Texture, m_Tint);
 }
 
 void Image::OnLoad(const Json& Root)

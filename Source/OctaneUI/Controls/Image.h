@@ -26,6 +26,7 @@ SOFTWARE.
 
 #pragma once
 
+#include "../Color.h"
 #include "Control.h"
 
 namespace OctaneUI
@@ -44,6 +45,7 @@ public:
 	Image* SetTexture(const char* Path);
 	Image* SetTexture(const std::shared_ptr<Texture>& InTexture);
 	Image* SetUVs(const Rect& UVs);
+	Image* SetTint(const Color& Tint);
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
@@ -52,8 +54,9 @@ protected:
 	virtual bool IsFixedSize() const override;
 
 private:
-	std::shared_ptr<Texture> m_Texture;
-	Rect m_UVs;
+	std::shared_ptr<Texture> m_Texture { nullptr };
+	Rect m_UVs {};
+	Color m_Tint { Color::White };
 };
 
 }
