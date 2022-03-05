@@ -225,7 +225,7 @@ void TextInput::MovePosition(int32_t Count, bool UseAnchor)
 
 	if (Position.X < Offset.X)
 	{
-		Offset.X = Position.X;
+		Offset.X = Position.X - GetTheme()->GetFont()->SpaceSize().X;
 	}
 	else if (Position.X >= Max.X)
 	{
