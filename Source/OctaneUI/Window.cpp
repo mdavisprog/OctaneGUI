@@ -173,8 +173,8 @@ void Window::OnMouseMove(const Vector2& Position)
 
 void Window::OnMousePressed(const Vector2& Position, Mouse::Button MouseButton)
 {
-	bool Unfocus = false;
 	std::shared_ptr<Control> Focused = m_Focus.lock();
+	std::shared_ptr<Control> New = nullptr;
 	if (!m_Hovered.expired())
 	{
 		std::shared_ptr<Control> Hovered = m_Hovered.lock();
@@ -182,34 +182,23 @@ void Window::OnMousePressed(const Vector2& Position, Mouse::Button MouseButton)
 
 		if (Pressed)
 		{
-			if (Focused != Hovered)
-			{
-				m_Focus = m_Hovered;
+			New = Hovered;
+		}
+	}
 
-				if (Hovered)
-				{
-					Hovered->OnFocused();
-				}
-			}
-		}
-		else
-		{
-			Unfocus = true;
-		}
-	}
-	else
-	{
-		Unfocus = true;
-	}
-	
-	if (Unfocus)
+	if (New != Focused)
 	{
 		if (Focused)
 		{
 			Focused->OnUnfocused();
 		}
 
-		m_Focus.reset();
+		m_Focus = New;
+
+		if (New)
+		{
+			New->OnFocused();
+		}
 	}
 
 	m_Popup.Close();
