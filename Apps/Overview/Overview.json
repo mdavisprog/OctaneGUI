@@ -45,6 +45,10 @@
 										"Text": "Hello"
 									},
 									{
+										"Type": "Text",
+										"Text": "This is a\nmulti-line string.\nThis is another line."
+									},
+									{
 										"Type": "HorizontalContainer",
 										"Controls": [
 											{
