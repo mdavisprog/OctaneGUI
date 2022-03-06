@@ -33,6 +33,51 @@ SOFTWARE.
 namespace OctaneUI
 {
 
+TextInput::TextPosition::TextPosition()
+{
+}
+
+bool TextInput::TextPosition::operator==(const TextInput::TextPosition& Other) const
+{
+	return m_Line == Other.m_Line && m_Column == Other.m_Column;
+}
+
+bool TextInput::TextPosition::operator!=(const TextInput::TextPosition& Other) const
+{
+	return m_Line != Other.m_Line || m_Column != Other.m_Column;
+}
+
+void TextInput::TextPosition::Invalidate()
+{
+	m_Line = -1;
+	m_Column = -1;
+}
+
+bool TextInput::TextPosition::IsValid() const
+{
+	return m_Line != -1 || m_Column != -1;
+}
+
+void TextInput::TextPosition::SetLine(uint32_t Line)
+{
+	m_Line = Line;
+}
+
+uint32_t TextInput::TextPosition::Line() const
+{
+	return m_Line;
+}
+
+void TextInput::TextPosition::SetColumn(uint32_t Column)
+{
+	m_Column = Column;
+}
+
+uint32_t TextInput::TextPosition::Column() const
+{
+	return m_Column;
+}
+
 TextInput::TextInput(Window* InWindow)
 	: Control(InWindow)
 {
@@ -82,10 +127,10 @@ void TextInput::OnPaint(Paint& Brush) const
 		Brush.Line(Start, End, TheTheme->GetColor(Theme::Colors::TextInput_Cursor));
 	}
 
-	if (m_Anchor != -1 && m_Anchor != m_Position)
+	if (m_Anchor.IsValid() && m_Anchor != m_Position)
 	{
-		uint32_t Min = std::min<uint32_t>(m_Anchor, m_Position);
-		uint32_t Max = std::max<uint32_t>(m_Anchor, m_Position);
+		uint32_t Min = std::min<uint32_t>(m_Anchor.Column(), m_Position.Column());
+		uint32_t Max = std::max<uint32_t>(m_Anchor.Column(), m_Position.Column());
 
 		const std::string Contents = m_Text->GetText();
 		const std::string Selected = Contents.substr(Min, Max - Min);
@@ -136,14 +181,14 @@ void TextInput::OnMouseMove(const Vector2& Position)
 	if (m_Drag)
 	{
 		uint32_t Pos = GetPosition(Position);
-		MovePosition(Pos - m_Position, true);
+		MovePosition(Pos - m_Position.Column(), true);
 	}
 }
 
 bool TextInput::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 {
 	uint32_t Pos = GetPosition(Position);
-	MovePosition(Pos - m_Position);
+	MovePosition(Pos - m_Position.Column());
 	m_Anchor = m_Position;
 	m_Drag = true;
 
@@ -154,7 +199,7 @@ void TextInput::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 {
 	if (m_Anchor == m_Position)
 	{
-		m_Anchor = -1;
+		m_Anchor.Invalidate();
 	}
 
 	m_Drag = false;
@@ -174,17 +219,19 @@ void TextInput::OnText(uint32_t Code)
 	}
 
 	std::string Contents = m_Text->GetText();
-	Contents.insert(Contents.begin() + m_Position, (int8_t)Code);
+	Contents.insert(Contents.begin() + m_Position.Column(), (int8_t)Code);
 	SetText(Contents.c_str());
 	MovePosition(1);
 }
 
 void TextInput::Delete(int32_t Range)
 {
-	int32_t Min = std::min<int32_t>(m_Position, m_Position + (int32_t)Range);
+	uint32_t Column = m_Position.Column();
+
+	int32_t Min = std::min<int32_t>(Column, Column + (int32_t)Range);
 	Min = std::max<int32_t>(0, Min);
 
-	int32_t Max = std::max<int32_t>(m_Position, m_Position + (int32_t)Range);
+	int32_t Max = std::max<int32_t>(Column, Column + (int32_t)Range);
 	Max = std::min<int32_t>(m_Text->Length(), Max);
 
 	std::string Contents = m_Text->GetText();
@@ -201,28 +248,29 @@ void TextInput::MovePosition(int32_t Count, bool UseAnchor)
 {
 	if (UseAnchor)
 	{
-		if (m_Anchor == -1)
+		if (!m_Anchor.IsValid())
 		{
 			m_Anchor = m_Position;
 		}
 	}
 	else
 	{
-		m_Anchor = -1;
+		m_Anchor.Invalidate();
 	}
 
 	if (Count < 0)
 	{
-		int32_t Result = (int32_t)m_Position + Count;
+		int32_t Result = (int32_t)m_Position.Column() + Count;
 
 		if (Result < 0)
 		{
-			Count = -m_Position;
+			Count = -m_Position.Column();
 		}
 	}
 
-	m_Position += Count;
-	m_Position = std::min<uint32_t>(m_Position, m_Text->Length());
+	uint32_t Column = m_Position.Column() + Count;
+	Column = std::min<uint32_t>(Column, m_Text->Length());
+	m_Position.SetColumn(Column);
 
 	Vector2 Offset = -m_Text->GetPosition();
 	Vector2 Position = GetPositionLocation();
@@ -244,7 +292,7 @@ void TextInput::MovePosition(int32_t Count, bool UseAnchor)
 
 Vector2 TextInput::GetPositionLocation() const
 {
-	const std::string Sub = std::string(m_Text->GetText()).substr(0, m_Position);
+	const std::string Sub = std::string(m_Text->GetText()).substr(0, m_Position.Column());
 	return GetTheme()->GetFont()->Measure(Sub);
 }
 
@@ -276,12 +324,12 @@ bool TextInput::IsShiftPressed() const
 
 int32_t TextInput::GetRangeOr(int32_t Value) const
 {
-	if (m_Anchor == -1)
+	if (!m_Anchor.IsValid())
 	{
 		return Value;
 	}
 
-	return m_Anchor - m_Position;
+	return m_Anchor.Column() - m_Position.Column();
 }
 
 }

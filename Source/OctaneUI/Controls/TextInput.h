@@ -38,6 +38,28 @@ class TextInput : public Control
 	CLASS(TextInput)
 
 public:
+	class TextPosition
+	{
+	public:
+		TextPosition();
+
+		bool operator==(const TextPosition& Other) const;
+		bool operator!=(const TextPosition& Other) const;
+
+		void Invalidate();
+		bool IsValid() const;
+
+		void SetLine(uint32_t Line);
+		uint32_t Line() const;
+
+		void SetColumn(uint32_t Column);
+		uint32_t Column() const;
+	
+	private:
+		uint32_t m_Line { (uint32_t)-1 };
+		uint32_t m_Column { (uint32_t)-1 };
+	};
+
 	TextInput(Window* InWindow);
 	virtual ~TextInput();
 
@@ -62,8 +84,8 @@ private:
 	int32_t GetRangeOr(int32_t Value) const;
 
 	std::shared_ptr<Text> m_Text { nullptr };
-	uint32_t m_Position { 0 };
-	uint32_t m_Anchor { (uint32_t)-1 };
+	TextPosition m_Position {};
+	TextPosition m_Anchor {};
 	bool m_Focused { false };
 	bool m_Drag { false };
 };
