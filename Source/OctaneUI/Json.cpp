@@ -398,6 +398,7 @@ const char* Json::ParseValue(const char* Stream, Json& Value)
 	const char* Ptr = Stream;
 	std::string Token;
 	bool ParseString = false;
+	unsigned char LastCh = 0;
 	while (*Ptr != '\0')
 	{
 		unsigned char Ch = *Ptr;
@@ -425,9 +426,31 @@ const char* Json::ParseValue(const char* Stream, Json& Value)
 		}
 		else if (isalnum(Ch) || ParseString || Ch == '.' || Ch == '-')
 		{
-			Token += Ch;
+			// Check for valid escape sequences.
+			if (LastCh == '\\')
+			{
+				switch (Ch)
+				{
+				case '"': Ch = '\"'; break;
+				case '\\':
+				case '/': Token += Ch; break;
+				case 'b': Ch = '\b'; break;
+				case 'f': Ch = '\f'; break;
+				case 'n': Ch = '\n'; break;
+				case 'r': Ch = '\r'; break;
+				case 't': Ch = '\t'; break;
+				case 'u': break; //TODO: Implement parsing 4-digit hex value.
+				default: Token += LastCh;
+				}
+			}
+
+			if (Ch != '\\')
+			{
+				Token += Ch;
+			}
 		}
 
+		LastCh = Ch;
 		Ptr++;
 	}
 
