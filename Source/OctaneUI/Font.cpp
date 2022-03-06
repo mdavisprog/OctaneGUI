@@ -130,7 +130,7 @@ bool Font::Draw(int32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoords
 	const Vector2 InvertedSize = m_Texture->GetSize().Invert();
 
 	int X = (int)floor(Position.X + Item.m_Offset.X + 0.5f);
-	int Y = (int)floor(Position.Y + Item.m_Offset.Y + m_Ascent + m_Descent + 0.5f);
+	int Y = (int)floor(Position.Y + Item.m_Offset.Y + m_Ascent + 0.5f);
 
 	Vertices.Min = Vector2((float)X, (float)Y);
 	Vertices.Max = Vertices.Min + ItemSize;
@@ -153,6 +153,33 @@ Vector2 Font::Measure(const std::string& Text) const
 		Result.X += Size.X;
 		Result.Y = std::max<float>(Result.Y, Size.Y);
 	}
+
+	return Result;
+}
+
+Vector2 Font::Measure(const std::string& Text, int& Lines) const
+{
+	Vector2 Result;
+	Lines = 1;
+
+	Vector2 LineSize;
+	for (char Ch : Text)
+	{
+		if (Ch == '\n')
+		{
+			Lines++;
+			Result.X = std::max<float>(Result.X, LineSize.X);
+			Result.Y += LineSize.Y;
+			LineSize = {0.0f, 0.0f};
+		}
+
+		const Vector2 Size = Measure(Ch);
+		LineSize.X += Size.X;
+		LineSize.Y = std::max<float>(LineSize.Y, Size.Y);
+	}
+
+	Result.X = std::max<float>(Result.X, LineSize.X);
+	Result.Y += LineSize.Y;
 
 	return Result;
 }

@@ -86,6 +86,13 @@ void Paint::Text(const Vector2& Position, const std::string& Contents, const Col
 	uint32_t Offset = 0;
 	for (char Char : Contents)
 	{
+		if (Char == '\n')
+		{
+			Pos.X = Position.X;
+			Pos.Y += ThemeFont->Size();
+			continue;
+		}
+
 		Rect Vertices;
 		Rect TexCoords;
 
