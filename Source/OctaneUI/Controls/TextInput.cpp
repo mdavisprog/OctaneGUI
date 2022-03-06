@@ -152,6 +152,11 @@ bool TextInput::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 
 void TextInput::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 {
+	if (m_Anchor == m_Position)
+	{
+		m_Anchor = -1;
+	}
+
 	m_Drag = false;
 }
 
