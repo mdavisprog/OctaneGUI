@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "../Font.h"
+#include "../Json.h"
 #include "../Paint.h"
 #include "../Theme.h"
 #include "Text.h"
@@ -160,6 +161,19 @@ void TextInput::OnUnfocused()
 {
 	m_Focused = false;
 	Invalidate();
+}
+
+void TextInput::OnLoad(const Json& Root)
+{
+	Control::OnLoad(Root);
+
+	m_Multiline = Root["Multiline"].Boolean();
+	if (m_Multiline)
+	{
+		SetSize({200.0f, 200.0f});
+	}
+
+	m_Text->OnLoad(Root["Text"]);
 }
 
 void TextInput::OnKeyPressed(Keyboard::Key Key)
