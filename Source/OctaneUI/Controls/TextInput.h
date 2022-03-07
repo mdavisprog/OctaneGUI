@@ -42,22 +42,29 @@ public:
 	{
 	public:
 		TextPosition();
+		TextPosition(uint32_t Line, uint32_t Column, uint32_t Index);
 
 		bool operator==(const TextPosition& Other) const;
 		bool operator!=(const TextPosition& Other) const;
+		bool operator<(const TextPosition& Other) const;
 
 		void Invalidate();
 		bool IsValid() const;
+		bool IsValidIndex() const;
 
 		void SetLine(uint32_t Line);
 		uint32_t Line() const;
 
 		void SetColumn(uint32_t Column);
 		uint32_t Column() const;
+
+		void SetIndex(uint32_t Index);
+		uint32_t Index() const;
 	
 	private:
 		uint32_t m_Line { (uint32_t)-1 };
 		uint32_t m_Column { (uint32_t)-1 };
+		uint32_t m_Index { (uint32_t)-1 };
 	};
 
 	TextInput(Window* InWindow);

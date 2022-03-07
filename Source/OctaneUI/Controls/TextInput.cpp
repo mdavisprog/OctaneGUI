@@ -38,25 +38,43 @@ TextInput::TextPosition::TextPosition()
 {
 }
 
+TextInput::TextPosition::TextPosition(uint32_t Line, uint32_t Column, uint32_t Index)
+	: m_Line(Line)
+	, m_Column(Column)
+	, m_Index(Index)
+{
+}
+
 bool TextInput::TextPosition::operator==(const TextInput::TextPosition& Other) const
 {
-	return m_Line == Other.m_Line && m_Column == Other.m_Column;
+	return m_Line == Other.m_Line && m_Column == Other.m_Column && m_Index == Other.m_Index;
 }
 
 bool TextInput::TextPosition::operator!=(const TextInput::TextPosition& Other) const
 {
-	return m_Line != Other.m_Line || m_Column != Other.m_Column;
+	return m_Line != Other.m_Line || m_Column != Other.m_Column || m_Index != Other.m_Index;
+}
+
+bool TextInput::TextPosition::operator<(const TextInput::TextPosition& Other) const
+{
+	return m_Line < Other.m_Line || (m_Line == Other.m_Line && m_Column < Other.m_Column);
 }
 
 void TextInput::TextPosition::Invalidate()
 {
 	m_Line = -1;
 	m_Column = -1;
+	m_Index = -1;
 }
 
 bool TextInput::TextPosition::IsValid() const
 {
-	return m_Line != -1 || m_Column != -1;
+	return m_Line != -1 && m_Column != -1 && m_Index != -1;
+}
+
+bool TextInput::TextPosition::IsValidIndex() const
+{
+	return m_Index != -1;
 }
 
 void TextInput::TextPosition::SetLine(uint32_t Line)
@@ -77,6 +95,16 @@ void TextInput::TextPosition::SetColumn(uint32_t Column)
 uint32_t TextInput::TextPosition::Column() const
 {
 	return m_Column;
+}
+
+void TextInput::TextPosition::SetIndex(uint32_t Index)
+{
+	m_Index = Index;
+}
+
+uint32_t TextInput::TextPosition::Index() const
+{
+	return m_Index;
 }
 
 TextInput::TextInput(Window* InWindow)
