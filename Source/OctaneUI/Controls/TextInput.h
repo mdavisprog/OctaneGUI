@@ -86,10 +86,11 @@ public:
 private:
 	void Delete(int32_t Range);
 	void MovePosition(int32_t Count, bool UseAnchor = false);
-	Vector2 GetPositionLocation() const;
-	uint32_t GetPosition(const Vector2& Position) const;
+	Vector2 GetPositionLocation(const TextPosition& Position) const;
+	TextPosition GetPosition(const Vector2& Position) const;
 	bool IsShiftPressed() const;
 	int32_t GetRangeOr(int32_t Value) const;
+	uint32_t LineStartIndex(uint32_t Index) const;
 
 	std::shared_ptr<Text> m_Text { nullptr };
 	TextPosition m_Position {};

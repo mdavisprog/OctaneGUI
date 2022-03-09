@@ -136,6 +136,7 @@ const char* TextInput::GetText() const
 void TextInput::OnPaint(Paint& Brush) const
 {
 	std::shared_ptr<Theme> TheTheme = GetTheme();
+	const float LineHeight = TheTheme->GetFont()->Size();
 
 	Rect Bounds = GetAbsoluteBounds();
 	Brush.Rectangle(Bounds, TheTheme->GetColor(Theme::Colors::TextInput_Background));
@@ -150,30 +151,73 @@ void TextInput::OnPaint(Paint& Brush) const
 
 	if (m_Focused)
 	{
-		const Vector2 Size = GetPositionLocation();
-		const Vector2 Start = m_Text->GetAbsolutePosition() + Vector2(std::max<float>(Size.X, 2.0f), 0.0f);
-		const Vector2 End = Start + Vector2(0.0f, GetTheme()->GetFont()->Size());
+		const Vector2 Size = GetPositionLocation(m_Position);
+		const Vector2 Start = m_Text->GetAbsolutePosition() + Vector2(std::max<float>(Size.X, 2.0f), Size.Y);
+		const Vector2 End = Start + Vector2(0.0f, LineHeight);
 		Brush.Line(Start, End, TheTheme->GetColor(Theme::Colors::TextInput_Cursor));
 	}
 
 	if (m_Anchor.IsValid() && m_Anchor != m_Position)
 	{
-		uint32_t Min = std::min<uint32_t>(m_Anchor.Column(), m_Position.Column());
-		uint32_t Max = std::max<uint32_t>(m_Anchor.Column(), m_Position.Column());
+		const TextPosition Min = m_Anchor < m_Position ? m_Anchor : m_Position;
+		const TextPosition Max = m_Anchor < m_Position ? m_Position : m_Anchor;
 
-		const std::string Contents = m_Text->GetText();
-		const std::string Selected = Contents.substr(Min, Max - Min);
-		const std::string MinStr = Contents.substr(0, Min);
+		const std::string& String = m_Text->GetString();
+		if (Min.Line() == Max.Line())
+		{
+			const Vector2 MinPos = GetPositionLocation(Min);
+			const Vector2 MaxPos = GetPositionLocation(Max);
 
-		const Vector2 MinSize = GetTheme()->GetFont()->Measure(MinStr);
-		const Vector2 Size = GetTheme()->GetFont()->Measure(Selected);
+			const Rect SelectBounds = {
+				m_Text->GetAbsolutePosition() + MinPos,
+				m_Text->GetAbsolutePosition() + MaxPos + Vector2(0.0f, LineHeight)
+			};
 
-		Rect SelectBounds;
-		SelectBounds.Min = Vector2(MinSize.X, 0.0f);
-		SelectBounds.Max = SelectBounds.Min + Vector2(Size.X, GetTheme()->GetFont()->Size());
-		SelectBounds.Move(m_Text->GetAbsolutePosition());
+			Brush.Rectangle(SelectBounds, TheTheme->GetColor(Theme::Colors::TextInput_Selection));
+		}
+		else
+		{
+			uint32_t Index = Min.Index();
+			for (uint32_t Line = Min.Line(); Line <= Max.Line(); Line++)
+			{
+				if (Line == Min.Line())
+				{
+					const std::string Sub = String.substr(Min.Index(), LineEndIndex(Min.Index()) - Min.Index());
+					const Vector2 Size = TheTheme->GetFont()->Measure(Sub);
+					const Vector2 Position = GetPositionLocation(Min);
+					const Rect SelectBounds = {
+						m_Text->GetAbsolutePosition() + Position,
+						m_Text->GetAbsolutePosition() + Position + Vector2(Size.X, LineHeight)
+					};
+					Brush.Rectangle(SelectBounds, TheTheme->GetColor(Theme::Colors::TextInput_Selection));
+				}
+				else if (Line == Max.Line())
+				{
+					const uint32_t Start = LineStartIndex(Max.Index());
+					const std::string Sub = String.substr(Start, Max.Index() - Start);
+					const Vector2 Size = TheTheme->GetFont()->Measure(Sub);
+					const Vector2 Position = GetPositionLocation(Max);
+					const Rect SelectBounds = {
+						m_Text->GetAbsolutePosition() + Position - Vector2(Size.X, 0.0f),
+						m_Text->GetAbsolutePosition() + Position + Vector2(0.0f, LineHeight)
+					};
+					Brush.Rectangle(SelectBounds, TheTheme->GetColor(Theme::Colors::TextInput_Selection));
+				}
+				else
+				{
+					const std::string Sub = String.substr(Index, LineEndIndex(Index) - Index);
+					const Vector2 Size = TheTheme->GetFont()->Measure(Sub);
+					const Vector2 Position = GetPositionLocation({Line, 0, Index});
+					const Rect SelectBounds = {
+						m_Text->GetAbsolutePosition() + Position,
+						m_Text->GetAbsolutePosition() + Position + Vector2(Size.X, LineHeight)
+					};
+					Brush.Rectangle(SelectBounds, TheTheme->GetColor(Theme::Colors::TextInput_Selection));
+				}
 
-		Brush.Rectangle(SelectBounds, TheTheme->GetColor(Theme::Colors::TextInput_Selection));
+				Index = LineEndIndex(Index) + 1;
+			}
+		}
 	}
 
 	Brush.PopClip();
@@ -222,17 +266,17 @@ void TextInput::OnMouseMove(const Vector2& Position)
 {
 	if (m_Drag)
 	{
-		uint32_t Pos = GetPosition(Position);
-		MovePosition(Pos - m_Position.Column(), true);
+		m_Position = GetPosition(Position);
+		Invalidate();
 	}
 }
 
 bool TextInput::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 {
-	uint32_t Pos = GetPosition(Position);
-	MovePosition(Pos - m_Position.Column());
+	m_Position = GetPosition(Position);
 	m_Anchor = m_Position;
 	m_Drag = true;
+	Invalidate();
 
 	return true;
 }
@@ -249,13 +293,7 @@ void TextInput::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 
 void TextInput::OnText(uint32_t Code)
 {
-	if (Code == '\b')
-	{
-		return;
-	}
-
-	// Check for delete character.
-	if (Code == 127)
+	if (!std::isalnum(Code) && Code != '\n')
 	{
 		return;
 	}
@@ -315,7 +353,7 @@ void TextInput::MovePosition(int32_t Count, bool UseAnchor)
 	m_Position.SetColumn(Column);
 
 	Vector2 Offset = -m_Text->GetPosition();
-	Vector2 Position = GetPositionLocation();
+	Vector2 Position = GetPositionLocation(m_Position);
 	Vector2 Max = Offset + Vector2(GetSize().X, 0.0f);
 
 	if (Position.X < Offset.X)
@@ -332,19 +370,69 @@ void TextInput::MovePosition(int32_t Count, bool UseAnchor)
 	Invalidate();
 }
 
-Vector2 TextInput::GetPositionLocation() const
+Vector2 TextInput::GetPositionLocation(const TextPosition& Position) const
 {
-	const std::string Sub = std::string(m_Text->GetText()).substr(0, m_Position.Column());
-	return GetTheme()->GetFont()->Measure(Sub);
+	if (!m_Position.IsValid())
+	{
+		return {0.0f, 0.0f};
+	}
+
+	const std::string& String = m_Text->GetString();
+	uint32_t Start = LineStartIndex(Position.Index());
+
+	const std::string Sub = String.substr(Start, Position.Index() - Start);
+	return {GetTheme()->GetFont()->Measure(Sub).X, Position.Line() * GetTheme()->GetFont()->Size()};
 }
 
-uint32_t TextInput::GetPosition(const Vector2& Position) const
+TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
 {
-	Vector2 Offset;
-	const std::string Contents = m_Text->GetText();
-	uint32_t Pos = 0;
-	for (char Ch : Contents)
+	const float LineHeight = GetTheme()->GetFont()->Size();
+	const std::string& String = m_Text->GetString();
+
+	// Transform into local space.
+	const Vector2 LocalPosition = Position - GetAbsolutePosition();
+	// TODO: Take into account any scrolling once contained within a ScrollableContainer.
+
+	// Find the starting index based on what line the position is on.
+	size_t StartIndex = 0;
+	size_t Index = 0;
+	uint32_t Line = 0;
+	uint32_t Column = 0;
+	Vector2 Offset = {0.0f, LineHeight};
+	while (StartIndex != std::string::npos)
 	{
+		if (Offset.Y > LocalPosition.Y)
+		{
+			Index = StartIndex;
+			break;
+		}
+
+		size_t Find = String.find('\n', StartIndex);
+		if (Find != std::string::npos)
+		{
+			Line++;
+			StartIndex = Find + 1;
+			Offset.Y += LineHeight;
+		}
+		else
+		{
+			// Reached the end of the string. Mark the column to be the end
+			// of the final line and make the index be the size of the string.
+			Column = String.size() - StartIndex;
+			Index = String.size();
+			break;
+		}
+	}
+
+	// Find the character on the line that is after the given position.
+	for (; Index < String.size(); Index++, Column++)
+	{
+		const char Ch = String[Index];
+		if (Ch == '\n')
+		{
+			break;
+		}
+
 		const Vector2 Size = GetTheme()->GetFont()->Measure(Ch);
 		Offset.X += Size.X;
 
@@ -352,11 +440,9 @@ uint32_t TextInput::GetPosition(const Vector2& Position) const
 		{
 			break;
 		}
-
-		Pos++;
 	}
 
-	return Pos;
+	return {Line, Column, (uint32_t)Index};
 }
 
 bool TextInput::IsShiftPressed() const
@@ -374,4 +460,14 @@ int32_t TextInput::GetRangeOr(int32_t Value) const
 	return m_Anchor.Column() - m_Position.Column();
 }
 
+uint32_t TextInput::LineStartIndex(uint32_t Index) const
+{
+	const std::string& String = m_Text->GetString();
+
+	// The index may already be on a newline character. Start the search at the character
+	// before this one.
+	const uint32_t Offset = String[Index] == '\n' ? Index - 1 : Index;
+	size_t Result = String.rfind('\n', Offset);
+	return Result == std::string::npos ? 0 : Result;
+}
 }
