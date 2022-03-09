@@ -160,6 +160,8 @@ OctaneUI::Keyboard::Key GetKey(SDL_Keycode Code)
 	case SDLK_DELETE: return OctaneUI::Keyboard::Key::Delete;
 	case SDLK_LEFT: return OctaneUI::Keyboard::Key::Left;
 	case SDLK_RIGHT: return OctaneUI::Keyboard::Key::Right;
+	case SDLK_UP: return OctaneUI::Keyboard::Key::Up;
+	case SDLK_DOWN: return OctaneUI::Keyboard::Key::Down;
 	case SDLK_HOME: return OctaneUI::Keyboard::Key::Home;
 	case SDLK_END: return OctaneUI::Keyboard::Key::End;
 	case SDLK_LSHIFT: return OctaneUI::Keyboard::Key::LeftShift;
