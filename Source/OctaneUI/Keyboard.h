@@ -39,10 +39,13 @@ public:
 		Delete,
 		Left,
 		Right,
+		Up,
+		Down,
 		Home,
 		End,
 		LeftShift,
 		RightShift,
+		Enter,
 	};
 };
 

@@ -57,10 +57,13 @@ OctaneUI::Keyboard::Key GetKeyCode(sf::Keyboard::Key Key)
 	case sf::Keyboard::Delete: return OctaneUI::Keyboard::Key::Delete;
 	case sf::Keyboard::Left: return OctaneUI::Keyboard::Key::Left;
 	case sf::Keyboard::Right: return OctaneUI::Keyboard::Key::Right;
+	case sf::Keyboard::Up: return OctaneUI::Keyboard::Key::Up;
+	case sf::Keyboard::Down: return OctaneUI::Keyboard::Key::Down;
 	case sf::Keyboard::Home: return OctaneUI::Keyboard::Key::Home;
 	case sf::Keyboard::End: return OctaneUI::Keyboard::Key::End;
 	case sf::Keyboard::LShift: return OctaneUI::Keyboard::Key::LeftShift;
 	case sf::Keyboard::RShift: return OctaneUI::Keyboard::Key::RightShift;
+	case sf::Keyboard::Enter: return OctaneUI::Keyboard::Key::Enter;
 	default: break;
 	}
 
