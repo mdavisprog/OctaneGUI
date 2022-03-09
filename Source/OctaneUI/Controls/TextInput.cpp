@@ -301,6 +301,11 @@ void TextInput::OnText(uint32_t Code)
 		return;
 	}
 
+	if (m_Anchor.IsValid())
+	{
+		Delete(GetRangeOr(0));
+	}
+
 	std::string Contents = m_Text->GetText();
 	Contents.insert(Contents.begin() + m_Position.Index(), (int8_t)Code);
 	SetText(Contents.c_str());
