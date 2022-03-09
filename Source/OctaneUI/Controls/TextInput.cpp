@@ -260,6 +260,7 @@ void TextInput::OnKeyPressed(Keyboard::Key Key)
 	case Keyboard::Key::Down: MovePosition(1, 0, IsShiftPressed()); break;
 	case Keyboard::Key::Home: MoveHome(); break;
 	case Keyboard::Key::End: MoveEnd(); break;
+	case Keyboard::Key::Enter: OnText('\n'); break;
 	default: break;
 	}
 }
@@ -301,7 +302,7 @@ void TextInput::OnText(uint32_t Code)
 	}
 
 	std::string Contents = m_Text->GetText();
-	Contents.insert(Contents.begin() + m_Position.Column(), (int8_t)Code);
+	Contents.insert(Contents.begin() + m_Position.Index(), (int8_t)Code);
 	SetText(Contents.c_str());
 	MovePosition(0, 1);
 }

@@ -166,6 +166,7 @@ OctaneUI::Keyboard::Key GetKey(SDL_Keycode Code)
 	case SDLK_END: return OctaneUI::Keyboard::Key::End;
 	case SDLK_LSHIFT: return OctaneUI::Keyboard::Key::LeftShift;
 	case SDLK_RSHIFT: return OctaneUI::Keyboard::Key::RightShift;
+	case SDLK_RETURN: return OctaneUI::Keyboard::Key::Enter;
 	default: break;
 	}
 
