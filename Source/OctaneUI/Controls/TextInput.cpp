@@ -308,22 +308,25 @@ void TextInput::OnText(uint32_t Code)
 
 void TextInput::Delete(int32_t Range)
 {
-	uint32_t Column = m_Position.Column();
+	uint32_t Index = m_Position.Index();
 
-	int32_t Min = std::min<int32_t>(Column, Column + (int32_t)Range);
+	int32_t Min = std::min<int32_t>(Index, Index + (int32_t)Range);
 	Min = std::max<int32_t>(0, Min);
 
-	int32_t Max = std::max<int32_t>(Column, Column + (int32_t)Range);
+	int32_t Max = std::max<int32_t>(Index, Index + (int32_t)Range);
 	Max = std::min<int32_t>(m_Text->Length(), Max);
 
+	// Only move the cursor if deleting characters to the left of the cursor.
+	// Move the position before updating the text object. This should place
+	// the position to the correct index in the string buffer.
+	int32_t Move = std::min<int32_t>(Range, 0);
+	MovePosition(0, Move);
+
+	// TODO: Maybe allow altering the contents in-place and repaint?
 	std::string Contents = m_Text->GetText();
 	Contents.erase(Contents.begin() + (uint32_t)Min, Contents.begin() + (uint32_t)Max);
 
 	SetText(Contents.c_str());
-
-	// Only move the cursor if deleting characters to the left of the cursor.
-	int32_t Move = std::min<int32_t>(Range, 0);
-	MovePosition(0, Move);
 }
 
 void TextInput::MoveHome()
@@ -536,7 +539,7 @@ int32_t TextInput::GetRangeOr(int32_t Value) const
 		return Value;
 	}
 
-	return m_Anchor.Column() - m_Position.Column();
+	return m_Anchor.Index() - m_Position.Index();
 }
 
 uint32_t TextInput::LineStartIndex(uint32_t Index) const
