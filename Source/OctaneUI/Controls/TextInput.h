@@ -76,7 +76,7 @@ public:
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnFocused() override;
 	virtual void OnUnfocused() override;
-	virtual void OnLoad(const Json& Root);
+	virtual void OnLoad(const Json& Root) override;
 	virtual void OnKeyPressed(Keyboard::Key Key) override;
 	virtual void OnMouseMove(const Vector2& Position) override;
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
