@@ -58,6 +58,11 @@ const char* Text::GetText() const
 	return m_Contents.c_str();
 }
 
+const std::string& Text::GetString() const
+{
+	return m_Contents;
+}
+
 uint32_t Text::Length() const
 {
 	return m_Contents.size();

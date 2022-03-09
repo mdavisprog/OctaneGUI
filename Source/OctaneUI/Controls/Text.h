@@ -44,6 +44,7 @@ public:
 
 	Text* SetText(const char* InContents);
 	const char* GetText() const;
+	const std::string& GetString() const;
 	uint32_t Length() const;
 
 	virtual void OnPaint(Paint& Brush) const override;
