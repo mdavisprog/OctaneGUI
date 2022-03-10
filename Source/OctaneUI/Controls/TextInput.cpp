@@ -301,6 +301,12 @@ void TextInput::OnText(uint32_t Code)
 		return;
 	}
 
+	// Prevent newline in single-line inputs.
+	if (!m_Multiline && Code == '\n')
+	{
+		return;
+	}
+
 	if (m_Anchor.IsValid())
 	{
 		Delete(GetRangeOr(0));
