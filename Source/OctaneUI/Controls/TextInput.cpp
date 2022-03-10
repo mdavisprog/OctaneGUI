@@ -455,6 +455,7 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 	NewColumn = std::max<int>(NewColumn, 0);
 
 	m_Position = { (uint32_t)NewLine, (uint32_t)NewColumn, (uint32_t)NewIndex };
+	ScrollIntoView();
 	Invalidate();
 }
 
@@ -583,6 +584,37 @@ uint32_t TextInput::LineSize(uint32_t Index) const
 	}
 	uint32_t End = LineEndIndex(Index);
 	return std::abs((int)Start - (int)End);
+}
+
+void TextInput::ScrollIntoView()
+{
+	const float LineHeight = GetTheme()->GetFont()->Size();
+	const Vector2 Position = GetPositionLocation(m_Position);
+	const Vector2 AbsPosition = m_Text->GetAbsolutePosition() + Position;
+	const Rect Bounds = GetAbsoluteBounds();
+	Vector2 Offset = m_Text->GetPosition();
+
+	const Vector2 BottomRight = Bounds.Max - AbsPosition;
+	const Vector2 TopLeft = Position + Offset;
+	if (TopLeft.X < 0.0f)
+	{
+		Offset.X -= TopLeft.X - 2.0f;
+	}
+	if (TopLeft.Y < 0.0f)
+	{
+		Offset.Y -= TopLeft.Y;
+	}
+
+	if (BottomRight.X < 0.0f)
+	{
+		Offset.X += BottomRight.X;
+	}
+	if (BottomRight.Y - LineHeight < 0.0f)
+	{
+		Offset.Y += BottomRight.Y - LineHeight;
+	}
+
+	m_Text->SetPosition(Offset);
 }
 
 }
