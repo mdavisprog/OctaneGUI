@@ -296,7 +296,7 @@ void TextInput::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 
 void TextInput::OnText(uint32_t Code)
 {
-	if (!std::isalnum(Code) && Code != '\n')
+	if (!std::isalnum(Code) && Code != '\n' && Code != ' ')
 	{
 		return;
 	}
