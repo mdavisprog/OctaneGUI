@@ -34,6 +34,69 @@ SOFTWARE.
 namespace OctaneUI
 {
 
+class TextInputInteraction : public Control
+{
+	CLASS(TextInputInteraction)
+
+public:
+	TextInputInteraction(Window* InWindow, TextInput* Input)
+		: Control(InWindow)
+		, m_Input(Input)
+	{
+		SetExpand(Expand::Both);
+	}
+
+	virtual void OnFocused() override
+	{
+		m_Input->Focus();
+	}
+
+	virtual void OnUnfocused() override
+	{
+		m_Input->Unfocus();
+	}
+
+	virtual void OnKeyPressed(Keyboard::Key Key) override
+	{
+		switch (Key)
+		{
+		case Keyboard::Key::Backspace: m_Input->Delete(m_Input->GetRangeOr(-1)); break;
+		case Keyboard::Key::Delete: m_Input->Delete(m_Input->GetRangeOr(1)); break;
+		case Keyboard::Key::Left: m_Input->MovePosition(0, -1, m_Input->IsShiftPressed()); break;
+		case Keyboard::Key::Right: m_Input->MovePosition(0, 1, m_Input->IsShiftPressed()); break;
+		case Keyboard::Key::Up: m_Input->MovePosition(-1, 0, m_Input->IsShiftPressed()); break;
+		case Keyboard::Key::Down: m_Input->MovePosition(1, 0, m_Input->IsShiftPressed()); break;
+		case Keyboard::Key::Home: m_Input->MoveHome(); break;
+		case Keyboard::Key::End: m_Input->MoveEnd(); break;
+		case Keyboard::Key::Enter: m_Input->AddText('\n'); break;
+		default: break;
+		}
+	}
+
+	virtual void OnMouseMove(const Vector2& Position) override
+	{
+		m_Input->MouseMove(Position);
+	}
+
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override
+	{
+		return m_Input->MousePressed(Position, Button);
+	}
+
+	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override
+	{
+		m_Input->MouseReleased(Position, Button);
+	}
+
+	virtual void OnText(uint32_t Code) override
+	{
+		m_Input->AddText(Code);
+	}
+
+private:
+	TextInput* m_Input { nullptr };
+};
+
 TextInput::TextPosition::TextPosition()
 {
 }
@@ -108,11 +171,13 @@ uint32_t TextInput::TextPosition::Index() const
 }
 
 TextInput::TextInput(Window* InWindow)
-	: Control(InWindow)
+	: Container(InWindow)
 {
-	m_Text = std::make_shared<Text>(InWindow);
+	m_Text = AddControl<Text>();
 	m_Text->SetParent(this);
 	m_Text->SetPosition({3.0f, 0.0f});
+
+	m_Interaction = AddControl<TextInputInteraction>(this);
 
 	SetSize({100.0f, GetTheme()->GetFont()->Size()});
 }
@@ -131,6 +196,18 @@ TextInput* TextInput::SetText(const char* InText)
 const char* TextInput::GetText() const
 {
 	return m_Text->GetText();
+}
+
+void TextInput::Focus()
+{
+	m_Focused = true;
+	Invalidate();
+}
+
+void TextInput::Unfocus()
+{
+	m_Focused = false;
+	Invalidate();
 }
 
 void TextInput::OnPaint(Paint& Brush) const
@@ -223,21 +300,9 @@ void TextInput::OnPaint(Paint& Brush) const
 	Brush.PopClip();
 }
 
-void TextInput::OnFocused()
-{
-	m_Focused = true;
-	Invalidate();
-}
-
-void TextInput::OnUnfocused()
-{
-	m_Focused = false;
-	Invalidate();
-}
-
 void TextInput::OnLoad(const Json& Root)
 {
-	Control::OnLoad(Root);
+	Container::OnLoad(Root);
 
 	m_Multiline = Root["Multiline"].Boolean();
 	if (m_Multiline)
@@ -248,24 +313,7 @@ void TextInput::OnLoad(const Json& Root)
 	m_Text->OnLoad(Root["Text"]);
 }
 
-void TextInput::OnKeyPressed(Keyboard::Key Key)
-{
-	switch (Key)
-	{
-	case Keyboard::Key::Backspace: Delete(GetRangeOr(-1)); break;
-	case Keyboard::Key::Delete: Delete(GetRangeOr(1)); break;
-	case Keyboard::Key::Left: MovePosition(0, -1, IsShiftPressed()); break;
-	case Keyboard::Key::Right: MovePosition(0, 1, IsShiftPressed()); break;
-	case Keyboard::Key::Up: MovePosition(-1, 0, IsShiftPressed()); break;
-	case Keyboard::Key::Down: MovePosition(1, 0, IsShiftPressed()); break;
-	case Keyboard::Key::Home: MoveHome(); break;
-	case Keyboard::Key::End: MoveEnd(); break;
-	case Keyboard::Key::Enter: OnText('\n'); break;
-	default: break;
-	}
-}
-
-void TextInput::OnMouseMove(const Vector2& Position)
+void TextInput::MouseMove(const Vector2& Position)
 {
 	if (m_Drag)
 	{
@@ -274,7 +322,7 @@ void TextInput::OnMouseMove(const Vector2& Position)
 	}
 }
 
-bool TextInput::OnMousePressed(const Vector2& Position, Mouse::Button Button)
+bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button)
 {
 	m_Position = GetPosition(Position);
 	m_Anchor = m_Position;
@@ -284,7 +332,7 @@ bool TextInput::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 	return true;
 }
 
-void TextInput::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
+void TextInput::MouseReleased(const Vector2& Position, Mouse::Button Button)
 {
 	if (m_Anchor == m_Position)
 	{
@@ -294,7 +342,7 @@ void TextInput::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 	m_Drag = false;
 }
 
-void TextInput::OnText(uint32_t Code)
+void TextInput::AddText(uint32_t Code)
 {
 	if (!std::isalnum(Code) && Code != '\n' && Code != ' ')
 	{

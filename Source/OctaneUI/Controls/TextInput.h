@@ -26,15 +26,18 @@ SOFTWARE.
 
 #pragma once
 
-#include "Control.h"
+#include "Container.h"
 
 namespace OctaneUI
 {
 
 class Text;
+class TextInputInteraction;
 
-class TextInput : public Control
+class TextInput : public Container
 {
+	friend TextInputInteraction;
+
 	CLASS(TextInput)
 
 public:
@@ -73,17 +76,18 @@ public:
 	TextInput* SetText(const char* InText);
 	const char* GetText() const;
 
+	void Focus();
+	void Unfocus();
+
 	virtual void OnPaint(Paint& Brush) const override;
-	virtual void OnFocused() override;
-	virtual void OnUnfocused() override;
 	virtual void OnLoad(const Json& Root) override;
-	virtual void OnKeyPressed(Keyboard::Key Key) override;
-	virtual void OnMouseMove(const Vector2& Position) override;
-	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
-	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
-	virtual void OnText(uint32_t Code) override;
 
 private:
+	void MouseMove(const Vector2& Position);
+	bool MousePressed(const Vector2& Position, Mouse::Button Button);
+	void MouseReleased(const Vector2& Position, Mouse::Button Button);
+	void AddText(uint32_t Code);
+
 	void Delete(int32_t Range);
 	void MoveHome();
 	void MoveEnd();
@@ -103,6 +107,7 @@ private:
 	bool m_Focused { false };
 	bool m_Drag { false };
 	bool m_Multiline { false };
+	std::shared_ptr<TextInputInteraction> m_Interaction { nullptr };
 };
 
 }
