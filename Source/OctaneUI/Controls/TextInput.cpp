@@ -28,6 +28,7 @@ SOFTWARE.
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Theme.h"
+#include "ScrollableContainer.h"
 #include "Text.h"
 #include "TextInput.h"
 
@@ -173,11 +174,11 @@ uint32_t TextInput::TextPosition::Index() const
 TextInput::TextInput(Window* InWindow)
 	: Container(InWindow)
 {
-	m_Text = AddControl<Text>();
-	m_Text->SetParent(this);
-	m_Text->SetPosition({3.0f, 0.0f});
-
 	m_Interaction = AddControl<TextInputInteraction>(this);
+	m_Scrollable = AddControl<ScrollableContainer>();
+
+	m_Text = m_Scrollable->AddControl<Text>();
+	m_Text->SetPosition({3.0f, 0.0f});
 
 	SetSize({100.0f, GetTheme()->GetFont()->Size()});
 }
@@ -210,6 +211,21 @@ void TextInput::Unfocus()
 	Invalidate();
 }
 
+std::weak_ptr<Control> TextInput::GetControl(const Vector2& Point) const
+{
+	std::weak_ptr<Control> Result = Container::GetControl(Point);
+
+	if (!Result.expired())
+	{
+		if (!m_Scrollable->IsScrollBarVisible(Result.lock()))
+		{
+			Result = m_Interaction;
+		}
+	}
+
+	return Result;
+}
+
 void TextInput::OnPaint(Paint& Brush) const
 {
 	std::shared_ptr<Theme> TheTheme = GetTheme();
@@ -223,8 +239,9 @@ void TextInput::OnPaint(Paint& Brush) const
 		Brush.RectangleOutline(Bounds, TheTheme->GetColor(Theme::Colors::TextInput_FocusedOutline));
 	}
 
+	Container::OnPaint(Brush);
+
 	Brush.PushClip(GetAbsoluteBounds());
-	m_Text->OnPaint(Brush);
 
 	if (m_Focused)
 	{
@@ -509,7 +526,6 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 	NewColumn = std::max<int>(NewColumn, 0);
 
 	m_Position = { (uint32_t)NewLine, (uint32_t)NewColumn, (uint32_t)NewIndex };
-	ScrollIntoView();
 	Invalidate();
 }
 
@@ -533,7 +549,7 @@ TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
 	const std::string& String = m_Text->GetString();
 
 	// Transform into local space.
-	const Vector2 LocalPosition = Position - GetAbsolutePosition();
+	const Vector2 LocalPosition = Position - m_Scrollable->GetAbsolutePosition();
 	// TODO: Take into account any scrolling once contained within a ScrollableContainer.
 
 	// Find the starting index based on what line the position is on.

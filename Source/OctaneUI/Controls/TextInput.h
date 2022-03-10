@@ -31,6 +31,7 @@ SOFTWARE.
 namespace OctaneUI
 {
 
+class ScrollableContainer;
 class Text;
 class TextInputInteraction;
 
@@ -79,6 +80,8 @@ public:
 	void Focus();
 	void Unfocus();
 
+	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
+
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
 
@@ -108,6 +111,7 @@ private:
 	bool m_Drag { false };
 	bool m_Multiline { false };
 	std::shared_ptr<TextInputInteraction> m_Interaction { nullptr };
+	std::shared_ptr<ScrollableContainer> m_Scrollable { nullptr };
 };
 
 }
