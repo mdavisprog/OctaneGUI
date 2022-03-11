@@ -326,6 +326,8 @@ void TextInput::OnLoad(const Json& Root)
 	{
 		SetSize({200.0f, 200.0f});
 	}
+	m_Scrollable->SetHorizontalSBEnabled(m_Multiline)
+		.SetVerticalSBEnabled(m_Multiline);
 
 	m_Text->OnLoad(Root["Text"]);
 }
