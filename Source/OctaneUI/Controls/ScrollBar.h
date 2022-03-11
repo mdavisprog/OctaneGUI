@@ -38,11 +38,14 @@ class ScrollBar : public Control
 public:
 	ScrollBar(Window* InWindow, Orientation InOrientation);
 
-	ScrollBar* SetHandleSize(float HandleSize);
-	ScrollBar* SetOnDrag(onScrollBarSignature Fn);
+	ScrollBar& SetHandleSize(float HandleSize);
+	ScrollBar& SetOnDrag(onScrollBarSignature Fn);
 	float Offset() const;
 	float OffsetPct() const;
 	bool HasHandle() const;
+
+	ScrollBar& SetEnabled(bool Enabled);
+	bool IsEnabled() const;
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnMouseMove(const Vector2& Position) override;
@@ -58,6 +61,7 @@ private:
 	float m_Offset { 0.0f };
 	bool m_Hovered { false };
 	bool m_Drag { false };
+	bool m_Enabled { true };
 	Vector2 m_DragAnchor { Vector2() };
 	onScrollBarSignature m_OnDrag { nullptr };
 };

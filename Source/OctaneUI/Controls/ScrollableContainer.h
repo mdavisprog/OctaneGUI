@@ -43,6 +43,9 @@ public:
 	bool IsScrollBarVisible(const std::shared_ptr<Control>& Item) const;
 	Vector2 ContentSize() const;
 
+	ScrollableContainer& SetHorizontalSBEnabled(bool Enabled);
+	ScrollableContainer& SetVerticalSBEnabled(bool Enabled);
+
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 
 	virtual void Update() override;

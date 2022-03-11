@@ -78,6 +78,18 @@ Vector2 ScrollableContainer::ContentSize() const
 	return m_ContentSize;
 }
 
+ScrollableContainer& ScrollableContainer::SetHorizontalSBEnabled(bool Enabled)
+{
+	m_HorizontalSB->SetEnabled(Enabled);
+	return *this;
+}
+
+ScrollableContainer& ScrollableContainer::SetVerticalSBEnabled(bool Enabled)
+{
+	m_VerticalSB->SetEnabled(Enabled);
+	return *this;
+}
+
 std::weak_ptr<Control> ScrollableContainer::GetControl(const Vector2& Point) const
 {
 	if (m_HorizontalSB->HasHandle() && m_HorizontalSB->Contains(Point))
@@ -138,12 +150,12 @@ void ScrollableContainer::PlaceControls(const std::vector<std::shared_ptr<Contro
 
 	m_HorizontalSB
 		->SetHandleSize(Overflow.X > 0.0f ? Size.X - Overflow.X : 0.0f)
-		->SetPosition({-GetPosition().X, -GetPosition().Y + Size.Y - SBSize})
+		.SetPosition({-GetPosition().X, -GetPosition().Y + Size.Y - SBSize})
 		->SetSize({Size.X, SBSize});
 
 	m_VerticalSB
 		->SetHandleSize(Overflow.Y > 0.0f ? Size.Y - Overflow.Y : 0.0f)
-		->SetPosition({-GetPosition().X + Size.X - SBSize, -GetPosition().Y})
+		.SetPosition({-GetPosition().X + Size.X - SBSize, -GetPosition().Y})
 		->SetSize({SBSize, Size.Y - (m_HorizontalSB->HasHandle() ? SBSize : 0.0f)});
 }
 

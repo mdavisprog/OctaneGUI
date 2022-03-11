@@ -37,23 +37,23 @@ ScrollBar::ScrollBar(Window* InWindow, Orientation InOrientation)
 {
 }
 
-ScrollBar* ScrollBar::SetHandleSize(float HandleSize)
+ScrollBar& ScrollBar::SetHandleSize(float HandleSize)
 {
 	// TODO: Not really a fan of how this is done. Look into something better.
 	m_HandleSize = 0.0f;
-	if (HandleSize != 0.0f)
+	if (HandleSize != 0.0f && m_Enabled)
 	{
 		const float Min = GetTheme()->GetConstant(Theme::FloatConstants::ScrollBar_HandleMinSize);
 		m_HandleSize = std::max<float>(Min, HandleSize);
 	}
 
-	return this;
+	return *this;
 }
 
-ScrollBar* ScrollBar::SetOnDrag(onScrollBarSignature Fn)
+ScrollBar& ScrollBar::SetOnDrag(onScrollBarSignature Fn)
 {
 	m_OnDrag = Fn;
-	return this;
+	return *this;
 }
 
 float ScrollBar::Offset() const
@@ -75,6 +75,25 @@ float ScrollBar::OffsetPct() const
 bool ScrollBar::HasHandle() const
 {
 	return m_HandleSize > 0.0f;
+}
+
+ScrollBar& ScrollBar::SetEnabled(bool Enabled)
+{
+	if (m_Enabled != Enabled)
+	{
+		m_Enabled = Enabled;
+		if (!m_Enabled)
+		{
+			m_HandleSize = 0.0f;
+		}
+		Invalidate();
+	}
+	return *this;
+}
+
+bool ScrollBar::IsEnabled() const
+{
+	return m_Enabled;
 }
 
 void ScrollBar::OnPaint(Paint& Brush) const
