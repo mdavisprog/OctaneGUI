@@ -436,6 +436,13 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 	}
 
 	const std::string& String = m_Text->GetString();
+
+	// Prevent any update if trying to go before the beginning or moveing past the end.
+	if ((Line < 0 && m_Position.Line() == 0) || (Column < 0 && m_Position.Index() == 0) || (Column > 0 && m_Position.Index() == String.size()))
+	{
+		return;
+	}
+
 	int32_t NewIndex = m_Position.Index();
 	int32_t LineIndex = LineStartIndex(m_Position.Index());
 	int32_t NewLine = m_Position.Line();
@@ -445,7 +452,12 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 	// This is done by iterating each line and calculating the new offset until the desired number
 	// of lines is reached.
 	const bool LineBack = Line < 0;
-	LineIndex = String[LineIndex] == '\n' ? LineIndex + 1 : LineIndex;
+	// No need to move the index forward if the current index is zero.
+	if (m_Position.Index() > 0)
+	{
+		LineIndex = String[LineIndex] == '\n' ? LineIndex + 1 : LineIndex;
+	}
+
 	for (int32_t I = 0; I < std::abs(Line) && NewLine >= 0; I++)
 	{
 		// Need to adjust the starting search position for finding the next newline character.
@@ -459,13 +471,21 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 			NewIndex = String.size();
 			break;
 		}
+		// Catching an edge case here where the first line could end up being a single newline.
+		// If this is the case, Index will actually end up being a newline because of the above
+		// logic pushing the index forward if it is on a newline character. This should occur
+		// for normal newlines in the middle of the buffer, but not at the beginning.
+		else if (Start == 0 && LineBack)
+		{
+			Index = 0;
+		}
 
 		NewLine = LineBack ? NewLine - 1 : NewLine + 1;
 		NewIndex = Index;
 		LineIndex = Index;
 	}
 
-	NewColumn = std::min<int32_t>(NewColumn, LineEndIndex(LineIndex) - LineIndex);
+	NewColumn = std::min<int32_t>(NewColumn, LineSize(LineIndex));
 	NewIndex = LineIndex + NewColumn;
 
 	// Apply any column movement. This will alter the current line based on if the
@@ -625,7 +645,7 @@ uint32_t TextInput::LineStartIndex(uint32_t Index) const
 
 	// The index may already be on a newline character. Start the search at the character
 	// before this one.
-	const uint32_t Offset = String[Index] == '\n' ? Index - 1 : Index;
+	const uint32_t Offset = String[Index] == '\n' ? std::max<int>(Index - 1, 0) : Index;
 	size_t Result = String.rfind('\n', Offset);
 	return Result == std::string::npos ? 0 : Result;
 }
@@ -653,7 +673,7 @@ uint32_t TextInput::LineSize(uint32_t Index) const
 		Start++;
 	}
 	uint32_t End = LineEndIndex(Index);
-	return std::abs((int)Start - (int)End);
+	return std::max<int>((int)End - (int)Start, 0);
 }
 
 void TextInput::ScrollIntoView()
