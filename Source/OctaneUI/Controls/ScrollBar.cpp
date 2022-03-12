@@ -61,7 +61,7 @@ float ScrollBar::GetAvailableScrollSize() const
 	return std::max<float>(0.0f, Max - m_HandleSize);
 }
 
-ScrollBar& ScrollBar::SetOnDrag(onScrollBarSignature Fn)
+ScrollBar& ScrollBar::SetOnDrag(OnScrollBarSignature Fn)
 {
 	m_OnDrag = Fn;
 	return *this;

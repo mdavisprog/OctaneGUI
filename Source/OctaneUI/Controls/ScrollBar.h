@@ -42,7 +42,7 @@ public:
 	float HandleSize() const;
 	float GetAvailableScrollSize() const;
 
-	ScrollBar& SetOnDrag(onScrollBarSignature Fn);
+	ScrollBar& SetOnDrag(OnScrollBarSignature Fn);
 
 	ScrollBar& SetOffset(float Offset);
 	float Offset() const;
@@ -68,7 +68,7 @@ private:
 	bool m_Drag { false };
 	bool m_Enabled { true };
 	Vector2 m_DragAnchor { Vector2() };
-	onScrollBarSignature m_OnDrag { nullptr };
+	OnScrollBarSignature m_OnDrag { nullptr };
 };
 
 }
