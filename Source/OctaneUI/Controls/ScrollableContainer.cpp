@@ -42,7 +42,7 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 	{
 		const float SBSize = GetTheme()->GetConstant(Theme::FloatConstants::ScrollBar_Size);
 		const float Size = m_ContentSize.X - GetSize().X + (m_VerticalSB->HasHandle() ? SBSize : 0.0f);
-		SetPosition({-m_HorizontalSB->OffsetPct() * Size, GetPosition().Y});
+		SetOffset({m_HorizontalSB->OffsetPct() * Size, 0.0f}, false);
 		InvalidateLayout();
 	});
 	InsertControl(m_HorizontalSB);
@@ -52,7 +52,7 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 	{
 		const float SBSize = GetTheme()->GetConstant(Theme::FloatConstants::ScrollBar_Size);
 		const float Size = m_ContentSize.Y - GetSize().Y + (m_HorizontalSB->HasHandle() ? SBSize : 0.0f);
-		SetPosition({GetPosition().X, -m_VerticalSB->OffsetPct() * Size});
+		SetOffset({0.0f, m_VerticalSB->OffsetPct() * Size}, false);
 		InvalidateLayout();
 	});
 	InsertControl(m_VerticalSB);
@@ -88,6 +88,27 @@ ScrollableContainer& ScrollableContainer::SetVerticalSBEnabled(bool Enabled)
 {
 	m_VerticalSB->SetEnabled(Enabled);
 	return *this;
+}
+
+ScrollableContainer& ScrollableContainer::SetOffset(const Vector2& Offset)
+{
+	SetOffset(Offset, true);
+	return *this;
+}
+
+ScrollableContainer& ScrollableContainer::AddOffset(const Vector2& Delta)
+{
+	SetOffset(Delta - GetPosition());
+	return *this;
+}
+
+Vector2 ScrollableContainer::GetScrollableSize() const
+{
+	const float SBSize = GetTheme()->GetConstant(Theme::FloatConstants::ScrollBar_Size);
+	return {
+		GetSize().X - (m_VerticalSB->HasHandle() ? SBSize : 0.0f),
+		GetSize().Y - (m_HorizontalSB->HasHandle() ? SBSize : 0.0f)
+	};
 }
 
 std::weak_ptr<Control> ScrollableContainer::GetControl(const Vector2& Point) const
@@ -186,6 +207,35 @@ Vector2 ScrollableContainer::GetContentSize(const std::vector<std::shared_ptr<Co
 	}
 
 	return Result;
+}
+
+Vector2 ScrollableContainer::GetOverflow() const
+{
+	const float SBSize = GetTheme()->GetConstant(Theme::FloatConstants::ScrollBar_Size);
+	return {
+		std::max<float>(m_ContentSize.X - GetSize().X + (m_VerticalSB->HasHandle() ? SBSize : 0.0f), 0.0f),
+		std::max<float>(m_ContentSize.Y - GetSize().Y + (m_HorizontalSB->HasHandle() ? SBSize : 0.0f), 0.0f)
+	};
+}
+
+void ScrollableContainer::SetOffset(const Vector2& Offset, bool UpdateScrollBar)
+{
+	const Vector2 Overflow = GetOverflow();
+	const Vector2 Position = {
+		std::max<float>(-Overflow.X, std::min<float>(-Offset.X, 0.0f)),
+		std::max<float>(-Overflow.Y, std::min<float>(-Offset.Y, 0.0f))
+	};
+	SetPosition({Position.X, Position.Y});
+
+	if (UpdateScrollBar)
+	{
+		const Vector2 ScrollOffset = {
+			-Position.X / (Overflow.X > 0.0f ? Overflow.X : 1.0f),
+			-Position.Y / (Overflow.Y > 0.0f ? Overflow.Y : 1.0f)
+		};
+		m_HorizontalSB->SetOffset(ScrollOffset.X * m_HorizontalSB->GetAvailableScrollSize());
+		m_VerticalSB->SetOffset(ScrollOffset.Y * m_VerticalSB->GetAvailableScrollSize());
+	}
 }
 
 }

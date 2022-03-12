@@ -45,6 +45,10 @@ public:
 
 	ScrollableContainer& SetHorizontalSBEnabled(bool Enabled);
 	ScrollableContainer& SetVerticalSBEnabled(bool Enabled);
+	ScrollableContainer& SetOffset(const Vector2& Offset);
+	ScrollableContainer& AddOffset(const Vector2& Delta);
+
+	Vector2 GetScrollableSize() const;
 
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 
@@ -57,6 +61,8 @@ protected:
 private:
 	Rect TranslatedBounds() const;
 	Vector2 GetContentSize(const std::vector<std::shared_ptr<Control>>& Controls) const;
+	Vector2 GetOverflow() const;
+	void SetOffset(const Vector2& Offset, bool UpdateScrollBar);
 
 	std::shared_ptr<ScrollBar> m_HorizontalSB;
 	std::shared_ptr<ScrollBar> m_VerticalSB;
