@@ -178,7 +178,6 @@ TextInput::TextInput(Window* InWindow)
 	m_Scrollable = AddControl<ScrollableContainer>();
 
 	m_Text = m_Scrollable->AddControl<Text>();
-	m_Text->SetPosition({3.0f, 0.0f});
 
 	SetSize({100.0f, GetTheme()->GetFont()->Size()});
 }
@@ -382,6 +381,7 @@ void TextInput::AddText(uint32_t Code)
 	std::string Contents = m_Text->GetText();
 	Contents.insert(Contents.begin() + m_Position.Index(), (int8_t)Code);
 	SetText(Contents.c_str());
+	m_Scrollable->Update();
 	MovePosition(0, 1);
 }
 
@@ -548,6 +548,7 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 	NewColumn = std::max<int>(NewColumn, 0);
 
 	m_Position = { (uint32_t)NewLine, (uint32_t)NewColumn, (uint32_t)NewIndex };
+	ScrollIntoView();
 	Invalidate();
 }
 
@@ -681,32 +682,29 @@ uint32_t TextInput::LineSize(uint32_t Index) const
 void TextInput::ScrollIntoView()
 {
 	const float LineHeight = GetTheme()->GetFont()->Size();
-	const Vector2 Position = GetPositionLocation(m_Position);
-	const Vector2 AbsPosition = m_Text->GetAbsolutePosition() + Position;
-	const Rect Bounds = GetAbsoluteBounds();
-	Vector2 Offset = m_Text->GetPosition();
+	const Vector2 Position = GetPositionLocation(m_Position) + m_Scrollable->GetPosition();
+	const Vector2 Size = m_Scrollable->GetScrollableSize();
+	Vector2 Offset;
 
-	const Vector2 BottomRight = Bounds.Max - AbsPosition;
-	const Vector2 TopLeft = Position + Offset;
-	if (TopLeft.X < 0.0f)
+	if (Position.X < 0.0f)
 	{
-		Offset.X -= TopLeft.X - 2.0f;
+		Offset.X = Position.X - 2.0f;
 	}
-	if (TopLeft.Y < 0.0f)
+	if (Position.Y < 0.0f)
 	{
-		Offset.Y -= TopLeft.Y;
+		Offset.Y = Position.Y;
 	}
 
-	if (BottomRight.X < 0.0f)
+	if (Position.X > Size.X)
 	{
-		Offset.X += BottomRight.X;
+		Offset.X = Position.X - Size.X;
 	}
-	if (BottomRight.Y - LineHeight < 0.0f)
+	if (Position.Y + LineHeight > Size.Y)
 	{
-		Offset.Y += BottomRight.Y - LineHeight;
+		Offset.Y = Position.Y + LineHeight - Size.Y;
 	}
 
-	m_Text->SetPosition(Offset);
+	m_Scrollable->AddOffset(Offset);
 }
 
 }
