@@ -50,9 +50,36 @@ ScrollBar& ScrollBar::SetHandleSize(float HandleSize)
 	return *this;
 }
 
+float ScrollBar::HandleSize() const
+{
+	return m_HandleSize;
+}
+
+float ScrollBar::GetAvailableScrollSize() const
+{
+	const float Max = m_Orientation == Orientation::Horizontal ? GetSize().X : GetSize().Y;
+	return std::max<float>(0.0f, Max - m_HandleSize);
+}
+
 ScrollBar& ScrollBar::SetOnDrag(onScrollBarSignature Fn)
 {
 	m_OnDrag = Fn;
+	return *this;
+}
+
+ScrollBar& ScrollBar::SetOffset(float Offset)
+{
+	if (m_Offset != Offset)
+	{
+		const float Max = m_Orientation == Orientation::Horizontal ? GetSize().X : GetSize().Y;
+
+		m_Offset = Offset;
+		m_Offset = std::max<float>(m_Offset, 0.0f);
+		m_Offset = std::min<float>(m_Offset, Max - m_HandleSize);
+
+		Invalidate();
+	}
+
 	return *this;
 }
 
@@ -117,29 +144,24 @@ void ScrollBar::OnMouseMove(const Vector2& Position)
 
 	if (m_Drag)
 	{
-		float Max = 0.0f;
+		float NewOffset = m_Offset;
 		if (m_Orientation == Orientation::Horizontal)
 		{
-			m_Offset += Position.X - m_DragAnchor.X;
-			Max = GetSize().X;
+			NewOffset += Position.X - m_DragAnchor.X;
 		}
 		else
 		{
-			m_Offset += Position.Y - m_DragAnchor.Y;
-			Max = GetSize().Y;
+			NewOffset += Position.Y - m_DragAnchor.Y;
 		}
 
 		m_DragAnchor = Position;
 
-		m_Offset = std::max<float>(m_Offset, 0.0f);
-		m_Offset = std::min<float>(m_Offset, Max - m_HandleSize);
+		SetOffset(NewOffset);
 
 		if (m_OnDrag)
 		{
 			m_OnDrag(this);
 		}
-
-		Invalidate();
 	}
 }
 

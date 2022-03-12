@@ -39,7 +39,12 @@ public:
 	ScrollBar(Window* InWindow, Orientation InOrientation);
 
 	ScrollBar& SetHandleSize(float HandleSize);
+	float HandleSize() const;
+	float GetAvailableScrollSize() const;
+
 	ScrollBar& SetOnDrag(onScrollBarSignature Fn);
+
+	ScrollBar& SetOffset(float Offset);
 	float Offset() const;
 	float OffsetPct() const;
 	bool HasHandle() const;
