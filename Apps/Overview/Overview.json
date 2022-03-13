@@ -104,7 +104,19 @@
 										}
 									},
 									{
-										"Type": "TextInput"
+										"Type": "HorizontalContainer",
+										"Controls": [
+											{
+												"Type": "TextInput"
+											},
+											{
+												"Type": "TextInput",
+												"Multiline": true,
+												"Text" : {
+													"Text": "Hello\nThis is a multiline\ntext input control."
+												}
+											}
+										]
 									},
 									{
 										"ID": "List",
