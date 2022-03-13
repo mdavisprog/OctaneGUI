@@ -45,6 +45,7 @@ ScrollBar& ScrollBar::SetHandleSize(float HandleSize)
 	{
 		const float Min = GetTheme()->GetConstant(Theme::FloatConstants::ScrollBar_HandleMinSize);
 		m_HandleSize = std::max<float>(Min, HandleSize);
+		ClampOffset();
 	}
 
 	return *this;
@@ -71,12 +72,8 @@ ScrollBar& ScrollBar::SetOffset(float Offset)
 {
 	if (m_Offset != Offset)
 	{
-		const float Max = m_Orientation == Orientation::Horizontal ? GetSize().X : GetSize().Y;
-
 		m_Offset = Offset;
-		m_Offset = std::max<float>(m_Offset, 0.0f);
-		m_Offset = std::min<float>(m_Offset, Max - m_HandleSize);
-
+		ClampOffset();
 		Invalidate();
 	}
 
@@ -206,6 +203,19 @@ Rect ScrollBar::HandleBounds() const
 	}
 
 	return Result;
+}
+
+void ScrollBar::ClampOffset()
+{
+	const float Max = m_Orientation == Orientation::Horizontal ? GetSize().X : GetSize().Y;
+	if (Max <= 0.0f)
+	{
+		m_Offset = 0.0f;
+		return;
+	}
+
+	m_Offset = std::max<float>(m_Offset, 0.0f);
+	m_Offset = std::min<float>(m_Offset, Max - m_HandleSize);
 }
 
 }

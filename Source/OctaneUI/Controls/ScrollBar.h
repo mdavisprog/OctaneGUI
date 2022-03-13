@@ -60,6 +60,7 @@ public:
 
 private:
 	Rect HandleBounds() const;
+	void ClampOffset();
 
 	Orientation m_Orientation { Orientation::Horizontal };
 	float m_HandleSize { 0.0f };
