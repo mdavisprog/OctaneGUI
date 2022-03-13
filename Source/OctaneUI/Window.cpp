@@ -281,7 +281,7 @@ std::shared_ptr<Icons> Window::GetIcons() const
 	return m_Application->GetIcons();
 }
 
-TextureCache& Window::TextureCache() const
+TextureCache& Window::GetTextureCache() const
 {
 	return m_Application->GetTextureCache();
 }

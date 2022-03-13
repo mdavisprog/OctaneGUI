@@ -47,7 +47,7 @@ Image* Image::SetTexture(const char* Path)
 {
 	if (!m_Texture)
 	{
-		m_Texture = GetWindow()->TextureCache().Load(Path);
+		m_Texture = GetWindow()->GetTextureCache().Load(Path);
 
 		if (m_Texture)
 		{
