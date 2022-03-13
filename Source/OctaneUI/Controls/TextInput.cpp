@@ -174,10 +174,10 @@ uint32_t TextInput::TextPosition::Index() const
 TextInput::TextInput(Window* InWindow)
 	: Container(InWindow)
 {
-	m_Interaction = AddControl<TextInputInteraction>(this);
 	m_Scrollable = AddControl<ScrollableContainer>();
-
 	m_Text = m_Scrollable->AddControl<Text>();
+
+	m_Interaction = AddControl<TextInputInteraction>(this);
 
 	SetSize({100.0f, GetTheme()->GetFont()->Size()});
 }
@@ -208,21 +208,6 @@ void TextInput::Unfocus()
 {
 	m_Focused = false;
 	Invalidate();
-}
-
-std::weak_ptr<Control> TextInput::GetControl(const Vector2& Point) const
-{
-	std::weak_ptr<Control> Result = Container::GetControl(Point);
-
-	if (!Result.expired())
-	{
-		if (!m_Scrollable->IsScrollBarVisible(Result.lock()))
-		{
-			Result = m_Interaction;
-		}
-	}
-
-	return Result;
 }
 
 void TextInput::OnPaint(Paint& Brush) const
@@ -338,10 +323,19 @@ void TextInput::MouseMove(const Vector2& Position)
 		m_Position = GetPosition(Position);
 		Invalidate();
 	}
+	else
+	{
+		m_Scrollable->OnMouseMove(Position);
+	}
 }
 
 bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button)
 {
+	if (m_Scrollable->OnMousePressed(Position, Button))
+	{
+		return true;
+	}
+
 	m_Position = GetPosition(Position);
 	m_Anchor = m_Position;
 	m_Drag = true;
@@ -358,6 +352,7 @@ void TextInput::MouseReleased(const Vector2& Position, Mouse::Button Button)
 	}
 
 	m_Drag = false;
+	m_Scrollable->OnMouseReleased(Position, Button);
 }
 
 void TextInput::AddText(uint32_t Code)

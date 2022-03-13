@@ -160,6 +160,33 @@ void ScrollableContainer::OnPaint(Paint& Brush) const
 	m_VerticalSB->OnPaint(Brush);
 }
 
+void ScrollableContainer::OnMouseMove(const Vector2& Position)
+{
+	m_HorizontalSB->OnMouseMove(Position);
+	m_VerticalSB->OnMouseMove(Position);
+}
+
+bool ScrollableContainer::OnMousePressed(const Vector2& Position, Mouse::Button Button)
+{
+	if (m_HorizontalSB->OnMousePressed(Position, Button))
+	{
+		return true;
+	}
+
+	if (m_VerticalSB->OnMousePressed(Position, Button))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+void ScrollableContainer::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
+{
+	m_HorizontalSB->OnMouseReleased(Position, Button);
+	m_VerticalSB->OnMouseReleased(Position, Button);
+}
+
 void ScrollableContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
 {
 	Container::PlaceControls(Controls);
