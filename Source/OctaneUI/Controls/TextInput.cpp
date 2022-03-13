@@ -223,17 +223,7 @@ void TextInput::OnPaint(Paint& Brush) const
 		Brush.RectangleOutline(Bounds, TheTheme->GetColor(Theme::Colors::TextInput_FocusedOutline));
 	}
 
-	Container::OnPaint(Brush);
-
 	Brush.PushClip(GetAbsoluteBounds());
-
-	if (m_Focused)
-	{
-		const Vector2 Size = GetPositionLocation(m_Position);
-		const Vector2 Start = m_Text->GetAbsolutePosition() + Vector2(std::max<float>(Size.X, 2.0f), Size.Y);
-		const Vector2 End = Start + Vector2(0.0f, LineHeight);
-		Brush.Line(Start, End, TheTheme->GetColor(Theme::Colors::TextInput_Cursor));
-	}
 
 	if (m_Anchor.IsValid() && m_Anchor != m_Position)
 	{
@@ -298,7 +288,17 @@ void TextInput::OnPaint(Paint& Brush) const
 		}
 	}
 
+	if (m_Focused)
+	{
+		const Vector2 Size = GetPositionLocation(m_Position);
+		const Vector2 Start = m_Text->GetAbsolutePosition() + Vector2(std::max<float>(Size.X, 2.0f), Size.Y);
+		const Vector2 End = Start + Vector2(0.0f, LineHeight);
+		Brush.Line(Start, End, TheTheme->GetColor(Theme::Colors::TextInput_Cursor));
+	}
+
 	Brush.PopClip();
+
+	Container::OnPaint(Brush);
 }
 
 void TextInput::OnLoad(const Json& Root)
