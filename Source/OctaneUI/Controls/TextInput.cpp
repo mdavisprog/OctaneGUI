@@ -461,7 +461,6 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 		// Want to avoid cases where the same index is returned.
 		const uint32_t Start = LineBack ? std::max<int32_t>(LineIndex - 1, 0) : LineIndex;
 		uint32_t Index = LineBack ? LineStartIndex(Start) : LineEndIndex(Start);
-		Index = String[Index] == '\n' ? Index + 1 : Index;
 
 		if (Index == String.size())
 		{
@@ -477,6 +476,7 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 			Index = 0;
 		}
 
+		Index = String[Index] == '\n' ? Index + 1 : Index;
 		NewLine = LineBack ? NewLine - 1 : NewLine + 1;
 		NewIndex = Index;
 		LineIndex = Index;
