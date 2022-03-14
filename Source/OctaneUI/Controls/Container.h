@@ -51,8 +51,6 @@ public:
 		return Result;
 	}
 
-	bool ShouldUpdateLayout() const;
-
 	std::shared_ptr<Control> CreateControl(const std::string& Type);
 	Container* InsertControl(const std::shared_ptr<Control>& Item, int Position = -1);
 	Container* RemoveControl(const std::shared_ptr<Control>& Item);
@@ -75,10 +73,7 @@ protected:
 	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const;
 
 private:
-	void OnInvalidate(Control* Focus, InvalidateType Type);
-
 	std::vector<std::shared_ptr<Control>> m_Controls;
-	bool m_UpdateLayout { false };
 };
 
 }

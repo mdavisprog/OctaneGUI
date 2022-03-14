@@ -57,11 +57,6 @@ Container::~Container()
 	m_Controls.clear();
 }
 
-bool Container::ShouldUpdateLayout() const
-{
-	return m_UpdateLayout;
-}
-
 std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 {
 	std::shared_ptr<Control> Result;
@@ -93,9 +88,18 @@ Container* Container::InsertControl(const std::shared_ptr<Control>& Item, int Po
 	}
 
 	Item->SetParent(this);
-	Item->SetOnInvalidate([=](Control* Focus, InvalidateType Type)
+	Item->SetOnInvalidate([this](Control* Focus, InvalidateType Type)
 	{
-		OnInvalidate(Focus, Type);
+		Container* FocusContainer = dynamic_cast<Container*>(Focus);
+		if (FocusContainer == nullptr && (Type == InvalidateType::Layout || Type == InvalidateType::Both))
+		{
+			// If Focus is a control but is requesting to have a layout update, the owning container should
+			// notify the listeners that it should have it's layout updated. The control will still be passed
+			// up in case of a repaint request.
+			Invalidate(Type);
+		}
+
+		Invalidate(Focus, Type);
 	});
 
 	if (Position >= 0)
@@ -107,7 +111,8 @@ Container* Container::InsertControl(const std::shared_ptr<Control>& Item, int Po
 		m_Controls.push_back(Item);
 	}
 
-	OnInvalidate(Item.get(), InvalidateType::Both);
+	Invalidate(Item.get(), InvalidateType::Paint);
+	Invalidate(InvalidateType::Layout);
 
 	return this;
 }
@@ -118,7 +123,7 @@ Container* Container::RemoveControl(const std::shared_ptr<Control>& Item)
 	if (Iter != m_Controls.end())
 	{
 		m_Controls.erase(Iter);
-		Invalidate();
+		Invalidate(InvalidateType::Both);
 	}
 
 	return this;
@@ -133,33 +138,25 @@ bool Container::HasControl(const std::shared_ptr<Control>& Item) const
 void Container::ClearControls()
 {
 	m_Controls.clear();
-	m_UpdateLayout = true;
 	Invalidate(InvalidateType::Both);
 }
 
 Container* Container::Layout()
 {
-	if (m_UpdateLayout)
+	PlaceControls(m_Controls);
+	
+	for (const std::shared_ptr<Control>& Item : m_Controls)
 	{
-		PlaceControls(m_Controls);
-		
-		for (const std::shared_ptr<Control>& Item : m_Controls)
+		const std::shared_ptr<Container> Child = std::dynamic_pointer_cast<Container>(Item);
+		if (Child)
 		{
-			const std::shared_ptr<Container> Child = std::dynamic_pointer_cast<Container>(Item);
-			if (Child)
-			{
-				// Child containers should be forced to update their layout if the parent has.
-				Child->InvalidateLayout();
-				Child->Layout();
-			}
+			Child->Layout();
 		}
+	}
 
-		for (const std::shared_ptr<Control>& Item : m_Controls)
-		{
-			Item->Update();
-		}
-
-		m_UpdateLayout = false;
+	for (const std::shared_ptr<Control>& Item : m_Controls)
+	{
+		Item->Update();
 	}
 
 	return this;
@@ -167,7 +164,6 @@ Container* Container::Layout()
 
 void Container::InvalidateLayout()
 {
-	m_UpdateLayout = true;
 	Invalidate(InvalidateType::Layout);
 }
 
@@ -271,23 +267,6 @@ void Container::PlaceControls(const std::vector<std::shared_ptr<Control>>& Contr
 		}
 
 		Item->SetSize(ItemSize);
-	}
-}
-
-void Container::OnInvalidate(Control* Focus, InvalidateType Type)
-{
-	const bool UpdateLayout = Type == InvalidateType::Layout || Type == InvalidateType::Both;
-	if (UpdateLayout)
-	{
-		if (m_UpdateLayout != UpdateLayout)
-		{
-			m_UpdateLayout = UpdateLayout;
-			Invalidate(Type);
-		}
-	}
-	else
-	{
-		Invalidate(Type);
 	}
 }
 

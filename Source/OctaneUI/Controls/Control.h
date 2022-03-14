@@ -124,6 +124,8 @@ public:
 	virtual void OnText(uint32_t Code);
 
 protected:
+	void Invalidate(Control* Focus, InvalidateType Type) const;
+
 	virtual bool IsFixedSize() const;
 
 private:

@@ -268,6 +268,19 @@ void Control::OnText(uint32_t Code)
 {
 }
 
+void Control::Invalidate(Control* Focus, InvalidateType Type) const
+{
+	if (Focus == nullptr)
+	{
+		return;
+	}
+
+	if (m_OnInvalidate)
+	{
+		m_OnInvalidate(Focus, Type);
+	}
+}
+
 bool Control::IsFixedSize() const
 {
 	return false;

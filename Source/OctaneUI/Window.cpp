@@ -33,6 +33,8 @@ SOFTWARE.
 #include "Paint.h"
 #include "Window.h"
 
+#include <algorithm>
+
 namespace OctaneUI
 {
 
@@ -249,6 +251,15 @@ void Window::CreateContainer()
 		->SetExpand(Expand::Both)
 		->SetOnInvalidate([=](Control* Focus, InvalidateType Type) -> void
 		{
+			Container* FocusContainer = dynamic_cast<Container*>(Focus);
+			if (FocusContainer != nullptr && (Type == InvalidateType::Layout || Type == InvalidateType::Both))
+			{
+				if (std::find(m_LayoutRequests.begin(), m_LayoutRequests.end(), FocusContainer) == m_LayoutRequests.end())
+				{
+					m_LayoutRequests.push_back(FocusContainer);
+				}
+			}
+
 			m_Repaint = true;
 		});
 
@@ -298,10 +309,11 @@ bool Window::IsKeyPressed(Keyboard::Key Key) const
 
 void Window::Update()
 {
-	if (m_Container->ShouldUpdateLayout())
+	for (Container* Item : m_LayoutRequests)
 	{
-		m_Container->Layout();
+		Item->Layout();
 	}
+	m_LayoutRequests.clear();
 
 	m_Popup.Update();
 }

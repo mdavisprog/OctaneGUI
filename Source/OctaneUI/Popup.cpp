@@ -55,7 +55,7 @@ void Popup::Open(const std::shared_ptr<Container>& InContainer, bool Modal)
 
 		if (m_Container)
 		{
-			m_Container->SetOnInvalidate([=](Control* Focus, InvalidateType Type) -> void
+			m_Container->SetOnInvalidate([this](Control* Focus, InvalidateType Type) -> void
 				{
 					if (m_OnInvalidate)
 					{
@@ -99,10 +99,9 @@ void Popup::Update()
 			m_State = State::Opened;
 		}
 
-		if (m_Container->ShouldUpdateLayout())
-		{
-			m_Container->Layout();
-		}
+		// TODO: Need to just allow the owning window of this popup to handle the layout and
+		//		 paint updates.
+		m_Container->Layout();
 	}
 }
 

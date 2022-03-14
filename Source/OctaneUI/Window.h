@@ -121,6 +121,7 @@ private:
 	std::weak_ptr<Control> m_Hovered {};
 	Popup m_Popup {};
 	bool m_Visible { false };
+	std::vector<Container*> m_LayoutRequests;
 
 	OnPaintSignature m_OnPaint { nullptr };
 };
