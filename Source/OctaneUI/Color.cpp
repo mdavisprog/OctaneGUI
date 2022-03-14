@@ -44,4 +44,14 @@ Color::Color(uint8_t InR, uint8_t InG, uint8_t InB, uint8_t InA)
 {
 }
 
+bool Color::operator==(const Color& Other) const
+{
+	return R == Other.R && G == Other.G && B == Other.B && A == Other.A;
+}
+
+bool Color::operator!=(const Color& Other) const
+{
+	return !(R == Other.R && G == Other.G && B == Other.B && A == Other.A);
+}
+
 }

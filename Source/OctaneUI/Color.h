@@ -44,6 +44,9 @@ public:
 
 	Color();
 	Color(uint8_t InR, uint8_t InG, uint8_t InB, uint8_t InA);
+
+	bool operator==(const Color& Other) const;
+	bool operator!=(const Color& Other) const;
 };
 
 }

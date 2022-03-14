@@ -41,6 +41,12 @@ Variant::Variant(bool Value)
 	m_Data.Bool = Value;
 }
 
+Variant::Variant(unsigned char Value)
+	: m_Type(Type::Byte)
+{
+	m_Data.Byte = Value;
+}
+
 Variant::Variant(int Value)
 	: m_Type(Type::Int)
 {
@@ -65,6 +71,18 @@ Variant::Variant(const std::string& Value)
 	Set(Value.c_str());
 }
 
+Variant::Variant(const Vector2& Value)
+	: m_Type(Type::Vector)
+{
+	m_Data.Vector = Value;
+}
+
+Variant::Variant(const Color& Value)
+	: m_Type(Type::Color)
+{
+	m_Data.Col = Value;
+}
+
 Variant::Variant(const Variant& Other)
 {
 	Clear();
@@ -86,6 +104,14 @@ Variant& Variant::operator=(bool Value)
 	Clear();
 	m_Type = Type::Bool;
 	m_Data.Bool = Value;
+	return *this;
+}
+
+Variant& Variant::operator=(unsigned char Value)
+{
+	Clear();
+	m_Type = Type::Byte;
+	m_Data.Byte = Value;
 	return *this;
 }
 
@@ -121,6 +147,22 @@ Variant& Variant::operator=(const std::string& Value)
 	return *this;
 }
 
+Variant& Variant::operator=(const Vector2& Value)
+{
+	Clear();
+	m_Type = Type::Vector;
+	m_Data.Vector = Value;
+	return *this;
+}
+
+Variant& Variant::operator=(const Color& Value)
+{
+	Clear();
+	m_Type = Type::Color;
+	m_Data.Col = Value;
+	return *this;
+}
+
 Variant& Variant::operator=(const Variant& Value)
 {
 	if (this != &Value)
@@ -140,6 +182,11 @@ Variant& Variant::operator=(Variant&& Value)
 bool Variant::Bool() const
 {
 	return m_Data.Bool;
+}
+
+unsigned char Variant::Byte() const
+{
+	return m_Data.Byte;
 }
 
 int Variant::Int() const
@@ -162,6 +209,16 @@ const char* Variant::String() const
 	return m_Data.String->c_str();
 }
 
+Vector2 Variant::Vector() const
+{
+	return m_Data.Vector;
+}
+
+Color Variant::ToColor() const
+{
+	return m_Data.Col;
+}
+
 bool Variant::IsNull() const
 {
 	return m_Type == Type::Null;
@@ -170,6 +227,11 @@ bool Variant::IsNull() const
 bool Variant::IsBool() const
 {
 	return m_Type == Type::Bool;
+}
+
+bool Variant::IsByte() const
+{
+	return m_Type == Type::Byte;
 }
 
 bool Variant::IsInt() const
@@ -185,6 +247,16 @@ bool Variant::IsFloat() const
 bool Variant::IsString() const
 {
 	return m_Type == Type::String;
+}
+
+bool Variant::IsVector() const
+{
+	return m_Type == Type::Vector;
+}
+
+bool Variant::IsColor() const
+{
+	return m_Type == Type::Color;
 }
 
 Variant::Type Variant::GetType() const
@@ -208,9 +280,12 @@ void Variant::Copy(const Variant& Other)
 	switch (m_Type)
 	{
 	case Type::Bool: m_Data.Bool = Other.Bool(); break;
+	case Type::Byte: m_Data.Byte = Other.Byte(); break;
 	case Type::Int: m_Data.Int = Other.Int(); break;
 	case Type::Float: m_Data.Float = Other.Float(); break;
 	case Type::String: Set(Other.String()); break;
+	case Type::Vector: m_Data.Vector = Other.Vector(); break;
+	case Type::Color: m_Data.Col = Other.ToColor(); break;
 	case Type::Null:
 	default: break;
 	}
@@ -229,9 +304,12 @@ void Variant::Move(Variant&& Other)
 	switch (m_Type)
 	{
 	case Type::Bool: m_Data.Bool = std::exchange(Other.m_Data.Bool, false); break;
+	case Type::Byte: m_Data.Byte = std::exchange(Other.m_Data.Byte, 0); break;
 	case Type::Int: m_Data.Int = std::exchange(Other.m_Data.Int, 0); break;
 	case Type::Float: m_Data.Float = std::exchange(Other.m_Data.Float, 0.0f); break;
 	case Type::String: m_Data.String = std::exchange(Other.m_Data.String, nullptr); break;
+	case Type::Vector: m_Data.Vector = std::exchange(Other.m_Data.Vector, {}); break;
+	case Type::Color: m_Data.Col = std::exchange(Other.m_Data.Col, {}); break;
 	case Type::Null:
 	default: break;
 	}

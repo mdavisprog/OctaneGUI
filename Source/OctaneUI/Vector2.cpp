@@ -101,6 +101,16 @@ Vector2& Vector2::operator/=(const Vector2& Other)
 	return *this;
 }
 
+bool Vector2::operator==(const Vector2& Other) const
+{
+	return X == Other.X && Y == Other.Y;
+}
+
+bool Vector2::operator!=(const Vector2& Other) const
+{
+	return !(X == Other.X && Y == Other.Y);
+}
+
 float Vector2::Length() const
 {
 	return std::sqrt(X * X + Y * Y);

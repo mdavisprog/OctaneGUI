@@ -26,6 +26,9 @@ SOFTWARE.
 
 #pragma once
 
+#include "Color.h"
+#include "Vector2.h"
+
 #include <string>
 
 namespace OctaneUI
@@ -38,39 +41,54 @@ public:
 	{
 		Null,
 		Bool,
+		Byte,
 		Int,
 		Float,
-		String
+		String,
+		Vector,
+		Color
 	};
 
 	Variant();
 	Variant(bool);
+	Variant(unsigned char);
 	Variant(int);
 	Variant(float);
 	Variant(const char*);
 	Variant(const std::string&);
+	Variant(const Vector2&);
+	Variant(const Color&);
 	Variant(const Variant&);
 	Variant(Variant&&);
 	~Variant();
 
 	Variant& operator=(bool Value);
+	Variant& operator=(unsigned char Value);
 	Variant& operator=(int Value);
 	Variant& operator=(float Value);
 	Variant& operator=(const char* Value);
 	Variant& operator=(const std::string& Value);
+	Variant& operator=(const Vector2& Value);
+	Variant& operator=(const Color& Value);
 	Variant& operator=(const Variant& Value);
 	Variant& operator=(Variant&& Value);
 
 	bool Bool() const;
+	unsigned char Byte() const;
 	int Int() const;
 	float Float() const;
 	const char* String() const;
+	Vector2 Vector() const;
+	Color ToColor() const;
 
 	bool IsNull() const;
 	bool IsBool() const;
+	bool IsByte() const;
 	bool IsInt() const;
 	bool IsFloat() const;
 	bool IsString() const;
+	bool IsVector() const;
+	bool IsColor() const;
 
 	Type GetType() const;
 
@@ -78,9 +96,12 @@ private:
 	union Data
 	{
 		bool Bool;
+		unsigned char Byte;
 		int Int;
 		float Float;
 		std::string* String;
+		Vector2 Vector;
+		Color Col;
 	};
 
 	void Set(const char*);

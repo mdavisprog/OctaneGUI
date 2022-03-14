@@ -53,6 +53,9 @@ public:
 	Vector2& operator*=(const Vector2& Other);
 	Vector2& operator/=(const Vector2& Other);
 
+	bool operator==(const Vector2& Other) const;
+	bool operator!=(const Vector2& Other) const;
+
 	float Length() const;
 	float LengthSq() const;
 	Vector2 Invert() const;
