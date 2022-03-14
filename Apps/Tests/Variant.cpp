@@ -44,6 +44,12 @@ TEST_CASE(Bool,
 	return Variant.IsBool() && Variant.Bool() == true;
 })
 
+TEST_CASE(Byte,
+{
+	OctaneUI::Variant Variant = (unsigned char)255;
+	return Variant.IsByte() && Variant.Byte() == 255;
+})
+
 TEST_CASE(Int,
 {
 	OctaneUI::Variant Variant = 42;
@@ -60,6 +66,20 @@ TEST_CASE(String,
 {
 	OctaneUI::Variant Variant = "Hello";
 	return Variant.IsString() && std::string(Variant.String()) == "Hello";
+})
+
+TEST_CASE(Vector,
+{
+	const OctaneUI::Vector2 Vector = OctaneUI::Vector2(3.14f, 42.0f);
+	OctaneUI::Variant Variant = Vector;
+	return Variant.IsVector() && Variant.Vector() == Vector;
+})
+
+TEST_CASE(Color,
+{
+	const OctaneUI::Color Color(255, 0, 255, 255);
+	OctaneUI::Variant Variant = Color;
+	return Variant.IsColor() && Variant.ToColor() == Color;
 })
 
 TEST_CASE(Copy,
