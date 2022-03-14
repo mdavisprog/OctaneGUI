@@ -85,6 +85,9 @@ public:
 	Json& operator=(const Json& Other);
 	Json& operator=(Json&& Other);
 
+	bool operator==(const Json& Other) const;
+	bool operator!=(const Json& Other) const;
+
 	Json& operator[](const char* Key);
 	Json& operator[](const std::string& Key);
 	Json& operator[](unsigned int Index);
@@ -118,6 +121,7 @@ private:
 	void Set(const char* Value);
 	void Clear();
 
+	bool Equals(const Json& Other) const;
 	void Copy(const Json& Other);
 	void Move(Json&& Other);
 

@@ -246,7 +246,11 @@ Json& Json::operator=(const std::string& Value)
 
 Json& Json::operator=(const Json& Other)
 {
-	Copy(Other);
+	if (this != &Other)
+	{
+		Clear();
+		Copy(Other);
+	}
 	return *this;
 }
 
@@ -254,6 +258,16 @@ Json& Json::operator=(Json&& Other)
 {
 	Move(std::move(Other));
 	return *this;
+}
+
+bool Json::operator==(const Json& Other) const
+{
+	return Equals(Other);
+}
+
+bool Json::operator!=(const Json& Other) const
+{
+	return !Equals(Other);
 }
 
 Json& Json::operator[](const char* Key)
@@ -593,6 +607,51 @@ void Json::Clear()
 
 	m_Type = Type::Null;
 	memset(&m_Data, 0, sizeof(m_Data));
+}
+
+bool Json::Equals(const Json& Other) const
+{
+	if (IsNull() == Other.IsNull())
+	{
+		return true;
+	}
+
+	if (IsBoolean() == Other.IsBoolean() && Boolean() == Other.Boolean())
+	{
+		return true;
+	}
+
+	if (IsNumber() == Other.IsNumber() && Number() == Other.Number())
+	{
+		return true;
+	}
+
+	if (IsString() == Other.IsString() && std::string(String()) == Other.String())
+	{
+		return true;
+	}
+
+	if (IsObject() == Other.IsObject())
+	{
+		bool Result = false;
+		ForEach([&](const std::string& Key, const Json& Value) -> void
+		{
+			Result &= Value[Key].Equals(Other[Key]);
+		});
+		return Result;
+	}
+
+	if (IsArray() == Other.IsArray())
+	{
+		bool Result = false;
+		for (int I = 0; I < Count(); I++)
+		{
+			Result &= (*this)[I].Equals(Other[I]);
+		}
+		return Result;
+	}
+
+	return false;
 }
 
 void Json::Copy(const Json& Other)
