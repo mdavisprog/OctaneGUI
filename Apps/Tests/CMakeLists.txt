@@ -7,6 +7,7 @@ add_executable(
 	Json.cpp
 	Main.cpp
 	TestSuite.cpp
+	Variant.cpp
 )
 
 target_include_directories(
