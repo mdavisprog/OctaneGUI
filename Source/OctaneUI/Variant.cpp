@@ -56,18 +56,24 @@ Variant::Variant(float Value)
 Variant::Variant(const char* Value)
 	: m_Type(Type::String)
 {
-	m_String = Value;
+	Set(Value);
 }
 
 Variant::Variant(const std::string& Value)
 	: m_Type(Type::String)
 {
-	m_String = Value;
+	Set(Value.c_str());
 }
 
 Variant::Variant(const Variant& Other)
 {
+	Clear();
 	Copy(Other);
+}
+
+Variant::Variant(Variant&& Other)
+{
+	Move(std::move(Other));
 }
 
 Variant::~Variant()
@@ -77,6 +83,7 @@ Variant::~Variant()
 
 Variant& Variant::operator=(bool Value)
 {
+	Clear();
 	m_Type = Type::Bool;
 	m_Data.Bool = Value;
 	return *this;
@@ -84,6 +91,7 @@ Variant& Variant::operator=(bool Value)
 
 Variant& Variant::operator=(int Value)
 {
+	Clear();
 	m_Type = Type::Int;
 	m_Data.Int = Value;
 	return *this;
@@ -91,6 +99,7 @@ Variant& Variant::operator=(int Value)
 
 Variant& Variant::operator=(float Value)
 {
+	Clear();
 	m_Type = Type::Float;
 	m_Data.Float = Value;
 	return *this;
@@ -98,21 +107,33 @@ Variant& Variant::operator=(float Value)
 
 Variant& Variant::operator=(const char* Value)
 {
+	Clear();
 	m_Type = Type::String;
-	m_String = Value;
+	Set(Value);
 	return *this;
 }
 
 Variant& Variant::operator=(const std::string& Value)
 {
+	Clear();
 	m_Type = Type::String;
-	m_String = Value;
+	Set(Value.c_str());
 	return *this;
 }
 
 Variant& Variant::operator=(const Variant& Value)
 {
-	Copy(Value);
+	if (this != &Value)
+	{
+		Clear();
+		Copy(Value);
+	}
+	return *this;
+}
+
+Variant& Variant::operator=(Variant&& Value)
+{
+	Move(std::move(Value));
 	return *this;
 }
 
@@ -133,7 +154,12 @@ float Variant::Float() const
 
 const char* Variant::String() const
 {
-	return m_String.c_str();
+	if (!IsString())
+	{
+		return "";
+	}
+
+	return m_Data.String->c_str();
 }
 
 bool Variant::IsNull() const
@@ -166,16 +192,46 @@ Variant::Type Variant::GetType() const
 	return m_Type;
 }
 
+void Variant::Set(const char* Value)
+{
+	if (m_Data.String == nullptr)
+	{
+		m_Data.String = new std::string();
+	}
+
+	*m_Data.String = Value;
+}
+
 void Variant::Copy(const Variant& Other)
 {
-	Clear();
 	m_Type = Other.m_Type;
 	switch (m_Type)
 	{
-	case Type::Bool: m_Data.Bool = Other.Bool();
-	case Type::Int: m_Data.Int = Other.Int();
-	case Type::Float: m_Data.Float = Other.Float();
-	case Type::String: m_String = Other.String();
+	case Type::Bool: m_Data.Bool = Other.Bool(); break;
+	case Type::Int: m_Data.Int = Other.Int(); break;
+	case Type::Float: m_Data.Float = Other.Float(); break;
+	case Type::String: Set(Other.String()); break;
+	case Type::Null:
+	default: break;
+	}
+}
+
+void Variant::Move(Variant&& Other)
+{
+	if (this == &Other)
+	{
+		return;
+	}
+
+	Clear();
+
+	m_Type = std::exchange(Other.m_Type, Type::Null);
+	switch (m_Type)
+	{
+	case Type::Bool: m_Data.Bool = std::exchange(Other.m_Data.Bool, false); break;
+	case Type::Int: m_Data.Int = std::exchange(Other.m_Data.Int, 0); break;
+	case Type::Float: m_Data.Float = std::exchange(Other.m_Data.Float, 0.0f); break;
+	case Type::String: m_Data.String = std::exchange(Other.m_Data.String, nullptr); break;
 	case Type::Null:
 	default: break;
 	}
@@ -183,8 +239,15 @@ void Variant::Copy(const Variant& Other)
 
 void Variant::Clear()
 {
+	if (IsString())
+	{
+		if (m_Data.String != nullptr)
+		{
+			delete m_Data.String;
+		}
+	}
+
 	m_Type = Type::Null;
-	m_String.clear();
 	std::memset(&m_Data, 0, sizeof(m_Data));
 }
 
