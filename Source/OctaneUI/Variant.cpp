@@ -181,21 +181,41 @@ Variant& Variant::operator=(Variant&& Value)
 
 bool Variant::Bool() const
 {
+	if (!IsBool())
+	{
+		return false;
+	}
+
 	return m_Data.Bool;
 }
 
 unsigned char Variant::Byte() const
 {
+	if (!IsByte())
+	{
+		return 0;
+	}
+
 	return m_Data.Byte;
 }
 
 int Variant::Int() const
 {
+	if (!IsInt())
+	{
+		return 0;
+	}
+
 	return m_Data.Int;
 }
 
 float Variant::Float() const
 {
+	if (!IsFloat())
+	{
+		return 0.0f;
+	}
+
 	return m_Data.Float;
 }
 
@@ -211,11 +231,21 @@ const char* Variant::String() const
 
 Vector2 Variant::Vector() const
 {
+	if (!IsVector())
+	{
+		return {};
+	}
+
 	return m_Data.Vector;
 }
 
 Color Variant::ToColor() const
 {
+	if (!IsColor())
+	{
+		return {};
+	}
+
 	return m_Data.Col;
 }
 
