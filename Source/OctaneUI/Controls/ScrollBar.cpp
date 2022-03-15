@@ -25,7 +25,6 @@ SOFTWARE.
 */
 
 #include "../Paint.h"
-#include "../Theme.h"
 #include "ScrollBar.h"
 
 namespace OctaneUI
@@ -43,7 +42,7 @@ ScrollBar& ScrollBar::SetHandleSize(float HandleSize)
 	m_HandleSize = 0.0f;
 	if (HandleSize != 0.0f && m_Enabled)
 	{
-		const float Min = GetTheme()->GetConstant(Theme::FloatConstants::ScrollBar_HandleMinSize);
+		const float Min = GetProperty(ThemeProperties::ScrollBar_HandleMinSize).Float();
 		m_HandleSize = std::max<float>(Min, HandleSize);
 		ClampOffset();
 	}
@@ -124,8 +123,10 @@ void ScrollBar::OnPaint(Paint& Brush) const
 {
 	if (m_HandleSize > 0.0f)
 	{
-		Brush.Rectangle(GetAbsoluteBounds(), GetTheme()->GetColor(Theme::Colors::ScrollBar));
-		Brush.Rectangle(HandleBounds(), (m_Hovered || m_Drag) ? GetTheme()->GetColor(Theme::Colors::ScrollBar_HandleHovered) :GetTheme()->GetColor(Theme::Colors::ScrollBar_Handle));
+		Brush.Rectangle(GetAbsoluteBounds(), GetProperty(ThemeProperties::ScrollBar).ToColor());
+		Brush.Rectangle(
+			HandleBounds(),
+			(m_Hovered || m_Drag) ? GetProperty(ThemeProperties::ScrollBar_HandleHovered).ToColor() : GetProperty(ThemeProperties::ScrollBar_Handle).ToColor());
 	}
 }
 

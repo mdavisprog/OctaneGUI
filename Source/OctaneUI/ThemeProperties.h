@@ -26,33 +26,63 @@ SOFTWARE.
 
 #pragma once
 
-#include "ThemeProperties.h"
+#include "Variant.h"
 
-#include <cstdint>
-#include <memory>
 #include <unordered_map>
 
 namespace OctaneUI
 {
 
-class Font;
-
-class Theme
+class ThemeProperties
 {
 public:
-	Theme();
-	~Theme();
+	enum Property
+	{
+		// Colors
+		Text,
+		Text_Disabled,
+		Button,
+		Button_Hovered,
+		Button_Pressed,
+		TextSelectable_Hovered,
+		TextInput_Background,
+		TextInput_FocusedOutline,
+		TextInput_Cursor,
+		TextInput_Selection,
+		Panel,
+		PanelOutline,
+		Separator,
+		ScrollBar,
+		ScrollBar_Handle,
+		ScrollBar_HandleHovered,
 
-	void SetFont(std::shared_ptr<Font> InFont);
-	std::shared_ptr<Font> GetFont() const;
+		// Floats
+		Separator_Thickness,
+		Separator_Margins,
+		Menu_RightPadding,
+		ScrollBar_Size,
+		ScrollBar_HandleMinSize,
 
-	const Variant& Get(ThemeProperties::Property Index) const;
+		// Vector2
+		Button_Padding,
+		TextSelectable_Padding,
+		TextSelectable_Offset,
+		Menu_Margins,
+		MenuBar_Padding,
+
+		Max
+	};
+
+	ThemeProperties();
+
+	bool Has(Property Index) const;
+	void Clear(Property Index);
+
+	Variant& operator[](Property Index);
+	const Variant& operator[](Property Index) const;
 
 private:
-	void InitializeDefault();
-
-	std::shared_ptr<Font> m_Font { nullptr };
-	ThemeProperties m_Properties {};
+	std::unordered_map<Property, Variant> m_Properties {};
 };
 
 }

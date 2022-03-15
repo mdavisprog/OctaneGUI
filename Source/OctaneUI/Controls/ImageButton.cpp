@@ -25,7 +25,6 @@ SOFTWARE.
 */
 
 #include "../Json.h"
-#include "../Theme.h"
 #include "Image.h"
 #include "ImageButton.h"
 
@@ -63,7 +62,7 @@ void ImageButton::OnPaint(Paint& Brush) const
 void ImageButton::Update()
 {
 	m_Image
-		->SetTint(IsDisabled() ? GetTheme()->GetColor(Theme::Colors::Text_Disabled) : Color::White)
+		->SetTint(IsDisabled() ? GetProperty(ThemeProperties::Text_Disabled).ToColor() : Color::White)
 		->SetPosition(GetSize() * 0.5f - m_Image->GetSize() * 0.5f);
 }
 
@@ -77,7 +76,7 @@ void ImageButton::OnLoad(const Json& Root)
 
 void ImageButton::UpdateSize()
 {
-	Vector2 Padding = GetTheme()->GetConstant(Theme::Vector2Constants::Button_Padding);
+	Vector2 Padding = GetProperty(ThemeProperties::Button_Padding).Vector();
 	SetSize(m_Image->GetSize() + Padding * 2.0f);
 }
 

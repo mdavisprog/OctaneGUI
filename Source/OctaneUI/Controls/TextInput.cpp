@@ -216,11 +216,11 @@ void TextInput::OnPaint(Paint& Brush) const
 	const float LineHeight = TheTheme->GetFont()->Size();
 
 	Rect Bounds = GetAbsoluteBounds();
-	Brush.Rectangle(Bounds, TheTheme->GetColor(Theme::Colors::TextInput_Background));
+	Brush.Rectangle(Bounds, GetProperty(ThemeProperties::TextInput_Background).ToColor());
 
 	if (m_Focused)
 	{
-		Brush.RectangleOutline(Bounds, TheTheme->GetColor(Theme::Colors::TextInput_FocusedOutline));
+		Brush.RectangleOutline(Bounds, GetProperty(ThemeProperties::TextInput_FocusedOutline).ToColor());
 	}
 
 	Brush.PushClip(GetAbsoluteBounds());
@@ -241,7 +241,7 @@ void TextInput::OnPaint(Paint& Brush) const
 				m_Text->GetAbsolutePosition() + MaxPos + Vector2(0.0f, LineHeight)
 			};
 
-			Brush.Rectangle(SelectBounds, TheTheme->GetColor(Theme::Colors::TextInput_Selection));
+			Brush.Rectangle(SelectBounds, GetProperty(ThemeProperties::TextInput_Selection).ToColor());
 		}
 		else
 		{
@@ -257,7 +257,7 @@ void TextInput::OnPaint(Paint& Brush) const
 						m_Text->GetAbsolutePosition() + Position,
 						m_Text->GetAbsolutePosition() + Position + Vector2(Size.X, LineHeight)
 					};
-					Brush.Rectangle(SelectBounds, TheTheme->GetColor(Theme::Colors::TextInput_Selection));
+					Brush.Rectangle(SelectBounds, GetProperty(ThemeProperties::TextInput_Selection).ToColor());
 				}
 				else if (Line == Max.Line())
 				{
@@ -269,7 +269,7 @@ void TextInput::OnPaint(Paint& Brush) const
 						m_Text->GetAbsolutePosition() + Position - Vector2(Size.X, 0.0f),
 						m_Text->GetAbsolutePosition() + Position + Vector2(0.0f, LineHeight)
 					};
-					Brush.Rectangle(SelectBounds, TheTheme->GetColor(Theme::Colors::TextInput_Selection));
+					Brush.Rectangle(SelectBounds, GetProperty(ThemeProperties::TextInput_Selection).ToColor());
 				}
 				else
 				{
@@ -280,7 +280,7 @@ void TextInput::OnPaint(Paint& Brush) const
 						m_Text->GetAbsolutePosition() + Position,
 						m_Text->GetAbsolutePosition() + Position + Vector2(Size.X, LineHeight)
 					};
-					Brush.Rectangle(SelectBounds, TheTheme->GetColor(Theme::Colors::TextInput_Selection));
+					Brush.Rectangle(SelectBounds, GetProperty(ThemeProperties::TextInput_Selection).ToColor());
 				}
 
 				Index = LineEndIndex(Index) + 1;
@@ -293,7 +293,7 @@ void TextInput::OnPaint(Paint& Brush) const
 		const Vector2 Size = GetPositionLocation(m_Position);
 		const Vector2 Start = m_Text->GetAbsolutePosition() + Vector2(std::max<float>(Size.X, 2.0f), Size.Y);
 		const Vector2 End = Start + Vector2(0.0f, LineHeight);
-		Brush.Line(Start, End, TheTheme->GetColor(Theme::Colors::TextInput_Cursor));
+		Brush.Line(Start, End, GetProperty(ThemeProperties::TextInput_Cursor).ToColor());
 	}
 
 	Brush.PopClip();

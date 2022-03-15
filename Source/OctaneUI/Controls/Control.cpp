@@ -26,8 +26,11 @@ SOFTWARE.
 
 #include "../Json.h"
 #include "../Paint.h"
+#include "../Theme.h"
 #include "../Window.h"
 #include "Control.h"
+
+#include <cassert>
 
 namespace OctaneUI
 {
@@ -207,6 +210,27 @@ void Control::Invalidate(InvalidateType Type)
 	{
 		m_OnInvalidate(this, Type);
 	}
+}
+
+void Control::SetProperty(ThemeProperties::Property Property, const Variant& Value)
+{
+	assert(Property < ThemeProperties::Max);
+	m_ThemeProperties[Property] = Value;
+}
+
+const Variant& Control::GetProperty(ThemeProperties::Property Property) const
+{
+	if (m_ThemeProperties.Has(Property))
+	{
+		return m_ThemeProperties[Property];
+	}
+
+	return GetTheme()->Get(Property);
+}
+
+void Control::ClearProperty(ThemeProperties::Property Property)
+{
+	m_ThemeProperties.Clear(Property);
 }
 
 void Control::OnPaint(Paint& Brush) const

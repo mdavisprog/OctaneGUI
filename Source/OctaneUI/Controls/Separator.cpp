@@ -25,7 +25,6 @@ SOFTWARE.
 */
 
 #include "../Paint.h"
-#include "../Theme.h"
 #include "Separator.h"
 
 namespace OctaneUI
@@ -51,9 +50,9 @@ Separator* Separator::SetOnHover(OnControlSignature Fn)
 
 void Separator::OnPaint(Paint& Brush) const
 {
-	const Color Fill = GetTheme()->GetColor(Theme::Colors::Separator);
-	const float Thickness = GetTheme()->GetConstant(Theme::FloatConstants::Separator_Thickness);
-	const float Margins = GetTheme()->GetConstant(Theme::FloatConstants::Separator_Margins);
+	const Color Fill = GetProperty(ThemeProperties::Separator).ToColor();
+	const float Thickness = GetProperty(ThemeProperties::Separator_Thickness).Float();
+	const float Margins = GetProperty(ThemeProperties::Separator_Margins).Float();
 
 	const Vector2 HalfSize = GetSize() * 0.5f;
 	const Vector2 Start = GetAbsolutePosition() + Vector2(Margins, HalfSize.Y);

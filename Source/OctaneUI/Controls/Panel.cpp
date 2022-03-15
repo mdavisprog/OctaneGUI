@@ -25,7 +25,6 @@ SOFTWARE.
 */
 
 #include "../Paint.h"
-#include "../Theme.h"
 #include "Panel.h"
 
 namespace OctaneUI
@@ -42,8 +41,8 @@ Panel::~Panel()
 
 void Panel::OnPaint(Paint& Brush) const
 {
-	const Color Background = Brush.GetTheme()->GetColor(Theme::Colors::Panel);
-	const Color Outline = Brush.GetTheme()->GetColor(Theme::Colors::PanelOutline);
+	const Color Background = GetProperty(ThemeProperties::Panel).ToColor();
+	const Color Outline = GetProperty(ThemeProperties::PanelOutline).ToColor();
 	Brush.Rectangle(GetAbsoluteBounds(), Background);
 	Brush.RectangleOutline(GetAbsoluteBounds(), Outline);
 }

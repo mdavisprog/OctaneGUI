@@ -26,7 +26,6 @@ SOFTWARE.
 
 #include "../Json.h"
 #include "../Paint.h"
-#include "../Theme.h"
 #include "Menu.h"
 #include "MenuItem.h"
 #include "Panel.h"
@@ -143,8 +142,8 @@ void Menu::OnLoad(const Json& Root)
 
 void Menu::Resize()
 {
-	const Vector2 Margins = GetTheme()->GetConstant(Theme::Vector2Constants::Menu_Margins);
-	const float RightPadding = GetTheme()->GetConstant(Theme::FloatConstants::Menu_RightPadding);
+	const Vector2 Margins = GetProperty(ThemeProperties::Menu_Margins).Vector();
+	const float RightPadding = GetProperty(ThemeProperties::Menu_RightPadding).Float();
 
 	std::vector<std::shared_ptr<Control>> Controls;
 	m_Container->GetControls(Controls);
@@ -183,7 +182,7 @@ void Menu::OnHovered(MenuItem* Item)
 
 	SetSelected(m_Menu, true);
 
-	const Vector2 Margins = GetTheme()->GetConstant(Theme::Vector2Constants::Menu_Margins);
+	const Vector2 Margins = GetProperty(ThemeProperties::Menu_Margins).Vector();
 	const Vector2 Position = Item->GetPosition() + Vector2(GetSize().X, 0.0f);
 	m_Menu->SetPosition(Position);
 	InsertControl(m_Menu);

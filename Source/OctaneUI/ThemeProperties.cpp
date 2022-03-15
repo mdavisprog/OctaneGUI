@@ -24,68 +24,37 @@ SOFTWARE.
 
 */
 
-#include "../Json.h"
-#include "Text.h"
-#include "TextButton.h"
+#include "ThemeProperties.h"
+
+#include <cassert>
 
 namespace OctaneUI
 {
 
-TextButton::TextButton(Window* InWindow)
-	: Button(InWindow)
+ThemeProperties::ThemeProperties()
 {
-	m_Text = std::make_shared<Text>(InWindow);
-	m_Text->SetParent(this);
 }
 
-Button* TextButton::SetText(const char* InText)
+bool ThemeProperties::Has(Property Index) const
 {
-	m_Text->SetText(InText);
-	UpdateSize();
-	return this;
+	return m_Properties.find(Index) != m_Properties.end();
 }
 
-const char* TextButton::GetText() const
+void ThemeProperties::Clear(Property Index)
 {
-	return m_Text->GetText();
+	m_Properties.erase(Index);
 }
 
-void TextButton::OnPaint(Paint& Brush) const
+Variant& ThemeProperties::operator[](Property Index)
 {
-	Button::OnPaint(Brush);
-
-	m_Text->OnPaint(Brush);
+	assert(Index < Max);
+	return m_Properties[Index];
 }
 
-void TextButton::Update()
+const Variant& ThemeProperties::operator[](Property Index) const
 {
-	if (IsDisabled())
-	{
-		m_Text->SetProperty(ThemeProperties::Text, GetProperty(ThemeProperties::Text_Disabled));
-	}
-	else
-	{
-		m_Text->ClearProperty(ThemeProperties::Text);
-	}
-
-	const Vector2 Size = GetSize() * 0.5f;
-	const Vector2 TextSize = m_Text->GetSize() * 0.5f;
-	m_Text->SetPosition(Size - TextSize);
-}
-
-void TextButton::OnLoad(const Json& Root)
-{
-	Button::OnLoad(Root);
-
-	m_Text->OnLoad(Root["Text"]);
-	UpdateSize();
-}
-
-void TextButton::UpdateSize()
-{
-	Vector2 Padding = GetProperty(ThemeProperties::Button_Padding).Vector();
-	Vector2 Size = m_Text->GetSize() + Padding * 2.0f;
-	SetSize(Size);
+	assert(Index < Max);
+	return m_Properties.at(Index);
 }
 
 }

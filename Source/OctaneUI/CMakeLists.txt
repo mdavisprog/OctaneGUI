@@ -39,6 +39,7 @@ set(SOURCE
 	Texture.cpp
 	TextureCache.cpp
 	Theme.cpp
+	ThemeProperties.cpp
 	Variant.cpp
 	Vector2.cpp
 	Vertex.cpp

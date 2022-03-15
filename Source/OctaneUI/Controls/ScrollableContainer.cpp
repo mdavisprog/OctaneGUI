@@ -25,7 +25,6 @@ SOFTWARE.
 */
 
 #include "../Paint.h"
-#include "../Theme.h"
 #include "ScrollableContainer.h"
 #include "ScrollBar.h"
 
@@ -40,7 +39,7 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 	m_HorizontalSB = std::make_shared<ScrollBar>(InWindow, Orientation::Horizontal);
 	m_HorizontalSB->SetOnDrag([this](ScrollBar*) -> void
 	{
-		const float SBSize = GetTheme()->GetConstant(Theme::FloatConstants::ScrollBar_Size);
+		const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
 		const float Size = m_ContentSize.X - GetSize().X + (m_VerticalSB->HasHandle() ? SBSize : 0.0f);
 		SetOffset({m_HorizontalSB->OffsetPct() * Size, 0.0f}, false);
 		InvalidateLayout();
@@ -50,7 +49,7 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 	m_VerticalSB = std::make_shared<ScrollBar>(InWindow, Orientation::Vertical);
 	m_VerticalSB->SetOnDrag([this](ScrollBar*) -> void
 	{
-		const float SBSize = GetTheme()->GetConstant(Theme::FloatConstants::ScrollBar_Size);
+		const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
 		const float Size = m_ContentSize.Y - GetSize().Y + (m_HorizontalSB->HasHandle() ? SBSize : 0.0f);
 		SetOffset({0.0f, m_VerticalSB->OffsetPct() * Size}, false);
 		InvalidateLayout();
@@ -104,7 +103,7 @@ ScrollableContainer& ScrollableContainer::AddOffset(const Vector2& Delta)
 
 Vector2 ScrollableContainer::GetScrollableSize() const
 {
-	const float SBSize = GetTheme()->GetConstant(Theme::FloatConstants::ScrollBar_Size);
+	const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
 	return {
 		GetSize().X - (m_VerticalSB->HasHandle() ? SBSize : 0.0f),
 		GetSize().Y - (m_HorizontalSB->HasHandle() ? SBSize : 0.0f)
@@ -194,7 +193,7 @@ void ScrollableContainer::PlaceControls(const std::vector<std::shared_ptr<Contro
 	const Vector2 ContentSize = GetContentSize(Controls);
 	const Vector2 Size = GetSize();
 	const Vector2 Overflow = ContentSize - Size;
-	const float SBSize = GetTheme()->GetConstant(Theme::FloatConstants::ScrollBar_Size);
+	const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
 
 	m_HorizontalSB
 		->SetHandleSize(Overflow.X > 0.0f ? Size.X - Overflow.X : 0.0f)
@@ -238,7 +237,7 @@ Vector2 ScrollableContainer::GetContentSize(const std::vector<std::shared_ptr<Co
 
 Vector2 ScrollableContainer::GetOverflow() const
 {
-	const float SBSize = GetTheme()->GetConstant(Theme::FloatConstants::ScrollBar_Size);
+	const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
 	return {
 		std::max<float>(m_ContentSize.X - GetSize().X + (m_VerticalSB->HasHandle() ? SBSize : 0.0f), 0.0f),
 		std::max<float>(m_ContentSize.Y - GetSize().Y + (m_HorizontalSB->HasHandle() ? SBSize : 0.0f), 0.0f)

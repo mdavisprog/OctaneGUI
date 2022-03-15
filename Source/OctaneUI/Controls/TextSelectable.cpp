@@ -26,7 +26,6 @@ SOFTWARE.
 
 #include "../Json.h"
 #include "../Paint.h"
-#include "../Theme.h"
 #include "Text.h"
 #include "TextSelectable.h"
 
@@ -93,7 +92,7 @@ void TextSelectable::OnPaint(Paint& Brush) const
 {
 	if (m_Hovered || m_Selected)
 	{
-		Brush.Rectangle(GetAbsoluteBounds(), GetTheme()->GetColor(Theme::Colors::TextSelectable_Hovered));
+		Brush.Rectangle(GetAbsoluteBounds(), GetProperty(ThemeProperties::TextSelectable_Hovered).ToColor());
 	}
 
 	m_Text->OnPaint(Brush);
@@ -101,7 +100,7 @@ void TextSelectable::OnPaint(Paint& Brush) const
 
 void TextSelectable::Update()
 {
-	const Vector2 Offset = GetTheme()->GetConstant(Theme::Vector2Constants::TextSelectable_Offset);
+	const Vector2 Offset = GetProperty(ThemeProperties::TextSelectable_Offset).Vector();
 	const float CenterY = GetSize().Y * 0.5f - m_Text->GetSize().Y * 0.5f;
 	Vector2 Position = Offset + Vector2(0.0f, CenterY);
 
@@ -158,7 +157,7 @@ std::shared_ptr<Text> TextSelectable::GetTextControl() const
 
 void TextSelectable::UpdateSize()
 {
-	const Vector2 Padding = GetTheme()->GetConstant(Theme::Vector2Constants::TextSelectable_Padding);
+	const Vector2 Padding = GetProperty(ThemeProperties::TextSelectable_Padding).Vector();
 	const Vector2 Size = m_Text->GetBounds().Expand(Padding).GetSize();
 	SetSize(Size);
 }

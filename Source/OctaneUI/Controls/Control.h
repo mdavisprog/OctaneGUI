@@ -31,6 +31,7 @@ SOFTWARE.
 #include "../Keyboard.h"
 #include "../Mouse.h"
 #include "../Rect.h"
+#include "../ThemeProperties.h"
 
 #include <functional>
 #include <memory>
@@ -109,6 +110,10 @@ public:
 	Control* SetOnInvalidate(OnInvalidateSignature Fn);
 	void Invalidate(InvalidateType Type = InvalidateType::Paint);
 
+	void SetProperty(ThemeProperties::Property Property, const Variant& Value);
+	const Variant& GetProperty(ThemeProperties::Property Property) const;
+	void ClearProperty(ThemeProperties::Property Property);
+
 	virtual void OnPaint(Paint& Brush) const;
 	virtual void Update();
 	virtual void OnFocused();
@@ -137,6 +142,7 @@ private:
 	Expand m_Expand;
 	std::string m_ID;
 	OnInvalidateSignature m_OnInvalidate;
+	ThemeProperties m_ThemeProperties {};
 };
 
 }

@@ -27,7 +27,6 @@ SOFTWARE.
 #include "../Icons.h"
 #include "../Json.h"
 #include "../Paint.h"
-#include "../Theme.h"
 #include "../Window.h"
 #include "Checkbox.h"
 #include "Text.h"
@@ -95,14 +94,12 @@ bool Checkbox::IsTriState() const
 
 void Checkbox::OnPaint(Paint& Brush) const
 {
-	std::shared_ptr<Theme> TheTheme = GetTheme();
-
 	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
 	const Vector2 BoxSize = TexCoords.GetSize() + Vector2(3.0f, 3.0f);
 	const Vector2 BoxPosition = GetAbsolutePosition() + Vector2(6.0f, GetSize().Y * 0.5f - BoxSize.Y * 0.5f);
 	Brush.Rectangle(
 		Rect(BoxPosition, BoxPosition + BoxSize),
-		m_Hovered ? TheTheme->GetColor(Theme::Colors::Button_Pressed) : TheTheme->GetColor(Theme::Colors::Button)
+		m_Hovered ? GetProperty(ThemeProperties::Button_Pressed).ToColor() : GetProperty(ThemeProperties::Button).ToColor()
 	);
 
 	if (m_State == State::Checked)
@@ -122,7 +119,7 @@ void Checkbox::OnPaint(Paint& Brush) const
 			BoxPosition + Shrink,
 			BoxPosition + BoxSize - Shrink
 		);
-		Brush.Rectangle(Inner, TheTheme->GetColor(Theme::Colors::Button_Hovered));
+		Brush.Rectangle(Inner, GetProperty(ThemeProperties::Button_Hovered).ToColor());
 	}
 
 	m_Text->OnPaint(Brush);
@@ -172,7 +169,7 @@ void Checkbox::OnMouseLeave()
 void Checkbox::UpdateSize()
 {
 	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
-	const Vector2 Padding = GetWindow()->GetTheme()->GetConstant(Theme::Vector2Constants::TextSelectable_Padding);
+	const Vector2 Padding =GetProperty(ThemeProperties::TextSelectable_Padding).Vector();
 	Vector2 Size(TexCoords.GetSize().X + m_Text->GetSize().X, m_Text->GetSize().Y + Padding.Y * 2.0f);
 	SetSize(Size);
 }

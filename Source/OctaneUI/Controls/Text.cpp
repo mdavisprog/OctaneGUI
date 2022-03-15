@@ -71,7 +71,7 @@ uint32_t Text::Length() const
 void Text::OnPaint(Paint& Brush) const
 {
 	const Vector2 Position = GetAbsolutePosition();
-	Brush.Text(Position.Floor(), m_Contents, GetTheme()->GetColor(Theme::Colors::Text));
+	Brush.Text(Position.Floor(), m_Contents, GetProperty(ThemeProperties::Text).ToColor());
 }
 
 void Text::OnLoad(const Json& Root)

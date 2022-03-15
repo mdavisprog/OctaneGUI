@@ -26,7 +26,6 @@ SOFTWARE.
 
 #include "../Json.h"
 #include "../Paint.h"
-#include "../Theme.h"
 #include "ListBox.h"
 #include "Panel.h"
 #include "ScrollableContainer.h"
@@ -169,7 +168,7 @@ private:
 		{
 			Bounds.SetSize({ContentWidth, Bounds.Height()});
 		}
-		Brush.Rectangle(Bounds, Brush.GetTheme()->GetColor(Theme::Colors::TextSelectable_Hovered));
+		Brush.Rectangle(Bounds, GetProperty(ThemeProperties::TextSelectable_Hovered).ToColor());
 	}
 
 	std::weak_ptr<ScrollableContainer> m_Scrollable {};
