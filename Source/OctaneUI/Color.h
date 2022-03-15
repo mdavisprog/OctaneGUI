@@ -31,11 +31,15 @@ SOFTWARE.
 namespace OctaneUI
 {
 
+class Json;
+
 struct Color
 {
 public:
 	static const Color White;
 	static const Color Black;
+
+	static Color Parse(const Json& Root);
 
 	uint8_t R { 0 };
 	uint8_t G { 0 };
