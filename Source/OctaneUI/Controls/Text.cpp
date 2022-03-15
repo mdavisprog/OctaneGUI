@@ -79,6 +79,11 @@ void Text::OnLoad(const Json& Root)
 	Control::OnLoad(Root);
 
 	SetText(Root["Text"].String());
+
+	if (!Root["Color"].IsNull())
+	{
+		SetProperty(ThemeProperties::Text, Color::Parse(Root["Color"]));
+	}
 }
 
 bool Text::IsFixedSize() const

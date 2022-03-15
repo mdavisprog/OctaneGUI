@@ -41,8 +41,18 @@
 								"Type": "VerticalContainer",
 								"Controls": [
 									{
-										"Type": "Text",
-										"Text": "Hello"
+										"Type": "HorizontalContainer",
+										"Controls": [
+											{
+												"Type": "Text",
+												"Text": "Hello"
+											},
+											{
+												"Type": "Text",
+												"Text": "Red Text",
+												"Color": [255, 0, 0, 255]
+											}
+										]
 									},
 									{
 										"Type": "Text",
