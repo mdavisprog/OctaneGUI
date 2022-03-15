@@ -34,6 +34,8 @@ SOFTWARE.
 namespace OctaneUI
 {
 
+class Json;
+
 class Variant
 {
 public:
@@ -58,6 +60,7 @@ public:
 	Variant(const std::string&);
 	Variant(const Vector2&);
 	Variant(const Color&);
+	Variant(const Json&);
 	Variant(const Variant&);
 	Variant(Variant&&);
 	~Variant();
@@ -70,6 +73,7 @@ public:
 	Variant& operator=(const std::string& Value);
 	Variant& operator=(const Vector2& Value);
 	Variant& operator=(const Color& Value);
+	Variant& operator=(const Json& Value);
 	Variant& operator=(const Variant& Value);
 	Variant& operator=(Variant&& Value);
 
@@ -105,6 +109,7 @@ private:
 	};
 
 	void Set(const char*);
+	void Copy(const Json&);
 	void Copy(const Variant&);
 	void Move(Variant&&);
 	void Clear();

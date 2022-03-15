@@ -24,6 +24,7 @@ SOFTWARE.
 
 */
 
+#include "Json.h"
 #include "Variant.h"
 
 #include <cstring>
@@ -81,6 +82,11 @@ Variant::Variant(const Color& Value)
 	: m_Type(Type::Color)
 {
 	m_Data.Col = Value;
+}
+
+Variant::Variant(const Json& Value)
+{
+	Copy(Value);
 }
 
 Variant::Variant(const Variant& Other)
@@ -160,6 +166,12 @@ Variant& Variant::operator=(const Color& Value)
 	Clear();
 	m_Type = Type::Color;
 	m_Data.Col = Value;
+	return *this;
+}
+
+Variant& Variant::operator=(const Json& Value)
+{
+	Copy(Value);
 	return *this;
 }
 
@@ -302,6 +314,19 @@ void Variant::Set(const char* Value)
 	}
 
 	*m_Data.String = Value;
+}
+
+void Variant::Copy(const Json& Value)
+{
+	Clear();
+
+	switch (Value.GetType())
+	{
+	case Json::Type::Boolean: m_Type = Type::Bool; m_Data.Bool = Value.Boolean(); break;
+	case Json::Type::Number: m_Type = Type::Float; m_Data.Float = Value.Number(); break;
+	case Json::Type::String: m_Type = Type::String; Set(Value.String()); break; 
+	default: break;
+	}
 }
 
 void Variant::Copy(const Variant& Other)
