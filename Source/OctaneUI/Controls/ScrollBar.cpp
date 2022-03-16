@@ -165,7 +165,7 @@ void ScrollBar::OnMouseMove(const Vector2& Position)
 
 bool ScrollBar::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 {
-	if (m_Hovered)
+	if (m_Hovered && Button == Mouse::Button::Left)
 	{
 		m_Drag = true;
 		m_DragAnchor = Position;
@@ -177,14 +177,27 @@ bool ScrollBar::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 
 void ScrollBar::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 {
+	if (Button != Mouse::Button::Left)
+	{
+		return;
+	}
+
+	if (!Contains(Position))
+	{
+		Invalidate();
+	}
+
 	m_Drag = false;
-	Invalidate();
 }
 
 void ScrollBar::OnMouseLeave()
 {
 	m_Hovered = false;
-	Invalidate();
+
+	if (!m_Drag)
+	{
+		Invalidate();
+	}
 }
 
 Rect ScrollBar::HandleBounds() const
