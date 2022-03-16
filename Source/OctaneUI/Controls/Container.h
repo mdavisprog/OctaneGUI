@@ -74,6 +74,7 @@ protected:
 
 private:
 	std::vector<std::shared_ptr<Control>> m_Controls;
+	bool m_InLayout { false };
 };
 
 }

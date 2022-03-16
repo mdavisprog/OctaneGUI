@@ -90,6 +90,11 @@ Container* Container::InsertControl(const std::shared_ptr<Control>& Item, int Po
 	Item->SetParent(this);
 	Item->SetOnInvalidate([this](Control* Focus, InvalidateType Type)
 	{
+		if (m_InLayout && Type != InvalidateType::Paint)
+		{
+			return;
+		}
+
 		Container* FocusContainer = dynamic_cast<Container*>(Focus);
 		if (FocusContainer == nullptr && (Type == InvalidateType::Layout || Type == InvalidateType::Both))
 		{
@@ -143,6 +148,8 @@ void Container::ClearControls()
 
 Container* Container::Layout()
 {
+	m_InLayout = true;
+
 	PlaceControls(m_Controls);
 	
 	for (const std::shared_ptr<Control>& Item : m_Controls)
@@ -158,6 +165,8 @@ Container* Container::Layout()
 	{
 		Item->Update();
 	}
+
+	m_InLayout = false;
 
 	return this;
 }
