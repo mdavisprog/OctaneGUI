@@ -63,13 +63,15 @@ Variant::Variant(float Value)
 Variant::Variant(const char* Value)
 	: m_Type(Type::String)
 {
-	Set(Value);
+	m_Data.String = new std::string();
+	*m_Data.String = Value;
 }
 
 Variant::Variant(const std::string& Value)
 	: m_Type(Type::String)
 {
-	Set(Value.c_str());
+	m_Data.String = new std::string();
+	*m_Data.String = Value;
 }
 
 Variant::Variant(const Vector2& Value)
@@ -141,7 +143,8 @@ Variant& Variant::operator=(const char* Value)
 {
 	Clear();
 	m_Type = Type::String;
-	Set(Value);
+	m_Data.String = new std::string();
+	*m_Data.String = Value;
 	return *this;
 }
 
@@ -149,7 +152,8 @@ Variant& Variant::operator=(const std::string& Value)
 {
 	Clear();
 	m_Type = Type::String;
-	Set(Value.c_str());
+	m_Data.String = new std::string();
+	*m_Data.String = Value;
 	return *this;
 }
 
@@ -306,16 +310,6 @@ Variant::Type Variant::GetType() const
 	return m_Type;
 }
 
-void Variant::Set(const char* Value)
-{
-	if (m_Data.String == nullptr)
-	{
-		m_Data.String = new std::string();
-	}
-
-	*m_Data.String = Value;
-}
-
 void Variant::Copy(const Json& Value)
 {
 	Clear();
@@ -324,7 +318,12 @@ void Variant::Copy(const Json& Value)
 	{
 	case Json::Type::Boolean: m_Type = Type::Bool; m_Data.Bool = Value.Boolean(); break;
 	case Json::Type::Number: m_Type = Type::Float; m_Data.Float = Value.Number(); break;
-	case Json::Type::String: m_Type = Type::String; Set(Value.String()); break; 
+	case Json::Type::String: 
+	{
+		m_Type = Type::String;
+		m_Data.String = new std::string();
+		*m_Data.String = Value.String();
+	} break;
 	default: break;
 	}
 }
@@ -338,9 +337,13 @@ void Variant::Copy(const Variant& Other)
 	case Type::Byte: m_Data.Byte = Other.Byte(); break;
 	case Type::Int: m_Data.Int = Other.Int(); break;
 	case Type::Float: m_Data.Float = Other.Float(); break;
-	case Type::String: Set(Other.String()); break;
 	case Type::Vector: m_Data.Vector = Other.Vector(); break;
 	case Type::Color: m_Data.Col = Other.ToColor(); break;
+	case Type::String:
+	{
+		m_Data.String = new std::string();
+		*m_Data.String = Other.String();
+	 } break;
 	case Type::Null:
 	default: break;
 	}
@@ -374,14 +377,11 @@ void Variant::Clear()
 {
 	if (IsString())
 	{
-		if (m_Data.String != nullptr)
-		{
-			delete m_Data.String;
-		}
+		delete m_Data.String;
 	}
 
 	m_Type = Type::Null;
-	std::memset(&m_Data, 0, sizeof(m_Data));
+	m_Data.String = nullptr;
 }
 
 }

@@ -108,7 +108,6 @@ private:
 		Color Col;
 	};
 
-	void Set(const char*);
 	void Copy(const Json&);
 	void Copy(const Variant&);
 	void Move(Variant&&);
