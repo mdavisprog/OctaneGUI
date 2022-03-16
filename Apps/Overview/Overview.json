@@ -156,6 +156,10 @@
 			"Body": {
 				"Controls": [
 					{
+						"Type": "Panel",
+						"Expand": "Both"
+					},
+					{
 						"Type": "MarginContainer",
 						"Left": 8,
 						"Top": 8,
@@ -186,6 +190,21 @@
 											{
 												"Type": "Text",
 												"Text": "Copyright (c) Mitchell Davis 2022"
+											}
+										]
+									},
+									{
+										"Type": "HorizontalContainer",
+										"Expand": "Width",
+										"Grow": "Center",
+										"Controls": [
+											{
+												"ID": "OK",
+												"Type": "TextButton",
+												"3D": true,
+												"Text": {
+													"Text": "OK"
+												}
 											}
 										]
 									}

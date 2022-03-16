@@ -72,5 +72,11 @@ int main(int argc, char **argv)
 		printf("OnSelect: %d\n", Index);
 	});
 
+	const OctaneUI::ControlList& AboutList = WindowControls["About"];
+	AboutList.To<OctaneUI::Button>("OK")->SetOnPressed([]() -> void
+	{
+		printf("About.OK\n");
+	});
+
 	return Application.Run();
 }
