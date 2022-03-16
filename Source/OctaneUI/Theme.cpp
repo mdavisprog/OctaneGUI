@@ -60,6 +60,8 @@ void Theme::InitializeDefault()
 	m_Properties[ThemeProperties::Text] = Color(255, 255, 255, 255);
 	m_Properties[ThemeProperties::Text_Disabled] = Color(105, 105, 105, 255);
 	m_Properties[ThemeProperties::Button] = Color(48, 48, 48, 255);
+	m_Properties[ThemeProperties::Button_Highlight_3D] = Color(117, 117, 117, 255);
+	m_Properties[ThemeProperties::Button_Shadow_3D] = Color(28, 28, 28, 255);
 	m_Properties[ThemeProperties::Button_Hovered] = Color(48, 63, 169, 255);
 	m_Properties[ThemeProperties::Button_Pressed] = Color(98, 125, 152, 255);
 	m_Properties[ThemeProperties::TextSelectable_Hovered] = Color(48, 63, 169, 255);
@@ -85,6 +87,8 @@ void Theme::InitializeDefault()
 	m_Properties[ThemeProperties::TextSelectable_Offset] = Vector2(8.0f, 0.0f);
 	m_Properties[ThemeProperties::Menu_Margins] = Vector2(0.0f, 8.0f);
 	m_Properties[ThemeProperties::MenuBar_Padding] = Vector2(0.0f, 6.0f);
+
+	m_Properties[ThemeProperties::Button_3D] = false;
 }
 
 }

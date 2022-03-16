@@ -42,6 +42,8 @@ public:
 		Text,
 		Text_Disabled,
 		Button,
+		Button_Highlight_3D,
+		Button_Shadow_3D,
 		Button_Hovered,
 		Button_Pressed,
 		TextSelectable_Hovered,
@@ -69,6 +71,9 @@ public:
 		TextSelectable_Offset,
 		Menu_Margins,
 		MenuBar_Padding,
+
+		// Flags
+		Button_3D,
 
 		Max
 	};

@@ -56,15 +56,41 @@ void Button::OnPaint(Paint& Brush) const
 {
 	std::shared_ptr<Theme> TheTheme = GetTheme();
 
-	Color BackgroundColor;
+	const bool Is3D = GetProperty(ThemeProperties::Button_3D).Bool();
+
+	Color BackgroundColor = GetProperty(ThemeProperties::Button).ToColor();
 	switch (m_State)
 	{
-	case State::Hovered: BackgroundColor = GetProperty(ThemeProperties::Button_Hovered).ToColor(); break;
-	case State::Pressed: BackgroundColor = GetProperty(ThemeProperties::Button_Pressed).ToColor(); break;
-	default: BackgroundColor = GetProperty(ThemeProperties::Button).ToColor();
+	case State::Hovered: if (!Is3D) BackgroundColor = GetProperty(ThemeProperties::Button_Hovered).ToColor(); break;
+	case State::Pressed: if (!Is3D) BackgroundColor = GetProperty(ThemeProperties::Button_Pressed).ToColor(); break;
+	default: break;
 	}
 
 	Brush.Rectangle(GetAbsoluteBounds(), BackgroundColor);
+
+	if (Is3D)
+	{
+		const Rect Bounds = GetAbsoluteBounds();
+		const Color Highlight = GetProperty(ThemeProperties::Button_Highlight_3D).ToColor();
+		const Color Shadow = GetProperty(ThemeProperties::Button_Shadow_3D).ToColor();
+
+		if (m_State == State::Pressed)
+		{
+			Brush.Line(Bounds.Min, {Bounds.Min + Vector2(Bounds.Width() - 1.0f, 0.0f)}, Shadow, 1.0f);
+			Brush.Line(Bounds.Min, {Bounds.Min + Vector2(0.0f, Bounds.Height() - 1.0f)}, Shadow, 1.0f);
+
+			Brush.Line(Bounds.Max, {Bounds.Max - Vector2(0.0f, Bounds.Height())}, Highlight, 1.0f);
+			Brush.Line(Bounds.Max, {Bounds.Max - Vector2(Bounds.Width(), 0.0f)}, Highlight, 1.0f);
+		}
+		else
+		{
+			Brush.Line(Bounds.Min, {Bounds.Min + Vector2(Bounds.Width() - 1.0f, 0.0f)}, Highlight, 1.0f);
+			Brush.Line(Bounds.Min, {Bounds.Min + Vector2(0.0f, Bounds.Height() - 1.0f)}, Highlight, 1.0f);
+
+			Brush.Line(Bounds.Max, {Bounds.Max - Vector2(0.0f, Bounds.Height())}, Shadow, 1.0f);
+			Brush.Line(Bounds.Max, {Bounds.Max - Vector2(Bounds.Width(), 0.0f)}, Shadow, 2.0f);
+		}
+	}
 }
 
 void Button::OnLoad(const Json& Root)
@@ -72,6 +98,7 @@ void Button::OnLoad(const Json& Root)
 	Control::OnLoad(Root);
 
 	m_Disabled = Root["Disabled"].Boolean();
+	SetProperty(ThemeProperties::Button_3D, Root["3D"]);
 }
 
 bool Button::OnMousePressed(const Vector2& Position, Mouse::Button Button)
