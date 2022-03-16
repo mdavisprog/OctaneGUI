@@ -139,13 +139,10 @@ void ScrollableContainer::Update()
 
 void ScrollableContainer::OnPaint(Paint& Brush) const
 {
-	std::vector<std::shared_ptr<Control>> Controls;
-	GetControls(Controls);
-
 	// Need to translate from scrolled space.
 	Brush.PushClip(TranslatedBounds());
 
-	for (const std::shared_ptr<Control>& Item : Controls)
+	for (const std::shared_ptr<Control>& Item : Controls())
 	{
 		if (Item != m_HorizontalSB && Item != m_VerticalSB)
 		{
