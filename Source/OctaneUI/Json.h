@@ -117,8 +117,7 @@ private:
 	static Json ParseToken(const std::string& Token);
 
 	static const Json Invalid;
-
-	void Set(const char* Value);
+	
 	void Clear();
 
 	bool Equals(const Json& Other) const;

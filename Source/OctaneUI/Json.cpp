@@ -63,11 +63,9 @@ Json::Json()
 Json::Json(Type InType)
 	: m_Type(InType)
 {
-	memset(&m_Data, 0, sizeof(m_Data));
-
 	if (IsString())
 	{
-		Set("");
+		m_Data.String = new std::string();
 	}
 	else if (IsArray())
 	{
@@ -94,13 +92,13 @@ Json::Json(float Value)
 Json::Json(const char* Value)
 	: m_Type(Type::String)
 {
-	Set(Value);
+	m_Data.String = new std::string();
+	*m_Data.String = Value;
 }
 
 Json::Json(const std::string& Value)
-	: m_Type(Type::String)
+	: Json(Value.c_str())
 {
-	Set(Value.c_str());
 }
 
 Json::Json(const Json& Other)
@@ -181,11 +179,6 @@ const char* Json::String(const char* Default) const
 		return Default;
 	}
 
-	if (m_Data.String == nullptr)
-	{
-		return "";
-	}
-
 	return m_Data.String->c_str();
 }
 
@@ -232,7 +225,8 @@ Json& Json::operator=(const char* Value)
 {
 	Clear();
 	m_Type = Type::String;
-	Set(Value);
+	m_Data.String = new std::string();
+	*m_Data.String = Value;
 	return *this;
 }
 
@@ -240,7 +234,8 @@ Json& Json::operator=(const std::string& Value)
 {
 	Clear();
 	m_Type = Type::String;
-	Set(Value.c_str());
+	m_Data.String = new std::string();
+	*m_Data.String = Value;
 	return *this;
 }
 
@@ -571,42 +566,23 @@ Json Json::ParseToken(const std::string& Token)
 	return Result;
 }
 
-void Json::Set(const char* Value)
-{
-	if (m_Data.String == nullptr)
-	{
-		m_Data.String = new std::string();
-	}
-
-	*m_Data.String = Value;
-}
-
 void Json::Clear()
 {
 	if (IsString())
 	{
-		if (m_Data.String != nullptr)
-		{
-			delete m_Data.String;
-		}
+		delete m_Data.String;
 	}
 	else if (IsArray())
 	{
-		if (m_Data.Array != nullptr)
-		{
-			delete m_Data.Array;
-		}
+		delete m_Data.Array;
 	}
 	else if (IsObject())
 	{
-		if (m_Data.Object != nullptr)
-		{
-			delete m_Data.Object;
-		}
+		delete m_Data.Object;
 	}
 
 	m_Type = Type::Null;
-	memset(&m_Data, 0, sizeof(m_Data));
+	m_Data.String = nullptr;
 }
 
 bool Json::Equals(const Json& Other) const
@@ -662,23 +638,19 @@ void Json::Copy(const Json& Other)
 	{
 	case Type::Boolean: m_Data.Bool = Other.Boolean(); break;
 	case Type::Number: m_Data.Number = Other.Number(); break;
-	case Type::String: Set(Other.String()); break;
+	case Type::String:
+	{
+		m_Data.String = new std::string();
+		*m_Data.String = Other.String();
+	} break;
 	case Type::Object:
 	{
-		if (m_Data.Object == nullptr)
-		{
-			m_Data.Object = new Map();
-		}
-
+		m_Data.Object = new Map();
 		*m_Data.Object = *Other.m_Data.Object;
 	} break;
 	case Type::Array:
 	{
-		if (m_Data.Array == nullptr)
-		{
-			m_Data.Array = new std::vector<Json>();
-		}
-
+		m_Data.Array = new std::vector<Json>();
 		*m_Data.Array = *Other.m_Data.Array;
 	} break;
 	case Type::Null:
