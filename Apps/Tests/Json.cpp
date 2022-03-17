@@ -143,6 +143,46 @@ TEST_CASE(SubObject,
 	return true;
 })
 
+TEST_CASE(CopyString,
+{
+	OctaneUI::Json Root = "Hello";
+	OctaneUI::Json Copy = 0.0f;
+	Copy = Root;
+	return Root.IsString() && Copy.IsString() && Root == Copy;
+})
+
+TEST_CASE(CopyArray,
+{
+	OctaneUI::Json Root = OctaneUI::Json::Parse("[1, 4, 2, 3]");
+	OctaneUI::Json Copy = "Hello";
+	Copy = Root;
+	return Root.IsArray() && Copy.IsArray() && Root == Copy;
+})
+
+TEST_CASE(CopyObject,
+{
+	OctaneUI::Json Root = OctaneUI::Json::Parse("{\"Bool\": true, \"Number\": 3.14, \"String\": \"Hello Friends\"}");
+	OctaneUI::Json Copy = "Hello";
+	Copy = Root;
+	return Root.IsObject() && Copy.IsObject() && Root == Copy;
+})
+
+TEST_CASE(MoveArray,
+{
+	OctaneUI::Json Root = OctaneUI::Json::Parse("[1, 4, 2, 3]");
+	OctaneUI::Json Move = "";
+	Move = std::move(Root);
+	return Root.IsNull() && Move.IsArray() && Root != Move;
+})
+
+TEST_CASE(MoveObject,
+{
+	OctaneUI::Json Root = OctaneUI::Json::Parse("{\"Bool\": true, \"Number\": 3.14, \"String\": \"Hello Friends\"}");
+	OctaneUI::Json Move = "";
+	Move = std::move(Root);
+	return Root.IsNull() && Move.IsObject() && Root != Move;
+})
+
 )
 
 }
