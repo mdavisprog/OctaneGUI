@@ -36,7 +36,7 @@ Button::Button(Window* InWindow)
 {
 }
 
-Button* Button::SetOnPressed(OnEmptySignature Fn)
+Button* Button::SetOnPressed(OnButtonSignature Fn)
 {
 	m_OnPressed = Fn;
 	return this;
@@ -126,7 +126,7 @@ void Button::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 	{
 		if (m_OnPressed)
 		{
-			m_OnPressed();
+			m_OnPressed(*this);
 		}
 	}
 

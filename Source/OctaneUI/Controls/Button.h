@@ -39,7 +39,7 @@ class Button : public Control
 public:
 	Button(Window* InWindow);
 
-	Button* SetOnPressed(OnEmptySignature Fn);
+	Button* SetOnPressed(OnButtonSignature Fn);
 
 	void SetDisabled(bool Disabled);
 	bool IsDisabled() const;
@@ -60,7 +60,7 @@ private:
 	};
 
 	State m_State { State::None };
-	OnEmptySignature m_OnPressed { nullptr };
+	OnButtonSignature m_OnPressed { nullptr };
 	bool m_Disabled { false };
 };
 

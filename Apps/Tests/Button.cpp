@@ -42,7 +42,7 @@ TEST_CASE(Press,
 	VERIFY(List.Contains("Button"))
 
 	bool Pressed = false;
-	List.To<OctaneUI::Button>("Button")->SetOnPressed([&]()
+	List.To<OctaneUI::Button>("Button")->SetOnPressed([&](const OctaneUI::Button&) -> void
 	{
 		Pressed = true;
 	});

@@ -66,7 +66,7 @@ int main(int argc, char** argv)
 	Application.Initialize(Stream, WindowControls);
 
 	const OctaneUI::ControlList& List = WindowControls["Main"];
-	List.To<OctaneUI::Button>("Container.Button")->SetOnPressed([&]()
+	List.To<OctaneUI::Button>("Container.Button")->SetOnPressed([&](const OctaneUI::Button&) -> void
 	{
 		static bool DidClick = false;
 		if (!DidClick)
