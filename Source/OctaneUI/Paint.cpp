@@ -75,13 +75,35 @@ void Paint::RectangleOutline(const Rect& Bounds, const Color& Col, float Thickne
 
 void Paint::Text(const Vector2& Position, const std::string& Contents, const Color& Col)
 {
+	if (Contents.empty())
+	{
+		return;
+	}
+
 	std::shared_ptr<Font> ThemeFont = m_Theme ? m_Theme->GetFont() : nullptr;
 	if (!ThemeFont)
 	{
 		return;
 	}
 
-	PushCommand(6 * Contents.length(), ThemeFont->ID());
+	size_t Start = 0;
+	size_t InvalidChars = 0;
+	while (Start < Contents.size())
+	{
+		size_t End = Contents.find_first_of("\n", Start);
+		if (End != std::string::npos)
+		{
+			InvalidChars++;
+			Start = End + 1;
+		}
+		else
+		{
+			Start = Contents.size();
+		}
+	}
+
+	size_t Count = Contents.size() - InvalidChars;
+	PushCommand(6 * Count, ThemeFont->ID());
 	Vector2 Pos = Position;
 	uint32_t Offset = 0;
 	for (char Char : Contents)
