@@ -156,6 +156,12 @@ void ScrollableContainer::OnPaint(Paint& Brush) const
 	m_VerticalSB->OnPaint(Brush);
 }
 
+void ScrollableContainer::OnLoad(const Json& Root)
+{
+	Container::OnLoad(Root);
+	SetExpand(Expand::Both);
+}
+
 void ScrollableContainer::OnMouseMove(const Vector2& Position)
 {
 	m_HorizontalSB->OnMouseMove(Position);
