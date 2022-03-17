@@ -475,8 +475,11 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 		{
 			Index = 0;
 		}
+		else
+		{
+			Index = String[Index] == '\n' ? Index + 1 : Index;
+		}
 
-		Index = String[Index] == '\n' ? Index + 1 : Index;
 		NewLine = LineBack ? NewLine - 1 : NewLine + 1;
 		NewIndex = Index;
 		LineIndex = Index;
