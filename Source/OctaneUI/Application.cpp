@@ -158,6 +158,14 @@ void Application::Update()
 			Item.second->DoPaint(Brush);
 		}
 	}
+
+	for (auto& Item : m_Windows)
+	{
+		if (Item.second->ShouldClose())
+		{
+			DestroyWindow(Item.second);
+		}
+	}
 }
 
 int Application::Run()
@@ -346,6 +354,12 @@ void Application::DestroyWindow(const std::shared_ptr<Window>& Item)
 	}
 
 	Item->SetVisible(false);
+	Item->RequestClose(false);
+
+	if (std::string(Item->ID()) == "Main")
+	{
+		m_IsRunning = false;
+	}
 }
 
 void Application::ProcessEvent(const std::shared_ptr<Window>& Item)
@@ -360,14 +374,7 @@ void Application::ProcessEvent(const std::shared_ptr<Window>& Item)
 	switch (E.GetType())
 	{
 	case Event::Type::WindowClosed:
-		if (std::string(Item->ID()) == "Main")
-		{
-			m_IsRunning = false;
-		}
-		else
-		{
-			DestroyWindow(Item);
-		}
+		DestroyWindow(Item);
 		break;
 	
 	case Event::Type::KeyPressed:

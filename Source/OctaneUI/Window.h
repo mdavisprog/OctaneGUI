@@ -73,6 +73,9 @@ public:
 	void SetVisible(bool Visible);
 	bool IsVisible() const;
 
+	void RequestClose(bool Request = true);
+	bool ShouldClose() const;
+
 	void SetPopup(const std::shared_ptr<Container>& Popup, bool Modal = false);
 
 	void OnKeyPressed(Keyboard::Key Key);
@@ -121,6 +124,7 @@ private:
 	std::weak_ptr<Control> m_Hovered {};
 	Popup m_Popup {};
 	bool m_Visible { false };
+	bool m_RequestClose { false };
 	std::vector<Container*> m_LayoutRequests;
 
 	OnPaintSignature m_OnPaint { nullptr };

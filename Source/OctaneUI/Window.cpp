@@ -106,6 +106,16 @@ bool Window::IsVisible() const
 	return m_Visible;
 }
 
+void Window::RequestClose(bool Request)
+{
+	m_RequestClose = Request;
+}
+
+bool Window::ShouldClose() const
+{
+	return m_RequestClose;
+}
+
 void Window::SetPopup(const std::shared_ptr<Container>& Popup, bool Modal)
 {
 	m_Popup.Open(Popup, Modal);

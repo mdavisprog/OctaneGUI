@@ -75,7 +75,7 @@ int main(int argc, char **argv)
 	const OctaneUI::ControlList& AboutList = WindowControls["About"];
 	AboutList.To<OctaneUI::Button>("OK")->SetOnPressed([](const OctaneUI::Button& Button) -> void
 	{
-		printf("About.OK\n");
+		Button.GetWindow()->RequestClose();
 	});
 
 	return Application.Run();
