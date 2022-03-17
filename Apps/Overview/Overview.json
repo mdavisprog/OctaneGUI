@@ -33,112 +33,118 @@
 			"Body": {
 				"Controls": [
 					{
+						"Type": "Panel",
+						"Expand": "Both"
+					},
+					{
 						"Type": "MarginContainer",
 						"Left": 8,
 						"Top": 8,
 						"Controls": [
 							{
-								"Type": "VerticalContainer",
+								"Type": "ScrollableContainer",
 								"Controls": [
 									{
-										"Type": "HorizontalContainer",
+										"Type": "VerticalContainer",
 										"Controls": [
 											{
-												"Type": "Text",
-												"Text": "Hello"
+												"Type": "HorizontalContainer",
+												"Controls": [
+													{
+														"Type": "Text",
+														"Text": "Hello"
+													},
+													{
+														"Type": "Text",
+														"Text": "Red Text",
+														"Color": [255, 0, 0, 255]
+													}
+												]
 											},
 											{
 												"Type": "Text",
-												"Text": "Red Text",
-												"Color": [255, 0, 0, 255]
-											}
-										]
-									},
-									{
-										"Type": "Text",
-										"Text": "This is a\nmulti-line string.\nThis is another line."
-									},
-									{
-										"Type": "HorizontalContainer",
-										"Controls": [
+												"Text": "This is a\nmulti-line string.\nThis is another line."
+											},
 											{
-												"ID": "OKBtn",
-												"Type": "TextButton",
+												"Type": "HorizontalContainer",
+												"Controls": [
+													{
+														"ID": "OKBtn",
+														"Type": "TextButton",
+														"Text": {
+															"Text": "OK"
+														}
+													},
+													{
+														"ID": "DisabledBtn",
+														"Type": "TextButton",
+														"Disabled": true,
+														"Text": {
+															"Text": "Disabled"
+														}
+													}
+												]
+											},
+											{
+												"Type": "HorizontalContainer",
+												"Controls": [
+													{
+														"Type": "ImageButton",
+														"Image": {
+															"Texture": "thumbs_up.png"
+														}
+													},
+													{
+														"Type": "ImageButton",
+														"Disabled": true,
+														"Image": {
+															"Texture": "thumbs_up.png"
+														}
+													}
+												]
+											},
+											{
+												"Type": "Checkbox",
 												"Text": {
-													"Text": "OK"
-												}
+													"Text": "Checkbox"
+												},
+												"TriState": true
 											},
 											{
-												"ID": "DisabledBtn",
-												"Type": "TextButton",
-												"Disabled": true,
+												"Type": "Image",
+												"Texture": "info.png"
+											},
+											{
+												"Type": "TextSelectable",
 												"Text": {
-													"Text": "Disabled"
-												}
-											}
-										]
-									},
-									{
-										"Type": "HorizontalContainer",
-										"Controls": [
-											{
-												"Type": "ImageButton",
-												"Image": {
-													"Texture": "thumbs_up.png"
+													"Text": "Selectable"
 												}
 											},
 											{
-												"Type": "ImageButton",
-												"Disabled": true,
-												"Image": {
-													"Texture": "thumbs_up.png"
-												}
-											}
-										]
-									},
-									{
-										"Type": "Checkbox",
-										"Text": {
-											"Text": "Checkbox"
-										},
-										"TriState": true
-									},
-									{
-										"Type": "Image",
-										"Texture": "info.png"
-									},
-									{
-										"Type": "TextSelectable",
-										"Text": {
-											"Text": "Selectable"
-										}
-									},
-									{
-										"Type": "HorizontalContainer",
-										"Controls": [
-											{
-												"Type": "TextInput"
+												"Type": "HorizontalContainer",
+												"Controls": [
+													{
+														"Type": "TextInput"
+													},
+													{
+														"Type": "TextInput",
+														"Multiline": true
+													}
+												]
 											},
 											{
-												"Type": "TextInput",
-												"Multiline": true,
-												"Text" : {
-													"Text": "Hello\nThis is a multiline\ntext input control."
-												}
-											}
-										]
-									},
-									{
-										"ID": "List",
-										"Type": "ListBox",
-										"Controls": [
-											{
-												"Type": "Text",
-												"Text": "This is a list box control."
-											},
-											{
-												"Type": "Text",
-												"Text": "Multiple items can be added to this control."
+												"ID": "List",
+												"Type": "ListBox",
+												"Controls": [
+													{
+														"Type": "Text",
+														"Text": "This is a listbox control."
+													},
+													{
+														"Type": "Text",
+														"Text": "Multiple items can be added to this control."
+													}
+												]
 											}
 										]
 									}
