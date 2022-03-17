@@ -587,39 +587,39 @@ void Json::Clear()
 
 bool Json::Equals(const Json& Other) const
 {
-	if (IsNull() == Other.IsNull())
+	if (IsNull() && Other.IsNull())
 	{
 		return true;
 	}
 
-	if (IsBoolean() == Other.IsBoolean() && Boolean() == Other.Boolean())
+	if (IsBoolean() && Other.IsBoolean() && Boolean() == Other.Boolean())
 	{
 		return true;
 	}
 
-	if (IsNumber() == Other.IsNumber() && Number() == Other.Number())
+	if (IsNumber() && Other.IsNumber() && Number() == Other.Number())
 	{
 		return true;
 	}
 
-	if (IsString() == Other.IsString() && std::string(String()) == Other.String())
+	if (IsString() && Other.IsString() && std::string(String()) == Other.String())
 	{
 		return true;
 	}
 
-	if (IsObject() == Other.IsObject())
+	if (IsObject() && Other.IsObject())
 	{
-		bool Result = false;
+		bool Result = true;
 		ForEach([&](const std::string& Key, const Json& Value) -> void
 		{
-			Result &= Value[Key].Equals(Other[Key]);
+			Result &= Value.Equals(Other[Key]);
 		});
 		return Result;
 	}
 
-	if (IsArray() == Other.IsArray())
+	if (IsArray() && Other.IsArray())
 	{
-		bool Result = false;
+		bool Result = true;
 		for (int I = 0; I < Count(); I++)
 		{
 			Result &= (*this)[I].Equals(Other[I]);
