@@ -52,7 +52,9 @@ void TestSuite::Run(OctaneUI::Application& Application, int Argc, char** Argv)
 		{
 			if (SuiteName == TS->m_Name)
 			{
-				Run(Application, *TS);
+				uint32_t Passed = 0;
+				uint32_t Failed = 0;
+				Run(Application, *TS, Passed, Failed);
 				Found = true;
 				break;
 			}
@@ -65,14 +67,21 @@ void TestSuite::Run(OctaneUI::Application& Application, int Argc, char** Argv)
 	}
 	else
 	{
+		uint32_t Passed = 0;
+		uint32_t Failed = 0;
+		uint32_t TotalPassed = 0;
+		uint32_t TotalFailed = 0;
+
 		OctaneUI::Clock Clock;
 		printf("Running %d test suites\n", (int)s_Suites->size());
 		for (const TestSuite* TS : *s_Suites)
 		{
-			Run(Application, *TS);
+			Run(Application, *TS, Passed, Failed);
+			TotalPassed += Passed;
+			TotalFailed += Failed;
 		}
 
-		printf("\nAll tests completed in %f seconds.\n", Clock.Measure());
+		printf("\nAll tests completed in %f seconds. %d test(s) have failed.\n", Clock.Measure(), TotalFailed);
 	}
 
 	delete s_Suites;
@@ -94,13 +103,13 @@ TestSuite::~TestSuite()
 {
 }
 
-bool TestSuite::Run(OctaneUI::Application& Application, const TestSuite& Suite)
+bool TestSuite::Run(OctaneUI::Application& Application, const TestSuite& Suite, uint32_t& Passed, uint32_t& Failed)
 {
 	OctaneUI::Clock Clock;
 	printf("\nRunning test suite '%s'\n", Suite.m_Name.c_str());
 
-	uint32_t Passed = 0;
-	uint32_t Failed = 0;
+	Passed = 0;
+	Failed = 0;
 	for (const std::pair<std::string, OnTestCaseSignature>& Item : Suite.m_TestCases)
 	{
 		Application.GetMainWindow()->Clear();

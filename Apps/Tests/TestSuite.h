@@ -53,7 +53,7 @@ public:
 	~TestSuite();
 
 private:
-	static bool Run(OctaneUI::Application& Application, const TestSuite& Suite);
+	static bool Run(OctaneUI::Application& Application, const TestSuite& Suite, uint32_t& Passed, uint32_t& Failed);
 
 	TestSuite();
 
