@@ -57,6 +57,21 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 	InsertControl(m_VerticalSB);
 }
 
+bool ScrollableContainer::IsInScrollBar(const Vector2& Point) const
+{
+	if (m_HorizontalSB->HasHandle() && m_HorizontalSB->Contains(Point))
+	{
+		return true;
+	}
+
+	if (m_VerticalSB->HasHandle() && m_VerticalSB->Contains(Point))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 bool ScrollableContainer::IsScrollBarVisible(const std::shared_ptr<Control>& Item) const
 {
 	if (m_HorizontalSB == Item)

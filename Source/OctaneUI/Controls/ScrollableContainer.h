@@ -40,6 +40,7 @@ class ScrollableContainer : public Container
 public:
 	ScrollableContainer(Window* InWindow);
 
+	bool IsInScrollBar(const Vector2& Point) const;
 	bool IsScrollBarVisible(const std::shared_ptr<Control>& Item) const;
 	Vector2 ContentSize() const;
 
