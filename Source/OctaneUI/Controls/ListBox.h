@@ -45,14 +45,27 @@ public:
 
 	ListBox(Window* InWindow);
 
+	template<typename T, typename ...TArgs>
+	std::shared_ptr<T> AddItem(TArgs... Args)
+	{
+		std::shared_ptr<T> Result = std::make_shared<T>(GetWindow(), Args...);
+		InsertItem(Result);
+		return Result;
+	}
+
 	int Index() const;
 	ListBox* SetOnSelect(OnSelectSignature Fn);
 
-	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
-
 	virtual void OnLoad(const Json& Root) override;
+	virtual void OnPaint(Paint& Brush) const override;
 
 private:
+	using Container::AddControl;
+	using Container::InsertControl;
+
+	void InsertItem(const std::shared_ptr<Control>& Item);
+	void PaintItem(Paint& Brush, const std::shared_ptr<Control>& Item) const;
+
 	std::shared_ptr<Panel> m_Panel { nullptr };
 	std::shared_ptr<ScrollableContainer> m_Scrollable { nullptr };
 	std::shared_ptr<VerticalContainer> m_List { nullptr };
