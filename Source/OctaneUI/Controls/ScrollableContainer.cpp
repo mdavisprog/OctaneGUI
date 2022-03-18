@@ -41,7 +41,7 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 	{
 		const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
 		const float Size = m_ContentSize.X - GetSize().X + (m_VerticalSB->HasHandle() ? SBSize : 0.0f);
-		SetOffset({m_HorizontalSB->OffsetPct() * Size, 0.0f}, false);
+		SetOffset({m_HorizontalSB->OffsetPct() * Size, m_VerticalSB->Offset()}, false);
 		InvalidateLayout();
 	});
 	InsertControl(m_HorizontalSB);
@@ -51,7 +51,7 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 	{
 		const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
 		const float Size = m_ContentSize.Y - GetSize().Y + (m_HorizontalSB->HasHandle() ? SBSize : 0.0f);
-		SetOffset({0.0f, m_VerticalSB->OffsetPct() * Size}, false);
+		SetOffset({m_HorizontalSB->Offset(), m_VerticalSB->OffsetPct() * Size}, false);
 		InvalidateLayout();
 	});
 	InsertControl(m_VerticalSB);
