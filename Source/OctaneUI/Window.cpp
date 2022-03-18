@@ -151,7 +151,8 @@ void Window::OnMouseMove(const Vector2& Position)
 
 	if (!m_Popup.IsModal() && Hovered.expired())
 	{
-		Hovered = m_Container->GetControl(Position);
+		Hovered = m_MenuBar->GetControl(Position);
+		Hovered = Hovered.expired() ? m_Body->GetControl(Position) : Hovered;
 	}
 
 	std::shared_ptr<Control> Current = Hovered.lock();
