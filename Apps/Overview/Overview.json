@@ -37,12 +37,12 @@
 						"Expand": "Both"
 					},
 					{
-						"Type": "MarginContainer",
-						"Left": 8,
-						"Top": 8,
+						"Type": "ScrollableContainer",
 						"Controls": [
 							{
-								"Type": "ScrollableContainer",
+								"Type": "MarginContainer",
+								"Left": 8,
+								"Top": 8,
 								"Controls": [
 									{
 										"Type": "VerticalContainer",

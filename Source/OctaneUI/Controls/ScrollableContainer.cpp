@@ -130,7 +130,12 @@ std::weak_ptr<Control> ScrollableContainer::GetControl(const Vector2& Point) con
 
 void ScrollableContainer::Update()
 {
-	m_ContentSize = GetContentSize(Controls());
+	// Not a fan of doing this twice. Once here, and once in PlaceControls.
+	// Would be nice for PlaceControls to use m_ContentSize.
+	std::vector<std::shared_ptr<Control>> AllControls;
+	GetControls(AllControls);
+
+	m_ContentSize = GetContentSize(AllControls);
 }
 
 void ScrollableContainer::OnPaint(Paint& Brush) const
@@ -189,7 +194,10 @@ void ScrollableContainer::PlaceControls(const std::vector<std::shared_ptr<Contro
 {
 	Container::PlaceControls(Controls);
 
-	const Vector2 ContentSize = GetContentSize(Controls);
+	std::vector<std::shared_ptr<Control>> AllControls;
+	GetControls(AllControls);
+
+	const Vector2 ContentSize = GetContentSize(AllControls);
 	const Vector2 Size = GetSize();
 	const Vector2 Overflow = ContentSize - Size;
 	const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
