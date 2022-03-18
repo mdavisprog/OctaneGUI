@@ -67,10 +67,17 @@ int main(int argc, char **argv)
 		printf("OK\n");
 	});
 
-	List.To<OctaneUI::ListBox>("List")->SetOnSelect([](int Index, std::weak_ptr<OctaneUI::Control>) -> void
+	std::shared_ptr<OctaneUI::ListBox> ListBox = List.To<OctaneUI::ListBox>("List");
+	ListBox->SetOnSelect([](int Index, std::weak_ptr<OctaneUI::Control>) -> void
 	{
 		printf("OnSelect: %d\n", Index);
 	});
+
+	for (int I = 0; I < 10; I++)
+	{
+		std::string Text = std::string("Item added through code: ") + std::to_string(I);
+		ListBox->AddItem<OctaneUI::Text>()->SetText(Text.c_str());
+	}
 
 	const OctaneUI::ControlList& AboutList = WindowControls["About"];
 	AboutList.To<OctaneUI::Button>("OK")->SetOnPressed([](const OctaneUI::Button& Button) -> void
