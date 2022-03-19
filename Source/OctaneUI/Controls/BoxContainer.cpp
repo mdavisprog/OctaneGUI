@@ -89,13 +89,13 @@ Vector2 BoxContainer::DesiredSize() const
 
 		if (m_Orient == Orientation::Horizontal)
 		{
-			Result.X += Size.X;
+			Result.X += Size.X + m_Spacing.X;
 			Result.Y = std::max<float>(Result.Y, Size.Y);
 		}
 		else
 		{
 			Result.X = std::max<float>(Result.X, Size.X);
-			Result.Y += Size.Y;
+			Result.Y += Size.Y + m_Spacing.Y;
 		}
 	}
 
