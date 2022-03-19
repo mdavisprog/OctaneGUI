@@ -75,6 +75,8 @@ std::shared_ptr<Menu> MenuBar::AddItem(const char* InText)
 
 void MenuBar::GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const
 {
+	Items.insert(Items.end(), m_MenuItems.begin(), m_MenuItems.end());
+
 	for (const std::shared_ptr<MenuItem>& Item : m_MenuItems)
 	{
 		const std::shared_ptr<Menu> ItemMenu = Item->GetMenu();
@@ -106,11 +108,8 @@ void MenuBar::OnLoad(const Json& Root)
 	{
 		const Json& Item = Menus[I];
 
-		std::shared_ptr<Menu> NewMenu = AddItem(Item["Text"].String());
-		if (NewMenu)
-		{
-			NewMenu->OnLoad(Item);
-		}
+		AddItem(Item["Text"].String());
+		m_MenuItems.back()->OnLoad(Item);
 	}
 
 	SetExpand(Expand::Width);
