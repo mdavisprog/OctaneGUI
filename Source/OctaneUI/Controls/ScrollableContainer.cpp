@@ -39,8 +39,7 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 	m_HorizontalSB = std::make_shared<ScrollBar>(InWindow, Orientation::Horizontal);
 	m_HorizontalSB->SetOnDrag([this](ScrollBar*) -> void
 	{
-		const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
-		const float Size = m_ContentSize.X - GetSize().X + (m_VerticalSB->HasHandle() ? SBSize : 0.0f);
+		const float Size = GetOverflow().X;
 		SetOffset({m_HorizontalSB->OffsetPct() * Size, m_VerticalSB->Offset()}, false);
 		InvalidateLayout();
 	});
@@ -49,8 +48,7 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 	m_VerticalSB = std::make_shared<ScrollBar>(InWindow, Orientation::Vertical);
 	m_VerticalSB->SetOnDrag([this](ScrollBar*) -> void
 	{
-		const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
-		const float Size = m_ContentSize.Y - GetSize().Y + (m_HorizontalSB->HasHandle() ? SBSize : 0.0f);
+		const float Size = GetOverflow().Y;
 		SetOffset({m_HorizontalSB->Offset(), m_VerticalSB->OffsetPct() * Size}, false);
 		InvalidateLayout();
 	});
@@ -273,7 +271,7 @@ void ScrollableContainer::SetOffset(const Vector2& Offset, bool UpdateScrollBar)
 		std::max<float>(-Overflow.X, std::min<float>(-Offset.X, 0.0f)),
 		std::max<float>(-Overflow.Y, std::min<float>(-Offset.Y, 0.0f))
 	};
-	SetPosition({Position.X, Position.Y});
+	SetPosition(Position);
 
 	if (UpdateScrollBar)
 	{
