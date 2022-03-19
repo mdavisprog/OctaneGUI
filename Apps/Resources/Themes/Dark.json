@@ -1,0 +1,34 @@
+{
+	"Text": [255, 255, 255, 255],
+	"Text_Disabled": [105, 105, 105, 255],
+	"Button": [48, 48, 48, 255],
+	"Button_Highlight_3D": [117, 117, 117, 255],
+	"Button_Shadow_3D": [28, 28, 28, 255],
+	"Button_Hovered": [48, 63, 169, 255],
+	"Button_Pressed": [98, 125, 152, 255],
+	"TextSelectable_Hovered": [48, 63, 169, 255],
+	"TextInput_Background": [14, 14, 14, 255],
+	"TextInput_FocusedOutline": [0, 0, 255, 255],
+	"TextInput_Cursor": [255, 255, 255, 255],
+	"TextInput_Selection": [55, 74, 92, 255],
+	"Panel": [33, 33, 33, 255],
+	"PanelOutline": [0, 0, 0, 255],
+	"Separator": [48, 48, 48, 255],
+	"ScrollBar": [48, 48, 48, 255],
+	"ScrollBar_Handle": [64, 64, 64, 255],
+	"ScrollBar_HandleHovered": [96, 96, 96, 255],
+
+	"Separator_Thickness": 1.5,
+	"Separator_Margins": 8.0,
+	"Menu_RightPadding": 60.0,
+	"ScrollBar_Size": 15.0,
+	"ScrollBar_HandleMinSize": 10.0,
+
+	"Button_Padding": [12.0, 6.0],
+	"TextSelectable_Padding": [8.0, 6.0],
+	"TextSelectable_Offset": [8.0, 0.0],
+	"Menu_Margins": [0.0, 8.0],
+	"MenuBar_Padding": [0.0, 6.0],
+
+	"Button_3D": false
+}

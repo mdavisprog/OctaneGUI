@@ -31,7 +31,7 @@ set_target_properties(
 add_custom_command(
 	TARGET ${TARGET}
 	POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy_if_different ${APP_FONT} ${APP_INFO_IMAGE} ${APP_THUMBS_UP_IMAGE} ${BIN_DIR}
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${APP_RESOURCES} ${BIN_DIR}
 )
 
 add_custom_command(
