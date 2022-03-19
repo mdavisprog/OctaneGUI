@@ -40,7 +40,7 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 	m_HorizontalSB->SetOnDrag([this](ScrollBar*) -> void
 	{
 		const float Size = GetOverflow().X;
-		SetOffset({m_HorizontalSB->OffsetPct() * Size, m_VerticalSB->Offset()}, false);
+		SetOffset({m_HorizontalSB->OffsetPct() * Size, -GetPosition().Y}, false);
 		InvalidateLayout();
 	});
 	InsertControl(m_HorizontalSB);
@@ -49,7 +49,7 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 	m_VerticalSB->SetOnDrag([this](ScrollBar*) -> void
 	{
 		const float Size = GetOverflow().Y;
-		SetOffset({m_HorizontalSB->Offset(), m_VerticalSB->OffsetPct() * Size}, false);
+		SetOffset({-GetPosition().X, m_VerticalSB->OffsetPct() * Size}, false);
 		InvalidateLayout();
 	});
 	InsertControl(m_VerticalSB);
