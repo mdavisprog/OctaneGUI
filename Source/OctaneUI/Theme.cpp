@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "Font.h"
+#include "Json.h"
 #include "Theme.h"
 #include "ThemeProperties.h"
 
@@ -53,6 +54,42 @@ std::shared_ptr<Font> Theme::GetFont() const
 const Variant& Theme::Get(ThemeProperties::Property Index) const
 {
 	return m_Properties[Index];
+}
+
+void Theme::Load(const Json& Root)
+{
+	Set(ThemeProperties::Text, Root["Text"]);
+	Set(ThemeProperties::Text_Disabled, Root["Text_Disabled"]);
+	Set(ThemeProperties::Button, Root["Button"]);
+	Set(ThemeProperties::Button_Highlight_3D, Root["Button_Highlight_3D"]);
+	Set(ThemeProperties::Button_Shadow_3D, Root["Button_Shadow_3D"]);
+	Set(ThemeProperties::Button_Hovered, Root["Button_Hovered"]);
+	Set(ThemeProperties::Button_Pressed, Root["Button_Pressed"]);
+	Set(ThemeProperties::TextSelectable_Hovered, Root["TextSelectable_Hovered"]);
+	Set(ThemeProperties::TextInput_Background, Root["TextInput_Background"]);
+	Set(ThemeProperties::TextInput_FocusedOutline, Root["TextInput_FocusedOutline"]);
+	Set(ThemeProperties::TextInput_Cursor, Root["TextInput_Cursor"]);
+	Set(ThemeProperties::TextInput_Selection, Root["TextInput_Selection"]);
+	Set(ThemeProperties::Panel, Root["Panel"]);
+	Set(ThemeProperties::PanelOutline, Root["PanelOutline"]);
+	Set(ThemeProperties::Separator, Root["Separator"]);
+	Set(ThemeProperties::ScrollBar, Root["ScrollBar"]);
+	Set(ThemeProperties::ScrollBar_Handle, Root["ScrollBar_Handle"]);
+	Set(ThemeProperties::ScrollBar_HandleHovered, Root["ScrollBar_HandleHovered"]);
+
+	Set(ThemeProperties::Separator_Thickness, Root["Separator_Thickness"]);
+	Set(ThemeProperties::Separator_Margins, Root["Separator_Margins"]);
+	Set(ThemeProperties::Menu_RightPadding, Root["Menu_RightPadding"]);
+	Set(ThemeProperties::ScrollBar_Size, Root["ScrollBar_Size"]);
+	Set(ThemeProperties::ScrollBar_HandleMinSize, Root["ScrollBar_HandleMinSize"]);
+
+	Set(ThemeProperties::Button_Padding, Root["Button_Padding"]);
+	Set(ThemeProperties::TextSelectable_Padding, Root["TextSelectable_Padding"]);
+	Set(ThemeProperties::TextSelectable_Offset, Root["TextSelectable_Offset"]);
+	Set(ThemeProperties::Menu_Margins, Root["Menu_Margins"]);
+	Set(ThemeProperties::MenuBar_Padding, Root["MenuBar_Padding"]);
+
+	Set(ThemeProperties::Button_3D, Root["Button_3D"]);
 }
 
 void Theme::InitializeDefault()
@@ -89,6 +126,14 @@ void Theme::InitializeDefault()
 	m_Properties[ThemeProperties::MenuBar_Padding] = Vector2(0.0f, 6.0f);
 
 	m_Properties[ThemeProperties::Button_3D] = false;
+}
+
+void Theme::Set(ThemeProperties::Property Property, const Variant& Value)
+{
+	if (!Value.IsNull())
+	{
+		m_Properties[Property] = Value;
+	}
 }
 
 }

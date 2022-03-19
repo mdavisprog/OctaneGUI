@@ -36,6 +36,7 @@ namespace OctaneUI
 {
 
 class Font;
+class Json;
 
 class Theme
 {
@@ -47,9 +48,11 @@ public:
 	std::shared_ptr<Font> GetFont() const;
 
 	const Variant& Get(ThemeProperties::Property Index) const;
+	void Load(const Json& Root);
 
 private:
 	void InitializeDefault();
+	void Set(ThemeProperties::Property Property, const Variant& Value);
 
 	std::shared_ptr<Font> m_Font { nullptr };
 	ThemeProperties m_Properties {};
