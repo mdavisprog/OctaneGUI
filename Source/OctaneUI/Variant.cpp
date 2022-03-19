@@ -324,6 +324,19 @@ void Variant::Copy(const Json& Value)
 		m_Data.String = new std::string();
 		*m_Data.String = Value.String();
 	} break;
+	case Json::Type::Array:
+	{
+		if (Value.Count() == 2)
+		{
+			m_Type = Type::Vector;
+			m_Data.Vector = {Value[0u].Number(), Value[1u].Number()};
+		}
+		else if (Value.Count() == 4)
+		{
+			m_Type = Type::Color;
+			m_Data.Col = {(unsigned char)Value[0u].Number(), (unsigned char)Value[1u].Number(), (unsigned char)Value[2u].Number(), (unsigned char)Value[3u].Number()};
+		}
+	} break;
 	default: break;
 	}
 }
