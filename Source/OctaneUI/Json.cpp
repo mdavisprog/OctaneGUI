@@ -499,6 +499,8 @@ const char* Json::ParseArray(const char* Stream, Json& Root)
 			Root.m_Data.Array->push_back(std::move(Value));
 		}
 
+		Ptr = ParseSpace(Ptr);
+
 		if (*Ptr == ']')
 		{
 			Ptr++;
@@ -532,12 +534,30 @@ const char* Json::ParseObject(const char* Stream, Json& Root)
 			Root[Key] = std::move(Value);
 		}
 
+		Ptr = ParseSpace(Ptr);
+
 		if (*Ptr == '}')
 		{
 			Ptr++;
 			break;
 		}
 
+		Ptr++;
+	}
+
+	return Ptr;
+}
+
+const char* Json::ParseSpace(const char* Stream)
+{
+	if (Stream == nullptr)
+	{
+		return Stream;
+	}
+
+	const char* Ptr = Stream;
+	while (std::isspace(*Ptr))
+	{
 		Ptr++;
 	}
 
