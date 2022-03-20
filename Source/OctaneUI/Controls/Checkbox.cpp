@@ -102,16 +102,13 @@ void Checkbox::OnPaint(Paint& Brush) const
 
 	if (Is3D)
 	{
-		const Color Shadow = GetProperty(ThemeProperties::Button_Shadow_3D).ToColor();
-		const Color Highlight = GetProperty(ThemeProperties::Button_Highlight_3D).ToColor();
-
-		Brush.Rectangle(Bounds, GetProperty(ThemeProperties::Button_Pressed).ToColor());
-
-		Brush.Line(Bounds.Min, {Bounds.Min + Vector2(Bounds.Width() - 1.0f, 0.0f)}, Shadow, 2.0f);
-		Brush.Line(Bounds.Min, {Bounds.Min + Vector2(0.0f, Bounds.Height() - 1.0f)}, Shadow, 2.0f);
-
-		Brush.Line(Bounds.Max, {Bounds.Max - Vector2(0.0f, Bounds.Height())}, Highlight, 1.0f);
-		Brush.Line(Bounds.Max, {Bounds.Max - Vector2(Bounds.Width(), 0.0f)}, Highlight, 1.0f);
+		Brush.Rectangle3D(
+			Bounds,
+			GetProperty(ThemeProperties::Button_Pressed).ToColor(),
+			GetProperty(ThemeProperties::Button_Highlight_3D).ToColor(),
+			GetProperty(ThemeProperties::Button_Shadow_3D).ToColor(),
+			true
+		);
 	}
 	else
 	{

@@ -61,6 +61,20 @@ void Paint::Rectangle(const Rect& Bounds, const Color& Col)
 	AddTriangles(Bounds, Col);
 }
 
+void Paint::Rectangle3D(const Rect& Bounds, const Color& Base, const Color& Highlight, const Color& Shadow, bool Sunken)
+{
+	Rectangle(Bounds, Base);
+
+	const Vector2 TopRight = Bounds.Min + Vector2(Bounds.Width(), 0.0f);
+	const Vector2 BottomLeft = Bounds.Min + Vector2(0.0f, Bounds.Height());
+	
+	Line(Bounds.Min, TopRight + Vector2(-1.0f, 0.0f), Sunken ? Shadow : Highlight, Sunken ? 2.0f : 1.0f);
+	Line(Bounds.Min, BottomLeft + Vector2(0.0f, -1.0f), Sunken ? Shadow : Highlight, Sunken ? 2.0f : 1.0f);
+
+	Line(Bounds.Max, TopRight, Sunken ? Highlight : Shadow, Sunken ? 1.0f : 2.0f);
+	Line(Bounds.Max, BottomLeft, Sunken ? Highlight : Shadow, Sunken ? 1.0f : 2.0f);
+}
+
 void Paint::RectangleOutline(const Rect& Bounds, const Color& Col, float Thickness)
 {
 	const Vector2 TopRight(Bounds.Min + Vector2(Bounds.GetSize().X, 0.0f));

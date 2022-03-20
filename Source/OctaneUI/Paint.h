@@ -49,6 +49,7 @@ public:
 
 	void Line(const Vector2& Start, const Vector2& End, const Color& Col, float Thickness = 1.0f);
 	void Rectangle(const Rect& Bounds, const Color& Col);
+	void Rectangle3D(const Rect& Bounds, const Color& Base, const Color& Highlight, const Color& Shadow, bool Sunken = false);
 	void RectangleOutline(const Rect& Bounds, const Color& Col, float Thickness = 1.0f);
 	void Text(const Vector2& Position, const std::string& Contents, const Color& Col);
 	void Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_ptr<Texture>& InTexture, const Color& Col);
