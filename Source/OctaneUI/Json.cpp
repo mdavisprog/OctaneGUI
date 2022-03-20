@@ -375,18 +375,26 @@ const char* Json::ParseKey(const char* Stream, std::string& Key)
 		return Stream;
 	}
 
+	bool Parsing = false;
 	const char* Ptr = Stream;
 	while (*Ptr != '\0')
 	{
 		unsigned char Ch = *Ptr;
 
-		if (std::isalnum(Ch))
+		if (Ch == '"')
+		{
+			if (!Parsing)
+			{
+				Parsing = true;
+			}
+			else
+			{
+				break;
+			}
+		}
+		else if (Parsing)
 		{
 			Key += Ch;
-		}
-		else
-		{
-			break;
 		}
 
 		Ptr++;

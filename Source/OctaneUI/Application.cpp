@@ -67,12 +67,12 @@ bool Application::Initialize(const char* Title, const char* FontPath, float Font
 {
 	std::stringstream JsonStream;
 	JsonStream 
-		<< "{Font: \"" << FontPath << "\","
-		<< "FontSize: " << FontSize << ","
-		<< "Windows: {"
-			<< "Main: {Title: " << Title << ", "
-			<< "Width: 1280,"
-			<< "Height: 720}"
+		<< "{\"Font\": \"" << FontPath << "\","
+		<< "\"FontSize\": " << FontSize << ","
+		<< "\"Windows\": {"
+			<< "\"Main\": {\"Title\": " << Title << ", "
+			<< "\"Width\": 1280,"
+			<< "\"Height\": 720}"
 		<< "}}";
 
 	std::unordered_map<std::string, ControlList> WindowControls;
