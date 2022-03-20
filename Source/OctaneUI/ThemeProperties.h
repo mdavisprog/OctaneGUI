@@ -46,6 +46,7 @@ public:
 		Button_Shadow_3D,
 		Button_Hovered,
 		Button_Pressed,
+		TextSelectable_Text_Hovered,
 		TextSelectable_Hovered,
 		TextInput_Background,
 		TextInput_FocusedOutline,

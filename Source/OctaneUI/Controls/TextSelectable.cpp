@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "../Json.h"
 #include "../Paint.h"
+#include "../ThemeProperties.h"
 #include "Text.h"
 #include "TextSelectable.h"
 
@@ -93,9 +94,11 @@ void TextSelectable::OnPaint(Paint& Brush) const
 	if (m_Hovered || m_Selected)
 	{
 		Brush.Rectangle(GetAbsoluteBounds(), GetProperty(ThemeProperties::TextSelectable_Hovered).ToColor());
+		m_Text->SetProperty(ThemeProperties::Text, GetProperty(ThemeProperties::TextSelectable_Text_Hovered));
 	}
 
 	m_Text->OnPaint(Brush);
+	m_Text->ClearProperty(ThemeProperties::Text);
 }
 
 void TextSelectable::Update()
