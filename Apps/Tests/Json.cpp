@@ -183,6 +183,12 @@ TEST_CASE(MoveObject,
 	return Root.IsNull() && Move.IsObject() && Root != Move;
 })
 
+TEST_CASE(Spaces,
+{
+	OctaneUI::Json Root = OctaneUI::Json::Parse("[\n{\n\"One\": 1\n},{\n\"Two\": 2\n}\n]");
+	return Root.IsArray() && Root[0u]["One"].Number() == 1.0f && Root[1u]["Two"].Number() == 2.0f;
+})
+
 )
 
 }
