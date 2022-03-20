@@ -51,6 +51,12 @@ std::shared_ptr<Font> Theme::GetFont() const
 	return m_Font;
 }
 
+Theme& Theme::SetOnThemeLoaded(OnEmptySignature Fn)
+{
+	m_OnThemeLoaded = Fn;
+	return *this;
+}
+
 const Variant& Theme::Get(ThemeProperties::Property Index) const
 {
 	return m_Properties[Index];
@@ -90,6 +96,11 @@ void Theme::Load(const Json& Root)
 	Set(ThemeProperties::MenuBar_Padding, Root["MenuBar_Padding"]);
 
 	Set(ThemeProperties::Button_3D, Root["Button_3D"]);
+
+	if (m_OnThemeLoaded)
+	{
+		m_OnThemeLoaded();
+	}
 }
 
 void Theme::InitializeDefault()

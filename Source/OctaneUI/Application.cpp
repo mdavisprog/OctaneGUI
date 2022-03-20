@@ -431,6 +431,16 @@ bool Application::Initialize()
 	}
 
 	m_Theme = std::make_shared<Theme>();
+	m_Theme->SetOnThemeLoaded([this]() -> void
+	{
+		for (const std::pair<std::string, std::shared_ptr<Window>>& Item : m_Windows)
+		{
+			if (Item.second->IsVisible())
+			{
+				Item.second->GetContainer()->Invalidate();
+			}
+		}
+	});
 
 	m_Icons = std::make_shared<Icons>();
 	m_Icons->Initialize();

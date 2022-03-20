@@ -26,6 +26,7 @@ SOFTWARE.
 
 #pragma once
 
+#include "CallbackDefs.h"
 #include "ThemeProperties.h"
 
 #include <cstdint>
@@ -47,6 +48,8 @@ public:
 	void SetFont(std::shared_ptr<Font> InFont);
 	std::shared_ptr<Font> GetFont() const;
 
+	Theme& SetOnThemeLoaded(OnEmptySignature Fn);
+
 	const Variant& Get(ThemeProperties::Property Index) const;
 	void Load(const Json& Root);
 
@@ -56,6 +59,7 @@ private:
 
 	std::shared_ptr<Font> m_Font { nullptr };
 	ThemeProperties m_Properties {};
+	OnEmptySignature m_OnThemeLoaded { nullptr };
 };
 
 }
