@@ -19,6 +19,10 @@
 						]
 					},
 					{
+						"ID": "Themes",
+						"Text": "Themes"
+					},
+					{
 						"ID": "Help",
 						"Text": "Help",
 						"Items": [
@@ -207,7 +211,6 @@
 											{
 												"ID": "OK",
 												"Type": "TextButton",
-												"3D": true,
 												"Text": {
 													"Text": "OK"
 												}

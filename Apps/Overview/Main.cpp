@@ -27,35 +27,67 @@ SOFTWARE.
 #include "Interface.h"
 #include "OctaneUI/OctaneUI.h"
 
+#include <filesystem>
 #include <fstream>
 #include <string>
 
-int main(int argc, char **argv)
+std::unordered_map<std::string, std::string> Themes;
+
+std::string GetContents(const char* Filename)
 {
-	std::string Buffer;
+	std::string Result;
 	std::ifstream File;
-	File.open("Overview.json");
+	File.open(Filename);
 	if (File.is_open())
 	{
 		File.seekg(0, std::ios::end);
-		Buffer.resize(File.tellg());
+		Result.resize(File.tellg());
 		File.seekg(0, std::ios::beg);
 
-		File.read(&Buffer[0], Buffer.size());
+		File.read(&Result[0], Result.size());
 		File.close();
+	}
+	return Result;
+}
+
+int main(int argc, char **argv)
+{
+	if (std::filesystem::exists("./Themes"))
+	{
+		for (const std::filesystem::directory_entry& Entry : std::filesystem::directory_iterator("./Themes"))
+		{
+			Themes[Entry.path().stem().c_str()] = Entry.path().c_str();
+		}
 	}
 
 	OctaneUI::Application Application;
 	Interface::Initialize(Application);
 
 	std::unordered_map<std::string, OctaneUI::ControlList> WindowControls;
-	Application.Initialize(Buffer.c_str(), WindowControls);
+	Application.Initialize(GetContents("Overview.json").c_str(), WindowControls);
 	
 	const OctaneUI::ControlList& List = WindowControls["Main"];
 	List.To<OctaneUI::MenuItem>("File.Quit")->SetOnSelected([&](OctaneUI::MenuItem* Item) -> void
 	{
 		Application.Quit();
 	});
+
+	std::shared_ptr<OctaneUI::Menu> ThemesMenu = List.To<OctaneUI::MenuItem>("Themes")->CreateMenu();
+	for (const std::pair<std::string, std::string>& Theme : Themes)
+	{
+		const char* Name = Theme.first.c_str();
+		ThemesMenu->AddItem(Name);
+		ThemesMenu->GetItem(Name)->SetOnSelected([&](OctaneUI::MenuItem* Item) -> void
+		{
+			const char* Name = Item->GetText();
+			if (Themes.find(Name) != Themes.end())
+			{
+				const std::string& Path = Themes[Name];
+				const std::string Buffer = GetContents(Path.c_str());
+				Application.GetTheme()->Load(OctaneUI::Json::Parse(Buffer.c_str()));
+			}
+		});
+	}
 
 	List.To<OctaneUI::MenuItem>("Help.About")->SetOnSelected([&](OctaneUI::MenuItem* Item) -> void
 	{
