@@ -6,6 +6,7 @@
 	"Button_Shadow_3D": [28, 28, 28, 255],
 	"Button_Hovered": [48, 63, 169, 255],
 	"Button_Pressed": [98, 125, 152, 255],
+	"Check": [255, 255, 255, 255],
 	"TextSelectable_Text_Hovered": [255, 255, 255, 255],
 	"TextSelectable_Hovered": [48, 63, 169, 255],
 	"TextInput_Background": [14, 14, 14, 255],
@@ -31,5 +32,6 @@
 	"Menu_Margins": [0.0, 8.0],
 	"MenuBar_Padding": [0.0, 6.0],
 
-	"Button_3D": false
+	"Button_3D": false,
+	"Checkbox_3D": false
 }

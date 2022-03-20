@@ -46,6 +46,7 @@ public:
 		Button_Shadow_3D,
 		Button_Hovered,
 		Button_Pressed,
+		Check,
 		TextSelectable_Text_Hovered,
 		TextSelectable_Hovered,
 		TextInput_Background,
@@ -75,6 +76,7 @@ public:
 
 		// Flags
 		Button_3D,
+		Checkbox_3D,
 
 		Max
 	};

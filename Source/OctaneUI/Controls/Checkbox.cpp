@@ -97,10 +97,29 @@ void Checkbox::OnPaint(Paint& Brush) const
 	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
 	const Vector2 BoxSize = TexCoords.GetSize() + Vector2(3.0f, 3.0f);
 	const Vector2 BoxPosition = GetAbsolutePosition() + Vector2(6.0f, GetSize().Y * 0.5f - BoxSize.Y * 0.5f);
-	Brush.Rectangle(
-		Rect(BoxPosition, BoxPosition + BoxSize),
-		m_Hovered ? GetProperty(ThemeProperties::Button_Pressed).ToColor() : GetProperty(ThemeProperties::Button).ToColor()
-	);
+	const Rect Bounds(BoxPosition, BoxPosition + BoxSize);
+	const bool Is3D = GetProperty(ThemeProperties::Checkbox_3D).Bool();
+
+	if (Is3D)
+	{
+		const Color Shadow = GetProperty(ThemeProperties::Button_Shadow_3D).ToColor();
+		const Color Highlight = GetProperty(ThemeProperties::Button_Highlight_3D).ToColor();
+
+		Brush.Rectangle(Bounds, GetProperty(ThemeProperties::Button_Pressed).ToColor());
+
+		Brush.Line(Bounds.Min, {Bounds.Min + Vector2(Bounds.Width() - 1.0f, 0.0f)}, Shadow, 2.0f);
+		Brush.Line(Bounds.Min, {Bounds.Min + Vector2(0.0f, Bounds.Height() - 1.0f)}, Shadow, 2.0f);
+
+		Brush.Line(Bounds.Max, {Bounds.Max - Vector2(0.0f, Bounds.Height())}, Highlight, 1.0f);
+		Brush.Line(Bounds.Max, {Bounds.Max - Vector2(Bounds.Width(), 0.0f)}, Highlight, 1.0f);
+	}
+	else
+	{
+		Brush.Rectangle(
+			Rect(BoxPosition, BoxPosition + BoxSize),
+			m_Hovered ? GetProperty(ThemeProperties::Button_Pressed).ToColor() : GetProperty(ThemeProperties::Button).ToColor()
+		);
+	}
 
 	if (m_State == State::Checked)
 	{
@@ -109,7 +128,7 @@ void Checkbox::OnPaint(Paint& Brush) const
 			Rect(Position, Position + TexCoords.GetSize()),
 			GetWindow()->GetIcons()->GetUVsNormalized(Icons::Type::Check),
 			GetWindow()->GetIcons()->GetTexture(),
-			Color(255, 255, 255, 255)
+			GetProperty(ThemeProperties::Check).ToColor()
 		);
 	}
 	else if (m_State == State::Intermediate)
@@ -119,7 +138,7 @@ void Checkbox::OnPaint(Paint& Brush) const
 			BoxPosition + Shrink,
 			BoxPosition + BoxSize - Shrink
 		);
-		Brush.Rectangle(Inner, GetProperty(ThemeProperties::Button_Hovered).ToColor());
+		Brush.Rectangle(Inner, GetProperty(ThemeProperties::Check).ToColor());
 	}
 
 	m_Text->OnPaint(Brush);
