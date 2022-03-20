@@ -56,7 +56,8 @@ int main(int argc, char **argv)
 	{
 		for (const std::filesystem::directory_entry& Entry : std::filesystem::directory_iterator("./Themes"))
 		{
-			Themes[Entry.path().stem().c_str()] = Entry.path().c_str();
+			const std::string Stem = Entry.path().stem().string().c_str();
+			Themes[Stem] = Entry.path().string().c_str();
 		}
 	}
 
