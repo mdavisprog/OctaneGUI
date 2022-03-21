@@ -81,15 +81,13 @@ public:
 			return;
 		}
 
-		float Width = std::max<float>(Scrollable->ContentSize().X, Scrollable->GetSize().X);
-
 		int Index = 0;
 		for (const std::shared_ptr<Control>& ListItem : List->Controls())
 		{
 			const Vector2 ItemPos = ListItem->GetAbsolutePosition();
-			const Rect Bounds = { ItemPos, ItemPos + Vector2(Width, ListItem->GetSize().Y) };
+			const Rect Bounds = { ItemPos, ItemPos + Vector2(Scrollable->GetSize().X, ListItem->GetSize().Y) };
 
-			if (Bounds.Contains(Position))
+			if (Bounds.Contains(Position + Vector2(Scrollable->GetPosition().X, 0.0f)))
 			{
 				break;
 			}
