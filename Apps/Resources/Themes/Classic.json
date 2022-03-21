@@ -16,7 +16,7 @@
 	"Panel": [194, 194, 194, 255],
 	"PanelOutline": [0, 0, 0, 255],
 	"Separator": [48, 48, 48, 255],
-	"ScrollBar": [255, 255, 255, 255],
+	"ScrollBar": [221, 221, 221, 255],
 	"ScrollBar_Handle": [194, 194, 194, 255],
 	"ScrollBar_HandleHovered": [96, 96, 96, 255],
 
