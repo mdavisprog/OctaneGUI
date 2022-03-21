@@ -43,6 +43,7 @@ public:
 
 	void SetDisabled(bool Disabled);
 	bool IsDisabled() const;
+	bool IsPressed() const;
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
@@ -50,6 +51,10 @@ public:
 	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseEnter() override;
 	virtual void OnMouseLeave() override;
+
+protected:
+	virtual void OnPressed();
+	virtual void OnReleased();
 
 private:
 	enum class State : uint8_t

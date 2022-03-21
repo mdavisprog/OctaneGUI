@@ -52,6 +52,11 @@ bool Button::IsDisabled() const
 	return m_Disabled;
 }
 
+bool Button::IsPressed() const
+{
+	return m_State == State::Pressed;
+}
+
 void Button::OnPaint(Paint& Brush) const
 {
 	std::shared_ptr<Theme> TheTheme = GetTheme();
@@ -92,6 +97,7 @@ bool Button::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 	if (m_State == State::Hovered)
 	{
 		m_State = State::Pressed;
+		OnPressed();
 		Invalidate();
 		return true;
 	}
@@ -108,11 +114,16 @@ void Button::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 
 	const bool Hovered = Contains(Position);
 
-	if (m_State == State::Pressed && Hovered)
+	if (m_State == State::Pressed)
 	{
-		if (m_OnPressed)
+		OnReleased();
+
+		if (Hovered)
 		{
-			m_OnPressed(*this);
+			if (m_OnPressed)
+			{
+				m_OnPressed(*this);
+			}
 		}
 	}
 
@@ -152,6 +163,14 @@ void Button::OnMouseLeave()
 	}
 
 	Invalidate();
+}
+
+void Button::OnPressed()
+{
+}
+
+void Button::OnReleased()
+{
 }
 
 }
