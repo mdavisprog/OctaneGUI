@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "../Json.h"
+#include "../ThemeProperties.h"
 #include "Image.h"
 #include "ImageButton.h"
 
@@ -61,9 +62,8 @@ void ImageButton::OnPaint(Paint& Brush) const
 
 void ImageButton::Update()
 {
-	m_Image
-		->SetTint(IsDisabled() ? GetProperty(ThemeProperties::Text_Disabled).ToColor() : Color::White)
-		->SetPosition(GetSize() * 0.5f - m_Image->GetSize() * 0.5f);
+	m_Image->SetTint(IsDisabled() ? GetProperty(ThemeProperties::Text_Disabled).ToColor() : Color::White);
+	UpdateImagePosition(IsPressed());
 }
 
 void ImageButton::OnLoad(const Json& Root)
@@ -72,6 +72,28 @@ void ImageButton::OnLoad(const Json& Root)
 
 	m_Image->OnLoad(Root["Image"]);
 	UpdateSize();
+}
+
+void ImageButton::OnPressed()
+{
+	UpdateImagePosition(true);
+}
+
+void ImageButton::OnReleased()
+{
+	UpdateImagePosition(false);
+}
+
+void ImageButton::UpdateImagePosition(bool Pressed)
+{
+	Vector2 Position = GetSize() * 0.5f - m_Image->GetSize() * 0.5f;
+
+	if (GetProperty(ThemeProperties::Button_3D).Bool() && Pressed)
+	{
+		Position += Vector2(1.0f, 1.0f);
+	}
+
+	m_Image->SetPosition(Position);
 }
 
 void ImageButton::UpdateSize()

@@ -68,9 +68,7 @@ void TextButton::Update()
 		m_Text->ClearProperty(ThemeProperties::Text);
 	}
 
-	const Vector2 Size = GetSize() * 0.5f;
-	const Vector2 TextSize = m_Text->GetSize() * 0.5f;
-	m_Text->SetPosition(Size - TextSize);
+	UpdateTextPosition(IsPressed());
 }
 
 void TextButton::OnLoad(const Json& Root)
@@ -79,6 +77,30 @@ void TextButton::OnLoad(const Json& Root)
 
 	m_Text->OnLoad(Root["Text"]);
 	UpdateSize();
+}
+
+void TextButton::OnPressed()
+{
+	UpdateTextPosition(true);
+}
+
+void TextButton::OnReleased()
+{
+	UpdateTextPosition(false);
+}
+
+void TextButton::UpdateTextPosition(bool Pressed)
+{
+	const Vector2 Size = GetSize() * 0.5f;
+	const Vector2 TextSize = m_Text->GetSize() * 0.5f;
+	Vector2 Position = Size - TextSize;
+
+	if (GetProperty(ThemeProperties::Button_3D).Bool() && Pressed)
+	{
+		Position += Vector2(1.0f, 1.0f);
+	}
+
+	m_Text->SetPosition(Position);
 }
 
 void TextButton::UpdateSize()

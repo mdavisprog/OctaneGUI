@@ -47,7 +47,12 @@ public:
 	virtual void Update() override;
 	virtual void OnLoad(const Json& Root) override;
 
+protected:
+	virtual void OnPressed() override;
+	virtual void OnReleased() override;
+
 private:
+	void UpdateTextPosition(bool Pressed);
 	void UpdateSize();
 
 	std::shared_ptr<Text> m_Text;

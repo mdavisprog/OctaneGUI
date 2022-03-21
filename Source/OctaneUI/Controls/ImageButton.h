@@ -48,7 +48,12 @@ public:
 	virtual void Update() override;
 	virtual void OnLoad(const Json& Root) override;
 
+protected:
+	virtual void OnPressed() override;
+	virtual void OnReleased() override;
+
 private:
+	void UpdateImagePosition(bool Pressed);
 	void UpdateSize();
 
 	std::shared_ptr<Image> m_Image { nullptr };
