@@ -99,6 +99,7 @@ void Theme::Load(const Json& Root)
 
 	Set(ThemeProperties::Button_3D, Root["Button_3D"]);
 	Set(ThemeProperties::Checkbox_3D, Root["Checkbox_3D"]);
+	Set(ThemeProperties::TextInput_3D, Root["TextInput_3D"]);
 
 	if (m_OnThemeLoaded)
 	{
@@ -143,6 +144,7 @@ void Theme::InitializeDefault()
 
 	m_Properties[ThemeProperties::Button_3D] = false;
 	m_Properties[ThemeProperties::Checkbox_3D] = false;
+	m_Properties[ThemeProperties::TextInput_3D] = false;
 }
 
 void Theme::Set(ThemeProperties::Property Property, const Variant& Value)

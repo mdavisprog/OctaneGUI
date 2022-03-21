@@ -33,5 +33,6 @@
 	"MenuBar_Padding": [0.0, 6.0],
 
 	"Button_3D": false,
-	"Checkbox_3D": false
+	"Checkbox_3D": false,
+	"TextInput_3D": false
 }

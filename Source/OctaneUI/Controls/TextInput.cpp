@@ -216,7 +216,21 @@ void TextInput::OnPaint(Paint& Brush) const
 	const float LineHeight = TheTheme->GetFont()->Size();
 
 	Rect Bounds = GetAbsoluteBounds();
-	Brush.Rectangle(Bounds, GetProperty(ThemeProperties::TextInput_Background).ToColor());
+
+	if (GetProperty(ThemeProperties::TextInput_3D).Bool())
+	{
+		Brush.Rectangle3D(
+			Bounds,
+			GetProperty(ThemeProperties::TextInput_Background).ToColor(),
+			GetProperty(ThemeProperties::Button_Highlight_3D).ToColor(),
+			GetProperty(ThemeProperties::Button_Shadow_3D).ToColor(),
+			true
+		);
+	}
+	else
+	{
+		Brush.Rectangle(Bounds, GetProperty(ThemeProperties::TextInput_Background).ToColor());
+	}
 
 	if (m_Focused)
 	{
