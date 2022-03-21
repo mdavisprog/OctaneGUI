@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "../Json.h"
 #include "../Paint.h"
+#include "../ThemeProperties.h"
 #include "ListBox.h"
 #include "Panel.h"
 #include "ScrollableContainer.h"
@@ -39,6 +40,8 @@ class ListBoxInteraction : public Control
 	CLASS(ListBoxInteraction)
 
 public:
+	typedef std::function<void(int, int)> OnChangeSignature;
+
 	ListBoxInteraction(Window* InWindow, const std::shared_ptr<ScrollableContainer>& Scrollable, const std::shared_ptr<Container>& List)
 		: Control(InWindow)
 		, m_Scrollable(Scrollable)
@@ -57,10 +60,22 @@ public:
 		return m_Hovered_Index;
 	}
 
-	ListBoxInteraction* SetOnSelect(ListBox::OnSelectSignature Fn)
+	ListBoxInteraction& SetOnSelect(ListBox::OnSelectSignature Fn)
 	{
 		m_OnSelect = Fn;
-		return this;
+		return *this;
+	}
+
+	ListBoxInteraction& SetOnHoverChange(OnChangeSignature Fn)
+	{
+		m_OnHoverChange = Fn;
+		return *this;
+	}
+
+	ListBoxInteraction& SetOnSelectionChange(OnChangeSignature Fn)
+	{
+		m_OnSelectionChange = Fn;
+		return *this;
 	}
 
 	virtual void OnMouseMove(const Vector2& Position) override
@@ -76,8 +91,7 @@ public:
 		Scrollable->OnMouseMove(Position);
 		if (Scrollable->IsInScrollBar(Position))
 		{
-			m_Hovered_Index = -1;
-			Invalidate();
+			SetHoveredIndex(-1);
 			return;
 		}
 
@@ -105,11 +119,7 @@ public:
 			NewIndex = -1;
 		}
 
-		if (m_Hovered_Index != NewIndex)
-		{
-			m_Hovered_Index = NewIndex;
-			Invalidate();
-		}
+		SetHoveredIndex(NewIndex);
 	}
 
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override
@@ -130,6 +140,11 @@ public:
 
 		if (Button == Mouse::Button::Left)
 		{
+			if (m_OnSelectionChange)
+			{
+				m_OnSelectionChange(m_Hovered_Index, m_Index);
+			}
+
 			m_Index = m_Hovered_Index;
 			if (m_OnSelect && !m_List.expired())
 			{
@@ -151,16 +166,30 @@ public:
 
 	virtual void OnMouseLeave() override
 	{
-		m_Hovered_Index = -1;
-		Invalidate();
+		SetHoveredIndex(-1);
 	}
 
 private:
+	void SetHoveredIndex(int Index)
+	{
+		if (m_Hovered_Index != Index)
+		{
+			if (m_OnHoverChange)
+			{
+				m_OnHoverChange(Index, m_Hovered_Index);
+			}
+			m_Hovered_Index = Index;
+			Invalidate();
+		}
+	}
+
 	std::weak_ptr<ScrollableContainer> m_Scrollable {};
 	std::weak_ptr<Container> m_List {};
 	int m_Index { -1 };
 	int m_Hovered_Index { -1 };
 	ListBox::OnSelectSignature m_OnSelect { nullptr };
+	OnChangeSignature m_OnHoverChange { nullptr };
+	OnChangeSignature m_OnSelectionChange { nullptr };
 };
 
 ListBox::ListBox(Window* InWindow)
@@ -181,6 +210,25 @@ ListBox::ListBox(Window* InWindow)
 			if (m_OnSelect)
 			{
 				m_OnSelect(Index, Item);
+			}
+		})
+		.SetOnHoverChange([this](int New, int Old) -> void
+		{
+			if (New != -1)
+			{
+				m_List->Controls()[New]->SetProperty(ThemeProperties::Text, GetProperty(ThemeProperties::TextSelectable_Text_Hovered).ToColor());
+			}
+
+			if (Old != -1 && Old != m_Interaction->Index())
+			{
+				m_List->Controls()[Old]->ClearProperty(ThemeProperties::Text);
+			}
+		})
+		.SetOnSelectionChange([this](int New, int Old) -> void
+		{
+			if (Old != -1 && New != Old)
+			{
+				m_List->Controls()[Old]->ClearProperty(ThemeProperties::Text);
 			}
 		});
 
