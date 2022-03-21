@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "../Paint.h"
+#include "../ThemeProperties.h"
 #include "ScrollBar.h"
 
 namespace OctaneUI
@@ -124,9 +125,22 @@ void ScrollBar::OnPaint(Paint& Brush) const
 	if (m_HandleSize > 0.0f)
 	{
 		Brush.Rectangle(GetAbsoluteBounds(), GetProperty(ThemeProperties::ScrollBar).ToColor());
-		Brush.Rectangle(
-			HandleBounds(),
-			(m_Hovered || m_Drag) ? GetProperty(ThemeProperties::ScrollBar_HandleHovered).ToColor() : GetProperty(ThemeProperties::ScrollBar_Handle).ToColor());
+
+		if (GetProperty(ThemeProperties::ScrollBar_3D).Bool())
+		{
+			Brush.Rectangle3D(
+				HandleBounds(),
+				GetProperty(ThemeProperties::ScrollBar_Handle).ToColor(),
+				GetProperty(ThemeProperties::Button_Highlight_3D).ToColor(),
+				GetProperty(ThemeProperties::Button_Shadow_3D).ToColor()
+			);
+		}
+		else
+		{
+			Brush.Rectangle(
+				HandleBounds(),
+				(m_Hovered || m_Drag) ? GetProperty(ThemeProperties::ScrollBar_HandleHovered).ToColor() : GetProperty(ThemeProperties::ScrollBar_Handle).ToColor());
+		}
 	}
 }
 

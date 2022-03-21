@@ -34,5 +34,6 @@
 
 	"Button_3D": false,
 	"Checkbox_3D": false,
-	"TextInput_3D": false
+	"TextInput_3D": false,
+	"ScrollBar_3D": false
 }
