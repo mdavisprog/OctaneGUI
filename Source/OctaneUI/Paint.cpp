@@ -65,14 +65,20 @@ void Paint::Rectangle3D(const Rect& Bounds, const Color& Base, const Color& High
 {
 	Rectangle(Bounds, Base);
 
-	const Vector2 TopRight = Bounds.Min + Vector2(Bounds.Width(), 0.0f);
-	const Vector2 BottomLeft = Bounds.Min + Vector2(0.0f, Bounds.Height());
-	
-	Line(Bounds.Min, TopRight + Vector2(-1.0f, 0.0f), Sunken ? Shadow : Highlight, Sunken ? 2.0f : 1.0f);
-	Line(Bounds.Min, BottomLeft + Vector2(0.0f, -1.0f), Sunken ? Shadow : Highlight, Sunken ? 2.0f : 1.0f);
+	const float Thickness = Sunken ? 1.0f : 1.0f;
+	const float HThickness = Thickness * 0.5f;
 
-	Line(Bounds.Max, TopRight, Sunken ? Highlight : Shadow, Sunken ? 1.0f : 2.0f);
-	Line(Bounds.Max, BottomLeft, Sunken ? Highlight : Shadow, Sunken ? 1.0f : 2.0f);
+	const Vector2 Min = Bounds.Min + Vector2(HThickness, HThickness);
+	Vector2 TR = Min + Vector2(Bounds.Width() - HThickness, 0.0f);
+	Vector2 BL = Min + Vector2(0.0f, Bounds.Height() - HThickness);
+	Line(Min, TR, Sunken ? Shadow : Highlight, Thickness);
+	Line(Min, BL, Sunken ? Shadow : Highlight, Thickness);
+
+	const Vector2 Max = Bounds.Max - Vector2(HThickness, HThickness);
+	TR = Max - Vector2(0.0f, Bounds.Height() - HThickness);
+	BL = Max - Vector2(Bounds.Width() - HThickness, 0.0f);
+	Line(Max, TR, Sunken ? Highlight : Shadow, Thickness);
+	Line(Max, BL, Sunken ? Highlight : Shadow, Thickness);
 }
 
 void Paint::RectangleOutline(const Rect& Bounds, const Color& Col, float Thickness)
