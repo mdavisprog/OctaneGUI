@@ -228,23 +228,15 @@ void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& Buffer)
 		const OctaneUI::Rect Clip = Command.Clip();
 		if (!Clip.IsZero())
 		{
-			sf::RenderTexture* BackBuffer = Item.BackBuffer;
-
-			BackBuffer->clear(sf::Color::Transparent);
-			BackBuffer->draw(Array, RenderStates);
-			BackBuffer->display();
-
-			sf::Sprite Sprite(BackBuffer->getTexture());
-
+			const sf::Vector2f Size((float)Item.Renderer->getSize().x, (float)Item.Renderer->getSize().y);
 			const OctaneUI::Vector2 ClipSize = Clip.GetSize();
-			Sprite.setTextureRect(sf::IntRect((int)(Clip.Min.X), (int)(Clip.Min.Y), (int)ClipSize.X, (int)ClipSize.Y));
-			Sprite.setPosition(Clip.Min.X, Clip.Min.Y);
-			Item.Renderer->draw(Sprite, RenderStates);
+			sf::View View(sf::FloatRect(Clip.Min.X, Clip.Min.Y, ClipSize.X, ClipSize.Y));
+			View.setViewport(sf::FloatRect(Clip.Min.X / Size.x, Clip.Min.Y / Size.y, ClipSize.X / Size.x, ClipSize.Y / Size.y));
+			Item.Renderer->setView(View);
 		}
-		else
-		{
-			Item.Renderer->draw(Array, RenderStates);
-		}
+
+		Item.Renderer->draw(Array, RenderStates);
+		Item.Renderer->setView(Item.Renderer->getDefaultView());
 	}
 
 	Item.Renderer->display();
