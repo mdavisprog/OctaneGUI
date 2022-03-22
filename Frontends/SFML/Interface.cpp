@@ -43,7 +43,6 @@ public:
 	{}
 
 	sf::RenderWindow* Renderer;
-	sf::RenderTexture* BackBuffer;
 };
 
 std::unordered_map<OctaneUI::Window*, Container> Windows;
@@ -92,9 +91,6 @@ void OnCreateWindow(OctaneUI::Window* Window)
 		Item.Renderer = new sf::RenderWindow(sf::VideoMode((int)Size.X, (int)Size.Y), Window->GetTitle());
 		Item.Renderer->setFramerateLimit(0);
 		Item.Renderer->setVerticalSyncEnabled(false);
-
-		Item.BackBuffer = new sf::RenderTexture();
-		Item.BackBuffer->create((uint32_t)Size.X, (uint32_t)Size.Y);
 	}
 }
 
@@ -110,7 +106,6 @@ void OnDestroyWindow(OctaneUI::Window* Window)
 	Item.Renderer->close();
 
 	delete Item.Renderer;
-	delete Item.BackBuffer;
 	Windows.erase(Iter);
 }
 
@@ -266,7 +261,6 @@ void OnExit()
 		Container& Item = Iter.second;
 		Item.Renderer->close();
 		delete Item.Renderer;
-		delete Item.BackBuffer;
 	}
 
 	Windows.clear();
