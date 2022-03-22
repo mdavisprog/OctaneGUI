@@ -231,7 +231,7 @@ void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& Buffer)
 		}
 
 		Item.Renderer->draw(Array, RenderStates);
-		Item.Renderer->setView(Item.Renderer->getDefaultView());
+		Item.Renderer->setView(sf::View(sf::FloatRect(0.0f, 0.0f, Item.Renderer->getSize().x, Item.Renderer->getSize().y)));
 	}
 
 	Item.Renderer->display();
