@@ -68,10 +68,28 @@ uint32_t Text::Length() const
 	return m_Contents.size();
 }
 
+void Text::PushFormat(const Paint::TextFormat& Format)
+{
+	m_Formats.push_back(Format);
+}
+
+void Text::ClearFormats()
+{
+	m_Formats.clear();
+}
+
 void Text::OnPaint(Paint& Brush) const
 {
 	const Vector2 Position = GetAbsolutePosition();
-	Brush.Text(Position.Floor(), m_Contents, GetProperty(ThemeProperties::Text).ToColor());
+
+	if (m_Formats.size() > 0)
+	{
+		Brush.Textf(Position.Floor(), m_Contents, m_Formats);
+	}
+	else
+	{
+		Brush.Text(Position.Floor(), m_Contents, GetProperty(ThemeProperties::Text).ToColor());
+	}
 }
 
 void Text::OnLoad(const Json& Root)

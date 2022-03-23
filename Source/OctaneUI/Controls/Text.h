@@ -26,6 +26,7 @@ SOFTWARE.
 
 #pragma once
 
+#include "../Paint.h"
 #include "Control.h"
 
 #include <string>
@@ -47,6 +48,9 @@ public:
 	const std::string& GetString() const;
 	uint32_t Length() const;
 
+	void PushFormat(const Paint::TextFormat& Format);
+	void ClearFormats();
+
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
 
@@ -56,6 +60,7 @@ protected:
 private:
 	std::string m_Contents {};
 	Vector2 m_ContentSize {};
+	std::vector<Paint::TextFormat> m_Formats {};
 };
 
 }
