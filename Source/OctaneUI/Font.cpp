@@ -67,20 +67,24 @@ bool Font::Load(const char* Path, float Size)
 	Stream.read(&Buffer[0], Buffer.size());
 	Stream.close();
 
+	float LineGap;
+	stbtt_GetScaledFontVMetrics((uint8_t*)Buffer.data(), 0, Size, &m_Ascent, &m_Descent, &LineGap);
+
 	m_Size = Size;
-	Vector2 TextureSize = Vector2(1024.0f, 1024.0f);
+	Vector2 TextureSize = Vector2(512.0f, 512.0f);
 	std::vector<uint8_t> Texture;
 	Texture.resize((int)TextureSize.X * (int)TextureSize.Y);
 
-	stbtt_bakedchar Glyphs[96];
-	int Result = stbtt_BakeFontBitmap((uint8_t*)Buffer.data(), 0, Size, &Texture[0], (int)TextureSize.X, (int)TextureSize.Y, 32, 96, Glyphs);
-	if (Result == 0)
+	stbtt_pack_context PackContext;
+	if (stbtt_PackBegin(&PackContext, Texture.data(), (int)TextureSize.X, (int)TextureSize.Y, 0, 1, nullptr) == 0)
 	{
 		return false;
 	}
 
-	float LineGap;
-	stbtt_GetScaledFontVMetrics((uint8_t*)Buffer.data(), 0, Size, &m_Ascent, &m_Descent, &LineGap);
+	stbtt_packedchar Chars[96];
+	stbtt_PackFontRange(&PackContext, (uint8_t*)Buffer.data(), 0, Size, 32, 96, Chars);
+
+	stbtt_PackEnd(&PackContext);
 
 	// Convert data to RGBA32
 	std::vector<uint8_t> RGBA32;
@@ -103,7 +107,7 @@ bool Font::Load(const char* Path, float Size)
 
 	for (int I = 0; I < 96; I++)
 	{
-		const stbtt_bakedchar& Char = Glyphs[I];
+		const stbtt_packedchar& Char = Chars[I];
 
 		Glyph Item;
 		Item.m_Min = Vector2(Char.x0, Char.y0);
