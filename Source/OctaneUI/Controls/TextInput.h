@@ -101,6 +101,7 @@ private:
 	uint32_t LineEndIndex(uint32_t Index) const;
 	uint32_t LineSize(uint32_t Index) const;
 	void ScrollIntoView();
+	void UpdateFormats();
 
 	std::shared_ptr<Text> m_Text { nullptr };
 	TextPosition m_Position {};

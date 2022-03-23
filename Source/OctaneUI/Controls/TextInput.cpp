@@ -336,6 +336,7 @@ void TextInput::MouseMove(const Vector2& Position)
 	{
 		m_Position = GetPosition(Position);
 		Invalidate();
+		UpdateFormats();
 	}
 	else
 	{
@@ -353,6 +354,7 @@ bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button)
 	m_Position = GetPosition(Position);
 	m_Anchor = m_Position;
 	m_Drag = true;
+	m_Text->ClearFormats();
 	Invalidate();
 
 	return true;
@@ -561,6 +563,7 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 
 	m_Position = { (uint32_t)NewLine, (uint32_t)NewColumn, (uint32_t)NewIndex };
 	ScrollIntoView();
+	UpdateFormats();
 	Invalidate();
 }
 
@@ -717,6 +720,25 @@ void TextInput::ScrollIntoView()
 	}
 
 	m_Scrollable->AddOffset(Offset);
+}
+
+void TextInput::UpdateFormats()
+{
+	m_Text->ClearFormats();
+
+	if (!m_Anchor.IsValid())
+	{
+		return;
+	}
+
+	if (m_Anchor != m_Position)
+	{
+		TextPosition Min = m_Anchor < m_Position ? m_Anchor : m_Position;
+		TextPosition Max = m_Anchor < m_Position ? m_Position : m_Anchor;
+		m_Text->PushFormat({0, Min.Index(), GetProperty(ThemeProperties::Text).ToColor()});
+		m_Text->PushFormat({Min.Index(), Max.Index(), GetProperty(ThemeProperties::TextSelectable_Text_Hovered).ToColor()});
+		m_Text->PushFormat({Max.Index(), m_Text->Length(), GetProperty(ThemeProperties::Text).ToColor()});
+	}
 }
 
 }
