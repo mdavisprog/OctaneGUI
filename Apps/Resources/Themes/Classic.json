@@ -12,7 +12,7 @@
 	"TextInput_Background": [255, 255, 255, 255],
 	"TextInput_FocusedOutline": [0, 0, 255, 255],
 	"TextInput_Cursor": [0, 0, 0, 255],
-	"TextInput_Selection": [164, 198, 238, 255],
+	"TextInput_Selection": [10, 36, 106, 255],
 	"Panel": [194, 194, 194, 255],
 	"PanelOutline": [0, 0, 0, 255],
 	"Separator": [48, 48, 48, 255],
