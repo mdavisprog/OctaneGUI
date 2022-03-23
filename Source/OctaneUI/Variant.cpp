@@ -195,71 +195,71 @@ Variant& Variant::operator=(Variant&& Value)
 	return *this;
 }
 
-bool Variant::Bool() const
+bool Variant::Bool(bool Or) const
 {
 	if (!IsBool())
 	{
-		return false;
+		return Or;
 	}
 
 	return m_Data.Bool;
 }
 
-unsigned char Variant::Byte() const
+unsigned char Variant::Byte(unsigned char Or) const
 {
 	if (!IsByte())
 	{
-		return 0;
+		return Or;
 	}
 
 	return m_Data.Byte;
 }
 
-int Variant::Int() const
+int Variant::Int(int Or) const
 {
 	if (!IsInt())
 	{
-		return 0;
+		return Or;
 	}
 
 	return m_Data.Int;
 }
 
-float Variant::Float() const
+float Variant::Float(float Or) const
 {
 	if (!IsFloat())
 	{
-		return 0.0f;
+		return Or;
 	}
 
 	return m_Data.Float;
 }
 
-const char* Variant::String() const
+const char* Variant::String(const char* Or) const
 {
 	if (!IsString())
 	{
-		return "";
+		return Or;
 	}
 
 	return m_Data.String->c_str();
 }
 
-Vector2 Variant::Vector() const
+Vector2 Variant::Vector(const Vector2& Or) const
 {
 	if (!IsVector())
 	{
-		return {};
+		return Or;
 	}
 
 	return m_Data.Vector;
 }
 
-Color Variant::ToColor() const
+Color Variant::ToColor(const Color& Or) const
 {
 	if (!IsColor())
 	{
-		return {};
+		return Or;
 	}
 
 	return m_Data.Col;

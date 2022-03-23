@@ -77,13 +77,13 @@ public:
 	Variant& operator=(const Variant& Value);
 	Variant& operator=(Variant&& Value);
 
-	bool Bool() const;
-	unsigned char Byte() const;
-	int Int() const;
-	float Float() const;
-	const char* String() const;
-	Vector2 Vector() const;
-	Color ToColor() const;
+	bool Bool(bool Or = false) const;
+	unsigned char Byte(unsigned char Or = 0) const;
+	int Int(int Or = 0) const;
+	float Float(float Or = 0.0f) const;
+	const char* String(const char* Or = "") const;
+	Vector2 Vector(const Vector2& Or = {}) const;
+	Color ToColor(const Color& Or = {}) const;
 
 	bool IsNull() const;
 	bool IsBool() const;
