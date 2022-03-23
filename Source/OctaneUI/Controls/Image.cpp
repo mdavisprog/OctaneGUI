@@ -99,7 +99,7 @@ void Image::OnLoad(const Json& Root)
 	Control::OnLoad(Root);
 
 	SetTexture(Root["Texture"].String());
-	m_Tint = Variant(Root["Tint"]).ToColor();
+	m_Tint = Variant(Root["Tint"]).ToColor(Color::White);
 	
 	const Json& UVs = Root["UVs"];
 	if (!UVs.IsNull())
