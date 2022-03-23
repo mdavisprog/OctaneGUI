@@ -43,6 +43,13 @@ class Theme;
 class Paint
 {
 public:
+	struct TextFormat
+	{
+		size_t Start { 0 };
+		size_t End { 0 };
+		Color TextColor {};
+	};
+
 	Paint();
 	Paint(const std::shared_ptr<Theme>& InTheme);
 	~Paint();
@@ -52,6 +59,7 @@ public:
 	void Rectangle3D(const Rect& Bounds, const Color& Base, const Color& Highlight, const Color& Shadow, bool Sunken = false);
 	void RectangleOutline(const Rect& Bounds, const Color& Col, float Thickness = 1.0f);
 	void Text(const Vector2& Position, const std::string& Contents, const Color& Col);
+	void Textf(const Vector2& Position, const std::string& Contents, const std::vector<TextFormat>& Formats);
 	void Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_ptr<Texture>& InTexture, const Color& Col);
 
 	void PushClip(const Rect& Bounds);

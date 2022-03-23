@@ -31,6 +31,8 @@ SOFTWARE.
 #include "Texture.h"
 #include "Theme.h"
 
+#include <string_view>
+
 namespace OctaneUI
 {
 
@@ -93,19 +95,8 @@ void Paint::RectangleOutline(const Rect& Bounds, const Color& Col, float Thickne
 	AddLine(BottomLeft, Bounds.Min, Col, Thickness, 12);
 }
 
-void Paint::Text(const Vector2& Position, const std::string& Contents, const Color& Col)
+size_t StripInvalidCharactersLength(const std::string_view& Contents)
 {
-	if (Contents.empty())
-	{
-		return;
-	}
-
-	std::shared_ptr<Font> ThemeFont = m_Theme ? m_Theme->GetFont() : nullptr;
-	if (!ThemeFont)
-	{
-		return;
-	}
-
 	size_t Start = 0;
 	size_t InvalidChars = 0;
 	while (Start < Contents.size())
@@ -122,6 +113,23 @@ void Paint::Text(const Vector2& Position, const std::string& Contents, const Col
 		}
 	}
 
+	return InvalidChars;
+}
+
+void Paint::Text(const Vector2& Position, const std::string& Contents, const Color& Col)
+{
+	if (Contents.empty())
+	{
+		return;
+	}
+
+	std::shared_ptr<Font> ThemeFont = m_Theme ? m_Theme->GetFont() : nullptr;
+	if (!ThemeFont)
+	{
+		return;
+	}
+
+	size_t InvalidChars = StripInvalidCharactersLength(Contents);
 	size_t Count = Contents.size() - InvalidChars;
 	PushCommand(6 * Count, ThemeFont->ID());
 	Vector2 Pos = Position;
@@ -141,6 +149,54 @@ void Paint::Text(const Vector2& Position, const std::string& Contents, const Col
 		ThemeFont->Draw((int32_t)Char - 32, Pos, Vertices, TexCoords);
 		AddTriangles(Vertices, TexCoords, Col, Offset);
 		Offset += 4;
+	}
+}
+
+void Paint::Textf(const Vector2& Position, const std::string& Contents, const std::vector<TextFormat>& Formats)
+{
+	if (Contents.empty())
+	{
+		return;
+	}
+
+	std::shared_ptr<Font> ThemeFont = m_Theme ? m_Theme->GetFont() : nullptr;
+	if (!ThemeFont)
+	{
+		return;
+	}
+
+	size_t InvalidChars = 0;
+	std::vector<std::string_view> Views;
+	for (const TextFormat& Item : Formats)
+	{
+		Views.emplace_back(&Contents[Item.Start], Item.End - Item.Start);
+		InvalidChars += StripInvalidCharactersLength(Views.back());
+	}
+	size_t Count = Contents.size() - InvalidChars;
+	PushCommand(6 * Count, ThemeFont->ID());
+
+	Vector2 Pos = Position;
+	uint32_t Offset = 0;
+	for (size_t I = 0; I < Formats.size(); I++)
+	{
+		const TextFormat& Format = Formats[I];
+		const std::string_view& View = Views[I];
+		for (char Char : View)
+		{
+			if (Char == '\n')
+			{
+				Pos.X = Position.X;
+				Pos.Y += ThemeFont->Size();
+				continue;
+			}
+
+			Rect Vertices;
+			Rect TexCoords;
+
+			ThemeFont->Draw((int32_t)Char - 32, Pos, Vertices, TexCoords);
+			AddTriangles(Vertices, TexCoords, Format.TextColor, Offset);
+			Offset += 4;
+		}
 	}
 }
 
