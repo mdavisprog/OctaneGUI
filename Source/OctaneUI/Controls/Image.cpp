@@ -28,6 +28,7 @@ SOFTWARE.
 #include "../Paint.h"
 #include "../Texture.h"
 #include "../TextureCache.h"
+#include "../Variant.h"
 #include "../Window.h"
 #include "Image.h"
 
@@ -98,6 +99,7 @@ void Image::OnLoad(const Json& Root)
 	Control::OnLoad(Root);
 
 	SetTexture(Root["Texture"].String());
+	m_Tint = Variant(Root["Tint"]).ToColor();
 	
 	const Json& UVs = Root["UVs"];
 	if (!UVs.IsNull())
