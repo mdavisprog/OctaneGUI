@@ -116,22 +116,16 @@ size_t StripInvalidCharactersLength(const std::string_view& Contents)
 	return InvalidChars;
 }
 
-void Paint::Text(const Vector2& Position, const std::string& Contents, const Color& Col)
+void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::string& Contents, const Color& Col)
 {
 	if (Contents.empty())
 	{
 		return;
 	}
 
-	std::shared_ptr<Font> ThemeFont = m_Theme ? m_Theme->GetFont() : nullptr;
-	if (!ThemeFont)
-	{
-		return;
-	}
-
 	size_t InvalidChars = StripInvalidCharactersLength(Contents);
 	size_t Count = Contents.size() - InvalidChars;
-	PushCommand(6 * Count, ThemeFont->ID());
+	PushCommand(6 * Count, InFont->ID());
 	Vector2 Pos = Position;
 	uint32_t Offset = 0;
 	for (char Char : Contents)
@@ -139,28 +133,22 @@ void Paint::Text(const Vector2& Position, const std::string& Contents, const Col
 		if (Char == '\n')
 		{
 			Pos.X = Position.X;
-			Pos.Y += ThemeFont->Size();
+			Pos.Y += InFont->Size();
 			continue;
 		}
 
 		Rect Vertices;
 		Rect TexCoords;
 
-		ThemeFont->Draw((int32_t)Char - 32, Pos, Vertices, TexCoords);
+		InFont->Draw((int32_t)Char - 32, Pos, Vertices, TexCoords);
 		AddTriangles(Vertices, TexCoords, Col, Offset);
 		Offset += 4;
 	}
 }
 
-void Paint::Textf(const Vector2& Position, const std::string& Contents, const std::vector<TextFormat>& Formats)
+void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::string& Contents, const std::vector<TextFormat>& Formats)
 {
 	if (Contents.empty())
-	{
-		return;
-	}
-
-	std::shared_ptr<Font> ThemeFont = m_Theme ? m_Theme->GetFont() : nullptr;
-	if (!ThemeFont)
 	{
 		return;
 	}
@@ -173,7 +161,7 @@ void Paint::Textf(const Vector2& Position, const std::string& Contents, const st
 		InvalidChars += StripInvalidCharactersLength(Views.back());
 	}
 	size_t Count = Contents.size() - InvalidChars;
-	PushCommand(6 * Count, ThemeFont->ID());
+	PushCommand(6 * Count, InFont->ID());
 
 	Vector2 Pos = Position;
 	uint32_t Offset = 0;
@@ -186,14 +174,14 @@ void Paint::Textf(const Vector2& Position, const std::string& Contents, const st
 			if (Char == '\n')
 			{
 				Pos.X = Position.X;
-				Pos.Y += ThemeFont->Size();
+				Pos.Y += InFont->Size();
 				continue;
 			}
 
 			Rect Vertices;
 			Rect TexCoords;
 
-			ThemeFont->Draw((int32_t)Char - 32, Pos, Vertices, TexCoords);
+			InFont->Draw((int32_t)Char - 32, Pos, Vertices, TexCoords);
 			AddTriangles(Vertices, TexCoords, Format.TextColor, Offset);
 			Offset += 4;
 		}

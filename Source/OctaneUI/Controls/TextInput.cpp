@@ -179,7 +179,7 @@ TextInput::TextInput(Window* InWindow)
 
 	m_Interaction = AddControl<TextInputInteraction>(this);
 
-	SetSize({100.0f, GetTheme()->GetFont()->Size()});
+	SetSize({100.0f, m_Text->LineHeight()});
 }
 
 TextInput::~TextInput()
@@ -213,7 +213,7 @@ void TextInput::Unfocus()
 void TextInput::OnPaint(Paint& Brush) const
 {
 	std::shared_ptr<Theme> TheTheme = GetTheme();
-	const float LineHeight = TheTheme->GetFont()->Size();
+	const float LineHeight = m_Text->LineHeight();
 
 	Rect Bounds = GetAbsoluteBounds();
 
@@ -265,7 +265,7 @@ void TextInput::OnPaint(Paint& Brush) const
 				if (Line == Min.Line())
 				{
 					const std::string Sub = String.substr(Min.Index(), LineEndIndex(Min.Index()) - Min.Index());
-					const Vector2 Size = TheTheme->GetFont()->Measure(Sub);
+					const Vector2 Size = m_Text->GetFont()->Measure(Sub);
 					const Vector2 Position = GetPositionLocation(Min);
 					const Rect SelectBounds = {
 						m_Text->GetAbsolutePosition() + Position,
@@ -277,7 +277,7 @@ void TextInput::OnPaint(Paint& Brush) const
 				{
 					const uint32_t Start = LineStartIndex(Max.Index());
 					const std::string Sub = String.substr(Start, Max.Index() - Start);
-					const Vector2 Size = TheTheme->GetFont()->Measure(Sub);
+					const Vector2 Size = m_Text->GetFont()->Measure(Sub);
 					const Vector2 Position = GetPositionLocation(Max);
 					const Rect SelectBounds = {
 						m_Text->GetAbsolutePosition() + Position - Vector2(Size.X, 0.0f),
@@ -288,7 +288,7 @@ void TextInput::OnPaint(Paint& Brush) const
 				else
 				{
 					const std::string Sub = String.substr(Index, LineEndIndex(Index) - Index);
-					const Vector2 Size = TheTheme->GetFont()->Measure(Sub);
+					const Vector2 Size = m_Text->GetFont()->Measure(Sub);
 					const Vector2 Position = GetPositionLocation({Line, 0, Index});
 					const Rect SelectBounds = {
 						m_Text->GetAbsolutePosition() + Position,
@@ -578,12 +578,12 @@ Vector2 TextInput::GetPositionLocation(const TextPosition& Position) const
 	uint32_t Start = LineStartIndex(Position.Index());
 
 	const std::string Sub = String.substr(Start, Position.Index() - Start);
-	return {GetTheme()->GetFont()->Measure(Sub).X, Position.Line() * GetTheme()->GetFont()->Size()};
+	return {m_Text->GetFont()->Measure(Sub).X, Position.Line() * m_Text->LineHeight()};
 }
 
 TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
 {
-	const float LineHeight = GetTheme()->GetFont()->Size();
+	const float LineHeight = m_Text->LineHeight();
 	const std::string& String = m_Text->GetString();
 
 	// Transform into local space.
@@ -696,7 +696,7 @@ uint32_t TextInput::LineSize(uint32_t Index) const
 
 void TextInput::ScrollIntoView()
 {
-	const float LineHeight = GetTheme()->GetFont()->Size();
+	const float LineHeight = m_Text->LineHeight();
 	const Vector2 Position = GetPositionLocation(m_Position) + m_Scrollable->GetPosition();
 	const Vector2 Size = m_Scrollable->GetScrollableSize();
 	Vector2 Offset;

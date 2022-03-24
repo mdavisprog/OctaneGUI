@@ -36,18 +36,21 @@ namespace OctaneUI
 Text::Text(Window* InWindow)
 	: Control(InWindow)
 {
+	if (GetTheme())
+	{
+		m_Font = GetTheme()->GetFont();
+	}
 }
 
 Text* Text::SetText(const char* InContents)
 {
 	m_Contents = InContents;
 
-	std::shared_ptr<Font> ThemeFont = GetTheme()->GetFont();
-	if (ThemeFont)
+	if (m_Font)
 	{
 		int Lines = 0;
-		m_ContentSize = ThemeFont->Measure(m_Contents, Lines);
-		SetSize({m_ContentSize.X, ThemeFont->Size() * Lines});
+		m_ContentSize = m_Font->Measure(m_Contents, Lines);
+		SetSize({m_ContentSize.X, m_Font->Size() * Lines});
 	}
 
 	return this;
@@ -68,6 +71,17 @@ uint32_t Text::Length() const
 	return m_Contents.size();
 }
 
+const std::shared_ptr<Font>& Text::GetFont() const
+{
+	return m_Font;
+}
+
+float Text::LineHeight() const
+{
+	assert(m_Font);
+	return m_Font->Size();
+}
+
 void Text::PushFormat(const Paint::TextFormat& Format)
 {
 	m_Formats.push_back(Format);
@@ -84,11 +98,11 @@ void Text::OnPaint(Paint& Brush) const
 
 	if (m_Formats.size() > 0)
 	{
-		Brush.Textf(Position.Floor(), m_Contents, m_Formats);
+		Brush.Textf(m_Font, Position.Floor(), m_Contents, m_Formats);
 	}
 	else
 	{
-		Brush.Text(Position.Floor(), m_Contents, GetProperty(ThemeProperties::Text).ToColor());
+		Brush.Text(m_Font, Position.Floor(), m_Contents, GetProperty(ThemeProperties::Text).ToColor());
 	}
 }
 

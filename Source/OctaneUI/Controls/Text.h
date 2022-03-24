@@ -34,6 +34,7 @@ SOFTWARE.
 namespace OctaneUI
 {
 
+class Font;
 class Paint;
 
 class Text : public Control
@@ -47,6 +48,8 @@ public:
 	const char* GetText() const;
 	const std::string& GetString() const;
 	uint32_t Length() const;
+	const std::shared_ptr<Font>& GetFont() const;
+	float LineHeight() const;
 
 	void PushFormat(const Paint::TextFormat& Format);
 	void ClearFormats();
@@ -61,6 +64,7 @@ private:
 	std::string m_Contents {};
 	Vector2 m_ContentSize {};
 	std::vector<Paint::TextFormat> m_Formats {};
+	std::shared_ptr<Font> m_Font { nullptr };
 };
 
 }
