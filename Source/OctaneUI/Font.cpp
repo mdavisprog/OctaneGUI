@@ -50,6 +50,27 @@ Font::~Font()
 {
 }
 
+// TODO: Do our own rect packing so that we can avoid a loop that just increases the texture size.
+bool LoadFont(const std::vector<char>& FontData, float FontSize, std::vector<uint8_t>& Data, const Vector2& Size, std::vector<stbtt_packedchar>& Glyphs)
+{
+	Data.clear();
+	Data.resize((int)Size.X * (int)Size.Y);
+
+	stbtt_pack_context PackContext;
+	if (stbtt_PackBegin(&PackContext, Data.data(), (int)Size.X, (int)Size.Y, 0, 1, nullptr) == 0)
+	{
+		return false;
+	}
+
+	Glyphs.clear();
+	Glyphs.resize(96);
+	int Result = stbtt_PackFontRange(&PackContext, (uint8_t*)FontData.data(), 0, FontSize, 32, Glyphs.size(), Glyphs.data());
+
+	stbtt_PackEnd(&PackContext);
+
+	return Result > 0;
+}
+
 bool Font::Load(const char* Path, float Size)
 {
 	std::ifstream Stream;
@@ -73,20 +94,15 @@ bool Font::Load(const char* Path, float Size)
 	stbtt_GetScaledFontVMetrics((uint8_t*)Buffer.data(), 0, Size, &m_Ascent, &m_Descent, &LineGap);
 
 	m_Size = Size;
-	Vector2 TextureSize = Vector2(512.0f, 512.0f);
+
+	const float TextureBaseSize = 128.0f;
+	Vector2 TextureSize;
 	std::vector<uint8_t> Texture;
-	Texture.resize((int)TextureSize.X * (int)TextureSize.Y);
-
-	stbtt_pack_context PackContext;
-	if (stbtt_PackBegin(&PackContext, Texture.data(), (int)TextureSize.X, (int)TextureSize.Y, 0, 1, nullptr) == 0)
+	std::vector<stbtt_packedchar> Chars;
+	do
 	{
-		return false;
-	}
-
-	stbtt_packedchar Chars[96];
-	stbtt_PackFontRange(&PackContext, (uint8_t*)Buffer.data(), 0, Size, 32, 96, Chars);
-
-	stbtt_PackEnd(&PackContext);
+		TextureSize = {TextureSize.X + TextureBaseSize, TextureSize.Y + TextureBaseSize};
+	} while (!LoadFont(Buffer, Size, Texture, TextureSize, Chars));
 
 	// Convert data to RGBA32
 	std::vector<uint8_t> RGBA32;
@@ -107,10 +123,8 @@ bool Font::Load(const char* Path, float Size)
 		return false;
 	}
 
-	for (int I = 0; I < 96; I++)
+	for (const stbtt_packedchar& Char : Chars)
 	{
-		const stbtt_packedchar& Char = Chars[I];
-
 		Glyph Item;
 		Item.m_Min = Vector2(Char.x0, Char.y0);
 		Item.m_Max = Vector2(Char.x1, Char.y1);
