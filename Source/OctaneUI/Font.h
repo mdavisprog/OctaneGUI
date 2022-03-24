@@ -31,6 +31,7 @@ SOFTWARE.
 #include <cstdint>
 #include <functional>
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace OctaneUI
@@ -53,6 +54,8 @@ public:
 		Vector2 m_Advance {};
 	};
 
+	static std::shared_ptr<Font> Create(const char* Path, float Size);
+
 	Font();
 	~Font();
 
@@ -68,6 +71,7 @@ public:
 	float Ascent() const;
 	float Descent() const;
 	Vector2 SpaceSize() const;
+	const char* Path() const;
 
 private:
 	std::vector<Glyph> m_Glyphs;
@@ -76,6 +80,7 @@ private:
 	float m_Descent { 0.0f };
 	Vector2 m_SpaceSize {};
 	std::shared_ptr<Texture> m_Texture { nullptr };
+	std::string m_Path {};
 };
 
 }

@@ -42,6 +42,18 @@ Font::Glyph::Glyph()
 {
 }
 
+std::shared_ptr<Font> Font::Create(const char* Path, float Size)
+{
+	std::shared_ptr<Font> Result = std::make_shared<Font>();
+
+	if (!Result->Load(Path, Size))
+	{
+		return nullptr;
+	}
+
+	return Result;
+}
+
 Font::Font()
 {
 }
@@ -94,6 +106,7 @@ bool Font::Load(const char* Path, float Size)
 	stbtt_GetScaledFontVMetrics((uint8_t*)Buffer.data(), 0, Size, &m_Ascent, &m_Descent, &LineGap);
 
 	m_Size = Size;
+	m_Path = Path;
 
 	const float TextureBaseSize = 128.0f;
 	Vector2 TextureSize;
@@ -252,6 +265,11 @@ float Font::Descent() const
 Vector2 Font::SpaceSize() const
 {
 	return m_SpaceSize;
+}
+
+const char* Font::Path() const
+{
+	return m_Path.c_str();
 }
 
 }
