@@ -204,17 +204,12 @@ void Application::Quit()
 
 std::shared_ptr<Font> Application::LoadFont(const char* Path, float Size)
 {
-	std::shared_ptr<Font> Result = Font::Create(Path, Size);
-
-	if (Result)
+	if (m_Theme)
 	{
-		if (m_Theme)
-		{
-			m_Theme->SetFont(Result);
-		}
+		return m_Theme->GetOrAddFont(Path, Size);
 	}
 
-	return Result;
+	return nullptr;
 }
 
 std::shared_ptr<Window> Application::GetMainWindow() const

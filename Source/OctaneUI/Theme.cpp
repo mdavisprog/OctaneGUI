@@ -41,14 +41,29 @@ Theme::~Theme()
 {
 }
 
-void Theme::SetFont(std::shared_ptr<Font> InFont)
+std::shared_ptr<Font> Theme::GetOrAddFont(const char* Path, float Size)
 {
-	m_Font = InFont;
+	for (const std::shared_ptr<Font>& Item : m_Fonts)
+	{
+		if (std::string(Path) == Item->Path() && Size == Item->Size())
+		{
+			return Item;
+		}
+	}
+
+	std::shared_ptr<Font> NewFont = Font::Create(Path, Size);
+	m_Fonts.push_back(NewFont);
+	return NewFont;
 }
 
 std::shared_ptr<Font> Theme::GetFont() const
 {
-	return m_Font;
+	if (m_Fonts.empty())
+	{
+		return nullptr;
+	}
+
+	return m_Fonts.front();
 }
 
 Theme& Theme::SetOnThemeLoaded(OnEmptySignature Fn)

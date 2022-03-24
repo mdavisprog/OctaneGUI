@@ -31,7 +31,7 @@ SOFTWARE.
 
 #include <cstdint>
 #include <memory>
-#include <unordered_map>
+#include <vector>
 
 namespace OctaneUI
 {
@@ -45,7 +45,7 @@ public:
 	Theme();
 	~Theme();
 
-	void SetFont(std::shared_ptr<Font> InFont);
+	std::shared_ptr<Font> GetOrAddFont(const char* Path, float Size);
 	std::shared_ptr<Font> GetFont() const;
 
 	Theme& SetOnThemeLoaded(OnEmptySignature Fn);
@@ -57,7 +57,7 @@ private:
 	void InitializeDefault();
 	void Set(ThemeProperties::Property Property, const Variant& Value);
 
-	std::shared_ptr<Font> m_Font { nullptr };
+	std::vector<std::shared_ptr<Font>> m_Fonts;
 	ThemeProperties m_Properties {};
 	OnEmptySignature m_OnThemeLoaded { nullptr };
 };
