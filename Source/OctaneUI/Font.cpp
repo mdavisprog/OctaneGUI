@@ -26,6 +26,8 @@ SOFTWARE.
 
 #include "Font.h"
 #include "Rect.h"
+#define STB_RECT_PACK_IMPLEMENTATION
+#include "External/stb/stb_rect_pack.h"
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "External/stb/stb_truetype.h"
 #include "Texture.h"
