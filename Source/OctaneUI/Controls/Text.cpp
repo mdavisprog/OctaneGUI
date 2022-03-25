@@ -30,6 +30,8 @@ SOFTWARE.
 #include "../Theme.h"
 #include "Text.h"
 
+#include <cassert>
+
 namespace OctaneUI
 {
 
@@ -110,12 +112,9 @@ void Text::OnLoad(const Json& Root)
 {
 	Control::OnLoad(Root);
 
+	m_Font = GetTheme()->GetOrAddFont(Root["Font"].String(nullptr), Root["FontSize"].Number(LineHeight()));
 	SetText(Root["Text"].String());
-
-	if (!Root["Color"].IsNull())
-	{
-		SetProperty(ThemeProperties::Text, Color::Parse(Root["Color"]));
-	}
+	SetProperty(ThemeProperties::Text, Root["Color"]);
 }
 
 bool Text::IsFixedSize() const
