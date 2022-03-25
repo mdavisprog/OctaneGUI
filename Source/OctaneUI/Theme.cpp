@@ -157,6 +157,7 @@ void Theme::Load(const Json& Root)
 
 	Set(ThemeProperties::FontPath, Root["FontPath"]);
 
+	m_Fonts.clear();
 	GetOrAddFont(m_Properties[ThemeProperties::FontPath].String(), m_Properties[ThemeProperties::FontSize].Float());
 
 	if (m_OnThemeLoaded)
