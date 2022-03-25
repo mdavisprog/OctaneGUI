@@ -30,33 +30,59 @@ SOFTWARE.
 namespace Tests
 {
 
+static const char* Json = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [{\"Type\": \"TextButton\", \"ID\": \"Button\", \"Text\": {\"Text\": \"Button\"}}]}}";
+
 TEST_SUITE(Button,
 
 TEST_CASE(Press,
 {
-	const char* Json = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [{\"Type\": \"TextButton\", \"ID\": \"Button\", \"Text\": {\"Text\": \"Button\"}}]}}";
 	OctaneUI::ControlList List;
 	Application.GetMainWindow()->Load(Json, List);
 	Application.GetMainWindow()->Update();
 
 	VERIFY(List.Contains("Button"))
 
+	std::shared_ptr<OctaneUI::Button> Button = List.To<OctaneUI::Button>("Button");
+
 	bool Pressed = false;
-	List.To<OctaneUI::Button>("Button")->SetOnPressed([&](const OctaneUI::Button&) -> void
+	Button->SetOnPressed([&](const OctaneUI::Button&) -> void
 	{
 		Pressed = true;
 	});
 
-	OctaneUI::Vector2 Position = List.To<OctaneUI::Button>("Button")->GetAbsoluteBounds().GetCenter();
+	OctaneUI::Vector2 Position = Button->GetAbsoluteBounds().GetCenter();
 
 	Application.GetMainWindow()->OnMouseMove(Position);
 	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
 	VERIFY(!Pressed)
+	VERIFY(Button->IsPressed());
 
 	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
 	VERIFY(Pressed)
 
 	return true;
+})
+
+TEST_CASE(Disabled,
+{
+	OctaneUI::ControlList List;
+	Application.GetMainWindow()->Load(Json, List);
+	Application.GetMainWindow()->Update();
+
+	bool Pressed = false;
+	List.To<OctaneUI::Button>("Button")->SetOnPressed([&](const OctaneUI::Button&) -> void
+	{
+		Pressed = true;
+	})
+	->SetDisabled(true);
+
+	OctaneUI::Vector2 Position = List.To<OctaneUI::Button>("Button")->GetAbsoluteBounds().GetCenter();
+
+	Application.GetMainWindow()->OnMouseMove(Position);
+	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
+
+	return !Pressed;
 })
 
 )
