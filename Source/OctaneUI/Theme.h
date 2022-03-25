@@ -51,6 +51,7 @@ public:
 	Theme& SetOnThemeLoaded(OnEmptySignature Fn);
 
 	const Variant& Get(ThemeProperties::Property Index) const;
+	void Load(const char* Path);
 	void Load(const Json& Root);
 
 private:

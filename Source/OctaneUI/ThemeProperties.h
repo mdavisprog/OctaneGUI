@@ -66,6 +66,7 @@ public:
 		Menu_RightPadding,
 		ScrollBar_Size,
 		ScrollBar_HandleMinSize,
+		FontSize,
 
 		// Vector2
 		Button_Padding,
@@ -79,6 +80,9 @@ public:
 		Checkbox_3D,
 		TextInput_3D,
 		ScrollBar_3D,
+
+		// Strings
+		FontPath,
 
 		Max
 	};

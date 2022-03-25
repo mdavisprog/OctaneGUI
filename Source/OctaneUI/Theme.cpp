@@ -29,6 +29,8 @@ SOFTWARE.
 #include "Theme.h"
 #include "ThemeProperties.h"
 
+#include <fstream>
+
 namespace OctaneUI
 {
 
@@ -87,8 +89,33 @@ const Variant& Theme::Get(ThemeProperties::Property Index) const
 	return m_Properties[Index];
 }
 
+void Theme::Load(const char* Path)
+{
+	std::ifstream File;
+	File.open(Path);
+	if (!File.is_open())
+	{
+		return;
+	}
+
+	std::string Buffer;
+	File.seekg(0, std::ios::end);
+	Buffer.resize(File.tellg());
+	File.seekg(0, std::ios::beg);
+	File.read(&Buffer[0], Buffer.size());
+	File.close();
+
+	Load(Json::Parse(Buffer.c_str()));
+}
+
 void Theme::Load(const Json& Root)
 {
+	if (Root.IsString())
+	{
+		Load(Root.String());
+		return;
+	}
+
 	Set(ThemeProperties::Text, Root["Text"]);
 	Set(ThemeProperties::Text_Disabled, Root["Text_Disabled"]);
 	Set(ThemeProperties::Button, Root["Button"]);
@@ -115,6 +142,7 @@ void Theme::Load(const Json& Root)
 	Set(ThemeProperties::Menu_RightPadding, Root["Menu_RightPadding"]);
 	Set(ThemeProperties::ScrollBar_Size, Root["ScrollBar_Size"]);
 	Set(ThemeProperties::ScrollBar_HandleMinSize, Root["ScrollBar_HandleMinSize"]);
+	Set(ThemeProperties::FontSize, Root["FontSize"]);
 
 	Set(ThemeProperties::Button_Padding, Root["Button_Padding"]);
 	Set(ThemeProperties::TextSelectable_Padding, Root["TextSelectable_Padding"]);
@@ -126,6 +154,10 @@ void Theme::Load(const Json& Root)
 	Set(ThemeProperties::Checkbox_3D, Root["Checkbox_3D"]);
 	Set(ThemeProperties::TextInput_3D, Root["TextInput_3D"]);
 	Set(ThemeProperties::ScrollBar_3D, Root["ScrollBar_3D"]);
+
+	Set(ThemeProperties::FontPath, Root["FontPath"]);
+
+	GetOrAddFont(m_Properties[ThemeProperties::FontPath].String(), m_Properties[ThemeProperties::FontSize].Float());
 
 	if (m_OnThemeLoaded)
 	{
@@ -161,6 +193,7 @@ void Theme::InitializeDefault()
 	m_Properties[ThemeProperties::Menu_RightPadding] = 60.0f;
 	m_Properties[ThemeProperties::ScrollBar_Size] = 15.0f;
 	m_Properties[ThemeProperties::ScrollBar_HandleMinSize] = 10.0f;
+	m_Properties[ThemeProperties::FontSize] = 0.0f;
 
 	m_Properties[ThemeProperties::Button_Padding] = Vector2(12.0f, 6.0f);
 	m_Properties[ThemeProperties::TextSelectable_Padding] = Vector2(8.0f, 6.0f);
@@ -172,6 +205,7 @@ void Theme::InitializeDefault()
 	m_Properties[ThemeProperties::Checkbox_3D] = false;
 	m_Properties[ThemeProperties::TextInput_3D] = false;
 	m_Properties[ThemeProperties::ScrollBar_3D] = false;
+	m_Properties[ThemeProperties::FontPath] = "";
 }
 
 void Theme::Set(ThemeProperties::Property Property, const Variant& Value)
