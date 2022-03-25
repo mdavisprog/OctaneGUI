@@ -121,6 +121,7 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 	int ExpandH = 0;
 	const Vector2 TotalSpacing = m_Spacing * (float)(Controls.size() > 0 ? Controls.size() - 1 : 0);
 	Vector2 AvailableSize = GetSize() - TotalSpacing;
+	std::unordered_map<Control*, Vector2> DesiredSizes;
 	for (const std::shared_ptr<Control>& Item : Controls)
 	{
 		Vector2 Size = Item->GetSize();
@@ -130,6 +131,8 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 		{
 			Size = ItemContainer->DesiredSize();
 		}
+
+		DesiredSizes[Item.get()] = Size;
 
 		switch (Item->GetExpand())
 		{
@@ -183,13 +186,7 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 	AvailableSize = GetSize();
 	for (const std::shared_ptr<Control>& Item : Controls)
 	{
-		Vector2 Size = Item->GetSize();
-
-		const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
-		if (ItemContainer)
-		{
-			Size = ItemContainer->DesiredSize();
-		}
+		Vector2 Size = DesiredSizes[Item.get()];
 
 		switch(Item->GetExpand())
 		{
