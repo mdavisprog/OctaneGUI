@@ -1,6 +1,6 @@
 {
 	"Font": "Roboto-Regular.ttf",
-	"FontSize": 24,
+	"FontSize": 18,
 	"Windows": {
 		"Main": {
 			"Title": "Overview",
@@ -62,6 +62,11 @@
 														"Type": "Text",
 														"Text": "Red Text",
 														"Color": [255, 0, 0, 255]
+													},
+													{
+														"Type": "Text",
+														"Text": "Larger Text",
+														"FontSize": 24
 													}
 												]
 											},
