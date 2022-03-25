@@ -43,6 +43,12 @@ Theme::~Theme()
 
 std::shared_ptr<Font> Theme::GetOrAddFont(const char* Path, float Size)
 {
+	// Use the default font path if no path is specified.
+	if (Path == nullptr && m_Fonts.size() > 0)
+	{
+		Path = m_Fonts.front()->Path();
+	}
+
 	for (const std::shared_ptr<Font>& Item : m_Fonts)
 	{
 		if (std::string(Path) == Item->Path() && Size == Item->Size())
@@ -52,7 +58,11 @@ std::shared_ptr<Font> Theme::GetOrAddFont(const char* Path, float Size)
 	}
 
 	std::shared_ptr<Font> NewFont = Font::Create(Path, Size);
-	m_Fonts.push_back(NewFont);
+	if (NewFont)
+	{
+		m_Fonts.push_back(NewFont);
+	}
+
 	return NewFont;
 }
 
