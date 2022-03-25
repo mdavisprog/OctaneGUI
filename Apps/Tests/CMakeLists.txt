@@ -29,5 +29,5 @@ set_target_properties(
 add_custom_command(
 	TARGET ${TARGET}
 	POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy ${APP_FONT} ${BIN_DIR}
+	COMMAND ${CMAKE_COMMAND} -E copy ${APP_FONTS} ${BIN_DIR}
 )
