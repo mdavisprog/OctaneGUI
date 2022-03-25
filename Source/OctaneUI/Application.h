@@ -41,7 +41,6 @@ namespace OctaneUI
 
 class ControlList;
 class Event;
-class Font;
 class Icons;
 class Json;
 class Theme;
@@ -59,13 +58,11 @@ public:
 	Application();
 	virtual ~Application();
 
-	bool Initialize(const char* Title, const char* FontPath, float FontSize);
 	bool Initialize(const char* JsonStream, std::unordered_map<std::string, ControlList>& WindowControls);
 	void Shutdown();
 	void Update();
 	int Run();
 	void Quit();
-	std::shared_ptr<Font> LoadFont(const char* Path, float Size);
 
 	std::shared_ptr<Window> GetMainWindow() const;
 	std::shared_ptr<Window> NewWindow(const char* ID, const char* JsonStream);

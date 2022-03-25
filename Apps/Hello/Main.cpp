@@ -31,8 +31,7 @@ int main(int argc, char** argv)
 {
 	const char* Stream = 
 	"{"
-		"\"Font\": \"Roboto-Regular.ttf\","
-		"\"FontSize\": 24,"
+		"\"Theme\": \"./Themes/Dark.json\","
 		"\"Windows\": {"
 			"\"Main\": {"
 				"\"Title\": \"Hello\","

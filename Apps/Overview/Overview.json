@@ -1,6 +1,5 @@
 {
-	"Font": "Roboto-Regular.ttf",
-	"FontSize": 18,
+	"Theme": "./Themes/Dark.json",
 	"Windows": {
 		"Main": {
 			"Title": "Overview",

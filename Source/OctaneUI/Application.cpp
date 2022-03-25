@@ -28,7 +28,6 @@ SOFTWARE.
 #include "Controls/Container.h"
 #include "Controls/ControlList.h"
 #include "Event.h"
-#include "Font.h"
 #include "Icons.h"
 #include "Json.h"
 #include "Paint.h"
@@ -63,22 +62,6 @@ Application::~Application()
 {
 }
 
-bool Application::Initialize(const char* Title, const char* FontPath, float FontSize)
-{
-	std::stringstream JsonStream;
-	JsonStream 
-		<< "{\"Font\": \"" << FontPath << "\","
-		<< "\"FontSize\": " << FontSize << ","
-		<< "\"Windows\": {"
-			<< "\"Main\": {\"Title\": " << Title << ", "
-			<< "\"Width\": 1280,"
-			<< "\"Height\": 720}"
-		<< "}}";
-
-	std::unordered_map<std::string, ControlList> WindowControls;
-	return Initialize(JsonStream.str().c_str(), WindowControls);
-}
-
 bool Application::Initialize(const char* JsonStream, std::unordered_map<std::string, ControlList>& WindowControls)
 {
 	if (!Initialize())
@@ -95,16 +78,14 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
 		return false;
 	}
 
+	m_Theme->Load(Root["Theme"]);
+
 	const Json& Windows = Root["Windows"];
 	if (!Windows.IsObject())
 	{
 		Shutdown();
 		return false;
 	}
-
-	const char* FontPath = Root["Font"].String();
-	float FontSize = Root["FontSize"].Number(16.0f);
-	LoadFont(FontPath, FontSize);
 
 	Windows.ForEach([&](const std::string& Key, const Json& Value) -> void
 	{
@@ -200,16 +181,6 @@ int Application::Run()
 void Application::Quit()
 {
 	m_IsRunning = false;
-}
-
-std::shared_ptr<Font> Application::LoadFont(const char* Path, float Size)
-{
-	if (m_Theme)
-	{
-		return m_Theme->GetOrAddFont(Path, Size);
-	}
-
-	return nullptr;
 }
 
 std::shared_ptr<Window> Application::GetMainWindow() const

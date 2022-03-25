@@ -66,11 +66,17 @@ int main(int argc, char** argv)
 		.SetOnLoadTexture(OnLoadTexture)
 		.SetOnExit(OnExit);
 	
-	printf("Initializing UnitTests...\n");
-	if (!Application.Initialize("UnitTests", "Roboto-Regular.ttf", 24.0f))
+	const char* Json = 
+	"{"
+		"\"Theme\": {\"FontPath\": \"Roboto-Regular.ttf\", \"FontSize\": 18},"
+		"\"Windows\": {\"Main\": {\"Title\": \"Unit Tests\", \"Width\": 1280, \"Height\": 720}}"
+	"}";
+	
+	std::unordered_map<std::string, OctaneUI::ControlList> WindowControls;
+	if (!Application.Initialize(Json, WindowControls))
 	{
-		printf("Application failed to initialize.\n");
-		return 1;
+		printf("Failed to initialize application.\n");
+		return -1;
 	}
 
 	Tests::TestSuite::Run(Application, argc, argv);
