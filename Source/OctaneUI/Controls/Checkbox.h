@@ -63,6 +63,7 @@ public:
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseEnter() override;
 	virtual void OnMouseLeave() override;
+	virtual void OnThemeLoaded() override;
 
 private:
 	void UpdateSize();

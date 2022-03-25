@@ -182,6 +182,14 @@ void Checkbox::OnMouseLeave()
 	Invalidate();
 }
 
+void Checkbox::OnThemeLoaded()
+{
+	Control::OnThemeLoaded();
+
+	m_Text->OnThemeLoaded();
+	UpdateSize();
+}
+
 void Checkbox::UpdateSize()
 {
 	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
