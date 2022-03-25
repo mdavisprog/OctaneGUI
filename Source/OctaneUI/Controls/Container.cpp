@@ -254,6 +254,14 @@ void Container::OnLoad(const Json& Root)
 	}
 }
 
+void Container::OnThemeLoaded()
+{
+	for (const std::shared_ptr<Control>& Item : m_Controls)
+	{
+		Item->OnThemeLoaded();
+	}
+}
+
 void Container::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
 {
 	for (const std::shared_ptr<Control>& Item : Controls)

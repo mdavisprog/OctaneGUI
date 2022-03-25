@@ -47,14 +47,7 @@ Text::Text(Window* InWindow)
 Text* Text::SetText(const char* InContents)
 {
 	m_Contents = InContents;
-
-	if (m_Font)
-	{
-		int Lines = 0;
-		m_ContentSize = m_Font->Measure(m_Contents, Lines);
-		SetSize({m_ContentSize.X, m_Font->Size() * Lines});
-	}
-
+	UpdateSize();
 	return this;
 }
 
@@ -112,14 +105,41 @@ void Text::OnLoad(const Json& Root)
 {
 	Control::OnLoad(Root);
 
-	m_Font = GetTheme()->GetOrAddFont(Root["Font"].String(nullptr), Root["FontSize"].Number(LineHeight()));
-	SetText(Root["Text"].String());
+	SetProperty(ThemeProperties::FontPath, Root["Font"]);
+	SetProperty(ThemeProperties::FontSize, Root["FontSize"]);
 	SetProperty(ThemeProperties::Text, Root["Color"]);
+
+	UpdateFont();
+
+	SetText(Root["Text"].String());
+}
+
+void Text::OnThemeLoaded()
+{
+	UpdateFont();
+	UpdateSize();
 }
 
 bool Text::IsFixedSize() const
 {
 	return true;
+}
+
+void Text::UpdateFont()
+{
+	const char* FontPath = GetProperty(ThemeProperties::FontPath).String(nullptr);
+	const float FontSize = GetProperty(ThemeProperties::FontSize).Float(LineHeight());
+	m_Font = GetTheme()->GetOrAddFont(FontPath, FontSize);
+}
+
+void Text::UpdateSize()
+{
+	if (m_Font)
+	{
+		int Lines = 0;
+		m_ContentSize = m_Font->Measure(m_Contents, Lines);
+		SetSize({m_ContentSize.X, m_Font->Size() * Lines});
+	}
 }
 
 }

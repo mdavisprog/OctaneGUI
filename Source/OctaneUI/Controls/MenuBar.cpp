@@ -115,6 +115,19 @@ void MenuBar::OnLoad(const Json& Root)
 	SetExpand(Expand::Width);
 }
 
+void MenuBar::OnThemeLoaded()
+{
+	Container::OnThemeLoaded();
+
+	for (const std::shared_ptr<MenuItem>& Item : m_MenuItems)
+	{
+		if (Item->GetMenu())
+		{
+			Item->GetMenu()->OnThemeLoaded();
+		}
+	}
+}
+
 void MenuBar::OnHover(MenuItem* Hovered)
 {
 	if (m_Open)

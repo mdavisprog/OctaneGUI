@@ -56,11 +56,15 @@ public:
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
+	virtual void OnThemeLoaded() override;
 
 protected:
 	virtual bool IsFixedSize() const override;
 
 private:
+	void UpdateFont();
+	void UpdateSize();
+
 	std::string m_Contents {};
 	Vector2 m_ContentSize {};
 	std::vector<Paint::TextFormat> m_Formats {};

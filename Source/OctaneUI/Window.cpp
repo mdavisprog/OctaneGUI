@@ -254,6 +254,11 @@ void Window::OnText(uint32_t Code)
 	Focused->OnText(Code);
 }
 
+void Window::ThemeLoaded()
+{
+	m_Container->OnThemeLoaded();
+}
+
 void Window::CreateContainer()
 {
 	m_Container = std::make_shared<VerticalContainer>(this);

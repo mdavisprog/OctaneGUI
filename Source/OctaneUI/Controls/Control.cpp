@@ -297,6 +297,10 @@ void Control::OnText(uint32_t Code)
 {
 }
 
+void Control::OnThemeLoaded()
+{
+}
+
 void Control::Invalidate(Control* Focus, InvalidateType Type) const
 {
 	if (Focus == nullptr)

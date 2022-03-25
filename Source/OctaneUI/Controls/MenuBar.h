@@ -48,6 +48,7 @@ public:
 	void Close();
 
 	virtual void OnLoad(const Json& Root) override;
+	virtual void OnThemeLoaded() override;
 
 private:
 	void OnHover(MenuItem* Hovered);

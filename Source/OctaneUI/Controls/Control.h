@@ -127,6 +127,7 @@ public:
 	virtual void OnMouseEnter();
 	virtual void OnMouseLeave();
 	virtual void OnText(uint32_t Code);
+	virtual void OnThemeLoaded();
 
 protected:
 	void Invalidate(Control* Focus, InvalidateType Type) const;

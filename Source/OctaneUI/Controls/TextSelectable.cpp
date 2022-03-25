@@ -153,6 +153,12 @@ void TextSelectable::OnMouseLeave()
 	Invalidate();
 }
 
+void TextSelectable::OnThemeLoaded()
+{
+	m_Text->OnThemeLoaded();
+	UpdateSize();
+}
+
 std::shared_ptr<Text> TextSelectable::GetTextControl() const
 {
 	return m_Text;

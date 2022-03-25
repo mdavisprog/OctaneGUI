@@ -58,6 +58,7 @@ public:
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseEnter() override;
 	virtual void OnMouseLeave() override;
+	virtual void OnThemeLoaded() override;
 
 protected:
 	std::shared_ptr<Text> GetTextControl() const;

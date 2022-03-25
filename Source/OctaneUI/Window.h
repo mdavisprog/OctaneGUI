@@ -84,6 +84,7 @@ public:
 	void OnMousePressed(const Vector2& Position, Mouse::Button Button);
 	void OnMouseReleased(const Vector2& Position, Mouse::Button Button);
 	void OnText(uint32_t Code);
+	void ThemeLoaded();
 
 	void CreateContainer();
 
