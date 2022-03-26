@@ -12,6 +12,17 @@
 						"Text": "File",
 						"Items": [
 							{
+								"Text": "New",
+								"Items": [
+									{
+										"Text": "File"
+									},
+									{
+										"Text": "Directory"
+									}
+								]
+							},
+							{
 								"ID": "Quit",
 								"Text": "Quit"
 							}
