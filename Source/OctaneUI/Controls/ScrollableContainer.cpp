@@ -37,7 +37,7 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 	SetExpand(Expand::Both);
 
 	m_HorizontalSB = std::make_shared<ScrollBar>(InWindow, Orientation::Horizontal);
-	m_HorizontalSB->SetOnDrag([this](ScrollBar*) -> void
+	m_HorizontalSB->SetOnDrag([this](const ScrollBar&) -> void
 	{
 		const float Size = GetOverflow().X;
 		SetOffset({m_HorizontalSB->OffsetPct() * Size, -GetPosition().Y}, false);
@@ -46,7 +46,7 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 	InsertControl(m_HorizontalSB);
 
 	m_VerticalSB = std::make_shared<ScrollBar>(InWindow, Orientation::Vertical);
-	m_VerticalSB->SetOnDrag([this](ScrollBar*) -> void
+	m_VerticalSB->SetOnDrag([this](const ScrollBar&) -> void
 	{
 		const float Size = GetOverflow().Y;
 		SetOffset({-GetPosition().X, m_VerticalSB->OffsetPct() * Size}, false);

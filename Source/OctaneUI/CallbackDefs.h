@@ -51,7 +51,7 @@ typedef std::function<void(Container*)> OnContainerSignature;
 typedef std::function<void(Control*)> OnControlSignature;
 typedef std::function<void(Control*, InvalidateType)> OnInvalidateSignature;
 typedef std::function<void(MenuItem*)> OnMenuItemSignature;
-typedef std::function<void(ScrollBar*)> OnScrollBarSignature;
+typedef std::function<void(const ScrollBar&)> OnScrollBarSignature;
 typedef std::function<void(TextSelectable*)> OnTextSelectableSignature;
 
 }

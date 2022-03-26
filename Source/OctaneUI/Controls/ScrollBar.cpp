@@ -172,7 +172,7 @@ void ScrollBar::OnMouseMove(const Vector2& Position)
 
 		if (m_OnDrag)
 		{
-			m_OnDrag(this);
+			m_OnDrag(*this);
 		}
 	}
 }
