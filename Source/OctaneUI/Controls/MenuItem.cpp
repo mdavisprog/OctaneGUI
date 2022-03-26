@@ -104,6 +104,7 @@ void MenuItem::OnPaint(Paint& Brush) const
 {
 	TextSelectable::OnPaint(Brush);
 
+	const Color IconColor = GetProperty(ThemeProperties::Check).ToColor();
 	if (m_IsChecked)
 	{
 		const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
@@ -111,9 +112,9 @@ void MenuItem::OnPaint(Paint& Brush) const
 
 		Brush.Image(
 			Rect(Position, Position + TexCoords.GetSize()),
-			TexCoords,
+			GetWindow()->GetIcons()->GetUVsNormalized(Icons::Type::Check),
 			GetWindow()->GetIcons()->GetTexture(),
-			Color(255, 255, 255, 255)
+			IconColor
 		);
 	}
 
@@ -125,9 +126,9 @@ void MenuItem::OnPaint(Paint& Brush) const
 		
 		Brush.Image(
 			Rect(Position, Position + TexCoords.GetSize()),
-			TexCoords,
+			GetWindow()->GetIcons()->GetUVsNormalized(Icons::Type::Expand),
 			GetWindow()->GetIcons()->GetTexture(),
-			Color(255, 255, 255, 255)
+			IconColor
 		);
 	}
 }
