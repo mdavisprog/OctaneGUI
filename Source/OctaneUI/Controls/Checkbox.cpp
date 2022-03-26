@@ -98,8 +98,6 @@ void Checkbox::OnPaint(Paint& Brush) const
 	const Rect Bounds(BoxPosition, BoxPosition + Size);
 	const bool Is3D = GetProperty(ThemeProperties::Button_3D).Bool();
 
-	Brush.RectangleOutline(GetAbsoluteBounds(), Color(255, 0, 0, 255));
-
 	if (Is3D)
 	{
 		Brush.Rectangle3D(
