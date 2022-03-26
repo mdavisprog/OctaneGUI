@@ -44,10 +44,10 @@ class Menu : public Container
 public:
 	Menu(Window* InWindow);
 
-	Menu* AddItem(const char* InText, OnEmptySignature Fn = nullptr);
+	Menu& AddItem(const char* InText, OnEmptySignature Fn = nullptr);
 	std::shared_ptr<MenuItem> GetItem(const char* InText) const;
-	Menu* AddSeparator();
-	Menu* Close();
+	Menu& AddSeparator();
+	Menu& Close();
 
 	void GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const;
 

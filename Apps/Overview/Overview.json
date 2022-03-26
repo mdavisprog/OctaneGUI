@@ -23,6 +23,9 @@
 								]
 							},
 							{
+								"Type": "Separator"
+							},
+							{
 								"ID": "Quit",
 								"Text": "Quit"
 							}

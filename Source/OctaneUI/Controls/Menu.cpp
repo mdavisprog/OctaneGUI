@@ -48,7 +48,7 @@ Menu::Menu(Window* InWindow)
 		->SetExpand(Expand::Width);
 }
 
-Menu* Menu::AddItem(const char* InText, OnEmptySignature Fn)
+Menu& Menu::AddItem(const char* InText, OnEmptySignature Fn)
 {
 	std::shared_ptr<MenuItem> Item = std::make_shared<MenuItem>(GetWindow());
 	Item
@@ -69,7 +69,7 @@ Menu* Menu::AddItem(const char* InText, OnEmptySignature Fn)
 	m_Callbacks[Item.get()] = Fn;
 	Resize();
 
-	return this;
+	return *this;
 }
 
 std::shared_ptr<MenuItem> Menu::GetItem(const char* InText) const
@@ -89,7 +89,7 @@ std::shared_ptr<MenuItem> Menu::GetItem(const char* InText) const
 	return Result;
 }
 
-Menu* Menu::AddSeparator()
+Menu& Menu::AddSeparator()
 {
 	std::shared_ptr<Separator> Item = std::make_shared<Separator>(GetWindow());
 	Item->SetOnHover([this](const Control&) -> void
@@ -103,10 +103,10 @@ Menu* Menu::AddSeparator()
 	});
 	m_Container->InsertControl(Item);
 	Resize();
-	return this;
+	return *this;
 }
 
-Menu* Menu::Close()
+Menu& Menu::Close()
 {
 	if (m_Menu)
 	{
@@ -120,7 +120,7 @@ Menu* Menu::Close()
 	}
 
 	m_Menu = nullptr;
-	return this;
+	return *this;
 }
 
 void Menu::GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const
@@ -147,11 +147,19 @@ void Menu::OnLoad(const Json& Root)
 	{
 		const Json& Item = Items[I];
 
-		AddItem(Item["Text"].String());
+		// TODO: More generic way of adding separator types.
+		if (Item["Type"].IsNull())
+		{
+			AddItem(Item["Text"].String());
 
-		const std::shared_ptr<MenuItem>& MI = m_Items.back();
-		MI->OnLoad(Item);
-		MI->SetExpand(Expand::Width);
+			const std::shared_ptr<MenuItem>& MI = m_Items.back();
+			MI->OnLoad(Item);
+			MI->SetExpand(Expand::Width);
+		}
+		else if (std::string(Item["Type"].String()) == "Separator")
+		{
+			AddSeparator();
+		}
 	}
 }
 
