@@ -43,6 +43,7 @@ public:
 
 	void SetDisabled(bool Disabled);
 	bool IsDisabled() const;
+	bool IsHovered() const;
 	bool IsPressed() const;
 
 	virtual void OnPaint(Paint& Brush) const override;
@@ -55,6 +56,7 @@ public:
 protected:
 	virtual void OnPressed();
 	virtual void OnReleased();
+	virtual void OnClicked();
 
 private:
 	enum class State : uint8_t

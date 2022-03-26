@@ -52,6 +52,11 @@ bool Button::IsDisabled() const
 	return m_Disabled;
 }
 
+bool Button::IsHovered() const
+{
+	return m_State == State::Hovered;
+}
+
 bool Button::IsPressed() const
 {
 	return m_State == State::Pressed;
@@ -120,6 +125,8 @@ void Button::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 
 		if (Hovered)
 		{
+			OnClicked();
+
 			if (m_OnPressed)
 			{
 				m_OnPressed(*this);
@@ -170,6 +177,10 @@ void Button::OnPressed()
 }
 
 void Button::OnReleased()
+{
+}
+
+void Button::OnClicked()
 {
 }
 
