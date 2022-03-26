@@ -123,6 +123,9 @@
 												"Texture": "info.png"
 											},
 											{
+												"Type": "Separator"
+											},
+											{
 												"Type": "TextSelectable",
 												"Text": {
 													"Text": "Selectable"
