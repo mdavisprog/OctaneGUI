@@ -41,16 +41,17 @@ public:
 	TextSelectable(Window* InWindow);
 	virtual ~TextSelectable();
 
-	TextSelectable* SetSelected(bool Selected);
+	TextSelectable& SetSelected(bool Selected);
 	bool IsSelected() const;
 
-	TextSelectable* SetText(const char* Contents);
+	TextSelectable& SetText(const char* Contents);
 	const char* GetText() const;
 
-	TextSelectable* SetAlignment(HorizontalAlignment Align);
+	TextSelectable& SetAlignment(HorizontalAlignment Align);
 	HorizontalAlignment GetAlignment() const;
 
-	TextSelectable* SetOnPressed(OnTextSelectableSignature Fn);
+	TextSelectable& SetOnHovered(OnTextSelectableSignature Fn);
+	TextSelectable& SetOnPressed(OnTextSelectableSignature Fn);
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
@@ -66,11 +67,12 @@ protected:
 private:
 	void UpdateSize();
 
-	bool m_Hovered;
-	bool m_Selected;
-	std::shared_ptr<Text> m_Text;
-	OnTextSelectableSignature m_OnPressed;
-	HorizontalAlignment m_Align;
+	bool m_Hovered { false };
+	bool m_Selected { false };
+	std::shared_ptr<Text> m_Text { nullptr };
+	OnTextSelectableSignature m_OnHovered { nullptr };
+	OnTextSelectableSignature m_OnPressed { nullptr };
+	HorizontalAlignment m_Align { HorizontalAlignment::Left };
 };
 
 }

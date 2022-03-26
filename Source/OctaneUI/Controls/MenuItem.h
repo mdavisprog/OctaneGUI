@@ -39,32 +39,23 @@ class MenuItem : public TextSelectable
 
 public:
 	MenuItem(Window* InWindow);
-	virtual ~MenuItem();
 
 	std::shared_ptr<Menu> CreateMenu();
 	std::shared_ptr<Menu> GetMenu() const;
-	MenuItem* DestroyMenu();
-	MenuItem* SetIsMenuBar(bool IsMenuBar);
+	MenuItem& DestroyMenu();
+	MenuItem& SetIsMenuBar(bool IsMenuBar);
 
-	MenuItem* SetChecked(bool Checked);
+	MenuItem& SetChecked(bool Checked);
 	bool IsChecked() const;
-
-	MenuItem* SetOnHover(OnMenuItemSignature Fn);
-	MenuItem* SetOnSelected(OnMenuItemSignature Fn);
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
 	virtual void OnLoad(const Json& Root) override;
-	virtual void OnMouseEnter() override;
 
 private:
-	void OnPressed(TextSelectable* Item);
-
-	std::shared_ptr<Menu> m_Menu;
-	bool m_IsMenuBar;
-	bool m_IsChecked;
-	OnMenuItemSignature m_OnHover;
-	OnMenuItemSignature m_OnSelected;
+	std::shared_ptr<Menu> m_Menu { nullptr };
+	bool m_IsMenuBar { false };
+	bool m_IsChecked { false };
 };
 
 }

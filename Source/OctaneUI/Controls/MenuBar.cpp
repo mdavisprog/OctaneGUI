@@ -54,11 +54,17 @@ std::shared_ptr<Menu> MenuBar::AddItem(const char* InText)
 {
 	std::shared_ptr<MenuItem> Item = std::make_shared<MenuItem>(GetWindow());
 	Item->SetIsMenuBar(true)
-		->SetOnHover(std::bind(&MenuBar::OnHover, this, std::placeholders::_1))
-		->SetOnSelected(std::bind(&MenuBar::OnSelected, this, std::placeholders::_1))
-		->SetAlignment(HorizontalAlignment::Center)
-		->SetText(InText)
-		->SetExpand(Expand::Height);
+		.SetOnHovered([this](const TextSelectable& Item) -> void
+		{
+			OnHover(static_cast<const MenuItem&>(Item));
+		})
+		.SetOnPressed([this](const TextSelectable& Item) -> void
+		{
+			OnSelected(static_cast<const MenuItem&>(Item));
+		})
+		.SetAlignment(HorizontalAlignment::Center)
+		.SetText(InText)
+		.SetExpand(Expand::Height);
 	m_Container->InsertControl(Item);
 
 	if (m_MenuItems.size() == 0)
@@ -128,7 +134,7 @@ void MenuBar::OnThemeLoaded()
 	}
 }
 
-void MenuBar::OnHover(MenuItem* Hovered)
+void MenuBar::OnHover(const MenuItem& Hovered)
 {
 	if (m_Open)
 	{
@@ -136,26 +142,21 @@ void MenuBar::OnHover(MenuItem* Hovered)
 	}
 }
 
-void MenuBar::OnSelected(MenuItem* Selected)
+void MenuBar::OnSelected(const MenuItem& Selected)
 {
 	Open(Selected);
 }
 
-void MenuBar::Open(MenuItem* Item)
+void MenuBar::Open(const MenuItem& Item)
 {
-	if (Item == nullptr)
-	{
-		return;
-	}
-
-	m_Menu = Item->GetMenu();
+	m_Menu = Item.GetMenu();
 	if (!m_Menu)
 	{
 		return;
 	}
 
 	m_Menu->Close();
-	const Vector2 Position = Item->GetPosition();
+	const Vector2 Position = Item.GetPosition();
 	m_Menu->SetPosition(Position + Vector2(0.0f, GetSize().Y));
 	GetWindow()->SetPopup(m_Menu);
 	m_Open = true;

@@ -51,10 +51,17 @@ Menu::Menu(Window* InWindow)
 Menu* Menu::AddItem(const char* InText, OnEmptySignature Fn)
 {
 	std::shared_ptr<MenuItem> Item = std::make_shared<MenuItem>(GetWindow());
-	Item->SetOnHover(std::bind(&Menu::OnHovered, this, std::placeholders::_1))
-		->SetOnSelected(std::bind(&Menu::OnSelected, this, std::placeholders::_1))
-		->SetText(InText)
-		->SetExpand(Expand::Width);
+	Item
+		->SetOnHovered([this](const TextSelectable& Item) -> void
+		{
+			OnHovered(static_cast<const MenuItem&>(Item));
+		})
+		.SetOnPressed([this](const TextSelectable& Item) -> void
+		{
+			OnSelected(static_cast<const MenuItem&>(Item));
+		})
+		.SetText(InText)
+		.SetExpand(Expand::Width);
 	
 	m_Container->InsertControl(Item);
 
@@ -159,14 +166,9 @@ void Menu::Resize()
 	SetSize(Size + Vector2(RightPadding, Margins.Y * 2.0f));
 }
 
-void Menu::OnHovered(MenuItem* Item)
+void Menu::OnHovered(const MenuItem& Item)
 {
-	if (Item == nullptr)
-	{
-		return;
-	}
-
-	if (m_Menu && Item->GetMenu() == m_Menu)
+	if (m_Menu && Item.GetMenu() == m_Menu)
 	{
 		return;
 	}
@@ -174,7 +176,7 @@ void Menu::OnHovered(MenuItem* Item)
 	SetSelected(m_Menu, false);
 	RemoveControl(m_Menu);
 
-	m_Menu = Item->GetMenu();
+	m_Menu = Item.GetMenu();
 	if (!m_Menu)
 	{
 		return;
@@ -183,24 +185,24 @@ void Menu::OnHovered(MenuItem* Item)
 	SetSelected(m_Menu, true);
 
 	const Vector2 Margins = GetProperty(ThemeProperties::Menu_Margins).Vector();
-	const Vector2 Position = Item->GetPosition() + Vector2(GetSize().X, 0.0f);
+	const Vector2 Position = Item.GetPosition() + Vector2(GetSize().X, 0.0f);
 	m_Menu->SetPosition(Position);
 	InsertControl(m_Menu);
 }
 
-void Menu::OnSelected(MenuItem* Item)
+void Menu::OnSelected(const MenuItem& Item)
 {
-	if (Item->GetMenu())
+	if (Item.GetMenu())
 	{
 		return;
 	}
 
-	if (m_Callbacks.find(Item) == m_Callbacks.end())
+	if (m_Callbacks.find(&Item) == m_Callbacks.end())
 	{
 		return;
 	}
 
-	OnEmptySignature Fn = m_Callbacks[Item];
+	OnEmptySignature Fn = m_Callbacks[&Item];
 
 	if (Fn != nullptr)
 	{

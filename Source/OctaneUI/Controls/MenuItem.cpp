@@ -37,16 +37,6 @@ namespace OctaneUI
 
 MenuItem::MenuItem(Window* InWindow)
 	: TextSelectable(InWindow)
-	, m_Menu(nullptr)
-	, m_IsMenuBar(false)
-	, m_IsChecked(false)
-	, m_OnHover(nullptr)
-	, m_OnSelected(nullptr)
-{
-	SetOnPressed(std::bind(&MenuItem::OnPressed, this, std::placeholders::_1));
-}
-
-MenuItem::~MenuItem()
 {
 }
 
@@ -65,39 +55,27 @@ std::shared_ptr<Menu> MenuItem::GetMenu() const
 	return m_Menu;
 }
 
-MenuItem* MenuItem::DestroyMenu()
+MenuItem& MenuItem::DestroyMenu()
 {
 	m_Menu = nullptr;
-	return this;
+	return *this;
 }
 
-MenuItem* MenuItem::SetIsMenuBar(bool IsMenuBar)
+MenuItem& MenuItem::SetIsMenuBar(bool IsMenuBar)
 {
 	m_IsMenuBar = IsMenuBar;
-	return this;
+	return *this;
 }
 
-MenuItem* MenuItem::SetChecked(bool Checked)
+MenuItem& MenuItem::SetChecked(bool Checked)
 {
 	m_IsChecked = Checked;
-	return this;
+	return *this;
 }
 
 bool MenuItem::IsChecked() const
 {
 	return m_IsChecked;
-}
-
-MenuItem* MenuItem::SetOnHover(OnMenuItemSignature Fn)
-{
-	m_OnHover = Fn;
-	return this;
-}
-
-MenuItem* MenuItem::SetOnSelected(OnMenuItemSignature Fn)
-{
-	m_OnSelected = Fn;
-	return this;
 }
 
 void MenuItem::OnPaint(Paint& Brush) const
@@ -156,29 +134,6 @@ void MenuItem::OnLoad(const Json& Root)
 	{
 		const std::shared_ptr<Menu>& NewMenu = CreateMenu();
 		NewMenu->OnLoad(Root);
-	}
-}
-
-void MenuItem::OnMouseEnter()
-{
-	TextSelectable::OnMouseEnter();
-
-	if (m_OnHover)
-	{
-		m_OnHover(this);
-	}
-}
-
-void MenuItem::OnPressed(TextSelectable* Item)
-{
-	if (this != Item)
-	{
-		return;
-	}
-
-	if (m_OnSelected)
-	{
-		m_OnSelected(this);
 	}
 }
 

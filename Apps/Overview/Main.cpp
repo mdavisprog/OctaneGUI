@@ -68,7 +68,7 @@ int main(int argc, char **argv)
 	Application.Initialize(GetContents("Overview.json").c_str(), WindowControls);
 	
 	const OctaneUI::ControlList& List = WindowControls["Main"];
-	List.To<OctaneUI::MenuItem>("File.Quit")->SetOnSelected([&](OctaneUI::MenuItem* Item) -> void
+	List.To<OctaneUI::MenuItem>("File.Quit")->SetOnPressed([&](const OctaneUI::TextSelectable&) -> void
 	{
 		Application.Quit();
 	});
@@ -78,9 +78,9 @@ int main(int argc, char **argv)
 	{
 		const char* Name = Theme.first.c_str();
 		ThemesMenu->AddItem(Name);
-		ThemesMenu->GetItem(Name)->SetOnSelected([&](OctaneUI::MenuItem* Item) -> void
+		ThemesMenu->GetItem(Name)->SetOnPressed([&](const OctaneUI::TextSelectable& Item) -> void
 		{
-			const char* Name = Item->GetText();
+			const char* Name = Item.GetText();
 			if (Themes.find(Name) != Themes.end())
 			{
 				const std::string& Path = Themes[Name];
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
 		});
 	}
 
-	List.To<OctaneUI::MenuItem>("Help.About")->SetOnSelected([&](OctaneUI::MenuItem* Item) -> void
+	List.To<OctaneUI::MenuItem>("Help.About")->SetOnPressed([&](const OctaneUI::TextSelectable&) -> void
 	{
 		Application.DisplayWindow("About");
 	});

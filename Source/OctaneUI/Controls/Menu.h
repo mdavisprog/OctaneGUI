@@ -54,18 +54,18 @@ public:
 	virtual void OnLoad(const Json& Root) override;
 
 private:
-	typedef std::unordered_map<MenuItem*, OnEmptySignature> MenuItemMap;
+	typedef std::unordered_map<const MenuItem*, OnEmptySignature> MenuItemMap;
 
 	void Resize();
-	void OnHovered(MenuItem* Item);
-	void OnSelected(MenuItem* Item);
+	void OnHovered(const MenuItem& Item);
+	void OnSelected(const MenuItem& Item);
 	void OnSeparatorHovered(Control* Item);
 	void SetSelected(const std::shared_ptr<Menu>& InMenu, bool Selected) const;
 
 	std::shared_ptr<Panel> m_Panel { nullptr };
-	std::shared_ptr<VerticalContainer> m_Container;
-	std::vector<std::shared_ptr<MenuItem>> m_Items;
-	MenuItemMap m_Callbacks;
+	std::shared_ptr<VerticalContainer> m_Container {};
+	std::vector<std::shared_ptr<MenuItem>> m_Items {};
+	MenuItemMap m_Callbacks {};
 	std::shared_ptr<Menu> m_Menu { nullptr };
 };
 

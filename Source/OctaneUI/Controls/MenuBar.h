@@ -51,9 +51,9 @@ public:
 	virtual void OnThemeLoaded() override;
 
 private:
-	void OnHover(MenuItem* Hovered);
-	void OnSelected(MenuItem* Selected);
-	void Open(MenuItem* Item);
+	void OnHover(const MenuItem& Hovered);
+	void OnSelected(const MenuItem& Selected);
+	void Open(const MenuItem& Item);
 
 	std::shared_ptr<Panel> m_Panel { nullptr };
 	std::shared_ptr<HorizontalContainer> m_Container { nullptr };

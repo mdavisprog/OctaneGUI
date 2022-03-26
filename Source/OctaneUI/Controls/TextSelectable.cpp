@@ -35,10 +35,6 @@ namespace OctaneUI
 
 TextSelectable::TextSelectable(Window* InWindow)
 	: Control(InWindow)
-	, m_Hovered(false)
-	, m_Selected(false)
-	, m_OnPressed(nullptr)
-	, m_Align(HorizontalAlignment::Left)
 {
 	m_Text = std::make_shared<Text>(InWindow);
 	m_Text->SetParent(this);
@@ -48,10 +44,10 @@ TextSelectable::~TextSelectable()
 {
 }
 
-TextSelectable* TextSelectable::SetSelected(bool Selected)
+TextSelectable& TextSelectable::SetSelected(bool Selected)
 {
 	m_Selected = Selected;
-	return this;
+	return *this;
 }
 
 bool TextSelectable::IsSelected() const
@@ -59,11 +55,11 @@ bool TextSelectable::IsSelected() const
 	return m_Selected;
 }
 
-TextSelectable* TextSelectable::SetText(const char* Contents)
+TextSelectable& TextSelectable::SetText(const char* Contents)
 {
 	m_Text->SetText(Contents);
 	UpdateSize();
-	return this;
+	return *this;
 }
 
 const char* TextSelectable::GetText() const
@@ -71,11 +67,11 @@ const char* TextSelectable::GetText() const
 	return m_Text->GetText();
 }
 
-TextSelectable* TextSelectable::SetAlignment(HorizontalAlignment Align)
+TextSelectable& TextSelectable::SetAlignment(HorizontalAlignment Align)
 {
 	m_Align = Align;
 	Invalidate();
-	return this;
+	return *this;
 }
 
 HorizontalAlignment TextSelectable::GetAlignment() const
@@ -83,10 +79,16 @@ HorizontalAlignment TextSelectable::GetAlignment() const
 	return m_Align;
 }
 
-TextSelectable* TextSelectable::SetOnPressed(OnTextSelectableSignature Fn)
+TextSelectable& TextSelectable::SetOnHovered(OnTextSelectableSignature Fn)
+{
+	m_OnHovered = Fn;
+	return *this;
+}
+
+TextSelectable& TextSelectable::SetOnPressed(OnTextSelectableSignature Fn)
 {
 	m_OnPressed = Fn;
-	return this;
+	return *this;
 }
 
 void TextSelectable::OnPaint(Paint& Brush) const
@@ -135,7 +137,7 @@ bool TextSelectable::OnMousePressed(const Vector2& Position, Mouse::Button Butto
 {
 	if (m_OnPressed)
 	{
-		m_OnPressed(this);
+		m_OnPressed(*this);
 	}
 
 	return true;
@@ -144,6 +146,12 @@ bool TextSelectable::OnMousePressed(const Vector2& Position, Mouse::Button Butto
 void TextSelectable::OnMouseEnter()
 {
 	m_Hovered = true;
+
+	if (m_OnHovered)
+	{
+		m_OnHovered(*this);
+	}
+
 	Invalidate();
 }
 
