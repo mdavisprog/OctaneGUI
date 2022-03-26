@@ -59,7 +59,6 @@ private:
 	void Resize();
 	void OnHovered(const MenuItem& Item);
 	void OnSelected(const MenuItem& Item);
-	void OnSeparatorHovered(Control* Item);
 	void SetSelected(const std::shared_ptr<Menu>& InMenu, bool Selected) const;
 
 	std::shared_ptr<Panel> m_Panel { nullptr };

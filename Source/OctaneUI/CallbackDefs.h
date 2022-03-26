@@ -48,7 +48,7 @@ enum class InvalidateType : unsigned char
 typedef std::function<void()> OnEmptySignature;
 typedef std::function<void(const Button&)> OnButtonSignature;
 typedef std::function<void(Container*)> OnContainerSignature;
-typedef std::function<void(Control*)> OnControlSignature;
+typedef std::function<void(const Control&)> OnControlSignature;
 typedef std::function<void(Control*, InvalidateType)> OnInvalidateSignature;
 typedef std::function<void(const ScrollBar&)> OnScrollBarSignature;
 typedef std::function<void(const TextSelectable&)> OnTextSelectableSignature;

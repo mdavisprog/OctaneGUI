@@ -92,7 +92,15 @@ std::shared_ptr<MenuItem> Menu::GetItem(const char* InText) const
 Menu* Menu::AddSeparator()
 {
 	std::shared_ptr<Separator> Item = std::make_shared<Separator>(GetWindow());
-	Item->SetOnHover(std::bind(&Menu::OnSeparatorHovered, this, std::placeholders::_1));
+	Item->SetOnHover([this](const Control&) -> void
+	{
+		if (m_Menu)
+		{
+			SetSelected(m_Menu, false);
+			RemoveControl(m_Menu);
+			m_Menu = nullptr;
+		}
+	});
 	m_Container->InsertControl(Item);
 	Resize();
 	return this;
@@ -207,16 +215,6 @@ void Menu::OnSelected(const MenuItem& Item)
 	if (Fn != nullptr)
 	{
 		Fn();
-	}
-}
-
-void Menu::OnSeparatorHovered(Control* Item)
-{
-	if (m_Menu)
-	{
-		SetSelected(m_Menu, false);
-		RemoveControl(m_Menu);
-		m_Menu = nullptr;
 	}
 }
 

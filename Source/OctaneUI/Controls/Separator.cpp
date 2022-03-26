@@ -67,7 +67,7 @@ void Separator::OnMouseEnter()
 {
 	if (m_OnHover)
 	{
-		m_OnHover(this);
+		m_OnHover(*this);
 	}
 }
 
