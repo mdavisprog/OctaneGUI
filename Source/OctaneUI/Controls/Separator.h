@@ -37,15 +37,15 @@ class Separator : public Control
 
 public:
 	Separator(Window* InWindow);
-	virtual ~Separator();
 
-	Separator* SetOnHover(OnControlSignature Fn);
+	Separator& SetOnHover(OnControlSignature Fn);
 
 	virtual void OnPaint(Paint& Brush) const override;
+	virtual void OnLoad(const Json& Root) override;
 	virtual void OnMouseEnter() override;
 
 private:
-	OnControlSignature m_OnHover;
+	OnControlSignature m_OnHover { nullptr };
 };
 
 }

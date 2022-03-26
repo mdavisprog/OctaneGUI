@@ -32,20 +32,15 @@ namespace OctaneUI
 
 Separator::Separator(Window* InWindow)
 	: Control(InWindow)
-	, m_OnHover(nullptr)
 {
 	SetExpand(Expand::Width);
 	SetSize({0.0f, 16.0f});
 }
 
-Separator::~Separator()
-{
-}
-
-Separator* Separator::SetOnHover(OnControlSignature Fn)
+Separator& Separator::SetOnHover(OnControlSignature Fn)
 {
 	m_OnHover = Fn;
-	return this;
+	return *this;
 }
 
 void Separator::OnPaint(Paint& Brush) const
@@ -59,6 +54,13 @@ void Separator::OnPaint(Paint& Brush) const
 	const Vector2 End = GetAbsolutePosition() + Vector2(GetSize().X - Margins, HalfSize.Y);
 
 	Brush.Line(Start, End, Fill, Thickness);
+}
+
+void Separator::OnLoad(const Json& Root)
+{
+	Control::OnLoad(Root);
+
+	SetExpand(Expand::Width);
 }
 
 void Separator::OnMouseEnter()
