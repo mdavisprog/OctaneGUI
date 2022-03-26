@@ -151,7 +151,6 @@ void Theme::Load(const Json& Root)
 	Set(ThemeProperties::MenuBar_Padding, Root["MenuBar_Padding"]);
 
 	Set(ThemeProperties::Button_3D, Root["Button_3D"]);
-	Set(ThemeProperties::Checkbox_3D, Root["Checkbox_3D"]);
 	Set(ThemeProperties::TextInput_3D, Root["TextInput_3D"]);
 	Set(ThemeProperties::ScrollBar_3D, Root["ScrollBar_3D"]);
 
@@ -203,7 +202,6 @@ void Theme::InitializeDefault()
 	m_Properties[ThemeProperties::MenuBar_Padding] = Vector2(0.0f, 6.0f);
 
 	m_Properties[ThemeProperties::Button_3D] = false;
-	m_Properties[ThemeProperties::Checkbox_3D] = false;
 	m_Properties[ThemeProperties::TextInput_3D] = false;
 	m_Properties[ThemeProperties::ScrollBar_3D] = false;
 	m_Properties[ThemeProperties::FontPath] = "";

@@ -35,10 +35,7 @@ namespace OctaneUI
 {
 
 Checkbox::Checkbox(Window* InWindow)
-	: Control(InWindow)
-	, m_State(State::None)
-	, m_Hovered(false)
-	, m_TriState(false)
+	: Button(InWindow)
 {
 	m_Text = std::make_shared<Text>(InWindow);
 	m_Text->SetParent(this);
@@ -51,6 +48,7 @@ Checkbox::~Checkbox()
 Checkbox* Checkbox::SetText(const char* InText)
 {
 	m_Text->SetText(InText);
+	Update();
 	UpdateSize();
 	return this;
 }
@@ -95,10 +93,12 @@ bool Checkbox::IsTriState() const
 void Checkbox::OnPaint(Paint& Brush) const
 {
 	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
-	const Vector2 BoxSize = TexCoords.GetSize() + Vector2(3.0f, 3.0f);
-	const Vector2 BoxPosition = GetAbsolutePosition() + Vector2(6.0f, GetSize().Y * 0.5f - BoxSize.Y * 0.5f);
-	const Rect Bounds(BoxPosition, BoxPosition + BoxSize);
-	const bool Is3D = GetProperty(ThemeProperties::Checkbox_3D).Bool();
+	const Vector2 Size = BoxSize();
+	const Vector2 BoxPosition = GetAbsolutePosition() + Vector2(0.0f, GetSize().Y * 0.5f - Size.Y * 0.5f);
+	const Rect Bounds(BoxPosition, BoxPosition + Size);
+	const bool Is3D = GetProperty(ThemeProperties::Button_3D).Bool();
+
+	Brush.RectangleOutline(GetAbsoluteBounds(), Color(255, 0, 0, 255));
 
 	if (Is3D)
 	{
@@ -112,15 +112,22 @@ void Checkbox::OnPaint(Paint& Brush) const
 	}
 	else
 	{
-		Brush.Rectangle(
-			Rect(BoxPosition, BoxPosition + BoxSize),
-			m_Hovered ? GetProperty(ThemeProperties::Button_Pressed).ToColor() : GetProperty(ThemeProperties::Button).ToColor()
-		);
+		Color Background = GetProperty(ThemeProperties::Button).ToColor();
+		if (IsHovered())
+		{
+			Background = GetProperty(ThemeProperties::Button_Hovered).ToColor();
+		}
+		else if (IsPressed())
+		{
+			Background = GetProperty(ThemeProperties::Button_Pressed).ToColor();
+		}
+
+		Brush.Rectangle(Rect(BoxPosition, BoxPosition + Size), Background);
 	}
 
 	if (m_State == State::Checked)
 	{
-		const Vector2 Position = BoxPosition + BoxSize * 0.5f - TexCoords.GetSize() * 0.5f;
+		const Vector2 Position = BoxPosition + Size * 0.5f - TexCoords.GetSize() * 0.5f;
 		Brush.Image(
 			Rect(Position, Position + TexCoords.GetSize()),
 			GetWindow()->GetIcons()->GetUVsNormalized(Icons::Type::Check),
@@ -133,7 +140,7 @@ void Checkbox::OnPaint(Paint& Brush) const
 		const Vector2 Shrink = {3.0f, 3.0f};
 		Rect Inner = Rect(
 			BoxPosition + Shrink,
-			BoxPosition + BoxSize - Shrink
+			BoxPosition + Size - Shrink
 		);
 		Brush.Rectangle(Inner, GetProperty(ThemeProperties::Check).ToColor());
 	}
@@ -143,20 +150,30 @@ void Checkbox::OnPaint(Paint& Brush) const
 
 void Checkbox::Update()
 {
-	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
-	m_Text->SetPosition({TexCoords.GetSize().X + 12.0f, GetSize().Y * 0.5f - m_Text->GetSize().Y * 0.5f});
+	m_Text->SetPosition({BoxSize().X + 12.0f, GetSize().Y * 0.5f - m_Text->GetSize().Y * 0.5f});
 }
 
 void Checkbox::OnLoad(const Json& Root)
 {
-	Control::OnLoad(Root);
+	Button::OnLoad(Root);
 
 	m_Text->OnLoad(Root["Text"]);
 	SetTriState(Root["TriState"].Boolean(false));
+
+	Update();
 	UpdateSize();
 }
 
-bool Checkbox::OnMousePressed(const Vector2& Position, Mouse::Button Button)
+void Checkbox::OnThemeLoaded()
+{
+	Control::OnThemeLoaded();
+
+	m_Text->OnThemeLoaded();
+	Update();
+	UpdateSize();
+}
+
+void Checkbox::OnClicked()
 {
 	switch (m_State)
 	{
@@ -167,34 +184,19 @@ bool Checkbox::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 	}
 
 	Invalidate();
-	return true;
 }
 
-void Checkbox::OnMouseEnter()
+Vector2 Checkbox::BoxSize() const
 {
-	m_Hovered = true;
-	Invalidate();
-}
-
-void Checkbox::OnMouseLeave()
-{
-	m_Hovered = false;
-	Invalidate();
-}
-
-void Checkbox::OnThemeLoaded()
-{
-	Control::OnThemeLoaded();
-
-	m_Text->OnThemeLoaded();
-	UpdateSize();
+	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
+	return TexCoords.GetSize() + Vector2(3.0f, 3.0f);
 }
 
 void Checkbox::UpdateSize()
 {
 	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
-	const Vector2 Padding =GetProperty(ThemeProperties::TextSelectable_Padding).Vector();
-	Vector2 Size(TexCoords.GetSize().X + m_Text->GetSize().X, m_Text->GetSize().Y + Padding.Y * 2.0f);
+	const Vector2 Padding = GetProperty(ThemeProperties::TextSelectable_Padding).Vector();
+	Vector2 Size(m_Text->GetPosition().X + m_Text->GetSize().X, m_Text->GetSize().Y + Padding.Y * 2.0f);
 	SetSize(Size);
 }
 

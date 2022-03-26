@@ -26,14 +26,14 @@ SOFTWARE.
 
 #pragma once
 
-#include "Control.h"
+#include "Button.h"
 
 namespace OctaneUI
 {
 
 class Text;
 
-class Checkbox : public Control
+class Checkbox : public Button
 {
 	CLASS(Checkbox)
 
@@ -60,18 +60,18 @@ public:
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
 	virtual void OnLoad(const Json& Root) override;
-	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
-	virtual void OnMouseEnter() override;
-	virtual void OnMouseLeave() override;
 	virtual void OnThemeLoaded() override;
 
+protected:
+	virtual void OnClicked() override;
+
 private:
+	Vector2 BoxSize() const;
 	void UpdateSize();
 
-	std::shared_ptr<Text> m_Text;
-	State m_State;
-	bool m_Hovered;
-	bool m_TriState;
+	std::shared_ptr<Text> m_Text { nullptr };
+	State m_State { State::None };
+	bool m_TriState { false };
 };
 
 }

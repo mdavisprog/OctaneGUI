@@ -77,7 +77,6 @@ public:
 
 		// Flags
 		Button_3D,
-		Checkbox_3D,
 		TextInput_3D,
 		ScrollBar_3D,
 
