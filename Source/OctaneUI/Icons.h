@@ -41,7 +41,7 @@ class Icons
 public:
 	enum class Type : uint8_t
 	{
-		Expand,
+		ArrowRight,
 		Check,
 		Max
 	};

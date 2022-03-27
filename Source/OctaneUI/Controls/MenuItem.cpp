@@ -98,13 +98,13 @@ void MenuItem::OnPaint(Paint& Brush) const
 
 	if (m_Menu && !m_IsMenuBar)
 	{
-		const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Expand);
+		const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::ArrowRight);
 		const Vector2 Position = GetAbsolutePosition()
 			+ Vector2(GetSize().X - TexCoords.GetSize().X * 1.5f, GetSize().Y * 0.5f - TexCoords.GetSize().Y * 0.5f);
 		
 		Brush.Image(
 			Rect(Position, Position + TexCoords.GetSize()),
-			GetWindow()->GetIcons()->GetUVsNormalized(Icons::Type::Expand),
+			GetWindow()->GetIcons()->GetUVsNormalized(Icons::Type::ArrowRight),
 			GetWindow()->GetIcons()->GetTexture(),
 			IconColor
 		);

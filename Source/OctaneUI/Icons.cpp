@@ -92,7 +92,7 @@ void Icons::Initialize()
 
 	m_Texture = Texture::Load(Buffer, Width, Height);
 
-	m_UVs[(int)Type::Expand] = Rect(0.0f, 0.0f, 8.0f, 12.0f);
+	m_UVs[(int)Type::ArrowRight] = Rect(0.0f, 0.0f, 8.0f, 12.0f);
 	m_UVs[(int)Type::Check] = Rect(8.0f, 0.0f, 26.0f, 12.0f);
 }
 
