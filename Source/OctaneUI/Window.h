@@ -76,7 +76,8 @@ public:
 	void RequestClose(bool Request = true);
 	bool ShouldClose() const;
 
-	void SetPopup(const std::shared_ptr<Container>& Popup, bool Modal = false);
+	void SetPopup(const std::shared_ptr<Container>& Popup, OnContainerSignature Callback = nullptr, bool Modal = false);
+	const std::shared_ptr<Container>& GetPopup() const;
 
 	void OnKeyPressed(Keyboard::Key Key);
 	void OnKeyReleased(Keyboard::Key Key);
@@ -129,6 +130,7 @@ private:
 	std::vector<Container*> m_LayoutRequests;
 
 	OnPaintSignature m_OnPaint { nullptr };
+	OnContainerSignature m_OnPopupClose { nullptr };
 };
 
 }

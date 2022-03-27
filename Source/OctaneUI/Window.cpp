@@ -48,6 +48,12 @@ Window::Window(Application* InApplication)
 
 	m_Popup.SetOnClose([=](const Container& Focus) -> void
 	{
+		if (m_OnPopupClose)
+		{
+			m_OnPopupClose(Focus);
+			m_OnPopupClose = nullptr;
+		}
+
 		m_MenuBar->Close();
 		m_Repaint = true;
 	});
@@ -116,9 +122,15 @@ bool Window::ShouldClose() const
 	return m_RequestClose;
 }
 
-void Window::SetPopup(const std::shared_ptr<Container>& Popup, bool Modal)
+void Window::SetPopup(const std::shared_ptr<Container>& Popup, OnContainerSignature Callback, bool Modal)
 {
 	m_Popup.Open(Popup, Modal);
+	m_OnPopupClose = Callback;
+}
+
+const std::shared_ptr<Container>& Window::GetPopup() const
+{
+	return m_Popup.GetContainer();
 }
 
 void Window::OnKeyPressed(Keyboard::Key Key)

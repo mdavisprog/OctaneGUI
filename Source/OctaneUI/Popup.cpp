@@ -110,7 +110,7 @@ bool Popup::IsModal() const
 	return m_Modal;
 }
 
-std::shared_ptr<Container> Popup::GetContainer() const
+const std::shared_ptr<Container>& Popup::GetContainer() const
 {
 	return m_Container;
 }
