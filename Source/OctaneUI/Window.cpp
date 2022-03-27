@@ -46,7 +46,7 @@ Window::Window(Application* InApplication)
 		m_Repaint = true;
 	});
 
-	m_Popup.SetOnClose([=](Container* Focus) -> void
+	m_Popup.SetOnClose([=](const Container& Focus) -> void
 	{
 		m_MenuBar->Close();
 		m_Repaint = true;

@@ -81,7 +81,7 @@ void Popup::Close()
 
 		if (m_OnClose)
 		{
-			m_OnClose(m_Container.get());
+			m_OnClose(*m_Container.get());
 		}
 	}
 
