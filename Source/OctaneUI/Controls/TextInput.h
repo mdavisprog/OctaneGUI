@@ -74,8 +74,11 @@ public:
 	TextInput(Window* InWindow);
 	virtual ~TextInput();
 
-	TextInput* SetText(const char* InText);
+	TextInput& SetText(const char* InText);
 	const char* GetText() const;
+
+	TextInput& SetReadOnly(bool Value);
+	bool ReadOnly() const;
 
 	void Focus();
 	void Unfocus();
@@ -109,6 +112,7 @@ private:
 	bool m_Focused { false };
 	bool m_Drag { false };
 	bool m_Multiline { false };
+	bool m_ReadOnly { false };
 	std::shared_ptr<TextInputInteraction> m_Interaction { nullptr };
 	std::shared_ptr<ScrollableContainer> m_Scrollable { nullptr };
 };

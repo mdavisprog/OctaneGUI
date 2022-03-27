@@ -186,16 +186,33 @@ TextInput::~TextInput()
 {
 }
 
-TextInput* TextInput::SetText(const char* InText)
+TextInput& TextInput::SetText(const char* InText)
 {
 	m_Text->SetText(InText);
 	Invalidate();
-	return this;
+	return *this;
 }
 
 const char* TextInput::GetText() const
 {
 	return m_Text->GetText();
+}
+
+TextInput& TextInput::SetReadOnly(bool Value)
+{
+	if (m_ReadOnly == Value)
+	{
+		return *this;
+	}
+
+	m_ReadOnly = Value;
+	Invalidate();
+	return *this;
+}
+
+bool TextInput::ReadOnly() const
+{
+	return m_ReadOnly;
 }
 
 void TextInput::Focus()
@@ -373,6 +390,11 @@ void TextInput::MouseReleased(const Vector2& Position, Mouse::Button Button)
 
 void TextInput::AddText(uint32_t Code)
 {
+	if (m_ReadOnly)
+	{
+		return;
+	}
+
 	if (!std::isalnum(Code) && Code != '\n' && Code != ' ')
 	{
 		return;
