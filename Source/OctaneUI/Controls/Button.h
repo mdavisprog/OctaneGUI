@@ -39,7 +39,7 @@ class Button : public Control
 public:
 	Button(Window* InWindow);
 
-	Button* SetOnPressed(OnButtonSignature Fn);
+	Button& SetOnPressed(OnButtonSignature Fn);
 
 	void SetDisabled(bool Disabled);
 	bool IsDisabled() const;

@@ -74,7 +74,7 @@ TEST_CASE(Disabled,
 	{
 		Pressed = true;
 	})
-	->SetDisabled(true);
+	.SetDisabled(true);
 
 	OctaneUI::Vector2 Position = List.To<OctaneUI::Button>("Button")->GetAbsoluteBounds().GetCenter();
 

@@ -36,10 +36,10 @@ Button::Button(Window* InWindow)
 {
 }
 
-Button* Button::SetOnPressed(OnButtonSignature Fn)
+Button& Button::SetOnPressed(OnButtonSignature Fn)
 {
 	m_OnPressed = Fn;
-	return this;
+	return *this;
 }
 
 void Button::SetDisabled(bool Disabled)
