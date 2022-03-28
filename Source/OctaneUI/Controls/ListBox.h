@@ -55,6 +55,7 @@ public:
 
 	int Index() const;
 	ListBox* SetOnSelect(OnSelectSignature Fn);
+	Vector2 ListSize() const;
 
 	virtual void OnLoad(const Json& Root) override;
 	virtual void OnPaint(Paint& Brush) const override;

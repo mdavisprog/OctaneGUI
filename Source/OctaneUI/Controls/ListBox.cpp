@@ -246,6 +246,11 @@ ListBox* ListBox::SetOnSelect(OnSelectSignature Fn)
 	return this;
 }
 
+Vector2 ListBox::ListSize() const
+{
+	return m_List->DesiredSize();
+}
+
 void ListBox::OnLoad(const Json& Root)
 {
 	Json Copy = Root;
