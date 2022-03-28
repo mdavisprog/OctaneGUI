@@ -44,7 +44,7 @@ Image::~Image()
 {
 }
 
-Image* Image::SetTexture(const char* Path)
+Image& Image::SetTexture(const char* Path)
 {
 	if (!m_Texture)
 	{
@@ -56,26 +56,31 @@ Image* Image::SetTexture(const char* Path)
 		}
 	}
 
-	return this;
+	return *this;
 }
 
-Image* Image::SetTexture(const std::shared_ptr<Texture>& InTexture)
+Image& Image::SetTexture(const std::shared_ptr<Texture>& InTexture)
 {
 	m_Texture = InTexture;
-	return this;
+	return *this;
 }
 
-Image* Image::SetUVs(const Rect& UVs)
+Image& Image::SetUVs(const Rect& UVs)
 {
 	m_UVs = UVs;
 	SetSize(m_UVs.GetSize());
-	return this;
+	return *this;
 }
 
-Image* Image::SetTint(const Color& Tint)
+Image& Image::SetTint(const Color& Tint)
 {
 	m_Tint = Tint;
-	return this;
+	return *this;
+}
+
+Color Image::Tint() const
+{
+	return m_Tint;
 }
 
 void Image::OnPaint(Paint& Brush) const

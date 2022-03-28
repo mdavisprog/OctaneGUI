@@ -42,10 +42,12 @@ public:
 	Image(Window* InWindow);
 	virtual ~Image();
 
-	Image* SetTexture(const char* Path);
-	Image* SetTexture(const std::shared_ptr<Texture>& InTexture);
-	Image* SetUVs(const Rect& UVs);
-	Image* SetTint(const Color& Tint);
+	Image& SetTexture(const char* Path);
+	Image& SetTexture(const std::shared_ptr<Texture>& InTexture);
+	Image& SetUVs(const Rect& UVs);
+
+	Image& SetTint(const Color& Tint);
+	Color Tint() const;
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
