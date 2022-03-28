@@ -112,6 +112,7 @@ private:
 	Window();
 
 	void Populate(ControlList& List) const;
+	void RequestLayout(Container* Request);
 
 	Application* m_Application { nullptr };
 	std::string m_Title {};

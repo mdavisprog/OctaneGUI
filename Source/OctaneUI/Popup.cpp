@@ -98,10 +98,6 @@ void Popup::Update()
 		{
 			m_State = State::Opened;
 		}
-
-		// TODO: Need to just allow the owning window of this popup to handle the layout and
-		//		 paint updates.
-		m_Container->Layout();
 	}
 }
 

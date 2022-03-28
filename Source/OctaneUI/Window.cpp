@@ -43,6 +43,11 @@ Window::Window(Application* InApplication)
 {
 	m_Popup.SetOnInvalidate([=](Control* Focus, InvalidateType Type) -> void
 	{
+		if ((Type == InvalidateType::Layout || Type == InvalidateType::Both))
+		{
+			RequestLayout(dynamic_cast<Container*>(Focus));
+		}
+
 		m_Repaint = true;
 	});
 
@@ -126,6 +131,7 @@ void Window::SetPopup(const std::shared_ptr<Container>& Popup, OnContainerSignat
 {
 	m_Popup.Open(Popup, Modal);
 	m_OnPopupClose = Callback;
+	RequestLayout(Popup.get());
 }
 
 const std::shared_ptr<Container>& Window::GetPopup() const
@@ -279,13 +285,9 @@ void Window::CreateContainer()
 		->SetExpand(Expand::Both)
 		->SetOnInvalidate([=](Control* Focus, InvalidateType Type) -> void
 		{
-			Container* FocusContainer = dynamic_cast<Container*>(Focus);
-			if (FocusContainer != nullptr && (Type == InvalidateType::Layout || Type == InvalidateType::Both))
+			if ((Type == InvalidateType::Layout || Type == InvalidateType::Both))
 			{
-				if (std::find(m_LayoutRequests.begin(), m_LayoutRequests.end(), FocusContainer) == m_LayoutRequests.end())
-				{
-					m_LayoutRequests.push_back(FocusContainer);
-				}
+				RequestLayout(dynamic_cast<Container*>(Focus));
 			}
 
 			m_Repaint = true;
@@ -425,6 +427,19 @@ void Window::Populate(ControlList& List) const
 		{
 			List.AddControl(Item);
 		}
+	}
+}
+
+void Window::RequestLayout(Container* Request)
+{
+	if (Request == nullptr)
+	{
+		return;
+	}
+
+	if (std::find(m_LayoutRequests.begin(), m_LayoutRequests.end(), Request) == m_LayoutRequests.end())
+	{
+		m_LayoutRequests.push_back(Request);
 	}
 }
 
