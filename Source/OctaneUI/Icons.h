@@ -42,6 +42,7 @@ public:
 	enum class Type : uint8_t
 	{
 		ArrowRight,
+		ArrowDown,
 		Check,
 		Max
 	};
