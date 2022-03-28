@@ -73,6 +73,9 @@ ComboBox::ComboBox(Window* InWindow)
 		})
 		.SetExpand(Expand::Height);
 	
+	// Setup the color to use by default for the image button.
+	OnThemeLoaded();
+	
 	m_List = std::make_shared<ListBox>(InWindow);
 	m_List
 		->SetOnSelect([this](int Index, std::weak_ptr<Control> Item) -> void
@@ -126,6 +129,14 @@ void ComboBox::OnLoad(const Json& Root)
 			AddItem(Item.String());
 		}
 	}
+
+	OnThemeLoaded();
+}
+
+void ComboBox::OnThemeLoaded()
+{
+	m_Button->SetProperty(ThemeProperties::ImageButton, GetProperty(ThemeProperties::Check).ToColor());
+	m_Button->OnThemeLoaded();
 }
 
 }
