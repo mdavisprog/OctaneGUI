@@ -105,6 +105,7 @@ private:
 	uint32_t LineSize(uint32_t Index) const;
 	void ScrollIntoView();
 	void UpdateFormats();
+	void InternalSetText(const char* InText);
 
 	std::shared_ptr<Text> m_Text { nullptr };
 	TextPosition m_Position {};

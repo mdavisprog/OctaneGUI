@@ -188,7 +188,9 @@ TextInput::~TextInput()
 
 TextInput& TextInput::SetText(const char* InText)
 {
-	m_Text->SetText(InText);
+	InternalSetText(InText);
+	m_Anchor.Invalidate();
+	UpdateFormats();
 	Invalidate();
 	return *this;
 }
@@ -413,7 +415,7 @@ void TextInput::AddText(uint32_t Code)
 
 	std::string Contents = m_Text->GetText();
 	Contents.insert(Contents.begin() + m_Position.Index(), (int8_t)Code);
-	SetText(Contents.c_str());
+	InternalSetText(Contents.c_str());
 	m_Scrollable->Update();
 	MovePosition(0, 1);
 }
@@ -438,7 +440,7 @@ void TextInput::Delete(int32_t Range)
 	std::string Contents = m_Text->GetText();
 	Contents.erase(Contents.begin() + (uint32_t)Min, Contents.begin() + (uint32_t)Max);
 
-	SetText(Contents.c_str());
+	InternalSetText(Contents.c_str());
 }
 
 void TextInput::MoveHome()
@@ -761,6 +763,12 @@ void TextInput::UpdateFormats()
 		m_Text->PushFormat({Min.Index(), Max.Index(), GetProperty(ThemeProperties::TextSelectable_Text_Hovered).ToColor()});
 		m_Text->PushFormat({Max.Index(), m_Text->Length(), GetProperty(ThemeProperties::Text).ToColor()});
 	}
+}
+
+void TextInput::InternalSetText(const char* InText)
+{
+	m_Text->SetText(InText);
+	Invalidate();
 }
 
 }
