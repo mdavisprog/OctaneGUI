@@ -27,6 +27,7 @@ SOFTWARE.
 #include "../Json.h"
 #include "../Paint.h"
 #include "Checkbox.h"
+#include "ComboBox.h"
 #include "Container.h"
 #include "HorizontalContainer.h"
 #include "Image.h"
@@ -66,6 +67,7 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 	else if (Type == TextSelectable::TypeName()) { Result = AddControl<TextSelectable>(); }
 	else if (Type == TextInput::TypeName()) { Result = AddControl<TextInput>(); }
 	else if (Type == Checkbox::TypeName()) { Result = AddControl<Checkbox>(); }
+	else if (Type == ComboBox::TypeName()) { Result = AddControl<ComboBox>(); }
 	else if (Type == Image::TypeName()) { Result = AddControl<Image>(); }
 	else if (Type == ImageButton::TypeName()) { Result = AddControl<ImageButton>(); }
 	else if (Type == ListBox::TypeName()) { Result = AddControl<ListBox>(); }

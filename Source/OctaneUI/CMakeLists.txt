@@ -4,6 +4,7 @@ set(SOURCE
 	Controls/BoxContainer.cpp
 	Controls/Button.cpp
 	Controls/Checkbox.cpp
+	Controls/ComboBox.cpp
 	Controls/Container.cpp
 	Controls/Control.cpp
 	Controls/ControlList.cpp

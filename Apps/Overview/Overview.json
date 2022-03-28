@@ -88,6 +88,15 @@
 												"Text": "This is a\nmulti-line string.\nThis is another line."
 											},
 											{
+												"Type": "ComboBox",
+												"Items": [
+													"Apple",
+													"Banana",
+													"Orange",
+													"Pear"
+												]
+											},
+											{
 												"Type": "HorizontalContainer",
 												"Controls": [
 													{
