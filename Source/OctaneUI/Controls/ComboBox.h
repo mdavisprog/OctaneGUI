@@ -50,20 +50,12 @@ public:
 	virtual void OnThemeLoaded() override;
 
 private:
-	enum class State : unsigned char
-	{
-		Closed,
-		Closing,
-		Open
-	};
-
 	using Container::AddControl;
 	using Container::InsertControl;
 
 	std::shared_ptr<TextInput> m_Input { nullptr };
 	std::shared_ptr<ImageButton> m_Button { nullptr };
 	std::shared_ptr<ListBox> m_List { nullptr };
-	State m_State { State::Closed };
 };
 
 }

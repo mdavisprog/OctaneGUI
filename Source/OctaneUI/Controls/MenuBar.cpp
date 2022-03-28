@@ -144,7 +144,15 @@ void MenuBar::OnHover(const MenuItem& Hovered)
 
 void MenuBar::OnSelected(const MenuItem& Selected)
 {
-	Open(Selected);
+	if (GetWindow()->GetPopup() == Selected.GetMenu())
+	{
+		GetWindow()->ClosePopup();
+		m_Open = false;
+	}
+	else
+	{
+		Open(Selected);
+	}
 }
 
 void MenuBar::Open(const MenuItem& Item)

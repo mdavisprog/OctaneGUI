@@ -51,24 +51,13 @@ ComboBox::ComboBox(Window* InWindow)
 		.SetUVs(InWindow->GetIcons()->GetUVs(Icons::Type::ArrowDown))
 		.SetOnPressed([this](const Button&)
 		{
-			if (m_State == State::Closed)
+			if (GetWindow()->GetPopup() == m_List)
 			{
-				m_State = State::Open;
-				GetWindow()->SetPopup(m_List, [this](const Container& Focus) -> void
-				{
-					if (m_Button->IsPressed())
-					{
-						m_State = State::Closing;
-					}
-					else
-					{
-						m_State = State::Closed;
-					}
-				});
+				GetWindow()->ClosePopup();
 			}
 			else
 			{
-				m_State = State::Closed;
+				GetWindow()->SetPopup(m_List);
 			}
 		})
 		.SetExpand(Expand::Height);
@@ -80,6 +69,11 @@ ComboBox::ComboBox(Window* InWindow)
 	m_List
 		->SetOnSelect([this](int Index, std::weak_ptr<Control> Item) -> void
 		{
+			if (GetWindow()->GetContainer() == m_List)
+			{
+				GetWindow()->ClosePopup();
+			}
+
 			if (Item.expired())
 			{
 				return;

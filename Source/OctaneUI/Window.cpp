@@ -134,6 +134,11 @@ void Window::SetPopup(const std::shared_ptr<Container>& Popup, OnContainerSignat
 	RequestLayout(Popup.get());
 }
 
+void Window::ClosePopup()
+{
+	m_Popup.Close();
+}
+
 const std::shared_ptr<Container>& Window::GetPopup() const
 {
 	return m_Popup.GetContainer();
@@ -217,6 +222,7 @@ void Window::OnMousePressed(const Vector2& Position, Mouse::Button MouseButton)
 		}
 	}
 
+	bool ShouldClosePopup = false;
 	if (New != Focused)
 	{
 		if (Focused)
@@ -228,11 +234,19 @@ void Window::OnMousePressed(const Vector2& Position, Mouse::Button MouseButton)
 
 		if (New)
 		{
+			ShouldClosePopup = !m_Popup.HasControl(New);
 			New->OnFocused();
+		}
+		else
+		{
+			ShouldClosePopup = true;
 		}
 	}
 
-	m_Popup.Close();
+	if (ShouldClosePopup)
+	{
+		m_Popup.Close();
+	}
 }
 
 void Window::OnMouseReleased(const Vector2& Position, Mouse::Button MouseButton)

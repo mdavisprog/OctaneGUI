@@ -77,6 +77,7 @@ public:
 	bool ShouldClose() const;
 
 	void SetPopup(const std::shared_ptr<Container>& Popup, OnContainerSignature Callback = nullptr, bool Modal = false);
+	void ClosePopup();
 	const std::shared_ptr<Container>& GetPopup() const;
 
 	void OnKeyPressed(Keyboard::Key Key);

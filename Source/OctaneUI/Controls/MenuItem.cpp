@@ -137,4 +137,17 @@ void MenuItem::OnLoad(const Json& Root)
 	}
 }
 
+bool MenuItem::OnMousePressed(const Vector2& Position, Mouse::Button Button)
+{
+	TextSelectable::OnMousePressed(Position, Button);
+
+	if (m_Menu)
+	{
+		return false;
+	}
+
+	GetWindow()->ClosePopup();
+	return true;
+}
+
 }
