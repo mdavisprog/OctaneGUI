@@ -76,7 +76,7 @@ void ImageButton::OnPaint(Paint& Brush) const
 
 void ImageButton::Update()
 {
-	m_Image->SetTint(IsDisabled() ? GetProperty(ThemeProperties::Text_Disabled).ToColor() : Color::White);
+	OnThemeLoaded();
 	UpdateImagePosition(IsPressed());
 }
 
@@ -86,6 +86,18 @@ void ImageButton::OnLoad(const Json& Root)
 
 	m_Image->OnLoad(Root["Image"]);
 	UpdateSize();
+
+	if (GetProperty(ThemeProperties::ImageButton).ToColor() != m_Image->Tint())
+	{
+		SetProperty(ThemeProperties::ImageButton, m_Image->Tint());
+	}
+}
+
+void ImageButton::OnThemeLoaded()
+{
+	m_Image->SetTint(IsDisabled()
+		? GetProperty(ThemeProperties::Text_Disabled).ToColor() 
+		: GetProperty(ThemeProperties::ImageButton).ToColor());
 }
 
 void ImageButton::OnPressed()

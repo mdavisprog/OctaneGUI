@@ -7,6 +7,7 @@
 	"Button_Hovered": [48, 63, 169, 255],
 	"Button_Pressed": [98, 125, 152, 255],
 	"Check": [255, 255, 255, 255],
+	"ImageButton": [255, 255, 255, 255],
 	"TextSelectable_Text_Hovered": [255, 255, 255, 255],
 	"TextSelectable_Hovered": [48, 63, 169, 255],
 	"TextInput_Background": [14, 14, 14, 255],

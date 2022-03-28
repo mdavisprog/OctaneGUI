@@ -124,6 +124,7 @@ void Theme::Load(const Json& Root)
 	Set(ThemeProperties::Button_Hovered, Root["Button_Hovered"]);
 	Set(ThemeProperties::Button_Pressed, Root["Button_Pressed"]);
 	Set(ThemeProperties::Check, Root["Check"]);
+	Set(ThemeProperties::ImageButton, Root["ImageButton"]);
 	Set(ThemeProperties::TextSelectable_Text_Hovered, Root["TextSelectable_Text_Hovered"]);
 	Set(ThemeProperties::TextSelectable_Hovered, Root["TextSelectable_Hovered"]);
 	Set(ThemeProperties::TextInput_Background, Root["TextInput_Background"]);
@@ -175,6 +176,7 @@ void Theme::InitializeDefault()
 	m_Properties[ThemeProperties::Button_Hovered] = Color(48, 63, 169, 255);
 	m_Properties[ThemeProperties::Button_Pressed] = Color(98, 125, 152, 255);
 	m_Properties[ThemeProperties::Check] = Color(255, 255, 255, 255);
+	m_Properties[ThemeProperties::ImageButton] = Color(255, 255, 255, 255);
 	m_Properties[ThemeProperties::TextSelectable_Text_Hovered] = Color(255, 255, 255, 255);
 	m_Properties[ThemeProperties::TextSelectable_Hovered] = Color(48, 63, 169, 255);
 	m_Properties[ThemeProperties::TextInput_Background] = Color(14, 14, 14, 255);

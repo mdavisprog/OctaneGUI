@@ -47,6 +47,7 @@ public:
 		Button_Hovered,
 		Button_Pressed,
 		Check,
+		ImageButton,
 		TextSelectable_Text_Hovered,
 		TextSelectable_Hovered,
 		TextInput_Background,
