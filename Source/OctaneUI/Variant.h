@@ -95,6 +95,7 @@ public:
 	bool IsColor() const;
 
 	Type GetType() const;
+	std::string ToString() const;
 
 private:
 	union Data

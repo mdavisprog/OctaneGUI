@@ -310,6 +310,34 @@ Variant::Type Variant::GetType() const
 	return m_Type;
 }
 
+std::string Variant::ToString() const
+{
+	std::string Result;
+
+	switch (m_Type)
+	{
+	case Type::Bool: Result = std::string("Bool: ") + (Bool() ? "true" : "false"); break;
+	case Type::Byte: Result = std::string("Byte: ") + std::to_string(Byte()); break;
+	case Type::Int: Result = std::string("Int: ") + std::to_string(Int()); break;
+	case Type::Float: Result = std::string("Float: ") + std::to_string(Float()); break;
+	case Type::String: Result = std::string("String: ") + String(); break;
+	case Type::Vector:
+	{
+		Vector2 Value = Vector();
+		Result = std::string("Vector2: ") + std::to_string(Value.X) + ", " + std::to_string(Value.Y);
+	} break;
+	case Type::Color:
+	{
+		Color Value = ToColor();
+		Result = std::string("Color: ") + std::to_string(Value.R) + ", " + std::to_string(Value.G) + ", " + std::to_string(Value.B) + ", " + std::to_string(Value.A);
+	} break;
+	case Type::Null:
+	default: Result = "Null"; break;
+	}
+
+	return Result;
+}
+
 void Variant::Copy(const Json& Value)
 {
 	Clear();
