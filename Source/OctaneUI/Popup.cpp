@@ -111,6 +111,16 @@ const std::shared_ptr<Container>& Popup::GetContainer() const
 	return m_Container;
 }
 
+bool Popup::HasControl(const std::shared_ptr<Control>& Item) const
+{
+	if (!m_Container)
+	{
+		return false;
+	}
+
+	return m_Container->HasControl(Item);
+}
+
 void Popup::OnMouseMove(const Vector2& Position)
 {
 	if (m_Container)

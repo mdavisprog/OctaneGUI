@@ -59,6 +59,7 @@ public:
 	void Update();
 	bool IsModal() const;
 	const std::shared_ptr<Container>& GetContainer() const;
+	bool HasControl(const std::shared_ptr<Control>& Item) const;
 	void OnMouseMove(const Vector2& Position);
 	std::weak_ptr<Control> GetControl(const Vector2& Position) const;
 	void OnPaint(Paint& Brush);
