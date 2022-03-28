@@ -41,8 +41,10 @@ class ImageButton : public Button
 public:
 	ImageButton(Window* InWindow);
 
-	ImageButton* SetTexture(const char* Path);
-	ImageButton* SetTexture(const std::shared_ptr<Texture>& InTexture);
+	ImageButton& SetTexture(const char* Path);
+	ImageButton& SetTexture(const std::shared_ptr<Texture>& InTexture);
+	ImageButton& SetUVs(const Rect& UVs);
+	ImageButton& SetTint(const Color& Tint);
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;

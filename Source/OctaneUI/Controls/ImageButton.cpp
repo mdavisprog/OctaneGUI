@@ -39,18 +39,32 @@ ImageButton::ImageButton(Window* InWindow)
 	m_Image->SetParent(this);
 }
 
-ImageButton* ImageButton::SetTexture(const char* Path)
+ImageButton& ImageButton::SetTexture(const char* Path)
 {
 	m_Image->SetTexture(Path);
 	UpdateSize();
-	return this;
+	return *this;
 }
 
-ImageButton* ImageButton::SetTexture(const std::shared_ptr<Texture>& InTexture)
+ImageButton& ImageButton::SetTexture(const std::shared_ptr<Texture>& InTexture)
 {
 	m_Image->SetTexture(InTexture);
 	UpdateSize();
-	return this;
+	return *this;
+}
+
+ImageButton& ImageButton::SetUVs(const Rect& UVs)
+{
+	m_Image->SetUVs(UVs);
+	UpdateSize();
+	return *this;
+}
+
+ImageButton& ImageButton::SetTint(const Color& Tint)
+{
+	m_Image->SetTint(Tint);
+	Invalidate();
+	return *this;
 }
 
 void ImageButton::OnPaint(Paint& Brush) const
