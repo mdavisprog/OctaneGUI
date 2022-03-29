@@ -3,7 +3,7 @@ set(TARGET OctaneUI)
 set(SOURCE
 	Controls/BoxContainer.cpp
 	Controls/Button.cpp
-	Controls/Checkbox.cpp
+	Controls/CheckBox.cpp
 	Controls/ComboBox.cpp
 	Controls/Container.cpp
 	Controls/Control.cpp

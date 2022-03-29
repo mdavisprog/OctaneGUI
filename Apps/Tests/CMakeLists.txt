@@ -3,7 +3,7 @@ set(TARGET Tests)
 add_executable(
 	${TARGET}
 	Button.cpp
-	Checkbox.cpp
+	CheckBox.cpp
 	Container.cpp
 	Json.cpp
 	Main.cpp

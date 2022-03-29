@@ -28,48 +28,48 @@ SOFTWARE.
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Window.h"
-#include "Checkbox.h"
+#include "CheckBox.h"
 #include "Text.h"
 
 namespace OctaneUI
 {
 
-Checkbox::Checkbox(Window* InWindow)
+CheckBox::CheckBox(Window* InWindow)
 	: Button(InWindow)
 {
 	m_Text = std::make_shared<Text>(InWindow);
 	m_Text->SetParent(this);
 }
 
-Checkbox::~Checkbox()
+CheckBox::~CheckBox()
 {
 }
 
-Checkbox* Checkbox::SetText(const char* InText)
+CheckBox& CheckBox::SetText(const char* InText)
 {
 	m_Text->SetText(InText);
 	Update();
 	UpdateSize();
-	return this;
+	return *this;
 }
 
-const char* Checkbox::GetText() const
+const char* CheckBox::GetText() const
 {
 	return m_Text->GetText();
 }
 
-Checkbox* Checkbox::SetState(State InState)
+CheckBox& CheckBox::SetState(State InState)
 {
 	m_State = InState;
-	return this;
+	return *this;
 }
 
-Checkbox::State Checkbox::GetState() const
+CheckBox::State CheckBox::GetState() const
 {
 	return m_State;
 }
 
-Checkbox* Checkbox::SetTriState(bool IsTriState)
+CheckBox& CheckBox::SetTriState(bool IsTriState)
 {
 	m_TriState = IsTriState;
 
@@ -82,15 +82,15 @@ Checkbox* Checkbox::SetTriState(bool IsTriState)
 		}
 	}
 
-	return this;
+	return *this;
 }
 
-bool Checkbox::IsTriState() const
+bool CheckBox::IsTriState() const
 {
 	return m_TriState;
 }
 
-void Checkbox::OnPaint(Paint& Brush) const
+void CheckBox::OnPaint(Paint& Brush) const
 {
 	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
 	const Vector2 Size = BoxSize();
@@ -146,12 +146,12 @@ void Checkbox::OnPaint(Paint& Brush) const
 	m_Text->OnPaint(Brush);
 }
 
-void Checkbox::Update()
+void CheckBox::Update()
 {
 	m_Text->SetPosition({BoxSize().X + 12.0f, GetSize().Y * 0.5f - m_Text->GetSize().Y * 0.5f});
 }
 
-void Checkbox::OnLoad(const Json& Root)
+void CheckBox::OnLoad(const Json& Root)
 {
 	Button::OnLoad(Root);
 
@@ -162,7 +162,7 @@ void Checkbox::OnLoad(const Json& Root)
 	UpdateSize();
 }
 
-void Checkbox::OnThemeLoaded()
+void CheckBox::OnThemeLoaded()
 {
 	Control::OnThemeLoaded();
 
@@ -171,7 +171,7 @@ void Checkbox::OnThemeLoaded()
 	UpdateSize();
 }
 
-void Checkbox::OnClicked()
+void CheckBox::OnClicked()
 {
 	switch (m_State)
 	{
@@ -184,13 +184,13 @@ void Checkbox::OnClicked()
 	Invalidate();
 }
 
-Vector2 Checkbox::BoxSize() const
+Vector2 CheckBox::BoxSize() const
 {
 	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
 	return TexCoords.GetSize() + Vector2(3.0f, 3.0f);
 }
 
-void Checkbox::UpdateSize()
+void CheckBox::UpdateSize()
 {
 	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
 	const Vector2 Padding = GetProperty(ThemeProperties::TextSelectable_Padding).Vector();

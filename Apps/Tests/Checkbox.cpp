@@ -30,64 +30,64 @@ SOFTWARE.
 namespace Tests
 {
 
-static std::string CheckboxJson(const char* ID, const char* Text, bool TriState)
+static std::string CheckBoxJson(const char* ID, const char* Text, bool TriState)
 {
 	const char* Json = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [";
 
 	return std::string(Json)
-		+ "{\"Type\": \"Checkbox\", \"ID\": \"" + ID + "\", "
+		+ "{\"Type\": \"CheckBox\", \"ID\": \"" + ID + "\", "
 		+ "\"TriState\": " + (TriState ? "true" : "false") + ", "
 		+ "\"Text\": {\"Text\": \"" + Text + "\"}}"
 		+ "]}}";
 }
 
-TEST_SUITE(Checkbox,
+TEST_SUITE(CheckBox,
 
 TEST_CASE(TwoState,
 {
 	OctaneUI::ControlList List;
-	Application.GetMainWindow()->Load(CheckboxJson("Checkbox", "Checkbox", false).c_str(), List);
+	Application.GetMainWindow()->Load(CheckBoxJson("CheckBox", "CheckBox", false).c_str(), List);
 	Application.GetMainWindow()->Update();
 
-	std::shared_ptr<OctaneUI::Checkbox> Checkbox = List.To<OctaneUI::Checkbox>("Checkbox");
+	std::shared_ptr<OctaneUI::CheckBox> CheckBox = List.To<OctaneUI::CheckBox>("CheckBox");
 
-	const OctaneUI::Vector2 Position = Checkbox->GetAbsoluteBounds().GetCenter();
+	const OctaneUI::Vector2 Position = CheckBox->GetAbsoluteBounds().GetCenter();
 	Application.GetMainWindow()->OnMouseMove(Position);
 	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
 	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
 
-	VERIFYF(Checkbox->GetState() == OctaneUI::Checkbox::State::Checked, "TwoState: Checkbox is not checked!");
+	VERIFYF(CheckBox->GetState() == OctaneUI::CheckBox::State::Checked, "TwoState: CheckBox is not checked!");
 
 	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
 	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
 
-	return Checkbox->GetState() == OctaneUI::Checkbox::State::None;
+	return CheckBox->GetState() == OctaneUI::CheckBox::State::None;
 })
 
 TEST_CASE(TriState,
 {
 	OctaneUI::ControlList List;
-	Application.GetMainWindow()->Load(CheckboxJson("Checkbox", "Checkbox", true).c_str(), List);
+	Application.GetMainWindow()->Load(CheckBoxJson("CheckBox", "CheckBox", true).c_str(), List);
 	Application.GetMainWindow()->Update();
 
-	std::shared_ptr<OctaneUI::Checkbox> Checkbox = List.To<OctaneUI::Checkbox>("Checkbox");
+	std::shared_ptr<OctaneUI::CheckBox> CheckBox = List.To<OctaneUI::CheckBox>("CheckBox");
 
-	const OctaneUI::Vector2 Position = Checkbox->GetAbsoluteBounds().GetCenter();
+	const OctaneUI::Vector2 Position = CheckBox->GetAbsoluteBounds().GetCenter();
 	Application.GetMainWindow()->OnMouseMove(Position);
 	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
 	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
 
-	VERIFYF(Checkbox->GetState() == OctaneUI::Checkbox::State::Intermediate, "TriState: Checkbox is not intermediate!\n");
+	VERIFYF(CheckBox->GetState() == OctaneUI::CheckBox::State::Intermediate, "TriState: CheckBox is not intermediate!\n");
 
 	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
 	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
 
-	VERIFYF(Checkbox->GetState() == OctaneUI::Checkbox::State::Checked, "TriState: Checkbox is not checked!\n");
+	VERIFYF(CheckBox->GetState() == OctaneUI::CheckBox::State::Checked, "TriState: CheckBox is not checked!\n");
 
 	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
 	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
 
-	return Checkbox->GetState() == OctaneUI::Checkbox::State::None;
+	return CheckBox->GetState() == OctaneUI::CheckBox::State::None;
 })
 
 )

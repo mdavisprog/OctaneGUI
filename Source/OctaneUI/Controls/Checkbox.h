@@ -33,9 +33,9 @@ namespace OctaneUI
 
 class Text;
 
-class Checkbox : public Button
+class CheckBox : public Button
 {
-	CLASS(Checkbox)
+	CLASS(CheckBox)
 
 public:
 	enum class State : uint8_t
@@ -45,16 +45,16 @@ public:
 		Checked
 	};
 
-	Checkbox(Window* InWindow);
-	virtual ~Checkbox();
+	CheckBox(Window* InWindow);
+	virtual ~CheckBox();
 
-	Checkbox* SetText(const char* InText);
+	CheckBox& SetText(const char* InText);
 	const char* GetText() const;
 
-	Checkbox* SetState(State InState);
+	CheckBox& SetState(State InState);
 	State GetState() const;
 
-	Checkbox* SetTriState(bool IsTriState);
+	CheckBox& SetTriState(bool IsTriState);
 	bool IsTriState() const;
 
 	virtual void OnPaint(Paint& Brush) const override;

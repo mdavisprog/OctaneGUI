@@ -31,7 +31,7 @@ SOFTWARE.
 #include "Color.h"
 #include "Controls/BoxContainer.h"
 #include "Controls/Button.h"
-#include "Controls/Checkbox.h"
+#include "Controls/CheckBox.h"
 #include "Controls/ComboBox.h"
 #include "Controls/Container.h"
 #include "Controls/Control.h"

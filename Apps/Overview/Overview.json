@@ -135,9 +135,9 @@
 												]
 											},
 											{
-												"Type": "Checkbox",
+												"Type": "CheckBox",
 												"Text": {
-													"Text": "Checkbox"
+													"Text": "CheckBox"
 												},
 												"TriState": true
 											},
