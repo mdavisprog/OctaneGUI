@@ -43,6 +43,8 @@ class ComboBox : public HorizontalContainer
 public:
 	ComboBox(Window* InWindow);
 
+	ComboBox& SetExpand(Expand InExpand);
+
 	std::shared_ptr<Text> AddItem(const char* Item);
 
 	virtual void Update() override;
@@ -50,6 +52,7 @@ public:
 	virtual void OnThemeLoaded() override;
 
 private:
+	using Control::SetExpand;
 	using Container::AddControl;
 	using Container::InsertControl;
 

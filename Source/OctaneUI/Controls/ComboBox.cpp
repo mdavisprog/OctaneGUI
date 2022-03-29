@@ -93,6 +93,22 @@ ComboBox::ComboBox(Window* InWindow)
 		->SetPosition({0.0f, m_Input->GetSize().Y});
 }
 
+ComboBox& ComboBox::SetExpand(Expand InExpand)
+{
+	Control::SetExpand(InExpand);
+
+	if (InExpand == Expand::Width || InExpand == Expand::Both)
+	{
+		m_Input->SetExpand(Expand::Width);
+	}
+	else
+	{
+		m_Input->SetExpand(Expand::None);
+	}
+
+	return *this;
+}
+
 std::shared_ptr<Text> ComboBox::AddItem(const char* Item)
 {
 	std::shared_ptr<Text> Result = m_List->AddItem<Text>();
@@ -123,6 +139,8 @@ void ComboBox::OnLoad(const Json& Root)
 			AddItem(Item.String());
 		}
 	}
+
+	SetExpand(GetExpand());
 
 	OnThemeLoaded();
 }
