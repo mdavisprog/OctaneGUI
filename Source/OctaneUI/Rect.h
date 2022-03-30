@@ -46,7 +46,7 @@ public:
 	Vector2 GetCenter() const;
 
 	bool IsZero() const;
-	
+
 	bool Contains(float X, float Y) const;
 	bool Contains(const Vector2& Point) const;
 

@@ -114,8 +114,9 @@ bool Font::Load(const char* Path, float Size)
 	std::vector<stbtt_packedchar> Chars;
 	do
 	{
-		TextureSize = {TextureSize.X + TextureBaseSize, TextureSize.Y + TextureBaseSize};
-	} while (!LoadFont(Buffer, Size, Texture, TextureSize, Chars));
+		TextureSize = { TextureSize.X + TextureBaseSize, TextureSize.Y + TextureBaseSize };
+	}
+	while (!LoadFont(Buffer, Size, Texture, TextureSize, Chars));
 
 	// Convert data to RGBA32
 	std::vector<uint8_t> RGBA32;
@@ -172,7 +173,7 @@ bool Font::Draw(int32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoords
 	TexCoords.Max = Item.m_Max * InvertedSize;
 
 	Position += Item.m_Advance;
-	
+
 	return true;
 }
 
@@ -203,7 +204,7 @@ Vector2 Font::Measure(const std::string& Text, int& Lines) const
 			Lines++;
 			Result.X = std::max<float>(Result.X, LineSize.X);
 			Result.Y += LineSize.Y;
-			LineSize = {0.0f, 0.0f};
+			LineSize = { 0.0f, 0.0f };
 		}
 
 		const Vector2 Size = Measure(Ch);

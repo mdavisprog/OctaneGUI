@@ -24,12 +24,12 @@ SOFTWARE.
 
 */
 
-#include "../Json.h"
+#include "MenuItem.h"
 #include "../Icons.h"
+#include "../Json.h"
 #include "../Paint.h"
 #include "../Window.h"
 #include "Menu.h"
-#include "MenuItem.h"
 #include "Text.h"
 
 namespace OctaneUI
@@ -92,8 +92,7 @@ void MenuItem::OnPaint(Paint& Brush) const
 			Rect(Position, Position + TexCoords.GetSize()),
 			GetWindow()->GetIcons()->GetUVsNormalized(Icons::Type::Check),
 			GetWindow()->GetIcons()->GetTexture(),
-			IconColor
-		);
+			IconColor);
 	}
 
 	if (m_Menu && !m_IsMenuBar)
@@ -101,13 +100,12 @@ void MenuItem::OnPaint(Paint& Brush) const
 		const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::ArrowRight);
 		const Vector2 Position = GetAbsolutePosition()
 			+ Vector2(GetSize().X - TexCoords.GetSize().X * 1.5f, GetSize().Y * 0.5f - TexCoords.GetSize().Y * 0.5f);
-		
+
 		Brush.Image(
 			Rect(Position, Position + TexCoords.GetSize()),
 			GetWindow()->GetIcons()->GetUVsNormalized(Icons::Type::ArrowRight),
 			GetWindow()->GetIcons()->GetTexture(),
-			IconColor
-		);
+			IconColor);
 	}
 }
 
@@ -119,7 +117,7 @@ void MenuItem::Update()
 	{
 		const Vector2 TextPosition = GetTextControl()->GetPosition();
 		const Vector2 CheckSize = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check).GetSize();
-		GetTextControl()->SetPosition({CheckSize.X + 12.0f, TextPosition.Y});
+		GetTextControl()->SetPosition({ CheckSize.X + 12.0f, TextPosition.Y });
 	}
 }
 

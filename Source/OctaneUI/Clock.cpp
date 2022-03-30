@@ -35,9 +35,9 @@ Clock::Clock()
 
 float Clock::Measure()
 {
-    std::chrono::time_point<std::chrono::high_resolution_clock> Now = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<float> Diff = Now - m_Stamp;
-    return Diff.count();
+	std::chrono::time_point<std::chrono::high_resolution_clock> Now = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<float> Diff = Now - m_Stamp;
+	return Diff.count();
 }
 
 }

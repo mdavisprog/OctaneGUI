@@ -36,23 +36,23 @@ namespace OctaneUI
 class DrawCommand
 {
 public:
-    DrawCommand(uint32_t VertexOffset, uint32_t IndexOffset, uint32_t IndexCount, uint32_t TextureID, Rect Clip);
-    ~DrawCommand();
+	DrawCommand(uint32_t VertexOffset, uint32_t IndexOffset, uint32_t IndexCount, uint32_t TextureID, Rect Clip);
+	~DrawCommand();
 
-    uint32_t VertexOffset() const;
-    uint32_t IndexOffset() const;
-    uint32_t IndexCount() const;
-    uint32_t TextureID() const;
-    Rect Clip() const;
+	uint32_t VertexOffset() const;
+	uint32_t IndexOffset() const;
+	uint32_t IndexCount() const;
+	uint32_t TextureID() const;
+	Rect Clip() const;
 
 private:
-    DrawCommand();
+	DrawCommand();
 
-    uint32_t m_VertexOffset;
-    uint32_t m_IndexOffset;
-    uint32_t m_IndexCount;
-    uint32_t m_TextureID;
-    Rect m_Clip;
+	uint32_t m_VertexOffset;
+	uint32_t m_IndexOffset;
+	uint32_t m_IndexCount;
+	uint32_t m_TextureID;
+	Rect m_Clip;
 };
 
 }

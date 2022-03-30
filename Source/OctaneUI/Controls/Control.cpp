@@ -24,11 +24,11 @@ SOFTWARE.
 
 */
 
+#include "Control.h"
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Theme.h"
 #include "../Window.h"
-#include "Control.h"
 
 #include <cassert>
 
@@ -38,9 +38,18 @@ namespace OctaneUI
 Expand ToExpand(const std::string& Value)
 {
 	const std::string Lower = Json::ToLower(Value);
-	if (Lower == "width") { return Expand::Width; }
-	else if (Lower == "height") { return Expand::Height; }
-	else if (Lower == "both") { return Expand::Both; }
+	if (Lower == "width")
+	{
+		return Expand::Width;
+	}
+	else if (Lower == "height")
+	{
+		return Expand::Height;
+	}
+	else if (Lower == "both")
+	{
+		return Expand::Both;
+	}
 
 	return Expand::None;
 }
@@ -145,7 +154,7 @@ std::string Control::GetFullID() const
 	{
 		Result += ".";
 	}
-	
+
 	Result += m_ID;
 
 	return Result;

@@ -26,8 +26,8 @@ SOFTWARE.
 
 #pragma once
 
-#include <string>
 #include <memory>
+#include <string>
 #include <unordered_map>
 
 namespace OctaneUI

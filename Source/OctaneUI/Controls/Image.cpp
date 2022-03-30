@@ -24,13 +24,13 @@ SOFTWARE.
 
 */
 
+#include "Image.h"
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Texture.h"
 #include "../TextureCache.h"
 #include "../Variant.h"
 #include "../Window.h"
-#include "Image.h"
 
 namespace OctaneUI
 {
@@ -93,8 +93,7 @@ void Image::OnPaint(Paint& Brush) const
 	const Vector2 Size = m_Texture->GetSize();
 	const Rect TexCoords(
 		m_UVs.Min / Size,
-		m_UVs.Max / Size
-	);
+		m_UVs.Max / Size);
 
 	Brush.Image(GetAbsoluteBounds(), TexCoords, m_Texture, m_Tint);
 }
@@ -105,7 +104,7 @@ void Image::OnLoad(const Json& Root)
 
 	SetTexture(Root["Texture"].String());
 	m_Tint = Variant(Root["Tint"]).ToColor(Color::White);
-	
+
 	const Json& UVs = Root["UVs"];
 	if (!UVs.IsNull())
 	{
@@ -113,8 +112,7 @@ void Image::OnLoad(const Json& Root)
 			UVs["Left"].Number(),
 			UVs["Top"].Number(),
 			UVs["Right"].Number(),
-			UVs["Bottom"].Number()
-		);
+			UVs["Bottom"].Number());
 
 		SetUVs(Value);
 	}

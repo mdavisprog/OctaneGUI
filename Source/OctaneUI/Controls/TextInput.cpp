@@ -24,13 +24,13 @@ SOFTWARE.
 
 */
 
+#include "TextInput.h"
 #include "../Font.h"
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Theme.h"
 #include "ScrollableContainer.h"
 #include "Text.h"
-#include "TextInput.h"
 
 namespace OctaneUI
 {
@@ -179,7 +179,7 @@ TextInput::TextInput(Window* InWindow)
 
 	m_Interaction = AddControl<TextInputInteraction>(this);
 
-	SetSize({100.0f, m_Text->LineHeight()});
+	SetSize({ 100.0f, m_Text->LineHeight() });
 }
 
 TextInput::~TextInput()
@@ -243,8 +243,7 @@ void TextInput::OnPaint(Paint& Brush) const
 			GetProperty(ThemeProperties::TextInput_Background).ToColor(),
 			GetProperty(ThemeProperties::Button_Highlight_3D).ToColor(),
 			GetProperty(ThemeProperties::Button_Shadow_3D).ToColor(),
-			true
-		);
+			true);
 	}
 	else
 	{
@@ -308,7 +307,7 @@ void TextInput::OnPaint(Paint& Brush) const
 				{
 					const std::string Sub = String.substr(Index, LineEndIndex(Index) - Index);
 					const Vector2 Size = m_Text->GetFont()->Measure(Sub);
-					const Vector2 Position = GetPositionLocation({Line, 0, Index});
+					const Vector2 Position = GetPositionLocation({ Line, 0, Index });
 					const Rect SelectBounds = {
 						m_Text->GetAbsolutePosition() + Position,
 						m_Text->GetAbsolutePosition() + Position + Vector2(Size.X, LineHeight)
@@ -341,7 +340,7 @@ void TextInput::OnLoad(const Json& Root)
 	m_Multiline = Root["Multiline"].Boolean();
 	if (m_Multiline)
 	{
-		SetSize({200.0f, 200.0f});
+		SetSize({ 200.0f, 200.0f });
 	}
 	m_Scrollable->SetHorizontalSBEnabled(m_Multiline)
 		.SetVerticalSBEnabled(m_Multiline);
@@ -540,7 +539,7 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 		// Find the line character based on if the cursor is moving forward or backward.
 		int LineSize = this->LineSize(NewIndex);
 		uint32_t Index = ColumnBack ? LineStartIndex(NewIndex) : LineEndIndex(NewIndex);
-		
+
 		// Prevent the diff to exceed amount of columns to traverse.
 		int Diff = std::min<int>(std::abs(NewIndex - (int)Index), std::abs(Column));
 		if (Diff == 0)
@@ -560,13 +559,13 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 		}
 
 		Column = std::max<int>(Column - Diff, 0);
-		
+
 		// Apply the current diff amount to the index for possible further searches.
 		// Clamp to [0, Stirng.size]
 		NewIndex = ColumnBack
 			? std::max<int>(NewIndex - Diff, 0)
 			: std::min<int>(NewIndex + Diff, String.size());
-		
+
 		// Set the new column index. This will move the column index to either the beginning
 		// or end of a line if the column exceeds the line size.
 		NewColumn = ColumnBack ? NewColumn - Diff : NewColumn + Diff;
@@ -595,14 +594,14 @@ Vector2 TextInput::GetPositionLocation(const TextPosition& Position) const
 {
 	if (!m_Position.IsValid())
 	{
-		return {0.0f, 0.0f};
+		return { 0.0f, 0.0f };
 	}
 
 	const std::string& String = m_Text->GetString();
 	uint32_t Start = LineStartIndex(Position.Index());
 
 	const std::string Sub = String.substr(Start, Position.Index() - Start);
-	return {m_Text->GetFont()->Measure(Sub).X, Position.Line() * m_Text->LineHeight()};
+	return { m_Text->GetFont()->Measure(Sub).X, Position.Line() * m_Text->LineHeight() };
 }
 
 TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
@@ -619,7 +618,7 @@ TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
 	size_t Index = 0;
 	uint32_t Line = 0;
 	uint32_t Column = 0;
-	Vector2 Offset = {0.0f, LineHeight};
+	Vector2 Offset = { 0.0f, LineHeight };
 	while (StartIndex != std::string::npos)
 	{
 		if (Offset.Y > LocalPosition.Y)
@@ -663,7 +662,7 @@ TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
 		}
 	}
 
-	return {Line, Column, (uint32_t)Index};
+	return { Line, Column, (uint32_t)Index };
 }
 
 bool TextInput::IsShiftPressed() const
@@ -759,9 +758,9 @@ void TextInput::UpdateFormats()
 	{
 		TextPosition Min = m_Anchor < m_Position ? m_Anchor : m_Position;
 		TextPosition Max = m_Anchor < m_Position ? m_Position : m_Anchor;
-		m_Text->PushFormat({0, Min.Index(), GetProperty(ThemeProperties::Text).ToColor()});
-		m_Text->PushFormat({Min.Index(), Max.Index(), GetProperty(ThemeProperties::TextSelectable_Text_Hovered).ToColor()});
-		m_Text->PushFormat({Max.Index(), m_Text->Length(), GetProperty(ThemeProperties::Text).ToColor()});
+		m_Text->PushFormat({ 0, Min.Index(), GetProperty(ThemeProperties::Text).ToColor() });
+		m_Text->PushFormat({ Min.Index(), Max.Index(), GetProperty(ThemeProperties::TextSelectable_Text_Hovered).ToColor() });
+		m_Text->PushFormat({ Max.Index(), m_Text->Length(), GetProperty(ThemeProperties::Text).ToColor() });
 	}
 }
 

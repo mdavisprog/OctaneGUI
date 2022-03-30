@@ -30,45 +30,45 @@ namespace OctaneUI
 {
 
 DrawCommand::DrawCommand(uint32_t VertexOffset, uint32_t IndexOffset, uint32_t IndexCount, uint32_t TextureID, Rect Clip)
-    : m_VertexOffset(VertexOffset)
-    , m_IndexOffset(IndexOffset)
-    , m_IndexCount(IndexCount)
-    , m_TextureID(TextureID)
-    , m_Clip(Clip)
+	: m_VertexOffset(VertexOffset)
+	, m_IndexOffset(IndexOffset)
+	, m_IndexCount(IndexCount)
+	, m_TextureID(TextureID)
+	, m_Clip(Clip)
 {
 }
 
 uint32_t DrawCommand::VertexOffset() const
 {
-    return m_VertexOffset;
+	return m_VertexOffset;
 }
 
 uint32_t DrawCommand::IndexOffset() const
 {
-    return m_IndexOffset;
+	return m_IndexOffset;
 }
 
 uint32_t DrawCommand::IndexCount() const
 {
-    return m_IndexCount;
+	return m_IndexCount;
 }
 
 uint32_t DrawCommand::TextureID() const
 {
-    return m_TextureID;
+	return m_TextureID;
 }
 
 Rect DrawCommand::Clip() const
 {
-    return m_Clip;
+	return m_Clip;
 }
 
 DrawCommand::DrawCommand()
-    : m_VertexOffset(0)
-    , m_IndexOffset(0)
-    , m_IndexCount(0)
-    , m_TextureID(0)
-    , m_Clip()
+	: m_VertexOffset(0)
+	, m_IndexOffset(0)
+	, m_IndexCount(0)
+	, m_TextureID(0)
+	, m_Clip()
 {
 }
 

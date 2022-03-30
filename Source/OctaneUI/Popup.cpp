@@ -24,9 +24,9 @@ SOFTWARE.
 
 */
 
+#include "Popup.h"
 #include "Controls/Container.h"
 #include "Paint.h"
-#include "Popup.h"
 
 namespace OctaneUI
 {

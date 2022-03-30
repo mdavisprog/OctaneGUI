@@ -24,11 +24,11 @@ SOFTWARE.
 
 */
 
+#include "Text.h"
 #include "../Font.h"
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Theme.h"
-#include "Text.h"
 
 #include <cassert>
 
@@ -138,7 +138,7 @@ void Text::UpdateSize()
 	{
 		int Lines = 0;
 		m_ContentSize = m_Font->Measure(m_Contents, Lines);
-		SetSize({m_ContentSize.X, m_Font->Size() * Lines});
+		SetSize({ m_ContentSize.X, m_Font->Size() * Lines });
 	}
 }
 

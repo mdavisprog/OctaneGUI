@@ -24,9 +24,9 @@ SOFTWARE.
 
 */
 
+#include "Button.h"
 #include "../Json.h"
 #include "../Paint.h"
-#include "Button.h"
 
 namespace OctaneUI
 {
@@ -71,7 +71,12 @@ void Button::OnPaint(Paint& Brush) const
 	Color BackgroundColor = GetProperty(ThemeProperties::Button).ToColor();
 	switch (m_State)
 	{
-	case State::Hovered: if (!Is3D) BackgroundColor = GetProperty(ThemeProperties::Button_Hovered).ToColor(); break;
+	case State::Hovered:
+		if (!Is3D)
+		{
+			BackgroundColor = GetProperty(ThemeProperties::Button_Hovered).ToColor();
+		}
+		break;
 	case State::Pressed: BackgroundColor = GetProperty(ThemeProperties::Button_Pressed).ToColor(); break;
 	default: break;
 	}
@@ -153,7 +158,7 @@ void Button::OnMouseEnter()
 	{
 		m_State = State::Hovered;
 	}
-	
+
 	Invalidate();
 }
 

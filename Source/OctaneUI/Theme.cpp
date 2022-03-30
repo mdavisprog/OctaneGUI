@@ -24,9 +24,9 @@ SOFTWARE.
 
 */
 
+#include "Theme.h"
 #include "Font.h"
 #include "Json.h"
-#include "Theme.h"
 #include "ThemeProperties.h"
 
 #include <fstream>

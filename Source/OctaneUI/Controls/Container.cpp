@@ -24,11 +24,11 @@ SOFTWARE.
 
 */
 
+#include "Container.h"
 #include "../Json.h"
 #include "../Paint.h"
 #include "CheckBox.h"
 #include "ComboBox.h"
-#include "Container.h"
 #include "HorizontalContainer.h"
 #include "Image.h"
 #include "ImageButton.h"
@@ -62,22 +62,70 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 {
 	std::shared_ptr<Control> Result;
 
-	if (Type == Text::TypeName()) { Result = AddControl<Text>(); }
-	else if (Type == TextButton::TypeName()) { Result = AddControl<TextButton>(); }
-	else if (Type == TextSelectable::TypeName()) { Result = AddControl<TextSelectable>(); }
-	else if (Type == TextInput::TypeName()) { Result = AddControl<TextInput>(); }
-	else if (Type == CheckBox::TypeName()) { Result = AddControl<CheckBox>(); }
-	else if (Type == ComboBox::TypeName()) { Result = AddControl<ComboBox>(); }
-	else if (Type == Image::TypeName()) { Result = AddControl<Image>(); }
-	else if (Type == ImageButton::TypeName()) { Result = AddControl<ImageButton>(); }
-	else if (Type == ListBox::TypeName()) { Result = AddControl<ListBox>(); }
-	else if (Type == Panel::TypeName()) { Result = AddControl<Panel>(); }
-	else if (Type == Separator::TypeName()) { Result = AddControl<Separator>(); }
-	else if (Type == Container::TypeName()) { Result = AddControl<Container>(); }
-	else if (Type == HorizontalContainer::TypeName()) { Result = AddControl<HorizontalContainer>(); }
-	else if (Type == MarginContainer::TypeName()) { Result = AddControl<MarginContainer>(); }
-	else if (Type == ScrollableContainer::TypeName()) { Result = AddControl<ScrollableContainer>(); }
-	else if (Type == VerticalContainer::TypeName()) { Result = AddControl<VerticalContainer>(); }
+	if (Type == Text::TypeName())
+	{
+		Result = AddControl<Text>();
+	}
+	else if (Type == TextButton::TypeName())
+	{
+		Result = AddControl<TextButton>();
+	}
+	else if (Type == TextSelectable::TypeName())
+	{
+		Result = AddControl<TextSelectable>();
+	}
+	else if (Type == TextInput::TypeName())
+	{
+		Result = AddControl<TextInput>();
+	}
+	else if (Type == CheckBox::TypeName())
+	{
+		Result = AddControl<CheckBox>();
+	}
+	else if (Type == ComboBox::TypeName())
+	{
+		Result = AddControl<ComboBox>();
+	}
+	else if (Type == Image::TypeName())
+	{
+		Result = AddControl<Image>();
+	}
+	else if (Type == ImageButton::TypeName())
+	{
+		Result = AddControl<ImageButton>();
+	}
+	else if (Type == ListBox::TypeName())
+	{
+		Result = AddControl<ListBox>();
+	}
+	else if (Type == Panel::TypeName())
+	{
+		Result = AddControl<Panel>();
+	}
+	else if (Type == Separator::TypeName())
+	{
+		Result = AddControl<Separator>();
+	}
+	else if (Type == Container::TypeName())
+	{
+		Result = AddControl<Container>();
+	}
+	else if (Type == HorizontalContainer::TypeName())
+	{
+		Result = AddControl<HorizontalContainer>();
+	}
+	else if (Type == MarginContainer::TypeName())
+	{
+		Result = AddControl<MarginContainer>();
+	}
+	else if (Type == ScrollableContainer::TypeName())
+	{
+		Result = AddControl<ScrollableContainer>();
+	}
+	else if (Type == VerticalContainer::TypeName())
+	{
+		Result = AddControl<VerticalContainer>();
+	}
 
 	return Result;
 }
@@ -91,23 +139,23 @@ Container* Container::InsertControl(const std::shared_ptr<Control>& Item, int Po
 
 	Item->SetParent(this);
 	Item->SetOnInvalidate([this](Control* Focus, InvalidateType Type)
-	{
-		if (m_InLayout && Type != InvalidateType::Paint)
 		{
-			return;
-		}
+			if (m_InLayout && Type != InvalidateType::Paint)
+			{
+				return;
+			}
 
-		Container* FocusContainer = dynamic_cast<Container*>(Focus);
-		if (FocusContainer == nullptr && (Type == InvalidateType::Layout || Type == InvalidateType::Both))
-		{
-			// If Focus is a control but is requesting to have a layout update, the owning container should
-			// notify the listeners that it should have it's layout updated. The control will still be passed
-			// up in case of a repaint request.
-			Invalidate(Type);
-		}
+			Container* FocusContainer = dynamic_cast<Container*>(Focus);
+			if (FocusContainer == nullptr && (Type == InvalidateType::Layout || Type == InvalidateType::Both))
+			{
+				// If Focus is a control but is requesting to have a layout update, the owning container should
+				// notify the listeners that it should have it's layout updated. The control will still be passed
+				// up in case of a repaint request.
+				Invalidate(Type);
+			}
 
-		Invalidate(Focus, Type);
-	});
+			Invalidate(Focus, Type);
+		});
 
 	if (Position >= 0)
 	{
@@ -155,7 +203,7 @@ Container* Container::Layout()
 	m_InLayout = true;
 
 	PlaceControls(m_Controls);
-	
+
 	for (const std::shared_ptr<Control>& Item : m_Controls)
 	{
 		const std::shared_ptr<Container> Child = std::dynamic_pointer_cast<Container>(Item);

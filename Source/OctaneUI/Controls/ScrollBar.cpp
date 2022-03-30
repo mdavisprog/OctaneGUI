@@ -24,9 +24,9 @@ SOFTWARE.
 
 */
 
+#include "ScrollBar.h"
 #include "../Paint.h"
 #include "../ThemeProperties.h"
-#include "ScrollBar.h"
 
 namespace OctaneUI
 {
@@ -132,8 +132,7 @@ void ScrollBar::OnPaint(Paint& Brush) const
 				HandleBounds(),
 				GetProperty(ThemeProperties::ScrollBar_Handle).ToColor(),
 				GetProperty(ThemeProperties::Button_Highlight_3D).ToColor(),
-				GetProperty(ThemeProperties::Button_Shadow_3D).ToColor()
-			);
+				GetProperty(ThemeProperties::Button_Shadow_3D).ToColor());
 		}
 		else
 		{
@@ -147,7 +146,7 @@ void ScrollBar::OnPaint(Paint& Brush) const
 void ScrollBar::OnMouseMove(const Vector2& Position)
 {
 	bool Hovered = HandleBounds().Contains(Position);
-	
+
 	if (Hovered != m_Hovered)
 	{
 		m_Hovered = Hovered;
@@ -227,7 +226,7 @@ Rect ScrollBar::HandleBounds() const
 	else
 	{
 		const Vector2 Position = GetAbsolutePosition() + Vector2(0.0f, m_Offset);
-		Result = Rect(Position, Position + Vector2(Size.X , m_HandleSize));
+		Result = Rect(Position, Position + Vector2(Size.X, m_HandleSize));
 	}
 
 	return Result;

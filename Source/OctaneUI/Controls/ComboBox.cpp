@@ -24,11 +24,11 @@ SOFTWARE.
 
 */
 
+#include "ComboBox.h"
 #include "../Icons.h"
 #include "../Json.h"
 #include "../ThemeProperties.h"
 #include "../Window.h"
-#include "ComboBox.h"
 #include "ImageButton.h"
 #include "ListBox.h"
 #include "Text.h"
@@ -40,7 +40,7 @@ namespace OctaneUI
 ComboBox::ComboBox(Window* InWindow)
 	: HorizontalContainer(InWindow)
 {
-	SetSpacing({0.0f, 0.0f});
+	SetSpacing({ 0.0f, 0.0f });
 
 	m_Input = AddControl<TextInput>();
 	m_Input->SetReadOnly(true);
@@ -50,47 +50,47 @@ ComboBox::ComboBox(Window* InWindow)
 		->SetTexture(InWindow->GetIcons()->GetTexture())
 		.SetUVs(InWindow->GetIcons()->GetUVs(Icons::Type::ArrowDown))
 		.SetOnPressed([this](const Button&)
-		{
-			if (GetWindow()->GetPopup() == m_List)
 			{
-				GetWindow()->ClosePopup();
-			}
-			else
-			{
-				GetWindow()->SetPopup(m_List);
-			}
-		})
+				if (GetWindow()->GetPopup() == m_List)
+				{
+					GetWindow()->ClosePopup();
+				}
+				else
+				{
+					GetWindow()->SetPopup(m_List);
+				}
+			})
 		.SetExpand(Expand::Height);
-	
+
 	// Setup the color to use by default for the image button.
 	OnThemeLoaded();
-	
+
 	m_List = std::make_shared<ListBox>(InWindow);
 	m_List
 		->SetOnSelect([this](int Index, std::weak_ptr<Control> Item) -> void
-		{
-			if (GetWindow()->GetContainer() == m_List)
 			{
-				GetWindow()->ClosePopup();
-			}
+				if (GetWindow()->GetContainer() == m_List)
+				{
+					GetWindow()->ClosePopup();
+				}
 
-			if (Item.expired())
-			{
-				return;
-			}
+				if (Item.expired())
+				{
+					return;
+				}
 
-			std::shared_ptr<Text> TextItem = std::dynamic_pointer_cast<Text>(Item.lock());
-			if (TextItem)
-			{
-				m_Input->SetText(TextItem->GetText());
-			}
-			else
-			{
-				m_Input->SetText((std::string("Item ") + std::to_string(Index)).c_str());
-			}
-		})
+				std::shared_ptr<Text> TextItem = std::dynamic_pointer_cast<Text>(Item.lock());
+				if (TextItem)
+				{
+					m_Input->SetText(TextItem->GetText());
+				}
+				else
+				{
+					m_Input->SetText((std::string("Item ") + std::to_string(Index)).c_str());
+				}
+			})
 		->SetParent(this)
-		->SetPosition({0.0f, m_Input->GetSize().Y});
+		->SetPosition({ 0.0f, m_Input->GetSize().Y });
 }
 
 ComboBox& ComboBox::SetExpand(Expand InExpand)
@@ -119,7 +119,7 @@ std::shared_ptr<Text> ComboBox::AddItem(const char* Item)
 void ComboBox::Update()
 {
 	const Vector2 ContentSize = m_List->ListSize();
-	m_List->SetSize({GetSize().X, std::min<float>(ContentSize.Y, 200.0f)});
+	m_List->SetSize({ GetSize().X, std::min<float>(ContentSize.Y, 200.0f) });
 }
 
 void ComboBox::OnLoad(const Json& Root)

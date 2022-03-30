@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#include "../Paint.h"
 #include "Panel.h"
+#include "../Paint.h"
 
 namespace OctaneUI
 {

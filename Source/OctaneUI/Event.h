@@ -56,7 +56,8 @@ public:
 	public:
 		Key(Keyboard::Key InCode)
 			: m_Code(InCode)
-		{}
+		{
+		}
 
 		Keyboard::Key m_Code;
 	};
@@ -66,11 +67,13 @@ public:
 	public:
 		MouseMove()
 			: m_Position()
-		{}
+		{
+		}
 
 		MouseMove(float X, float Y)
 			: m_Position(X, Y)
-		{}
+		{
+		}
 
 		Vector2 m_Position;
 	};
@@ -81,12 +84,14 @@ public:
 		MouseButton()
 			: m_Button(Mouse::Button::Left)
 			, m_Position()
-		{}
+		{
+		}
 
 		MouseButton(Mouse::Button InButton, float X, float Y)
 			: m_Button(InButton)
 			, m_Position(X, Y)
-		{}
+		{
+		}
 
 		Mouse::Button m_Button;
 		Vector2 m_Position;
@@ -97,7 +102,8 @@ public:
 	public:
 		Text(uint32_t InCode)
 			: Code(InCode)
-		{}
+		{
+		}
 
 		uint32_t Code;
 	};
@@ -107,7 +113,8 @@ public:
 	public:
 		WindowResized(float Width, float Height)
 			: m_Size(Width, Height)
-		{}
+		{
+		}
 
 		Vector2 m_Size;
 	};

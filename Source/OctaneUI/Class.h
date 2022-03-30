@@ -38,9 +38,15 @@ public:
 	virtual const char* GetType() const;
 };
 
-#define CLASS(Name)														\
-	public:																\
-		virtual const char* GetType() const override { return #Name; }	\
-		static const char* TypeName() { return #Name; }
+#define CLASS(Name)                              \
+public:                                          \
+	virtual const char* GetType() const override \
+	{                                            \
+		return #Name;                            \
+	}                                            \
+	static const char* TypeName()                \
+	{                                            \
+		return #Name;                            \
+	}
 
 }

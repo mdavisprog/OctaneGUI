@@ -52,9 +52,9 @@ public:
 	virtual void OnThemeLoaded() override;
 
 private:
-	using Control::SetExpand;
 	using Container::AddControl;
 	using Container::InsertControl;
+	using Control::SetExpand;
 
 	std::shared_ptr<TextInput> m_Input { nullptr };
 	std::shared_ptr<ImageButton> m_Button { nullptr };

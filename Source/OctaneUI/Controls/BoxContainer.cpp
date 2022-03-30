@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#include "../Json.h"
 #include "BoxContainer.h"
+#include "../Json.h"
 
 namespace OctaneUI
 {
@@ -136,7 +136,10 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 
 		switch (Item->GetExpand())
 		{
-		case Expand::Both: ExpandW++; ExpandH++; break;
+		case Expand::Both:
+			ExpandW++;
+			ExpandH++;
+			break;
 		case Expand::Width:
 		{
 			if (IsHorizontal)
@@ -147,7 +150,8 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 			{
 				AvailableSize.Y -= Size.Y;
 			}
-		 } break;
+		}
+		break;
 		case Expand::Height:
 		{
 			if (IsHorizontal)
@@ -158,7 +162,8 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 			{
 				ExpandH++;
 			}
-		 } break;
+		}
+		break;
 		case Expand::None:
 		default:
 			if (IsHorizontal)
@@ -178,7 +183,7 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 	Vector2 PartitionSize = IsHorizontal
 		? Vector2(AvailableSize.X / (float)ExpandW, AvailableSize.Y)
 		: Vector2(AvailableSize.X, AvailableSize.Y / (float)ExpandH);
-	
+
 	// 2. Resize each control by setting each control's size by the partition size if it has an expansion
 	//	  Type. The available size is then reduced by this partition size for the next control to use.
 	//	  TODO: Mayby check if AvailableSize is zero and size any left over controls to zero?
@@ -188,7 +193,7 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 	{
 		Vector2 Size = DesiredSizes[Item.get()];
 
-		switch(Item->GetExpand())
+		switch (Item->GetExpand())
 		{
 		case Expand::Both:
 		{
@@ -202,7 +207,8 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 				Size.X = GetSize().X;
 				Size.Y = PartitionSize.Y;
 			}
-		} break;
+		}
+		break;
 		case Expand::Width:
 		{
 			if (IsHorizontal)
@@ -213,7 +219,8 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 			{
 				Size.X = GetSize().X;
 			}
-		 } break;
+		}
+		break;
 		case Expand::Height:
 		{
 			if (IsHorizontal)
@@ -224,7 +231,8 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 			{
 				Size.Y = PartitionSize.Y;
 			}
-		 } break;
+		}
+		break;
 		case Expand::None:
 		default: break;
 		}
@@ -259,7 +267,8 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 		{
 			Offset.Y = GetSize().Y * 0.5f - TotalSize.Y * 0.5f;
 		}
-	} break;
+	}
+	break;
 	case Grow::End:
 	{
 		if (IsHorizontal)
@@ -270,7 +279,8 @@ void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Co
 		{
 			Offset.Y = GetSize().Y - TotalSize.Y;
 		}
-	} break;
+	}
+	break;
 	case Grow::Begin:
 	default: break;
 	}

@@ -24,9 +24,9 @@ SOFTWARE.
 
 */
 
+#include "TextButton.h"
 #include "../Json.h"
 #include "Text.h"
-#include "TextButton.h"
 
 namespace OctaneUI
 {

@@ -24,13 +24,13 @@ SOFTWARE.
 
 */
 
+#include "MenuBar.h"
 #include "../Font.h"
 #include "../Json.h"
 #include "../Theme.h"
 #include "../Window.h"
 #include "HorizontalContainer.h"
 #include "Menu.h"
-#include "MenuBar.h"
 #include "MenuItem.h"
 #include "Panel.h"
 #include "TextSelectable.h"
@@ -55,13 +55,13 @@ std::shared_ptr<Menu> MenuBar::AddItem(const char* InText)
 	std::shared_ptr<MenuItem> Item = std::make_shared<MenuItem>(GetWindow());
 	Item->SetIsMenuBar(true)
 		.SetOnHovered([this](const TextSelectable& Item) -> void
-		{
-			OnHover(static_cast<const MenuItem&>(Item));
-		})
+			{
+				OnHover(static_cast<const MenuItem&>(Item));
+			})
 		.SetOnPressed([this](const TextSelectable& Item) -> void
-		{
-			OnSelected(static_cast<const MenuItem&>(Item));
-		})
+			{
+				OnSelected(static_cast<const MenuItem&>(Item));
+			})
 		.SetAlignment(HorizontalAlignment::Center)
 		.SetText(InText)
 		.SetExpand(Expand::Height);

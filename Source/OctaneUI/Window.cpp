@@ -24,6 +24,7 @@ SOFTWARE.
 
 */
 
+#include "Window.h"
 #include "Application.h"
 #include "Controls/ControlList.h"
 #include "Controls/MenuBar.h"
@@ -31,7 +32,6 @@ SOFTWARE.
 #include "Controls/VerticalContainer.h"
 #include "Json.h"
 #include "Paint.h"
-#include "Window.h"
 
 #include <algorithm>
 
@@ -42,26 +42,26 @@ Window::Window(Application* InApplication)
 	: m_Application(InApplication)
 {
 	m_Popup.SetOnInvalidate([=](Control* Focus, InvalidateType Type) -> void
-	{
-		if ((Type == InvalidateType::Layout || Type == InvalidateType::Both))
 		{
-			RequestLayout(dynamic_cast<Container*>(Focus));
-		}
+			if ((Type == InvalidateType::Layout || Type == InvalidateType::Both))
+			{
+				RequestLayout(dynamic_cast<Container*>(Focus));
+			}
 
-		m_Repaint = true;
-	});
+			m_Repaint = true;
+		});
 
 	m_Popup.SetOnClose([=](const Container& Focus) -> void
-	{
-		if (m_OnPopupClose)
 		{
-			m_OnPopupClose(Focus);
-			m_OnPopupClose = nullptr;
-		}
+			if (m_OnPopupClose)
+			{
+				m_OnPopupClose(Focus);
+				m_OnPopupClose = nullptr;
+			}
 
-		m_MenuBar->Close();
-		m_Repaint = true;
-	});
+			m_MenuBar->Close();
+			m_Repaint = true;
+		});
 }
 
 Window::~Window()
@@ -295,21 +295,21 @@ void Window::CreateContainer()
 {
 	m_Container = std::make_shared<VerticalContainer>(this);
 	m_Container
-		->SetSpacing({0.0f, 0.0f})
+		->SetSpacing({ 0.0f, 0.0f })
 		->SetExpand(Expand::Both)
 		->SetOnInvalidate([=](Control* Focus, InvalidateType Type) -> void
-		{
-			if ((Type == InvalidateType::Layout || Type == InvalidateType::Both))
 			{
-				RequestLayout(dynamic_cast<Container*>(Focus));
-			}
+				if ((Type == InvalidateType::Layout || Type == InvalidateType::Both))
+				{
+					RequestLayout(dynamic_cast<Container*>(Focus));
+				}
 
-			m_Repaint = true;
-		});
+				m_Repaint = true;
+			});
 
 	m_MenuBar = std::make_shared<MenuBar>(this);
 	m_Container->InsertControl(m_MenuBar);
-	
+
 	m_Body = m_Container->AddControl<Container>();
 	m_Body->SetExpand(Expand::Both);
 
@@ -394,7 +394,7 @@ void Window::Load(const Json& Root)
 	const Json& Body = Root["Body"];
 
 	SetTitle(Title.c_str());
-	SetSize({Width, Height});
+	SetSize({ Width, Height });
 
 	m_MenuBar->OnLoad(MB);
 	m_Body->OnLoad(Body);

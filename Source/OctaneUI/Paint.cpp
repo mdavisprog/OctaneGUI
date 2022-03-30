@@ -24,9 +24,9 @@ SOFTWARE.
 
 */
 
+#include "Paint.h"
 #include "Application.h"
 #include "Font.h"
-#include "Paint.h"
 #include "Rect.h"
 #include "Texture.h"
 #include "Theme.h"

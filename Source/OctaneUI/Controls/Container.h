@@ -43,7 +43,7 @@ public:
 	Container(Window* InWindow);
 	virtual ~Container();
 
-	template<class T, typename ...TArgs>
+	template <class T, typename... TArgs>
 	std::shared_ptr<T> AddControl(TArgs... Args)
 	{
 		std::shared_ptr<T> Result = std::make_shared<T>(GetWindow(), Args...);

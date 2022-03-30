@@ -37,10 +37,12 @@ class Container
 {
 public:
 	Container()
-	{}
+	{
+	}
 
 	~Container()
-	{}
+	{
+	}
 
 	sf::RenderWindow* Renderer;
 };
@@ -124,37 +126,33 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 		{
 		case sf::Event::Closed:
 			return OctaneUI::Event(OctaneUI::Event::Type::WindowClosed);
-		
+
 		case sf::Event::KeyPressed:
 			return OctaneUI::Event(
 				OctaneUI::Event::Type::KeyPressed,
-				OctaneUI::Event::Key(GetKeyCode(Event.key.code))
-			);
-		
+				OctaneUI::Event::Key(GetKeyCode(Event.key.code)));
+
 		case sf::Event::KeyReleased:
 			return OctaneUI::Event(
 				OctaneUI::Event::Type::KeyReleased,
-				OctaneUI::Event::Key(GetKeyCode(Event.key.code))
-			);
-		
+				OctaneUI::Event::Key(GetKeyCode(Event.key.code)));
+
 		case sf::Event::MouseMoved:
 			return OctaneUI::Event(OctaneUI::Event::MouseMove((float)Event.mouseMove.x, (float)Event.mouseMove.y));
-		
+
 		case sf::Event::MouseButtonPressed:
 			return OctaneUI::Event(
 				OctaneUI::Event::Type::MousePressed,
-				OctaneUI::Event::MouseButton(GetMouseButton(Event.mouseButton.button), (float)Event.mouseButton.x, (float)Event.mouseButton.y)
-			);
-		
+				OctaneUI::Event::MouseButton(GetMouseButton(Event.mouseButton.button), (float)Event.mouseButton.x, (float)Event.mouseButton.y));
+
 		case sf::Event::MouseButtonReleased:
 			return OctaneUI::Event(
 				OctaneUI::Event::Type::MouseReleased,
-				OctaneUI::Event::MouseButton(GetMouseButton(Event.mouseButton.button), (float)Event.mouseButton.x, (float)Event.mouseButton.y)
-			);
-		
+				OctaneUI::Event::MouseButton(GetMouseButton(Event.mouseButton.button), (float)Event.mouseButton.x, (float)Event.mouseButton.y));
+
 		case sf::Event::TextEntered:
 			return OctaneUI::Event(OctaneUI::Event::Text(Event.text.unicode));
-		
+
 		case sf::Event::Resized:
 			Item.Renderer->setView(sf::View(sf::FloatRect(0.0f, 0.0f, (float)Event.size.width, (float)Event.size.height)));
 			return OctaneUI::Event(OctaneUI::Event::WindowResized((float)Event.size.width, (float)Event.size.height));

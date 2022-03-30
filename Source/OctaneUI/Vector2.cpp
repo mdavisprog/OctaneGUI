@@ -45,7 +45,7 @@ Vector2::Vector2(float InX, float InY)
 
 Vector2 Vector2::operator-() const
 {
-	return {-X, -Y};
+	return { -X, -Y };
 }
 
 Vector2 Vector2::operator+(const Vector2& Other) const

@@ -48,14 +48,14 @@ namespace OctaneUI
 Application::Application()
 {
 	Texture::SetOnLoad([this](const std::vector<uint8_t>& Data, uint32_t Width, uint32_t Height) -> uint32_t
-	{
-		if (m_OnLoadTexture)
 		{
-			return m_OnLoadTexture(Data, Width, Height);
-		}
+			if (m_OnLoadTexture)
+			{
+				return m_OnLoadTexture(Data, Width, Height);
+			}
 
-		return 0;
-	});
+			return 0;
+		});
 }
 
 Application::~Application()
@@ -88,11 +88,11 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
 	}
 
 	Windows.ForEach([&](const std::string& Key, const Json& Value) -> void
-	{
-		ControlList List;
-		CreateWindow(Key.c_str(), Value, List);
-		WindowControls[Key] = List;
-	});
+		{
+			ControlList List;
+			CreateWindow(Key.c_str(), Value, List);
+			WindowControls[Key] = List;
+		});
 
 	assert(m_Windows.find("Main") != m_Windows.end());
 	DisplayWindow("Main");
@@ -337,48 +337,50 @@ void Application::ProcessEvent(const std::shared_ptr<Window>& Item)
 	case Event::Type::WindowClosed:
 		DestroyWindow(Item);
 		break;
-	
+
 	case Event::Type::KeyPressed:
+	{
+		Keyboard::Key Code = E.GetData().m_Key.m_Code;
+		Item->OnKeyPressed(Code);
+		if (std::find(m_PressedKeys.begin(), m_PressedKeys.end(), Code) == m_PressedKeys.end())
 		{
-			Keyboard::Key Code = E.GetData().m_Key.m_Code;
-			Item->OnKeyPressed(Code);
-			if (std::find(m_PressedKeys.begin(), m_PressedKeys.end(), Code) == m_PressedKeys.end())
-			{
-				m_PressedKeys.push_back(Code);
-			}
-		} break;
-	
+			m_PressedKeys.push_back(Code);
+		}
+	}
+	break;
+
 	case Event::Type::KeyReleased:
+	{
+		Keyboard::Key Code = E.GetData().m_Key.m_Code;
+		Item->OnKeyReleased(Code);
+		std::vector<Keyboard::Key>::iterator Iter = std::remove(m_PressedKeys.begin(), m_PressedKeys.end(), Code);
+		if (Iter != m_PressedKeys.end())
 		{
-			Keyboard::Key Code = E.GetData().m_Key.m_Code;
-			Item->OnKeyReleased(Code);
-			std::vector<Keyboard::Key>::iterator Iter = std::remove(m_PressedKeys.begin(), m_PressedKeys.end(), Code);
-			if (Iter != m_PressedKeys.end())
-			{
-				m_PressedKeys.erase(Iter);
-			}
-		} break;
+			m_PressedKeys.erase(Iter);
+		}
+	}
+	break;
 
 	case Event::Type::MouseMoved:
 		Item->OnMouseMove(E.GetData().m_MouseMove.m_Position);
 		break;
-	
+
 	case Event::Type::MousePressed:
 		Item->OnMousePressed(E.GetData().m_MouseButton.m_Position, E.GetData().m_MouseButton.m_Button);
 		break;
-	
+
 	case Event::Type::MouseReleased:
 		Item->OnMouseReleased(E.GetData().m_MouseButton.m_Position, E.GetData().m_MouseButton.m_Button);
 		break;
-	
+
 	case Event::Type::WindowResized:
 		Item->SetSize(E.GetData().m_Resized.m_Size);
 		break;
-	
+
 	case Event::Type::Text:
 		Item->OnText(E.GetData().m_Text.Code);
 		break;
-	
+
 	case Event::Type::None:
 	default: break;
 	}
@@ -393,16 +395,16 @@ bool Application::Initialize()
 
 	m_Theme = std::make_shared<Theme>();
 	m_Theme->SetOnThemeLoaded([this]() -> void
-	{
-		for (const std::pair<std::string, std::shared_ptr<Window>>& Item : m_Windows)
 		{
-			Item.second->ThemeLoaded();
-			if (Item.second->IsVisible())
+			for (const std::pair<std::string, std::shared_ptr<Window>>& Item : m_Windows)
 			{
-				Item.second->GetContainer()->Invalidate();
+				Item.second->ThemeLoaded();
+				if (Item.second->IsVisible())
+				{
+					Item.second->GetContainer()->Invalidate();
+				}
 			}
-		}
-	});
+		});
 
 	m_Icons = std::make_shared<Icons>();
 	m_Icons->Initialize();

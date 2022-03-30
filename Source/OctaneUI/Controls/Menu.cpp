@@ -24,9 +24,9 @@ SOFTWARE.
 
 */
 
+#include "Menu.h"
 #include "../Json.h"
 #include "../Paint.h"
-#include "Menu.h"
 #include "MenuItem.h"
 #include "Panel.h"
 #include "Separator.h"
@@ -44,7 +44,7 @@ Menu::Menu(Window* InWindow)
 
 	m_Container = AddControl<VerticalContainer>();
 	m_Container
-		->SetSpacing({0.0f, 0.0f})
+		->SetSpacing({ 0.0f, 0.0f })
 		->SetExpand(Expand::Width);
 }
 
@@ -53,16 +53,16 @@ Menu& Menu::AddItem(const char* InText, OnEmptySignature Fn)
 	std::shared_ptr<MenuItem> Item = std::make_shared<MenuItem>(GetWindow());
 	Item
 		->SetOnHovered([this](const TextSelectable& Item) -> void
-		{
-			OnHovered(static_cast<const MenuItem&>(Item));
-		})
+			{
+				OnHovered(static_cast<const MenuItem&>(Item));
+			})
 		.SetOnPressed([this](const TextSelectable& Item) -> void
-		{
-			OnSelected(static_cast<const MenuItem&>(Item));
-		})
+			{
+				OnSelected(static_cast<const MenuItem&>(Item));
+			})
 		.SetText(InText)
 		.SetExpand(Expand::Width);
-	
+
 	m_Container->InsertControl(Item);
 
 	m_Items.push_back(Item);
@@ -93,14 +93,14 @@ Menu& Menu::AddSeparator()
 {
 	std::shared_ptr<Separator> Item = std::make_shared<Separator>(GetWindow());
 	Item->SetOnHover([this](const Control&) -> void
-	{
-		if (m_Menu)
 		{
-			SetSelected(m_Menu, false);
-			RemoveControl(m_Menu);
-			m_Menu = nullptr;
-		}
-	});
+			if (m_Menu)
+			{
+				SetSelected(m_Menu, false);
+				RemoveControl(m_Menu);
+				m_Menu = nullptr;
+			}
+		});
 	m_Container->InsertControl(Item);
 	Resize();
 	return *this;

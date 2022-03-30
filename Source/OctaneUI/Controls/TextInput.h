@@ -64,7 +64,7 @@ public:
 
 		void SetIndex(uint32_t Index);
 		uint32_t Index() const;
-	
+
 	private:
 		uint32_t m_Line { (uint32_t)-1 };
 		uint32_t m_Column { (uint32_t)-1 };

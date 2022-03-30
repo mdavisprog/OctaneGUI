@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#include "Json.h"
 #include "Variant.h"
+#include "Json.h"
 
 #include <cstring>
 
@@ -325,12 +325,14 @@ std::string Variant::ToString() const
 	{
 		Vector2 Value = Vector();
 		Result = std::string("Vector2: ") + std::to_string(Value.X) + ", " + std::to_string(Value.Y);
-	} break;
+	}
+	break;
 	case Type::Color:
 	{
 		Color Value = ToColor();
 		Result = std::string("Color: ") + std::to_string(Value.R) + ", " + std::to_string(Value.G) + ", " + std::to_string(Value.B) + ", " + std::to_string(Value.A);
-	} break;
+	}
+	break;
 	case Type::Null:
 	default: Result = "Null"; break;
 	}
@@ -344,27 +346,35 @@ void Variant::Copy(const Json& Value)
 
 	switch (Value.GetType())
 	{
-	case Json::Type::Boolean: m_Type = Type::Bool; m_Data.Bool = Value.Boolean(); break;
-	case Json::Type::Number: m_Type = Type::Float; m_Data.Float = Value.Number(); break;
-	case Json::Type::String: 
+	case Json::Type::Boolean:
+		m_Type = Type::Bool;
+		m_Data.Bool = Value.Boolean();
+		break;
+	case Json::Type::Number:
+		m_Type = Type::Float;
+		m_Data.Float = Value.Number();
+		break;
+	case Json::Type::String:
 	{
 		m_Type = Type::String;
 		m_Data.String = new std::string();
 		*m_Data.String = Value.String();
-	} break;
+	}
+	break;
 	case Json::Type::Array:
 	{
 		if (Value.Count() == 2)
 		{
 			m_Type = Type::Vector;
-			m_Data.Vector = {Value[0u].Number(), Value[1u].Number()};
+			m_Data.Vector = { Value[0u].Number(), Value[1u].Number() };
 		}
 		else if (Value.Count() == 4)
 		{
 			m_Type = Type::Color;
-			m_Data.Col = {(unsigned char)Value[0u].Number(), (unsigned char)Value[1u].Number(), (unsigned char)Value[2u].Number(), (unsigned char)Value[3u].Number()};
+			m_Data.Col = { (unsigned char)Value[0u].Number(), (unsigned char)Value[1u].Number(), (unsigned char)Value[2u].Number(), (unsigned char)Value[3u].Number() };
 		}
-	} break;
+	}
+	break;
 	default: break;
 	}
 }
@@ -384,7 +394,8 @@ void Variant::Copy(const Variant& Other)
 	{
 		m_Data.String = new std::string();
 		*m_Data.String = Other.String();
-	 } break;
+	}
+	break;
 	case Type::Null:
 	default: break;
 	}

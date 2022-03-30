@@ -24,10 +24,10 @@ SOFTWARE.
 
 */
 
+#include "ImageButton.h"
 #include "../Json.h"
 #include "../ThemeProperties.h"
 #include "Image.h"
-#include "ImageButton.h"
 
 namespace OctaneUI
 {
@@ -96,8 +96,8 @@ void ImageButton::OnLoad(const Json& Root)
 void ImageButton::OnThemeLoaded()
 {
 	m_Image->SetTint(IsDisabled()
-		? GetProperty(ThemeProperties::Text_Disabled).ToColor() 
-		: GetProperty(ThemeProperties::ImageButton).ToColor());
+			? GetProperty(ThemeProperties::Text_Disabled).ToColor()
+			: GetProperty(ThemeProperties::ImageButton).ToColor());
 }
 
 void ImageButton::OnPressed()

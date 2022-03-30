@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#include "../Paint.h"
 #include "Separator.h"
+#include "../Paint.h"
 
 namespace OctaneUI
 {
@@ -34,7 +34,7 @@ Separator::Separator(Window* InWindow)
 	: Control(InWindow)
 {
 	SetExpand(Expand::Width);
-	SetSize({0.0f, 16.0f});
+	SetSize({ 0.0f, 16.0f });
 }
 
 Separator& Separator::SetOnHover(OnControlSignature Fn)

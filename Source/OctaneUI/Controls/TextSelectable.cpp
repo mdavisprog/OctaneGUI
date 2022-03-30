@@ -24,11 +24,11 @@ SOFTWARE.
 
 */
 
+#include "TextSelectable.h"
 #include "../Json.h"
 #include "../Paint.h"
 #include "../ThemeProperties.h"
 #include "Text.h"
-#include "TextSelectable.h"
 
 namespace OctaneUI
 {
@@ -114,11 +114,11 @@ void TextSelectable::Update()
 	case HorizontalAlignment::Center:
 		Position = GetSize() * 0.5f - m_Text->GetSize() * 0.5f;
 		break;
-	
+
 	case HorizontalAlignment::Right:
 		Position = Vector2(GetBounds().Max.X, GetBounds().Min.Y + CenterY) - Offset - Vector2(m_Text->GetSize().X, 0.0f);
 		break;
-	
+
 	default: break;
 	}
 

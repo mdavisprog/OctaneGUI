@@ -45,7 +45,7 @@ public:
 
 	ListBox(Window* InWindow);
 
-	template<typename T, typename ...TArgs>
+	template <typename T, typename... TArgs>
 	std::shared_ptr<T> AddItem(TArgs... Args)
 	{
 		std::shared_ptr<T> Result = std::make_shared<T>(GetWindow(), Args...);

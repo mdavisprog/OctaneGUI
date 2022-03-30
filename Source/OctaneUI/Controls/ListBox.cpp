@@ -24,10 +24,10 @@ SOFTWARE.
 
 */
 
+#include "ListBox.h"
 #include "../Json.h"
 #include "../Paint.h"
 #include "../ThemeProperties.h"
-#include "ListBox.h"
 #include "Panel.h"
 #include "ScrollableContainer.h"
 #include "VerticalContainer.h"
@@ -201,38 +201,38 @@ ListBox::ListBox(Window* InWindow)
 	m_Scrollable = AddControl<ScrollableContainer>();
 
 	m_List = m_Scrollable->AddControl<VerticalContainer>();
-	m_List->SetSpacing({0.0f, 0.0f});
+	m_List->SetSpacing({ 0.0f, 0.0f });
 
 	m_Interaction = AddControl<ListBoxInteraction>(m_Scrollable, m_List);
 	m_Interaction
 		->SetOnSelect([this](int Index, std::weak_ptr<Control> Item) -> void
-		{
-			if (m_OnSelect)
 			{
-				m_OnSelect(Index, Item);
-			}
-		})
+				if (m_OnSelect)
+				{
+					m_OnSelect(Index, Item);
+				}
+			})
 		.SetOnHoverChange([this](int New, int Old) -> void
-		{
-			if (New != -1)
 			{
-				m_List->Controls()[New]->SetProperty(ThemeProperties::Text, GetProperty(ThemeProperties::TextSelectable_Text_Hovered).ToColor());
-			}
+				if (New != -1)
+				{
+					m_List->Controls()[New]->SetProperty(ThemeProperties::Text, GetProperty(ThemeProperties::TextSelectable_Text_Hovered).ToColor());
+				}
 
-			if (Old != -1 && Old != m_Interaction->Index())
-			{
-				m_List->Controls()[Old]->ClearProperty(ThemeProperties::Text);
-			}
-		})
+				if (Old != -1 && Old != m_Interaction->Index())
+				{
+					m_List->Controls()[Old]->ClearProperty(ThemeProperties::Text);
+				}
+			})
 		.SetOnSelectionChange([this](int New, int Old) -> void
-		{
-			if (Old != -1 && New != Old)
 			{
-				m_List->Controls()[Old]->ClearProperty(ThemeProperties::Text);
-			}
-		});
+				if (Old != -1 && New != Old)
+				{
+					m_List->Controls()[Old]->ClearProperty(ThemeProperties::Text);
+				}
+			});
 
-	SetSize({200.0f, 200.0f});
+	SetSize({ 200.0f, 200.0f });
 }
 
 int ListBox::Index() const
@@ -300,7 +300,7 @@ void ListBox::PaintItem(Paint& Brush, const std::shared_ptr<Control>& Item) cons
 	Rect Bounds = Item->GetAbsoluteBounds();
 	if (Bounds.GetSize().X < ContentWidth)
 	{
-		Bounds.SetSize({ContentWidth, Bounds.Height()});
+		Bounds.SetSize({ ContentWidth, Bounds.Height() });
 	}
 	Brush.Rectangle(Bounds, GetProperty(ThemeProperties::TextSelectable_Hovered).ToColor());
 }

@@ -456,7 +456,7 @@ const char* Json::ParseValue(const char* Stream, Json& Value)
 				case 'n': Ch = '\n'; break;
 				case 'r': Ch = '\r'; break;
 				case 't': Ch = '\t'; break;
-				case 'u': break; //TODO: Implement parsing 4-digit hex value.
+				case 'u': break; // TODO: Implement parsing 4-digit hex value.
 				default: Token += LastCh;
 				}
 			}
@@ -639,9 +639,9 @@ bool Json::Equals(const Json& Other) const
 	{
 		bool Result = true;
 		ForEach([&](const std::string& Key, const Json& Value) -> void
-		{
-			Result &= Value.Equals(Other[Key]);
-		});
+			{
+				Result &= Value.Equals(Other[Key]);
+			});
 		return Result;
 	}
 
@@ -670,17 +670,20 @@ void Json::Copy(const Json& Other)
 	{
 		m_Data.String = new std::string();
 		*m_Data.String = Other.String();
-	} break;
+	}
+	break;
 	case Type::Object:
 	{
 		m_Data.Object = new Map();
 		*m_Data.Object = *Other.m_Data.Object;
-	} break;
+	}
+	break;
 	case Type::Array:
 	{
 		m_Data.Array = new std::vector<Json>();
 		*m_Data.Array = *Other.m_Data.Array;
-	} break;
+	}
+	break;
 	case Type::Null:
 	default: break;
 	}

@@ -24,11 +24,11 @@ SOFTWARE.
 
 */
 
+#include "CheckBox.h"
 #include "../Icons.h"
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Window.h"
-#include "CheckBox.h"
 #include "Text.h"
 
 namespace OctaneUI
@@ -105,8 +105,7 @@ void CheckBox::OnPaint(Paint& Brush) const
 			GetProperty(ThemeProperties::Button_Pressed).ToColor(),
 			GetProperty(ThemeProperties::Button_Highlight_3D).ToColor(),
 			GetProperty(ThemeProperties::Button_Shadow_3D).ToColor(),
-			true
-		);
+			true);
 	}
 	else
 	{
@@ -130,16 +129,14 @@ void CheckBox::OnPaint(Paint& Brush) const
 			Rect(Position, Position + TexCoords.GetSize()),
 			GetWindow()->GetIcons()->GetUVsNormalized(Icons::Type::Check),
 			GetWindow()->GetIcons()->GetTexture(),
-			GetProperty(ThemeProperties::Check).ToColor()
-		);
+			GetProperty(ThemeProperties::Check).ToColor());
 	}
 	else if (m_State == State::Intermediate)
 	{
-		const Vector2 Shrink = {3.0f, 3.0f};
+		const Vector2 Shrink = { 3.0f, 3.0f };
 		Rect Inner = Rect(
 			BoxPosition + Shrink,
-			BoxPosition + Size - Shrink
-		);
+			BoxPosition + Size - Shrink);
 		Brush.Rectangle(Inner, GetProperty(ThemeProperties::Check).ToColor());
 	}
 
@@ -148,7 +145,7 @@ void CheckBox::OnPaint(Paint& Brush) const
 
 void CheckBox::Update()
 {
-	m_Text->SetPosition({BoxSize().X + 12.0f, GetSize().Y * 0.5f - m_Text->GetSize().Y * 0.5f});
+	m_Text->SetPosition({ BoxSize().X + 12.0f, GetSize().Y * 0.5f - m_Text->GetSize().Y * 0.5f });
 }
 
 void CheckBox::OnLoad(const Json& Root)

@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#include "../Paint.h"
 #include "ScrollableContainer.h"
+#include "../Paint.h"
 #include "ScrollBar.h"
 
 namespace OctaneUI
@@ -38,20 +38,20 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 
 	m_HorizontalSB = std::make_shared<ScrollBar>(InWindow, Orientation::Horizontal);
 	m_HorizontalSB->SetOnDrag([this](const ScrollBar&) -> void
-	{
-		const float Size = GetOverflow().X;
-		SetOffset({m_HorizontalSB->OffsetPct() * Size, -GetPosition().Y}, false);
-		InvalidateLayout();
-	});
+		{
+			const float Size = GetOverflow().X;
+			SetOffset({ m_HorizontalSB->OffsetPct() * Size, -GetPosition().Y }, false);
+			InvalidateLayout();
+		});
 	InsertControl(m_HorizontalSB);
 
 	m_VerticalSB = std::make_shared<ScrollBar>(InWindow, Orientation::Vertical);
 	m_VerticalSB->SetOnDrag([this](const ScrollBar&) -> void
-	{
-		const float Size = GetOverflow().Y;
-		SetOffset({-GetPosition().X, m_VerticalSB->OffsetPct() * Size}, false);
-		InvalidateLayout();
-	});
+		{
+			const float Size = GetOverflow().Y;
+			SetOffset({ -GetPosition().X, m_VerticalSB->OffsetPct() * Size }, false);
+			InvalidateLayout();
+		});
 	InsertControl(m_VerticalSB);
 }
 
@@ -217,19 +217,19 @@ void ScrollableContainer::PlaceControls(const std::vector<std::shared_ptr<Contro
 
 	m_HorizontalSB
 		->SetHandleSize(Overflow.X > 0.0f ? Size.X - Overflow.X : 0.0f)
-		.SetPosition({-GetPosition().X, -GetPosition().Y + Size.Y - SBSize})
-		->SetSize({Size.X, SBSize});
+		.SetPosition({ -GetPosition().X, -GetPosition().Y + Size.Y - SBSize })
+		->SetSize({ Size.X, SBSize });
 
 	m_VerticalSB
 		->SetHandleSize(Overflow.Y > 0.0f ? Size.Y - Overflow.Y : 0.0f)
-		.SetPosition({-GetPosition().X + Size.X - SBSize, -GetPosition().Y})
-		->SetSize({SBSize, Size.Y - (m_HorizontalSB->HasHandle() ? SBSize : 0.0f)});
+		.SetPosition({ -GetPosition().X + Size.X - SBSize, -GetPosition().Y })
+		->SetSize({ SBSize, Size.Y - (m_HorizontalSB->HasHandle() ? SBSize : 0.0f) });
 }
 
 Rect ScrollableContainer::TranslatedBounds() const
 {
 	const Vector2 Position = GetAbsolutePosition() - GetPosition();
-	return {Position, Position + GetSize()};
+	return { Position, Position + GetSize() };
 }
 
 Vector2 ScrollableContainer::GetContentSize(const std::vector<std::shared_ptr<Control>>& Controls) const
