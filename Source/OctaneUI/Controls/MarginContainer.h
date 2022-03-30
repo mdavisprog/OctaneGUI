@@ -38,6 +38,8 @@ class MarginContainer : public Container
 public:
 	MarginContainer(Window* InWindow);
 
+	virtual Vector2 DesiredSize() const override;
+
 	virtual void OnLoad(const Json& Root) override;
 
 protected:

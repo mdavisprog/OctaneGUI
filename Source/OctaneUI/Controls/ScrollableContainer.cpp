@@ -137,7 +137,6 @@ std::weak_ptr<Control> ScrollableContainer::GetControl(const Vector2& Point) con
 
 	// This still may return a scrollbar. Parent containers can check for scrollbar visibility
 	// with IsScrollBarVisible function.
-	// TODO: May need to transform the point before passing up to parent.
 	return Container::GetControl(Point);
 }
 

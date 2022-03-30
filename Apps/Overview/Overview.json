@@ -60,6 +60,8 @@
 								"Type": "MarginContainer",
 								"Left": 8,
 								"Top": 8,
+								"Right": 8,
+								"Bottom": 8,
 								"Controls": [
 									{
 										"Type": "VerticalContainer",

@@ -36,6 +36,26 @@ MarginContainer::MarginContainer(Window* InWindow)
 	SetExpand(Expand::Both);
 }
 
+Vector2 MarginContainer::DesiredSize() const
+{
+	Vector2 Result;
+
+	for (const std::shared_ptr<Control>& Item : Controls())
+	{
+		Vector2 Size = Item->GetSize();
+		const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
+		if (ItemContainer)
+		{
+			Size = ItemContainer->DesiredSize();
+		}
+
+		Result.X = std::max<float>(Result.X, Size.X);
+		Result.Y = std::max<float>(Result.Y, Size.Y);
+	}
+
+	return Result + m_Margins.Min + m_Margins.Max;
+}
+
 void MarginContainer::OnLoad(const Json& Root)
 {
 	Container::OnLoad(Root);
