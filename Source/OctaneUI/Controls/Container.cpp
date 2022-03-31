@@ -145,15 +145,6 @@ Container* Container::InsertControl(const std::shared_ptr<Control>& Item, int Po
 				return;
 			}
 
-			Container* FocusContainer = dynamic_cast<Container*>(Focus);
-			if (FocusContainer == nullptr && (Type == InvalidateType::Layout || Type == InvalidateType::Both))
-			{
-				// If Focus is a control but is requesting to have a layout update, the owning container should
-				// notify the listeners that it should have it's layout updated. The control will still be passed
-				// up in case of a repaint request.
-				Invalidate(Type);
-			}
-
 			Invalidate(Focus, Type);
 		});
 
