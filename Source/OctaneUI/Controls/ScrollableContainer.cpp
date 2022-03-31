@@ -264,7 +264,7 @@ void ScrollableContainer::SetOffset(const Vector2& Offset, bool UpdateSBHandles)
 void ScrollableContainer::UpdateScrollBars()
 {
 	const Vector2 Size = GetSize();
-	const Vector2 Overflow = m_ContentSize - Size;
+	const Vector2 Overflow = GetOverflow();
 	const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
 
 	m_HorizontalSB
