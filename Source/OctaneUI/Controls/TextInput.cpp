@@ -440,6 +440,7 @@ void TextInput::Delete(int32_t Range)
 	Contents.erase(Contents.begin() + (uint32_t)Min, Contents.begin() + (uint32_t)Max);
 
 	InternalSetText(Contents.c_str());
+	m_Scrollable->Update();
 }
 
 void TextInput::MoveHome()

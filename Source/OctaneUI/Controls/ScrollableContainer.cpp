@@ -142,12 +142,11 @@ std::weak_ptr<Control> ScrollableContainer::GetControl(const Vector2& Point) con
 
 void ScrollableContainer::Update()
 {
-	// Not a fan of doing this twice. Once here, and once in PlaceControls.
-	// Would be nice for PlaceControls to use m_ContentSize.
 	std::vector<std::shared_ptr<Control>> AllControls;
 	GetControls(AllControls);
 
 	m_ContentSize = GetContentSize(AllControls);
+	UpdateScrollBars();
 }
 
 void ScrollableContainer::OnPaint(Paint& Brush) const
@@ -202,29 +201,6 @@ void ScrollableContainer::OnMouseReleased(const Vector2& Position, Mouse::Button
 	m_VerticalSB->OnMouseReleased(Position, Button);
 }
 
-void ScrollableContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
-{
-	Container::PlaceControls(Controls);
-
-	std::vector<std::shared_ptr<Control>> AllControls;
-	GetControls(AllControls);
-
-	const Vector2 ContentSize = GetContentSize(AllControls);
-	const Vector2 Size = GetSize();
-	const Vector2 Overflow = ContentSize - Size;
-	const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
-
-	m_HorizontalSB
-		->SetHandleSize(Overflow.X > 0.0f ? Size.X - Overflow.X : 0.0f)
-		.SetPosition({ -GetPosition().X, -GetPosition().Y + Size.Y - SBSize })
-		->SetSize({ Size.X, SBSize });
-
-	m_VerticalSB
-		->SetHandleSize(Overflow.Y > 0.0f ? Size.Y - Overflow.Y : 0.0f)
-		.SetPosition({ -GetPosition().X + Size.X - SBSize, -GetPosition().Y })
-		->SetSize({ SBSize, Size.Y - (m_HorizontalSB->HasHandle() ? SBSize : 0.0f) });
-}
-
 Rect ScrollableContainer::TranslatedBounds() const
 {
 	const Vector2 Position = GetAbsolutePosition() - GetPosition();
@@ -263,7 +239,7 @@ Vector2 ScrollableContainer::GetOverflow() const
 	};
 }
 
-void ScrollableContainer::SetOffset(const Vector2& Offset, bool UpdateScrollBar)
+void ScrollableContainer::SetOffset(const Vector2& Offset, bool UpdateSBHandles)
 {
 	const Vector2 Overflow = GetOverflow();
 	const Vector2 Position = {
@@ -272,7 +248,7 @@ void ScrollableContainer::SetOffset(const Vector2& Offset, bool UpdateScrollBar)
 	};
 	SetPosition(Position);
 
-	if (UpdateScrollBar)
+	if (UpdateSBHandles)
 	{
 		const Vector2 ScrollOffset = {
 			-Position.X / (Overflow.X > 0.0f ? Overflow.X : 1.0f),
@@ -281,6 +257,25 @@ void ScrollableContainer::SetOffset(const Vector2& Offset, bool UpdateScrollBar)
 		m_HorizontalSB->SetOffset(ScrollOffset.X * m_HorizontalSB->GetAvailableScrollSize());
 		m_VerticalSB->SetOffset(ScrollOffset.Y * m_VerticalSB->GetAvailableScrollSize());
 	}
+
+	UpdateScrollBars();
+}
+
+void ScrollableContainer::UpdateScrollBars()
+{
+	const Vector2 Size = GetSize();
+	const Vector2 Overflow = m_ContentSize - Size;
+	const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
+
+	m_HorizontalSB
+		->SetHandleSize(Overflow.X > 0.0f ? Size.X - Overflow.X : 0.0f)
+		.SetPosition({ -GetPosition().X, -GetPosition().Y + Size.Y - SBSize })
+		->SetSize({ Size.X, SBSize });
+
+	m_VerticalSB
+		->SetHandleSize(Overflow.Y > 0.0f ? Size.Y - Overflow.Y : 0.0f)
+		.SetPosition({ -GetPosition().X + Size.X - SBSize, -GetPosition().Y })
+		->SetSize({ SBSize, Size.Y - (m_HorizontalSB->HasHandle() ? SBSize : 0.0f) });
 }
 
 }

@@ -60,14 +60,12 @@ public:
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
 
-protected:
-	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const override;
-
 private:
 	Rect TranslatedBounds() const;
 	Vector2 GetContentSize(const std::vector<std::shared_ptr<Control>>& Controls) const;
 	Vector2 GetOverflow() const;
-	void SetOffset(const Vector2& Offset, bool UpdateScrollBar);
+	void SetOffset(const Vector2& Offset, bool UpdateSBHandles);
+	void UpdateScrollBars();
 
 	std::shared_ptr<ScrollBar> m_HorizontalSB;
 	std::shared_ptr<ScrollBar> m_VerticalSB;
