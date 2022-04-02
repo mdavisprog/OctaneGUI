@@ -37,6 +37,7 @@
 	"Button_3D": false,
 	"TextInput_3D": false,
 	"ScrollBar_3D": false,
+	"ScrollBar_AlwaysPaint": false,
 
 	"FontPath": "Roboto-Regular.ttf"
 }

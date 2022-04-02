@@ -98,7 +98,7 @@ float ScrollBar::OffsetPct() const
 
 bool ScrollBar::HasHandle() const
 {
-	return m_HandleSize > 0.0f;
+	return (m_HandleSize > 0.0f || m_AlwaysPaint) && m_Enabled;
 }
 
 ScrollBar& ScrollBar::SetEnabled(bool Enabled)
@@ -120,25 +120,38 @@ bool ScrollBar::IsEnabled() const
 	return m_Enabled;
 }
 
+void ScrollBar::SetAlwaysPaint(bool AlwaysPaint)
+{
+	m_AlwaysPaint = AlwaysPaint;
+}
+
 void ScrollBar::OnPaint(Paint& Brush) const
 {
-	if (m_HandleSize > 0.0f)
+	if (!m_Enabled)
+	{
+		return;
+	}
+
+	if (m_HandleSize > 0.0f || m_AlwaysPaint)
 	{
 		Brush.Rectangle(GetAbsoluteBounds(), GetProperty(ThemeProperties::ScrollBar).ToColor());
 
-		if (GetProperty(ThemeProperties::ScrollBar_3D).Bool())
+		if (m_HandleSize > 0.0f)
 		{
-			Brush.Rectangle3D(
-				HandleBounds(),
-				GetProperty(ThemeProperties::ScrollBar_Handle).ToColor(),
-				GetProperty(ThemeProperties::Button_Highlight_3D).ToColor(),
-				GetProperty(ThemeProperties::Button_Shadow_3D).ToColor());
-		}
-		else
-		{
-			Brush.Rectangle(
-				HandleBounds(),
-				(m_Hovered || m_Drag) ? GetProperty(ThemeProperties::ScrollBar_HandleHovered).ToColor() : GetProperty(ThemeProperties::ScrollBar_Handle).ToColor());
+			if (GetProperty(ThemeProperties::ScrollBar_3D).Bool())
+			{
+				Brush.Rectangle3D(
+					HandleBounds(),
+					GetProperty(ThemeProperties::ScrollBar_Handle).ToColor(),
+					GetProperty(ThemeProperties::Button_Highlight_3D).ToColor(),
+					GetProperty(ThemeProperties::Button_Shadow_3D).ToColor());
+			}
+			else
+			{
+				Brush.Rectangle(
+					HandleBounds(),
+					(m_Hovered || m_Drag) ? GetProperty(ThemeProperties::ScrollBar_HandleHovered).ToColor() : GetProperty(ThemeProperties::ScrollBar_Handle).ToColor());
+			}
 		}
 	}
 }
@@ -211,6 +224,13 @@ void ScrollBar::OnMouseLeave()
 	{
 		Invalidate();
 	}
+}
+
+void ScrollBar::OnThemeLoaded()
+{
+	Control::OnThemeLoaded();
+
+	m_AlwaysPaint = GetProperty(ThemeProperties::ScrollBar_AlwaysPaint).Bool();
 }
 
 Rect ScrollBar::HandleBounds() const

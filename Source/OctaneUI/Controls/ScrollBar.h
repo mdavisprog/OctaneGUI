@@ -52,11 +52,14 @@ public:
 	ScrollBar& SetEnabled(bool Enabled);
 	bool IsEnabled() const;
 
+	void SetAlwaysPaint(bool AlwaysPaint);
+
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnMouseMove(const Vector2& Position) override;
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseLeave() override;
+	virtual void OnThemeLoaded() override;
 
 private:
 	Rect HandleBounds() const;
@@ -68,6 +71,7 @@ private:
 	bool m_Hovered { false };
 	bool m_Drag { false };
 	bool m_Enabled { true };
+	bool m_AlwaysPaint { false };
 	Vector2 m_DragAnchor { Vector2() };
 	OnScrollBarSignature m_OnDrag { nullptr };
 };
