@@ -33,11 +33,22 @@ Clock::Clock()
 {
 }
 
-float Clock::Measure()
+float Clock::Measure() const
 {
 	std::chrono::time_point<std::chrono::high_resolution_clock> Now = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float> Diff = Now - m_Stamp;
 	return Diff.count();
+}
+
+int64_t Clock::MeasureMS() const
+{
+	std::chrono::time_point<std::chrono::high_resolution_clock> Now = std::chrono::high_resolution_clock::now();
+	return std::chrono::duration_cast<std::chrono::milliseconds>(Now - m_Stamp).count();
+}
+
+void Clock::Reset()
+{
+	m_Stamp = std::chrono::high_resolution_clock::now();
 }
 
 }
