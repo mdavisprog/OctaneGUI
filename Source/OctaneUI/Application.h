@@ -91,7 +91,7 @@ private:
 	std::shared_ptr<Theme> m_Theme { nullptr };
 	std::shared_ptr<Icons> m_Icons { nullptr };
 	bool m_IsRunning { false };
-	std::vector<Keyboard::Key> m_PressedKeys;
+	std::vector<Keyboard::Key> m_PressedKeys {};
 	TextureCache m_TextureCache {};
 	OnWindowSignature m_OnCreateWindow { nullptr };
 	OnWindowSignature m_OnDestroyWindow { nullptr };
