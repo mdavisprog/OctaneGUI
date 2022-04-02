@@ -34,6 +34,7 @@ namespace OctaneUI
 class ScrollableContainer;
 class Text;
 class TextInputInteraction;
+class Timer;
 
 class TextInput : public Container
 {
@@ -106,6 +107,7 @@ private:
 	void ScrollIntoView();
 	void UpdateFormats();
 	void InternalSetText(const char* InText);
+	void ResetCursorTimer();
 
 	std::shared_ptr<Text> m_Text { nullptr };
 	TextPosition m_Position {};
@@ -114,6 +116,10 @@ private:
 	bool m_Drag { false };
 	bool m_Multiline { false };
 	bool m_ReadOnly { false };
+
+	std::shared_ptr<Timer> m_BlinkTimer { nullptr };
+	bool m_DrawCursor { false };
+
 	std::shared_ptr<TextInputInteraction> m_Interaction { nullptr };
 	std::shared_ptr<ScrollableContainer> m_Scrollable { nullptr };
 };

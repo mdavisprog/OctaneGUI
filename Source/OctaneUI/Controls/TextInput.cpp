@@ -29,6 +29,8 @@ SOFTWARE.
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Theme.h"
+#include "../Timer.h"
+#include "../Window.h"
 #include "ScrollableContainer.h"
 #include "Text.h"
 
@@ -180,6 +182,12 @@ TextInput::TextInput(Window* InWindow)
 	m_Interaction = AddControl<TextInputInteraction>(this);
 
 	SetSize({ 100.0f, m_Text->LineHeight() });
+
+	m_BlinkTimer = InWindow->CreateTimer(500, true, [this]() -> void
+		{
+			m_DrawCursor = !m_DrawCursor;
+			Invalidate();
+		});
 }
 
 TextInput::~TextInput()
@@ -220,12 +228,14 @@ bool TextInput::ReadOnly() const
 void TextInput::Focus()
 {
 	m_Focused = true;
+	ResetCursorTimer();
 	Invalidate();
 }
 
 void TextInput::Unfocus()
 {
 	m_Focused = false;
+	m_BlinkTimer->Stop();
 	Invalidate();
 }
 
@@ -320,7 +330,7 @@ void TextInput::OnPaint(Paint& Brush) const
 		}
 	}
 
-	if (m_Focused)
+	if (m_Focused && m_DrawCursor)
 	{
 		const Vector2 Size = GetPositionLocation(m_Position);
 		const Vector2 Start = m_Text->GetAbsolutePosition() + Vector2(std::max<float>(Size.X, 2.0f), Size.Y);
@@ -417,6 +427,7 @@ void TextInput::AddText(uint32_t Code)
 	InternalSetText(Contents.c_str());
 	m_Scrollable->Update();
 	MovePosition(0, 1);
+	ResetCursorTimer();
 }
 
 void TextInput::Delete(int32_t Range)
@@ -441,6 +452,7 @@ void TextInput::Delete(int32_t Range)
 
 	InternalSetText(Contents.c_str());
 	m_Scrollable->Update();
+	ResetCursorTimer();
 }
 
 void TextInput::MoveHome()
@@ -769,6 +781,12 @@ void TextInput::InternalSetText(const char* InText)
 {
 	m_Text->SetText(InText);
 	Invalidate();
+}
+
+void TextInput::ResetCursorTimer()
+{
+	m_BlinkTimer->Start();
+	m_DrawCursor = true;
 }
 
 }
