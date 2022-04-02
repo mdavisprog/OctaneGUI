@@ -32,6 +32,7 @@ SOFTWARE.
 #include "Controls/VerticalContainer.h"
 #include "Json.h"
 #include "Paint.h"
+#include "Timer.h"
 
 #include <algorithm>
 
@@ -353,6 +354,8 @@ bool Window::IsKeyPressed(Keyboard::Key Key) const
 
 void Window::Update()
 {
+	UpdateTimers();
+
 	for (Container* Item : m_LayoutRequests)
 	{
 		Item->Layout();
@@ -415,6 +418,42 @@ void Window::Clear()
 	m_Body->ClearControls();
 }
 
+std::shared_ptr<Timer> Window::CreateTimer(int Interval, bool Repeat, OnEmptySignature&& Callback)
+{
+	std::shared_ptr Result = std::make_unique<Timer>(Interval, Repeat, this, std::move(Callback));
+	return std::move(Result);
+}
+
+void Window::StartTimer(Timer* Object)
+{
+	for (TimerHandle& Handle : m_Timers)
+	{
+		if (Handle.Object == Object)
+		{
+			Handle.Elapsed.Reset();
+			return;
+		}
+	}
+
+	m_Timers.emplace_back(Object);
+}
+
+bool Window::ClearTimer(Timer* Object)
+{
+	for (std::vector<TimerHandle>::const_iterator It = m_Timers.begin(); It != m_Timers.end();)
+	{
+		const TimerHandle& Handle = *It;
+
+		if (Handle.Object == Object)
+		{
+			m_Timers.erase(It);
+			return true;
+		}
+	}
+
+	return false;
+}
+
 Window* Window::SetOnPaint(OnPaintSignature Fn)
 {
 	m_OnPaint = Fn;
@@ -454,6 +493,32 @@ void Window::RequestLayout(Container* Request)
 	if (std::find(m_LayoutRequests.begin(), m_LayoutRequests.end(), Request) == m_LayoutRequests.end())
 	{
 		m_LayoutRequests.push_back(Request);
+	}
+}
+
+void Window::UpdateTimers()
+{
+	for (std::vector<TimerHandle>::iterator It = m_Timers.begin(); It != m_Timers.end();)
+	{
+		TimerHandle& Handle = *It;
+
+		if (Handle.Elapsed.MeasureMS() >= Handle.Object->Interval())
+		{
+			Handle.Object->Invoke();
+
+			if (Handle.Object->Repeat())
+			{
+				Handle.Elapsed.Reset();
+			}
+			else
+			{
+				It = m_Timers.erase(It);
+			}
+		}
+		else
+		{
+			It++;
+		}
 	}
 }
 

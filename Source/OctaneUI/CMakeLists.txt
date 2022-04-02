@@ -41,6 +41,7 @@ set(SOURCE
 	TextureCache.cpp
 	Theme.cpp
 	ThemeProperties.cpp
+	Timer.cpp
 	Variant.cpp
 	Vector2.cpp
 	Vertex.cpp

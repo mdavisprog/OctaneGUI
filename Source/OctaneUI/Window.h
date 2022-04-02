@@ -26,6 +26,7 @@ SOFTWARE.
 
 #pragma once
 
+#include "Clock.h"
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Popup.h"
@@ -49,6 +50,7 @@ class MenuBar;
 class Paint;
 class TextureCache;
 class Theme;
+class Timer;
 class VertexBuffer;
 class VerticalContainer;
 
@@ -107,13 +109,33 @@ public:
 	void Load(const Json& Root, ControlList& List);
 	void Clear();
 
+	std::shared_ptr<Timer> CreateTimer(int Interval, bool Repeat, OnEmptySignature&& Callback);
+	void StartTimer(Timer* Object);
+	bool ClearTimer(Timer* Object);
+
 	Window* SetOnPaint(OnPaintSignature Fn);
 
 private:
+	struct TimerHandle
+	{
+	public:
+		TimerHandle(Timer* InObject)
+			: Object(InObject)
+		{
+		}
+
+		// Not a fan of using a raw pointer here. The object should be valid
+		// during the lifetime of the active timer. If the timer is destroyed,
+		// the window should be notified to remove the timer.
+		Timer* Object { nullptr };
+		Clock Elapsed {};
+	};
+
 	Window();
 
 	void Populate(ControlList& List) const;
 	void RequestLayout(Container* Request);
+	void UpdateTimers();
 
 	Application* m_Application { nullptr };
 	std::string m_Title {};
@@ -130,6 +152,8 @@ private:
 	bool m_Visible { false };
 	bool m_RequestClose { false };
 	std::vector<Container*> m_LayoutRequests;
+
+	std::vector<TimerHandle> m_Timers {};
 
 	OnPaintSignature m_OnPaint { nullptr };
 	OnContainerSignature m_OnPopupClose { nullptr };
