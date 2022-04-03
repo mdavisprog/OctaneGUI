@@ -104,7 +104,7 @@ float ScrollBarHandle::OffsetPct() const
 
 bool ScrollBarHandle::HasHandle() const
 {
-	return (m_HandleSize > 0.0f || m_AlwaysPaint) && m_Enabled;
+	return m_HandleSize > 0.0f && m_Enabled;
 }
 
 ScrollBarHandle& ScrollBarHandle::SetEnabled(bool Enabled)
@@ -126,11 +126,6 @@ bool ScrollBarHandle::IsEnabled() const
 	return m_Enabled;
 }
 
-void ScrollBarHandle::SetAlwaysPaint(bool AlwaysPaint)
-{
-	m_AlwaysPaint = AlwaysPaint;
-}
-
 void ScrollBarHandle::OnPaint(Paint& Brush) const
 {
 	if (!m_Enabled)
@@ -138,10 +133,8 @@ void ScrollBarHandle::OnPaint(Paint& Brush) const
 		return;
 	}
 
-	if (m_HandleSize > 0.0f || m_AlwaysPaint)
+	if (m_HandleSize > 0.0f)
 	{
-		Brush.Rectangle(GetAbsoluteBounds(), GetProperty(ThemeProperties::ScrollBar).ToColor());
-
 		if (m_HandleSize > 0.0f)
 		{
 			if (GetProperty(ThemeProperties::ScrollBar_3D).Bool())
@@ -232,13 +225,6 @@ void ScrollBarHandle::OnMouseLeave()
 	}
 }
 
-void ScrollBarHandle::OnThemeLoaded()
-{
-	Control::OnThemeLoaded();
-
-	m_AlwaysPaint = GetProperty(ThemeProperties::ScrollBar_AlwaysPaint).Bool();
-}
-
 Rect ScrollBarHandle::HandleBounds() const
 {
 	Rect Result;
@@ -287,6 +273,31 @@ ScrollBar& ScrollBar::SetScrollBarSize(const Vector2& Size)
 	SetSize(Size);
 	m_Handle->SetSize(Size);
 	return *this;
+}
+
+ScrollBar& ScrollBar::SetAlwaysPaint(bool AlwaysPaint)
+{
+	m_AlwaysPaint = AlwaysPaint;
+	return *this;
+}
+
+bool ScrollBar::ShouldPaint() const
+{
+	return m_AlwaysPaint || m_Handle->HasHandle();
+}
+
+void ScrollBar::OnPaint(Paint& Brush) const
+{
+	Brush.Rectangle(GetAbsoluteBounds(), GetProperty(ThemeProperties::ScrollBar).ToColor());
+
+	Container::OnPaint(Brush);
+}
+
+void ScrollBar::OnThemeLoaded()
+{
+	Container::OnThemeLoaded();
+
+	m_AlwaysPaint = GetProperty(ThemeProperties::ScrollBar_AlwaysPaint).Bool();
 }
 
 }

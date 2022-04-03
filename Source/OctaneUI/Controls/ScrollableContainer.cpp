@@ -125,12 +125,12 @@ Vector2 ScrollableContainer::GetScrollableSize() const
 
 std::weak_ptr<Control> ScrollableContainer::GetControl(const Vector2& Point) const
 {
-	if (m_HorizontalSB->Handle()->HasHandle() && m_HorizontalSB->Contains(Point))
+	if (m_HorizontalSB->ShouldPaint() && m_HorizontalSB->Contains(Point))
 	{
 		return m_HorizontalSB->GetControl(Point);
 	}
 
-	if (m_VerticalSB->Handle()->HasHandle() && m_VerticalSB->Contains(Point))
+	if (m_VerticalSB->ShouldPaint() && m_VerticalSB->Contains(Point))
 	{
 		return m_VerticalSB->GetControl(Point);
 	}
@@ -164,8 +164,15 @@ void ScrollableContainer::OnPaint(Paint& Brush) const
 
 	Brush.PopClip();
 
-	m_HorizontalSB->OnPaint(Brush);
-	m_VerticalSB->OnPaint(Brush);
+	if (m_HorizontalSB->ShouldPaint())
+	{
+		m_HorizontalSB->OnPaint(Brush);
+	}
+
+	if (m_VerticalSB->ShouldPaint())
+	{
+		m_VerticalSB->OnPaint(Brush);
+	}
 }
 
 void ScrollableContainer::OnLoad(const Json& Root)
@@ -234,8 +241,8 @@ Vector2 ScrollableContainer::GetOverflow() const
 {
 	const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
 	return {
-		std::max<float>(m_ContentSize.X - GetSize().X + (m_VerticalSB->Handle()->HasHandle() ? SBSize : 0.0f), 0.0f),
-		std::max<float>(m_ContentSize.Y - GetSize().Y + (m_HorizontalSB->Handle()->HasHandle() ? SBSize : 0.0f), 0.0f)
+		std::max<float>(m_ContentSize.X - GetSize().X + (m_VerticalSB->ShouldPaint() ? SBSize : 0.0f), 0.0f),
+		std::max<float>(m_ContentSize.Y - GetSize().Y + (m_HorizontalSB->ShouldPaint() ? SBSize : 0.0f), 0.0f)
 	};
 }
 
@@ -274,7 +281,7 @@ void ScrollableContainer::UpdateScrollBars()
 
 	m_VerticalSB->Handle()->SetHandleSize(Overflow.Y > 0.0f ? Size.Y - Overflow.Y : 0.0f);
 	m_VerticalSB
-		->SetScrollBarSize({ SBSize, Size.Y - (m_HorizontalSB->Handle()->HasHandle() ? SBSize : 0.0f) })
+		->SetScrollBarSize({ SBSize, Size.Y - (m_HorizontalSB->ShouldPaint() ? SBSize : 0.0f) })
 		.SetPosition({ -GetPosition().X + Size.X - SBSize, -GetPosition().Y });
 }
 
