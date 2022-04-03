@@ -26,30 +26,35 @@ SOFTWARE.
 
 #pragma once
 
-#include "Control.h"
+#include "Container.h"
 
 namespace OctaneUI
 {
 
-class ScrollBar : public Control
+class BoxContainer;
+class ScrollBar;
+
+class ScrollBarHandle : public Control
 {
-	CLASS(ScrollBar)
+	CLASS(ScrollBarHandle)
 
 public:
-	ScrollBar(Window* InWindow, Orientation InOrientation);
+	ScrollBarHandle(Window* InWindow, ScrollBar* InScrollBar, Orientation InOrientation);
 
-	ScrollBar& SetHandleSize(float HandleSize);
+	Orientation GetOrientation() const;
+
+	ScrollBarHandle& SetHandleSize(float HandleSize);
 	float HandleSize() const;
 	float GetAvailableScrollSize() const;
 
-	ScrollBar& SetOnDrag(OnScrollBarSignature Fn);
+	ScrollBarHandle& SetOnDrag(OnScrollBarSignature Fn);
 
-	ScrollBar& SetOffset(float Offset);
+	ScrollBarHandle& SetOffset(float Offset);
 	float Offset() const;
 	float OffsetPct() const;
 	bool HasHandle() const;
 
-	ScrollBar& SetEnabled(bool Enabled);
+	ScrollBarHandle& SetEnabled(bool Enabled);
 	bool IsEnabled() const;
 
 	void SetAlwaysPaint(bool AlwaysPaint);
@@ -73,7 +78,23 @@ private:
 	bool m_Enabled { true };
 	bool m_AlwaysPaint { false };
 	Vector2 m_DragAnchor { Vector2() };
+	ScrollBar* m_ScrollBar { nullptr };
 	OnScrollBarSignature m_OnDrag { nullptr };
+};
+
+class ScrollBar : public Container
+{
+	CLASS(ScrollBar)
+
+public:
+	ScrollBar(Window* InWindow, Orientation InOrientation);
+
+	const std::shared_ptr<ScrollBarHandle>& Handle() const;
+
+	ScrollBar& SetScrollBarSize(const Vector2& Size);
+
+private:
+	std::shared_ptr<ScrollBarHandle> m_Handle { nullptr };
 };
 
 }

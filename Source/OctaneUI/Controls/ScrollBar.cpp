@@ -31,13 +31,19 @@ SOFTWARE.
 namespace OctaneUI
 {
 
-ScrollBar::ScrollBar(Window* InWindow, Orientation InOrientation)
+ScrollBarHandle::ScrollBarHandle(Window* InWindow, ScrollBar* InScrollBar, Orientation InOrientation)
 	: Control(InWindow)
+	, m_ScrollBar(InScrollBar)
 	, m_Orientation(InOrientation)
 {
 }
 
-ScrollBar& ScrollBar::SetHandleSize(float HandleSize)
+Orientation ScrollBarHandle::GetOrientation() const
+{
+	return m_Orientation;
+}
+
+ScrollBarHandle& ScrollBarHandle::SetHandleSize(float HandleSize)
 {
 	// TODO: Not really a fan of how this is done. Look into something better.
 	m_HandleSize = 0.0f;
@@ -51,24 +57,24 @@ ScrollBar& ScrollBar::SetHandleSize(float HandleSize)
 	return *this;
 }
 
-float ScrollBar::HandleSize() const
+float ScrollBarHandle::HandleSize() const
 {
 	return m_HandleSize;
 }
 
-float ScrollBar::GetAvailableScrollSize() const
+float ScrollBarHandle::GetAvailableScrollSize() const
 {
 	const float Max = m_Orientation == Orientation::Horizontal ? GetSize().X : GetSize().Y;
 	return std::max<float>(0.0f, Max - m_HandleSize);
 }
 
-ScrollBar& ScrollBar::SetOnDrag(OnScrollBarSignature Fn)
+ScrollBarHandle& ScrollBarHandle::SetOnDrag(OnScrollBarSignature Fn)
 {
 	m_OnDrag = Fn;
 	return *this;
 }
 
-ScrollBar& ScrollBar::SetOffset(float Offset)
+ScrollBarHandle& ScrollBarHandle::SetOffset(float Offset)
 {
 	if (m_Offset != Offset)
 	{
@@ -80,12 +86,12 @@ ScrollBar& ScrollBar::SetOffset(float Offset)
 	return *this;
 }
 
-float ScrollBar::Offset() const
+float ScrollBarHandle::Offset() const
 {
 	return m_Offset;
 }
 
-float ScrollBar::OffsetPct() const
+float ScrollBarHandle::OffsetPct() const
 {
 	if (m_HandleSize <= 0.0f)
 	{
@@ -96,12 +102,12 @@ float ScrollBar::OffsetPct() const
 	return m_Offset / (Max - m_HandleSize);
 }
 
-bool ScrollBar::HasHandle() const
+bool ScrollBarHandle::HasHandle() const
 {
 	return (m_HandleSize > 0.0f || m_AlwaysPaint) && m_Enabled;
 }
 
-ScrollBar& ScrollBar::SetEnabled(bool Enabled)
+ScrollBarHandle& ScrollBarHandle::SetEnabled(bool Enabled)
 {
 	if (m_Enabled != Enabled)
 	{
@@ -115,17 +121,17 @@ ScrollBar& ScrollBar::SetEnabled(bool Enabled)
 	return *this;
 }
 
-bool ScrollBar::IsEnabled() const
+bool ScrollBarHandle::IsEnabled() const
 {
 	return m_Enabled;
 }
 
-void ScrollBar::SetAlwaysPaint(bool AlwaysPaint)
+void ScrollBarHandle::SetAlwaysPaint(bool AlwaysPaint)
 {
 	m_AlwaysPaint = AlwaysPaint;
 }
 
-void ScrollBar::OnPaint(Paint& Brush) const
+void ScrollBarHandle::OnPaint(Paint& Brush) const
 {
 	if (!m_Enabled)
 	{
@@ -156,7 +162,7 @@ void ScrollBar::OnPaint(Paint& Brush) const
 	}
 }
 
-void ScrollBar::OnMouseMove(const Vector2& Position)
+void ScrollBarHandle::OnMouseMove(const Vector2& Position)
 {
 	bool Hovered = HandleBounds().Contains(Position);
 
@@ -184,12 +190,12 @@ void ScrollBar::OnMouseMove(const Vector2& Position)
 
 		if (m_OnDrag)
 		{
-			m_OnDrag(*this);
+			m_OnDrag(*m_ScrollBar);
 		}
 	}
 }
 
-bool ScrollBar::OnMousePressed(const Vector2& Position, Mouse::Button Button)
+bool ScrollBarHandle::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 {
 	if (m_Hovered && Button == Mouse::Button::Left)
 	{
@@ -201,7 +207,7 @@ bool ScrollBar::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 	return false;
 }
 
-void ScrollBar::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
+void ScrollBarHandle::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 {
 	if (Button != Mouse::Button::Left)
 	{
@@ -216,7 +222,7 @@ void ScrollBar::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 	m_Drag = false;
 }
 
-void ScrollBar::OnMouseLeave()
+void ScrollBarHandle::OnMouseLeave()
 {
 	m_Hovered = false;
 
@@ -226,14 +232,14 @@ void ScrollBar::OnMouseLeave()
 	}
 }
 
-void ScrollBar::OnThemeLoaded()
+void ScrollBarHandle::OnThemeLoaded()
 {
 	Control::OnThemeLoaded();
 
 	m_AlwaysPaint = GetProperty(ThemeProperties::ScrollBar_AlwaysPaint).Bool();
 }
 
-Rect ScrollBar::HandleBounds() const
+Rect ScrollBarHandle::HandleBounds() const
 {
 	Rect Result;
 
@@ -252,7 +258,7 @@ Rect ScrollBar::HandleBounds() const
 	return Result;
 }
 
-void ScrollBar::ClampOffset()
+void ScrollBarHandle::ClampOffset()
 {
 	const float Max = m_Orientation == Orientation::Horizontal ? GetSize().X : GetSize().Y;
 	if (Max <= 0.0f)
@@ -263,6 +269,24 @@ void ScrollBar::ClampOffset()
 
 	m_Offset = std::max<float>(m_Offset, 0.0f);
 	m_Offset = std::min<float>(m_Offset, Max - m_HandleSize);
+}
+
+ScrollBar::ScrollBar(Window* InWindow, Orientation InOrientation)
+	: Container(InWindow)
+{
+	m_Handle = AddControl<ScrollBarHandle>(this, InOrientation);
+}
+
+const std::shared_ptr<ScrollBarHandle>& ScrollBar::Handle() const
+{
+	return m_Handle;
+}
+
+ScrollBar& ScrollBar::SetScrollBarSize(const Vector2& Size)
+{
+	SetSize(Size);
+	m_Handle->SetSize(Size);
+	return *this;
 }
 
 }
