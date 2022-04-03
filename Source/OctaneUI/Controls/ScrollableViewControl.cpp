@@ -24,52 +24,31 @@ SOFTWARE.
 
 */
 
-#pragma once
-
 #include "ScrollableViewControl.h"
+#include "ScrollableContainer.h"
 
 namespace OctaneUI
 {
 
-class ListBoxInteraction;
-class Panel;
-class VerticalContainer;
-
-class ListBox : public ScrollableViewControl
+ScrollableViewControl::ScrollableViewControl(Window* InWindow)
+	: Container(InWindow)
 {
-	CLASS(ListBox)
+	m_Scrollable = AddControl<ScrollableContainer>();
+}
 
-public:
-	typedef std::function<void(int, std::weak_ptr<Control>)> OnSelectSignature;
-
-	ListBox(Window* InWindow);
-
-	template <typename T, typename... TArgs>
-	std::shared_ptr<T> AddItem(TArgs... Args)
+std::weak_ptr<Control> ScrollableViewControl::GetControl(const Vector2& Point) const
+{
+	if (m_Scrollable->IsInScrollBar(Point))
 	{
-		std::shared_ptr<T> Result = std::make_shared<T>(GetWindow(), Args...);
-		InsertItem(Result);
-		return Result;
+		return m_Scrollable->GetControl(Point);
 	}
 
-	int Index() const;
-	ListBox* SetOnSelect(OnSelectSignature Fn);
-	Vector2 ListSize() const;
+	return Container::GetControl(Point);
+}
 
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnPaint(Paint& Brush) const override;
-
-private:
-	using Container::AddControl;
-	using Container::InsertControl;
-
-	void InsertItem(const std::shared_ptr<Control>& Item);
-	void PaintItem(Paint& Brush, const std::shared_ptr<Control>& Item) const;
-
-	std::shared_ptr<Panel> m_Panel { nullptr };
-	std::shared_ptr<VerticalContainer> m_List { nullptr };
-	std::shared_ptr<ListBoxInteraction> m_Interaction { nullptr };
-	OnSelectSignature m_OnSelect { nullptr };
-};
+const std::shared_ptr<ScrollableContainer>& ScrollableViewControl::Scrollable() const
+{
+	return m_Scrollable;
+}
 
 }

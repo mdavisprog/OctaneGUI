@@ -193,17 +193,15 @@ private:
 };
 
 ListBox::ListBox(Window* InWindow)
-	: Container(InWindow)
+	: ScrollableViewControl(InWindow)
 {
 	m_Panel = AddControl<Panel>();
 	m_Panel->SetExpand(Expand::Both);
 
-	m_Scrollable = AddControl<ScrollableContainer>();
-
-	m_List = m_Scrollable->AddControl<VerticalContainer>();
+	m_List = Scrollable()->AddControl<VerticalContainer>();
 	m_List->SetSpacing({ 0.0f, 0.0f });
 
-	m_Interaction = AddControl<ListBoxInteraction>(m_Scrollable, m_List);
+	m_Interaction = AddControl<ListBoxInteraction>(Scrollable(), m_List);
 	m_Interaction
 		->SetOnSelect([this](int Index, std::weak_ptr<Control> Item) -> void
 			{
@@ -286,7 +284,7 @@ void ListBox::OnPaint(Paint& Brush) const
 
 	Brush.PopClip();
 
-	m_Scrollable->OnPaint(Brush);
+	Scrollable()->OnPaint(Brush);
 }
 
 void ListBox::InsertItem(const std::shared_ptr<Control>& Item)
@@ -296,7 +294,7 @@ void ListBox::InsertItem(const std::shared_ptr<Control>& Item)
 
 void ListBox::PaintItem(Paint& Brush, const std::shared_ptr<Control>& Item) const
 {
-	float ContentWidth = std::max<float>(m_Scrollable->ContentSize().X, GetSize().X);
+	float ContentWidth = std::max<float>(Scrollable()->ContentSize().X, GetSize().X);
 	Rect Bounds = Item->GetAbsoluteBounds();
 	if (Bounds.GetSize().X < ContentWidth)
 	{

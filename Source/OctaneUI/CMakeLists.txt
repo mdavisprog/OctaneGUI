@@ -18,6 +18,7 @@ set(SOURCE
 	Controls/MenuItem.cpp
 	Controls/Panel.cpp
 	Controls/ScrollableContainer.cpp
+	Controls/ScrollableViewControl.cpp
 	Controls/ScrollBar.cpp
 	Controls/Separator.cpp
 	Controls/Text.cpp

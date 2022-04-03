@@ -26,17 +26,16 @@ SOFTWARE.
 
 #pragma once
 
-#include "Container.h"
+#include "ScrollableViewControl.h"
 
 namespace OctaneUI
 {
 
-class ScrollableContainer;
 class Text;
 class TextInputInteraction;
 class Timer;
 
-class TextInput : public Container
+class TextInput : public ScrollableViewControl
 {
 	friend TextInputInteraction;
 
@@ -121,7 +120,6 @@ private:
 	bool m_DrawCursor { false };
 
 	std::shared_ptr<TextInputInteraction> m_Interaction { nullptr };
-	std::shared_ptr<ScrollableContainer> m_Scrollable { nullptr };
 };
 
 }

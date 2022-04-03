@@ -174,10 +174,9 @@ uint32_t TextInput::TextPosition::Index() const
 }
 
 TextInput::TextInput(Window* InWindow)
-	: Container(InWindow)
+	: ScrollableViewControl(InWindow)
 {
-	m_Scrollable = AddControl<ScrollableContainer>();
-	m_Text = m_Scrollable->AddControl<Text>();
+	m_Text = Scrollable()->AddControl<Text>();
 
 	m_Interaction = AddControl<TextInputInteraction>(this);
 
@@ -352,8 +351,7 @@ void TextInput::OnLoad(const Json& Root)
 	{
 		SetSize({ 200.0f, 200.0f });
 	}
-	m_Scrollable->SetHorizontalSBEnabled(m_Multiline)
-		.SetVerticalSBEnabled(m_Multiline);
+	Scrollable()->SetHorizontalSBEnabled(m_Multiline).SetVerticalSBEnabled(m_Multiline);
 
 	m_Text->OnLoad(Root["Text"]);
 }
@@ -368,13 +366,13 @@ void TextInput::MouseMove(const Vector2& Position)
 	}
 	else
 	{
-		m_Scrollable->OnMouseMove(Position);
+		Scrollable()->OnMouseMove(Position);
 	}
 }
 
 bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button)
 {
-	if (m_Scrollable->OnMousePressed(Position, Button))
+	if (Scrollable()->OnMousePressed(Position, Button))
 	{
 		return true;
 	}
@@ -396,7 +394,7 @@ void TextInput::MouseReleased(const Vector2& Position, Mouse::Button Button)
 	}
 
 	m_Drag = false;
-	m_Scrollable->OnMouseReleased(Position, Button);
+	Scrollable()->OnMouseReleased(Position, Button);
 }
 
 void TextInput::AddText(uint32_t Code)
@@ -425,7 +423,7 @@ void TextInput::AddText(uint32_t Code)
 	std::string Contents = m_Text->GetText();
 	Contents.insert(Contents.begin() + m_Position.Index(), (int8_t)Code);
 	InternalSetText(Contents.c_str());
-	m_Scrollable->Update();
+	Scrollable()->Update();
 	MovePosition(0, 1);
 	ResetCursorTimer();
 }
@@ -451,7 +449,7 @@ void TextInput::Delete(int32_t Range)
 	Contents.erase(Contents.begin() + (uint32_t)Min, Contents.begin() + (uint32_t)Max);
 
 	InternalSetText(Contents.c_str());
-	m_Scrollable->Update();
+	Scrollable()->Update();
 	ResetCursorTimer();
 }
 
@@ -623,7 +621,7 @@ TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
 	const std::string& String = m_Text->GetString();
 
 	// Transform into local space.
-	const Vector2 LocalPosition = Position - m_Scrollable->GetAbsolutePosition();
+	const Vector2 LocalPosition = Position - Scrollable()->GetAbsolutePosition();
 	// TODO: Take into account any scrolling once contained within a ScrollableContainer.
 
 	// Find the starting index based on what line the position is on.
@@ -669,7 +667,7 @@ TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
 		const Vector2 Size = GetTheme()->GetFont()->Measure(Ch);
 		Offset.X += Size.X;
 
-		if (Position.X - m_Scrollable->GetPosition().X <= GetAbsolutePosition().X + Offset.X)
+		if (Position.X - Scrollable()->GetPosition().X <= GetAbsolutePosition().X + Offset.X)
 		{
 			break;
 		}
@@ -733,8 +731,8 @@ uint32_t TextInput::LineSize(uint32_t Index) const
 void TextInput::ScrollIntoView()
 {
 	const float LineHeight = m_Text->LineHeight();
-	const Vector2 Position = GetPositionLocation(m_Position) + m_Scrollable->GetPosition();
-	const Vector2 Size = m_Scrollable->GetScrollableSize();
+	const Vector2 Position = GetPositionLocation(m_Position) + Scrollable()->GetPosition();
+	const Vector2 Size = Scrollable()->GetScrollableSize();
 	Vector2 Offset;
 
 	if (Position.X < 0.0f)
@@ -755,7 +753,7 @@ void TextInput::ScrollIntoView()
 		Offset.Y = Position.Y + LineHeight - Size.Y;
 	}
 
-	m_Scrollable->AddOffset(Offset);
+	Scrollable()->AddOffset(Offset);
 }
 
 void TextInput::UpdateFormats()
