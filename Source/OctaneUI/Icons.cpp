@@ -47,23 +47,23 @@ void Icons::Initialize()
 		return;
 	}
 
-	const uint32_t Width = 39;
+	const uint32_t Width = 63;
 	const uint32_t Height = 13;
 	const char* Data =
-		"x                     xx               "
-		"x.x                  x..x              "
-		"x..x                x..x               "
-		"x...x              x..x                "
-		"x....x            x..x    xxxxxxxxxxxxx"
-		"x.....x          x..x      x.........x "
-		"x......x xx     x..x        x.......x  "
-		"x.....x x..x   x..x          x.....x   "
-		"x....x   x..x x..x            x...x    "
-		"x...x     x..x..x              x.x     "
-		"x..x       x...x                x      "
-		"x.x         xxx                        "
-		"x                                      "
-		"                                       ";
+		"x               x               xx                             "
+		"x.x           x.x              x..x                            "
+		"x..x         x..x             x..x                             "
+		"x...x       x...x            x..x                              "
+		"x....x     x....x           x..x    xxxxxxxxxxxxx       x      "
+		"x.....x   x.....x          x..x      x.........x       x.x     "
+		"x......x x......x  xx     x..x        x.......x       x...x    "
+		"x.....x   x.....x x..x   x..x          x.....x       x.....x   "
+		"x....x     x....x  x..x x..x            x...x       x.......x  "
+		"x...x       x...x   x..x..x              x.x       x.........x "
+		"x..x         x..x    x...x                x       xxxxxxxxxxxxx"
+		"x.x           x.x     xxx                                      "
+		"x               x                                              "
+		"                                                               ";
 
 	std::vector<uint8_t> Buffer;
 	Buffer.resize(Width * Height * 4);
@@ -78,7 +78,7 @@ void Icons::Initialize()
 
 			switch (Ch)
 			{
-			case 'x': Col = Color(0, 0, 0, 255); break;
+			case 'x':
 			case '.': Col = Color(255, 255, 255, 255); break;
 			default: break;
 			}
@@ -94,8 +94,10 @@ void Icons::Initialize()
 	m_Texture = Texture::Load(Buffer, Width, Height);
 
 	m_UVs[(int)Type::ArrowRight] = { 0.0f, 0.0f, 8.0f, 13.0f };
-	m_UVs[(int)Type::ArrowDown] = { 26.0f, 4.0f, 39.0f, 11.0f };
-	m_UVs[(int)Type::Check] = { 8.0f, 0.0f, 26.0f, 12.0f };
+	m_UVs[(int)Type::ArrowLeft] = { 9.0f, 0.0f, 17.0f, 13.0f };
+	m_UVs[(int)Type::ArrowUp] = { 50.0f, 4.0f, 63.0f, 11.0f };
+	m_UVs[(int)Type::ArrowDown] = { 36.0f, 4.0f, 49.0f, 11.0f };
+	m_UVs[(int)Type::Check] = { 18.0f, 0.0f, 35.0f, 12.0f };
 }
 
 std::shared_ptr<Texture> Icons::GetTexture() const
