@@ -54,11 +54,37 @@ TEST_CASE(Press,
 
 	Application.GetMainWindow()->OnMouseMove(Position);
 	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
-	VERIFY(!Pressed)
+	VERIFY(Pressed)
+	VERIFY(Button->IsPressed());
+
+	return true;
+})
+
+TEST_CASE(Click,
+{
+	OctaneUI::ControlList List;
+	Application.GetMainWindow()->Load(Json, List);
+	Application.GetMainWindow()->Update();
+
+	VERIFY(List.Contains("Button"))
+
+	std::shared_ptr<OctaneUI::Button> Button = List.To<OctaneUI::Button>("Button");
+
+	bool Clicked = false;
+	Button->SetOnClicked([&](const OctaneUI::Button&) -> void
+	{
+		Clicked = true;
+	});
+
+	OctaneUI::Vector2 Position = Button->GetAbsoluteBounds().GetCenter();
+
+	Application.GetMainWindow()->OnMouseMove(Position);
+	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
+	VERIFY(!Clicked)
 	VERIFY(Button->IsPressed());
 
 	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
-	VERIFY(Pressed)
+	VERIFY(Clicked)
 
 	return true;
 })

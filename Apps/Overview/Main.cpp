@@ -95,7 +95,7 @@ int main(int argc, char **argv)
 		Application.DisplayWindow("About");
 	});
 
-	List.To<OctaneUI::Button>("OKBtn")->SetOnPressed([&](const OctaneUI::Button& Button) -> void
+	List.To<OctaneUI::Button>("OKBtn")->SetOnClicked([&](const OctaneUI::Button& Button) -> void
 	{
 		printf("OK\n");
 	});
@@ -113,7 +113,7 @@ int main(int argc, char **argv)
 	}
 
 	const OctaneUI::ControlList& AboutList = WindowControls["About"];
-	AboutList.To<OctaneUI::Button>("OK")->SetOnPressed([](const OctaneUI::Button& Button) -> void
+	AboutList.To<OctaneUI::Button>("OK")->SetOnClicked([](const OctaneUI::Button& Button) -> void
 	{
 		Button.GetWindow()->RequestClose();
 	});

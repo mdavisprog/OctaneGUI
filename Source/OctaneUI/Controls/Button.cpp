@@ -36,9 +36,21 @@ Button::Button(Window* InWindow)
 {
 }
 
-Button& Button::SetOnPressed(OnButtonSignature Fn)
+Button& Button::SetOnPressed(OnButtonSignature&& Fn)
 {
-	m_OnPressed = Fn;
+	m_OnPressed = std::move(Fn);
+	return *this;
+}
+
+Button& Button::SetOnClicked(OnButtonSignature&& Fn)
+{
+	m_OnClicked = std::move(Fn);
+	return *this;
+}
+
+Button& Button::SetOnReleased(OnButtonSignature&& Fn)
+{
+	m_OnReleased = std::move(Fn);
 	return *this;
 }
 
@@ -108,6 +120,12 @@ bool Button::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 	{
 		m_State = State::Pressed;
 		OnPressed();
+
+		if (m_OnPressed)
+		{
+			m_OnPressed(*this);
+		}
+
 		Invalidate();
 		return true;
 	}
@@ -128,13 +146,18 @@ void Button::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 	{
 		OnReleased();
 
+		if (m_OnReleased)
+		{
+			m_OnReleased(*this);
+		}
+
 		if (Hovered)
 		{
 			OnClicked();
 
-			if (m_OnPressed)
+			if (m_OnClicked)
 			{
-				m_OnPressed(*this);
+				m_OnClicked(*this);
 			}
 		}
 	}

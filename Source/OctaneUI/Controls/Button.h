@@ -39,7 +39,9 @@ class Button : public Control
 public:
 	Button(Window* InWindow);
 
-	Button& SetOnPressed(OnButtonSignature Fn);
+	Button& SetOnPressed(OnButtonSignature&& Fn);
+	Button& SetOnClicked(OnButtonSignature&& Fn);
+	Button& SetOnReleased(OnButtonSignature&& Fn);
 
 	void SetDisabled(bool Disabled);
 	bool IsDisabled() const;
@@ -68,6 +70,8 @@ private:
 
 	State m_State { State::None };
 	OnButtonSignature m_OnPressed { nullptr };
+	OnButtonSignature m_OnClicked { nullptr };
+	OnButtonSignature m_OnReleased { nullptr };
 	bool m_Disabled { false };
 };
 
