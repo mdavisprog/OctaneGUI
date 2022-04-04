@@ -25,8 +25,11 @@ SOFTWARE.
 */
 
 #include "ScrollBar.h"
+#include "../Icons.h"
 #include "../Paint.h"
 #include "../ThemeProperties.h"
+#include "../Window.h"
+#include "ImageButton.h"
 
 namespace OctaneUI
 {
@@ -47,7 +50,7 @@ ScrollBarHandle& ScrollBarHandle::SetHandleSize(float HandleSize)
 {
 	// TODO: Not really a fan of how this is done. Look into something better.
 	m_HandleSize = 0.0f;
-	if (HandleSize != 0.0f && m_Enabled)
+	if (HandleSize != 0.0f)
 	{
 		const float Min = GetProperty(ThemeProperties::ScrollBar_HandleMinSize).Float();
 		m_HandleSize = std::max<float>(Min, HandleSize);
@@ -104,35 +107,11 @@ float ScrollBarHandle::OffsetPct() const
 
 bool ScrollBarHandle::HasHandle() const
 {
-	return m_HandleSize > 0.0f && m_Enabled;
-}
-
-ScrollBarHandle& ScrollBarHandle::SetEnabled(bool Enabled)
-{
-	if (m_Enabled != Enabled)
-	{
-		m_Enabled = Enabled;
-		if (!m_Enabled)
-		{
-			m_HandleSize = 0.0f;
-		}
-		Invalidate();
-	}
-	return *this;
-}
-
-bool ScrollBarHandle::IsEnabled() const
-{
-	return m_Enabled;
+	return m_HandleSize > 0.0f;
 }
 
 void ScrollBarHandle::OnPaint(Paint& Brush) const
 {
-	if (!m_Enabled)
-	{
-		return;
-	}
-
 	if (m_HandleSize > 0.0f)
 	{
 		if (m_HandleSize > 0.0f)
@@ -271,8 +250,40 @@ const std::shared_ptr<ScrollBarHandle>& ScrollBar::Handle() const
 ScrollBar& ScrollBar::SetScrollBarSize(const Vector2& Size)
 {
 	SetSize(Size);
-	m_Handle->SetSize(Size);
+
+	Vector2 HandleSize = Size;
+	if (m_Buttons)
+	{
+		const float ScrollBarSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
+
+		if (m_Handle->GetOrientation() == Orientation::Horizontal)
+		{
+			HandleSize.X -= ScrollBarSize * 2.0f;
+
+			if (m_MaxButton)
+			{
+				m_MaxButton->SetPosition({ HandleSize.X + ScrollBarSize, 0.0f });
+			}
+		}
+		else
+		{
+			HandleSize.Y -= ScrollBarSize * 2.0f;
+
+			if (m_MaxButton)
+			{
+				m_MaxButton->SetPosition({ 0.0f, HandleSize.Y + ScrollBarSize });
+			}
+		}
+	}
+
+	m_Handle->SetSize(HandleSize);
+
 	return *this;
+}
+
+Vector2 ScrollBar::GetScrollBarSize() const
+{
+	return m_Handle->GetSize();
 }
 
 ScrollBar& ScrollBar::SetAlwaysPaint(bool AlwaysPaint)
@@ -283,12 +294,43 @@ ScrollBar& ScrollBar::SetAlwaysPaint(bool AlwaysPaint)
 
 bool ScrollBar::ShouldPaint() const
 {
-	return m_AlwaysPaint || m_Handle->HasHandle();
+	return (m_AlwaysPaint || m_Handle->HasHandle()) && m_Enabled;
+}
+
+ScrollBar& ScrollBar::SetEnabled(bool Enabled)
+{
+	m_Enabled = Enabled;
+	return *this;
+}
+
+ScrollBar& ScrollBar::SetOnScrollMin(OnScrollBarSignature&& Fn)
+{
+	m_OnScrollMin = std::move(Fn);
+	return *this;
+}
+
+ScrollBar& ScrollBar::SetOnScrollMax(OnScrollBarSignature&& Fn)
+{
+	m_OnScrollMax = std::move(Fn);
+	return *this;
+}
+
+ScrollBar& ScrollBar::SetOnRelease(OnScrollBarSignature&& Fn)
+{
+	m_OnRelease = std::move(Fn);
+	return *this;
+}
+
+void ScrollBar::Update()
+{
+	Container::Update();
+
+	UpdateButtons();
 }
 
 void ScrollBar::OnPaint(Paint& Brush) const
 {
-	Brush.Rectangle(GetAbsoluteBounds(), GetProperty(ThemeProperties::ScrollBar).ToColor());
+	Brush.Rectangle(HandleBackgroundBounds(), GetProperty(ThemeProperties::ScrollBar).ToColor());
 
 	Container::OnPaint(Brush);
 }
@@ -298,6 +340,125 @@ void ScrollBar::OnThemeLoaded()
 	Container::OnThemeLoaded();
 
 	m_AlwaysPaint = GetProperty(ThemeProperties::ScrollBar_AlwaysPaint).Bool();
+	m_Buttons = GetProperty(ThemeProperties::ScrollBar_Buttons).Bool();
+
+	if (m_Buttons)
+	{
+		const float ScrollBarSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
+
+		if (!m_MinButton)
+		{
+			m_MinButton = AddControl<ImageButton>();
+			m_MinButton
+				->SetOnPressed([this](const Button&) -> void
+					{
+						if (m_OnScrollMin)
+						{
+							m_OnScrollMin(*this);
+						}
+					})
+				.SetOnReleased([this](const Button&) -> void
+					{
+						if (m_OnRelease)
+						{
+							m_OnRelease(*this);
+						}
+					});
+		}
+
+		if (!m_MaxButton)
+		{
+			m_MaxButton = AddControl<ImageButton>();
+			m_MaxButton
+				->SetOnPressed([this](const Button&) -> void
+					{
+						if (m_OnScrollMax)
+						{
+							m_OnScrollMax(*this);
+						}
+					})
+				.SetOnReleased([this](const Button&) -> void
+					{
+						if (m_OnRelease)
+						{
+							m_OnRelease(*this);
+						}
+					});
+		}
+
+		m_MinButton->SetTexture(GetWindow()->GetIcons()->GetTexture());
+		m_MaxButton->SetTexture(GetWindow()->GetIcons()->GetTexture());
+
+		if (m_Handle->GetOrientation() == Orientation::Horizontal)
+		{
+			m_Handle->SetPosition({ ScrollBarSize, 0.0f });
+			m_MaxButton->SetPosition({ m_Handle->GetSize().X, 0.0f });
+
+			m_MinButton->SetUVs(GetWindow()->GetIcons()->GetUVs(Icons::Type::ArrowLeft));
+			m_MaxButton->SetUVs(GetWindow()->GetIcons()->GetUVs(Icons::Type::ArrowRight));
+		}
+		else
+		{
+			m_Handle->SetPosition({ 0.0f, ScrollBarSize });
+			m_MaxButton->SetPosition({ 0.0f, m_Handle->GetSize().Y - ScrollBarSize });
+
+			m_MinButton->SetUVs(GetWindow()->GetIcons()->GetUVs(Icons::Type::ArrowUp));
+			m_MaxButton->SetUVs(GetWindow()->GetIcons()->GetUVs(Icons::Type::ArrowDown));
+		}
+
+		m_MinButton->SetProperty(ThemeProperties::ImageButton, GetProperty(ThemeProperties::Check).ToColor());
+		m_MaxButton->SetProperty(ThemeProperties::ImageButton, GetProperty(ThemeProperties::Check).ToColor());
+
+		m_MinButton->SetSize({ ScrollBarSize, ScrollBarSize });
+		m_MaxButton->SetSize({ ScrollBarSize, ScrollBarSize });
+
+		UpdateButtons();
+	}
+	else
+	{
+		m_Handle->SetPosition({ 0.0f, 0.0f });
+
+		RemoveControl(m_MinButton);
+		RemoveControl(m_MaxButton);
+		m_MinButton = nullptr;
+		m_MaxButton = nullptr;
+	}
+}
+
+Rect ScrollBar::HandleBackgroundBounds() const
+{
+	Rect Result = GetAbsoluteBounds();
+
+	if (m_Buttons)
+	{
+		const float ScrollBarSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
+
+		if (m_Handle->GetOrientation() == Orientation::Horizontal)
+		{
+			Result.Move({ ScrollBarSize, 0.0f });
+			Result.SetSize({ Result.GetSize().X - ScrollBarSize * 2.0f, Result.GetSize().Y });
+		}
+		else
+		{
+			Result.Move({ 0.0f, ScrollBarSize });
+			Result.SetSize({ Result.GetSize().X, Result.GetSize().Y - ScrollBarSize * 2.0f });
+		}
+	}
+
+	return Result;
+}
+
+void ScrollBar::UpdateButtons()
+{
+	if (m_MinButton)
+	{
+		m_MinButton->SetDisabled(!m_Handle->HasHandle());
+	}
+
+	if (m_MaxButton)
+	{
+		m_MaxButton->SetDisabled(!m_Handle->HasHandle());
+	}
 }
 
 }

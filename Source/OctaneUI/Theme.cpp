@@ -155,6 +155,7 @@ void Theme::Load(const Json& Root)
 	Set(ThemeProperties::TextInput_3D, Root["TextInput_3D"]);
 	Set(ThemeProperties::ScrollBar_3D, Root["ScrollBar_3D"]);
 	Set(ThemeProperties::ScrollBar_AlwaysPaint, Root["ScrollBar_AlwaysPaint"]);
+	Set(ThemeProperties::ScrollBar_Buttons, Root["ScrollBar_Buttons"]);
 
 	Set(ThemeProperties::FontPath, Root["FontPath"]);
 
@@ -208,6 +209,7 @@ void Theme::InitializeDefault()
 	m_Properties[ThemeProperties::TextInput_3D] = false;
 	m_Properties[ThemeProperties::ScrollBar_3D] = false;
 	m_Properties[ThemeProperties::ScrollBar_AlwaysPaint] = false;
+	m_Properties[ThemeProperties::ScrollBar_Buttons] = false;
 
 	m_Properties[ThemeProperties::FontPath] = "";
 }

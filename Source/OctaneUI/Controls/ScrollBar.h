@@ -32,6 +32,7 @@ namespace OctaneUI
 {
 
 class BoxContainer;
+class ImageButton;
 class ScrollBar;
 
 class ScrollBarHandle : public Control
@@ -54,9 +55,6 @@ public:
 	float OffsetPct() const;
 	bool HasHandle() const;
 
-	ScrollBarHandle& SetEnabled(bool Enabled);
-	bool IsEnabled() const;
-
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnMouseMove(const Vector2& Position) override;
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
@@ -72,7 +70,6 @@ private:
 	float m_Offset { 0.0f };
 	bool m_Hovered { false };
 	bool m_Drag { false };
-	bool m_Enabled { true };
 	Vector2 m_DragAnchor { Vector2() };
 	ScrollBar* m_ScrollBar { nullptr };
 	OnScrollBarSignature m_OnDrag { nullptr };
@@ -88,16 +85,36 @@ public:
 	const std::shared_ptr<ScrollBarHandle>& Handle() const;
 
 	ScrollBar& SetScrollBarSize(const Vector2& Size);
+	Vector2 GetScrollBarSize() const;
 
 	ScrollBar& SetAlwaysPaint(bool AlwaysPaint);
 	bool ShouldPaint() const;
 
+	ScrollBar& SetEnabled(bool Enabled);
+
+	ScrollBar& SetOnScrollMin(OnScrollBarSignature&& Fn);
+	ScrollBar& SetOnScrollMax(OnScrollBarSignature&& Fn);
+	ScrollBar& SetOnRelease(OnScrollBarSignature&& Fn);
+
+	virtual void Update() override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnThemeLoaded() override;
 
 private:
+	Rect HandleBackgroundBounds() const;
+	void UpdateButtons();
+
+	std::shared_ptr<ImageButton> m_MinButton { nullptr };
+	std::shared_ptr<ImageButton> m_MaxButton { nullptr };
 	std::shared_ptr<ScrollBarHandle> m_Handle { nullptr };
+
 	bool m_AlwaysPaint { false };
+	bool m_Buttons { false };
+	bool m_Enabled { true };
+
+	OnScrollBarSignature m_OnScrollMin { nullptr };
+	OnScrollBarSignature m_OnScrollMax { nullptr };
+	OnScrollBarSignature m_OnRelease { nullptr };
 };
 
 }

@@ -24,7 +24,7 @@
 	"Separator_Thickness": 1.5,
 	"Separator_Margins": 8.0,
 	"Menu_RightPadding": 60.0,
-	"ScrollBar_Size": 15.0,
+	"ScrollBar_Size": 18.0,
 	"ScrollBar_HandleMinSize": 10.0,
 	"FontSize": 18.0,
 
@@ -38,6 +38,7 @@
 	"TextInput_3D": true,
 	"ScrollBar_3D": true,
 	"ScrollBar_AlwaysPaint": true,
+	"ScrollBar_Buttons": true,
 
 	"FontPath": "Roboto-Regular.ttf"
 }

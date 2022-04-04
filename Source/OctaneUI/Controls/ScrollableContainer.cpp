@@ -26,10 +26,14 @@ SOFTWARE.
 
 #include "ScrollableContainer.h"
 #include "../Paint.h"
+#include "../Timer.h"
+#include "../Window.h"
 #include "ScrollBar.h"
 
 namespace OctaneUI
 {
+
+#define SCROLL_SPEED 2.0f
 
 ScrollableContainer::ScrollableContainer(Window* InWindow)
 	: Container(InWindow)
@@ -37,32 +41,73 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 	SetExpand(Expand::Both);
 
 	m_HorizontalSB = std::make_shared<ScrollBar>(InWindow, Orientation::Horizontal);
-	m_HorizontalSB->Handle()->SetOnDrag([this](const ScrollBar&) -> void
-		{
-			const float Size = GetOverflow().X;
-			SetOffset({ m_HorizontalSB->Handle()->OffsetPct() * Size, -GetPosition().Y }, false);
-			InvalidateLayout();
-		});
+	m_HorizontalSB
+		->SetOnScrollMin([this](const ScrollBar&) -> void
+			{
+				m_ScrollOffset = { -SCROLL_SPEED, 0.0f };
+				AddOffset(m_ScrollOffset);
+				m_ScrollTimer->Start();
+			})
+		.SetOnScrollMax([this](const ScrollBar&) -> void
+			{
+				m_ScrollOffset = { SCROLL_SPEED, 0.0f };
+				AddOffset(m_ScrollOffset);
+				m_ScrollTimer->Start();
+			})
+		.SetOnRelease([this](const ScrollBar&) -> void
+			{
+				m_ScrollTimer->Stop();
+			})
+		.Handle()
+		->SetOnDrag([this](const ScrollBar&) -> void
+			{
+				const float Size = GetOverflow().X;
+				SetOffset({ m_HorizontalSB->Handle()->OffsetPct() * Size, -GetPosition().Y }, false);
+				InvalidateLayout();
+			});
 	InsertControl(m_HorizontalSB);
 
 	m_VerticalSB = std::make_shared<ScrollBar>(InWindow, Orientation::Vertical);
-	m_VerticalSB->Handle()->SetOnDrag([this](const ScrollBar&) -> void
-		{
-			const float Size = GetOverflow().Y;
-			SetOffset({ -GetPosition().X, m_VerticalSB->Handle()->OffsetPct() * Size }, false);
-			InvalidateLayout();
-		});
+	m_VerticalSB
+		->SetOnScrollMin([this](const ScrollBar&) -> void
+			{
+				m_ScrollOffset = { 0.0f, -SCROLL_SPEED };
+				AddOffset(m_ScrollOffset);
+				m_ScrollTimer->Start();
+			})
+		.SetOnScrollMax([this](const ScrollBar&) -> void
+			{
+				m_ScrollOffset = { 0.0f, SCROLL_SPEED };
+				AddOffset(m_ScrollOffset);
+				m_ScrollTimer->Start();
+			})
+		.SetOnRelease([this](const ScrollBar&) -> void
+			{
+				m_ScrollTimer->Stop();
+			})
+		.Handle()
+		->SetOnDrag([this](const ScrollBar&) -> void
+			{
+				const float Size = GetOverflow().Y;
+				SetOffset({ -GetPosition().X, m_VerticalSB->Handle()->OffsetPct() * Size }, false);
+				InvalidateLayout();
+			});
 	InsertControl(m_VerticalSB);
+
+	m_ScrollTimer = GetWindow()->CreateTimer(100, true, [this]() -> void
+		{
+			AddOffset(m_ScrollOffset);
+		});
 }
 
 bool ScrollableContainer::IsInScrollBar(const Vector2& Point) const
 {
-	if (m_HorizontalSB->Handle()->HasHandle() && m_HorizontalSB->Contains(Point))
+	if (m_HorizontalSB->ShouldPaint() && m_HorizontalSB->Contains(Point))
 	{
 		return true;
 	}
 
-	if (m_VerticalSB->Handle()->HasHandle() && m_VerticalSB->Contains(Point))
+	if (m_VerticalSB->ShouldPaint() && m_VerticalSB->Contains(Point))
 	{
 		return true;
 	}
@@ -74,12 +119,12 @@ bool ScrollableContainer::IsScrollBarVisible(const std::shared_ptr<Control>& Ite
 {
 	if (m_HorizontalSB->Handle() == Item)
 	{
-		return m_HorizontalSB->Handle()->HasHandle();
+		return m_HorizontalSB->ShouldPaint();
 	}
 
 	if (m_VerticalSB->Handle() == Item)
 	{
-		return m_VerticalSB->Handle()->HasHandle();
+		return m_VerticalSB->ShouldPaint();
 	}
 
 	return false;
@@ -92,13 +137,13 @@ Vector2 ScrollableContainer::ContentSize() const
 
 ScrollableContainer& ScrollableContainer::SetHorizontalSBEnabled(bool Enabled)
 {
-	m_HorizontalSB->Handle()->SetEnabled(Enabled);
+	m_HorizontalSB->SetEnabled(Enabled);
 	return *this;
 }
 
 ScrollableContainer& ScrollableContainer::SetVerticalSBEnabled(bool Enabled)
 {
-	m_VerticalSB->Handle()->SetEnabled(Enabled);
+	m_VerticalSB->SetEnabled(Enabled);
 	return *this;
 }
 
@@ -118,8 +163,8 @@ Vector2 ScrollableContainer::GetScrollableSize() const
 {
 	const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
 	return {
-		GetSize().X - (m_VerticalSB->Handle()->HasHandle() ? SBSize : 0.0f),
-		GetSize().Y - (m_HorizontalSB->Handle()->HasHandle() ? SBSize : 0.0f)
+		GetSize().X - (m_VerticalSB->ShouldPaint() ? SBSize : 0.0f),
+		GetSize().Y - (m_HorizontalSB->ShouldPaint() ? SBSize : 0.0f)
 	};
 }
 
@@ -208,6 +253,13 @@ void ScrollableContainer::OnMouseReleased(const Vector2& Position, Mouse::Button
 	m_VerticalSB->OnMouseReleased(Position, Button);
 }
 
+void ScrollableContainer::OnThemeLoaded()
+{
+	Container::OnThemeLoaded();
+
+	UpdateScrollBars();
+}
+
 Rect ScrollableContainer::TranslatedBounds() const
 {
 	const Vector2 Position = GetAbsolutePosition() - GetPosition();
@@ -274,15 +326,15 @@ void ScrollableContainer::UpdateScrollBars()
 	const Vector2 Overflow = GetOverflow();
 	const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
 
-	m_HorizontalSB->Handle()->SetHandleSize(Overflow.X > 0.0f ? Size.X - Overflow.X : 0.0f);
 	m_HorizontalSB
 		->SetScrollBarSize({ Size.X, SBSize })
 		.SetPosition({ -GetPosition().X, -GetPosition().Y + Size.Y - SBSize });
+	m_HorizontalSB->Handle()->SetHandleSize(Overflow.X > 0.0f ? m_HorizontalSB->GetScrollBarSize().X - Overflow.X : 0.0f);
 
-	m_VerticalSB->Handle()->SetHandleSize(Overflow.Y > 0.0f ? Size.Y - Overflow.Y : 0.0f);
 	m_VerticalSB
 		->SetScrollBarSize({ SBSize, Size.Y - (m_HorizontalSB->ShouldPaint() ? SBSize : 0.0f) })
 		.SetPosition({ -GetPosition().X + Size.X - SBSize, -GetPosition().Y });
+	m_VerticalSB->Handle()->SetHandleSize(Overflow.Y > 0.0f ? m_VerticalSB->GetScrollBarSize().Y - Overflow.Y : 0.0f);
 }
 
 }

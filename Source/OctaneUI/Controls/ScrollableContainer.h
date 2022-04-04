@@ -32,6 +32,7 @@ namespace OctaneUI
 {
 
 class ScrollBar;
+class Timer;
 
 class ScrollableContainer : public Container
 {
@@ -59,6 +60,7 @@ public:
 	virtual void OnMouseMove(const Vector2& Position) override;
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
+	virtual void OnThemeLoaded() override;
 
 private:
 	Rect TranslatedBounds() const;
@@ -67,9 +69,12 @@ private:
 	void SetOffset(const Vector2& Offset, bool UpdateSBHandles);
 	void UpdateScrollBars();
 
-	std::shared_ptr<ScrollBar> m_HorizontalSB;
-	std::shared_ptr<ScrollBar> m_VerticalSB;
+	std::shared_ptr<ScrollBar> m_HorizontalSB { nullptr };
+	std::shared_ptr<ScrollBar> m_VerticalSB { nullptr };
 	Vector2 m_ContentSize { Vector2() };
+
+	Vector2 m_ScrollOffset { Vector2() };
+	std::shared_ptr<Timer> m_ScrollTimer { nullptr };
 };
 
 }

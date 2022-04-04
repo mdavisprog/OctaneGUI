@@ -81,6 +81,7 @@ public:
 		TextInput_3D,
 		ScrollBar_3D,
 		ScrollBar_AlwaysPaint,
+		ScrollBar_Buttons,
 
 		// Strings
 		FontPath,
