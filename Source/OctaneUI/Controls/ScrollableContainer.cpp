@@ -33,7 +33,7 @@ SOFTWARE.
 namespace OctaneUI
 {
 
-#define SCROLL_SPEED 2.0f
+#define SCROLL_SPEED 6.0f
 
 ScrollableContainer::ScrollableContainer(Window* InWindow)
 	: Container(InWindow)
@@ -73,16 +73,19 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 			{
 				m_ScrollOffset = { 0.0f, -SCROLL_SPEED };
 				AddOffset(m_ScrollOffset);
+				m_ScrollTimer->SetInterval(400);
 				m_ScrollTimer->Start();
 			})
 		.SetOnScrollMax([this](const ScrollBar&) -> void
 			{
 				m_ScrollOffset = { 0.0f, SCROLL_SPEED };
 				AddOffset(m_ScrollOffset);
+				m_ScrollTimer->SetInterval(400);
 				m_ScrollTimer->Start();
 			})
 		.SetOnRelease([this](const ScrollBar&) -> void
 			{
+				m_InitialScroll = true;
 				m_ScrollTimer->Stop();
 			})
 		.Handle()
@@ -96,6 +99,12 @@ ScrollableContainer::ScrollableContainer(Window* InWindow)
 
 	m_ScrollTimer = GetWindow()->CreateTimer(100, true, [this]() -> void
 		{
+			if (m_InitialScroll)
+			{
+				m_InitialScroll = false;
+				m_ScrollTimer->SetInterval(100);
+			}
+
 			AddOffset(m_ScrollOffset);
 		});
 }

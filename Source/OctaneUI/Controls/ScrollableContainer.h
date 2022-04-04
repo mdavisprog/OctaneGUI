@@ -75,6 +75,7 @@ private:
 
 	Vector2 m_ScrollOffset { Vector2() };
 	std::shared_ptr<Timer> m_ScrollTimer { nullptr };
+	bool m_InitialScroll { true };
 };
 
 }
