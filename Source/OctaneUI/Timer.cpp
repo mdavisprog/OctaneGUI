@@ -31,7 +31,8 @@ namespace OctaneUI
 {
 
 Timer::Timer(int Interval, bool Repeat, Window* InWindow, OnEmptySignature&& Fn)
-	: m_Interval(Interval)
+	: std::enable_shared_from_this<Timer>()
+	, m_Interval(Interval)
 	, m_Repeat(Repeat)
 	, m_Window(InWindow)
 	, m_OnTimeout(std::move(Fn))
@@ -40,7 +41,6 @@ Timer::Timer(int Interval, bool Repeat, Window* InWindow, OnEmptySignature&& Fn)
 
 Timer::~Timer()
 {
-	Stop();
 }
 
 Timer& Timer::SetOnTimeout(OnEmptySignature&& Fn)
@@ -86,7 +86,7 @@ void Timer::Start()
 		return;
 	}
 
-	m_Window->StartTimer(this);
+	m_Window->StartTimer(shared_from_this());
 }
 
 void Timer::Stop()
@@ -96,7 +96,7 @@ void Timer::Stop()
 		return;
 	}
 
-	m_Window->ClearTimer(this);
+	m_Window->ClearTimer(shared_from_this());
 }
 
 Timer::Timer()

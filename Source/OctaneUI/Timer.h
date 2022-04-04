@@ -28,16 +28,18 @@ SOFTWARE.
 
 #include "CallbackDefs.h"
 
+#include <memory>
+
 namespace OctaneUI
 {
 
 class Window;
 
-class Timer
+class Timer : public std::enable_shared_from_this<Timer>
 {
 public:
 	Timer(int Interval, bool Repeat, Window* InWindow, OnEmptySignature&& Fn);
-	~Timer();
+	virtual ~Timer();
 
 	Timer& SetOnTimeout(OnEmptySignature&& Fn);
 	void Invoke() const;

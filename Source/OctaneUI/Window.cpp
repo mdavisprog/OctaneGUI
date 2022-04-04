@@ -424,27 +424,37 @@ std::shared_ptr<Timer> Window::CreateTimer(int Interval, bool Repeat, OnEmptySig
 	return std::move(Result);
 }
 
-void Window::StartTimer(Timer* Object)
+void Window::StartTimer(const std::shared_ptr<Timer>& Object)
 {
-	for (TimerHandle& Handle : m_Timers)
+	for (std::vector<TimerHandle>::iterator It = m_Timers.begin(); It != m_Timers.end();)
 	{
-		if (Handle.Object == Object)
+		TimerHandle& Handle = *It;
+
+		if (Handle.Object.expired())
+		{
+			It = m_Timers.erase(It);
+		}
+		else if (Handle.Object.lock() == Object)
 		{
 			Handle.Elapsed.Reset();
 			return;
+		}
+		else
+		{
+			It++;
 		}
 	}
 
 	m_Timers.emplace_back(Object);
 }
 
-bool Window::ClearTimer(Timer* Object)
+bool Window::ClearTimer(const std::shared_ptr<Timer>& Object)
 {
 	for (std::vector<TimerHandle>::const_iterator It = m_Timers.begin(); It != m_Timers.end();)
 	{
 		const TimerHandle& Handle = *It;
 
-		if (Handle.Object == Object)
+		if (Handle.Object.expired() || Handle.Object.lock() == Object)
 		{
 			m_Timers.erase(It);
 			return true;
@@ -502,13 +512,21 @@ void Window::UpdateTimers()
 	{
 		TimerHandle& Handle = *It;
 
-		if (Handle.Elapsed.MeasureMS() >= Handle.Object->Interval())
+		if (Handle.Object.expired())
 		{
-			Handle.Object->Invoke();
+			It = m_Timers.erase(It);
+			continue;
+		}
 
-			if (Handle.Object->Repeat())
+		std::shared_ptr<Timer> Object = Handle.Object.lock();
+		if (Handle.Elapsed.MeasureMS() >= Object->Interval())
+		{
+			Object->Invoke();
+
+			if (Object->Repeat())
 			{
 				Handle.Elapsed.Reset();
+				It++;
 			}
 			else
 			{

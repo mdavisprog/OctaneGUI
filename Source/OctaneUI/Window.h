@@ -110,8 +110,8 @@ public:
 	void Clear();
 
 	std::shared_ptr<Timer> CreateTimer(int Interval, bool Repeat, OnEmptySignature&& Callback);
-	void StartTimer(Timer* Object);
-	bool ClearTimer(Timer* Object);
+	void StartTimer(const std::shared_ptr<Timer>& Object);
+	bool ClearTimer(const std::shared_ptr<Timer>& Object);
 
 	Window* SetOnPaint(OnPaintSignature Fn);
 
@@ -119,15 +119,12 @@ private:
 	struct TimerHandle
 	{
 	public:
-		TimerHandle(Timer* InObject)
+		TimerHandle(const std::weak_ptr<Timer>& InObject)
 			: Object(InObject)
 		{
 		}
 
-		// Not a fan of using a raw pointer here. The object should be valid
-		// during the lifetime of the active timer. If the timer is destroyed,
-		// the window should be notified to remove the timer.
-		Timer* Object { nullptr };
+		std::weak_ptr<Timer> Object;
 		Clock Elapsed {};
 	};
 
