@@ -36,6 +36,12 @@ MarginContainer::MarginContainer(Window* InWindow)
 	SetExpand(Expand::Both);
 }
 
+MarginContainer& MarginContainer::SetMargins(const Rect& Margins)
+{
+	m_Margins = Margins;
+	return *this;
+}
+
 Vector2 MarginContainer::DesiredSize() const
 {
 	Vector2 Result;
