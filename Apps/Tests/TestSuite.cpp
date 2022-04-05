@@ -25,12 +25,12 @@ SOFTWARE.
 */
 
 #include "TestSuite.h"
-#include "OctaneUI/OctaneUI.h"
+#include "OctaneGUI/OctaneGUI.h"
 
 namespace Tests
 {
 
-void TestSuite::Run(OctaneUI::Application& Application, int Argc, char** Argv)
+void TestSuite::Run(OctaneGUI::Application& Application, int Argc, char** Argv)
 {
 	if (s_Suites->size() == 0)
 	{
@@ -72,7 +72,7 @@ void TestSuite::Run(OctaneUI::Application& Application, int Argc, char** Argv)
 		uint32_t TotalPassed = 0;
 		uint32_t TotalFailed = 0;
 
-		OctaneUI::Clock Clock;
+		OctaneGUI::Clock Clock;
 		printf("Running %d test suites\n", (int)s_Suites->size());
 		for (const TestSuite* TS : *s_Suites)
 		{
@@ -103,9 +103,9 @@ TestSuite::~TestSuite()
 {
 }
 
-bool TestSuite::Run(OctaneUI::Application& Application, const TestSuite& Suite, uint32_t& Passed, uint32_t& Failed)
+bool TestSuite::Run(OctaneGUI::Application& Application, const TestSuite& Suite, uint32_t& Passed, uint32_t& Failed)
 {
-	OctaneUI::Clock Clock;
+	OctaneGUI::Clock Clock;
 	printf("\nRunning test suite '%s'\n", Suite.m_Name.c_str());
 
 	Passed = 0;

@@ -25,7 +25,7 @@ SOFTWARE.
 */
 
 #include "../Interface.h"
-#include "OctaneUI/OctaneUI.h"
+#include "OctaneGUI/OctaneGUI.h"
 #include "SFML/Graphics.hpp"
 
 #include <unordered_map>
@@ -47,47 +47,47 @@ public:
 	sf::RenderWindow* Renderer;
 };
 
-std::unordered_map<OctaneUI::Window*, Container> Windows;
+std::unordered_map<OctaneGUI::Window*, Container> Windows;
 std::vector<sf::Texture*> Textures;
 
-OctaneUI::Keyboard::Key GetKeyCode(sf::Keyboard::Key Key)
+OctaneGUI::Keyboard::Key GetKeyCode(sf::Keyboard::Key Key)
 {
 	switch (Key)
 	{
-	case sf::Keyboard::Backspace: return OctaneUI::Keyboard::Key::Backspace;
-	case sf::Keyboard::Delete: return OctaneUI::Keyboard::Key::Delete;
-	case sf::Keyboard::Left: return OctaneUI::Keyboard::Key::Left;
-	case sf::Keyboard::Right: return OctaneUI::Keyboard::Key::Right;
-	case sf::Keyboard::Up: return OctaneUI::Keyboard::Key::Up;
-	case sf::Keyboard::Down: return OctaneUI::Keyboard::Key::Down;
-	case sf::Keyboard::Home: return OctaneUI::Keyboard::Key::Home;
-	case sf::Keyboard::End: return OctaneUI::Keyboard::Key::End;
-	case sf::Keyboard::LShift: return OctaneUI::Keyboard::Key::LeftShift;
-	case sf::Keyboard::RShift: return OctaneUI::Keyboard::Key::RightShift;
-	case sf::Keyboard::Enter: return OctaneUI::Keyboard::Key::Enter;
+	case sf::Keyboard::Backspace: return OctaneGUI::Keyboard::Key::Backspace;
+	case sf::Keyboard::Delete: return OctaneGUI::Keyboard::Key::Delete;
+	case sf::Keyboard::Left: return OctaneGUI::Keyboard::Key::Left;
+	case sf::Keyboard::Right: return OctaneGUI::Keyboard::Key::Right;
+	case sf::Keyboard::Up: return OctaneGUI::Keyboard::Key::Up;
+	case sf::Keyboard::Down: return OctaneGUI::Keyboard::Key::Down;
+	case sf::Keyboard::Home: return OctaneGUI::Keyboard::Key::Home;
+	case sf::Keyboard::End: return OctaneGUI::Keyboard::Key::End;
+	case sf::Keyboard::LShift: return OctaneGUI::Keyboard::Key::LeftShift;
+	case sf::Keyboard::RShift: return OctaneGUI::Keyboard::Key::RightShift;
+	case sf::Keyboard::Enter: return OctaneGUI::Keyboard::Key::Enter;
 	default: break;
 	}
 
-	return OctaneUI::Keyboard::Key::None;
+	return OctaneGUI::Keyboard::Key::None;
 }
 
-OctaneUI::Mouse::Button GetMouseButton(sf::Mouse::Button Button)
+OctaneGUI::Mouse::Button GetMouseButton(sf::Mouse::Button Button)
 {
 	switch (Button)
 	{
-	case sf::Mouse::Button::Right: return OctaneUI::Mouse::Button::Right;
-	case sf::Mouse::Button::Middle: return OctaneUI::Mouse::Button::Middle;
+	case sf::Mouse::Button::Right: return OctaneGUI::Mouse::Button::Right;
+	case sf::Mouse::Button::Middle: return OctaneGUI::Mouse::Button::Middle;
 	default: break;
 	}
 
-	return OctaneUI::Mouse::Button::Left;
+	return OctaneGUI::Mouse::Button::Left;
 }
 
-void OnCreateWindow(OctaneUI::Window* Window)
+void OnCreateWindow(OctaneGUI::Window* Window)
 {
 	if (Windows.find(Window) == Windows.end())
 	{
-		OctaneUI::Vector2 Size = Window->GetSize();
+		OctaneGUI::Vector2 Size = Window->GetSize();
 
 		Container& Item = Windows[Window];
 		Item.Renderer = new sf::RenderWindow(sf::VideoMode((int)Size.X, (int)Size.Y), Window->GetTitle());
@@ -96,7 +96,7 @@ void OnCreateWindow(OctaneUI::Window* Window)
 	}
 }
 
-void OnDestroyWindow(OctaneUI::Window* Window)
+void OnDestroyWindow(OctaneGUI::Window* Window)
 {
 	auto Iter = Windows.find(Window);
 	if (Iter == Windows.end())
@@ -111,11 +111,11 @@ void OnDestroyWindow(OctaneUI::Window* Window)
 	Windows.erase(Iter);
 }
 
-OctaneUI::Event OnEvent(OctaneUI::Window* Window)
+OctaneGUI::Event OnEvent(OctaneGUI::Window* Window)
 {
 	if (Windows.find(Window) == Windows.end())
 	{
-		return OctaneUI::Event(OctaneUI::Event::Type::None);
+		return OctaneGUI::Event(OctaneGUI::Event::Type::None);
 	}
 
 	Container& Item = Windows[Window];
@@ -125,46 +125,46 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 		switch (Event.type)
 		{
 		case sf::Event::Closed:
-			return OctaneUI::Event(OctaneUI::Event::Type::WindowClosed);
+			return OctaneGUI::Event(OctaneGUI::Event::Type::WindowClosed);
 
 		case sf::Event::KeyPressed:
-			return OctaneUI::Event(
-				OctaneUI::Event::Type::KeyPressed,
-				OctaneUI::Event::Key(GetKeyCode(Event.key.code)));
+			return OctaneGUI::Event(
+				OctaneGUI::Event::Type::KeyPressed,
+				OctaneGUI::Event::Key(GetKeyCode(Event.key.code)));
 
 		case sf::Event::KeyReleased:
-			return OctaneUI::Event(
-				OctaneUI::Event::Type::KeyReleased,
-				OctaneUI::Event::Key(GetKeyCode(Event.key.code)));
+			return OctaneGUI::Event(
+				OctaneGUI::Event::Type::KeyReleased,
+				OctaneGUI::Event::Key(GetKeyCode(Event.key.code)));
 
 		case sf::Event::MouseMoved:
-			return OctaneUI::Event(OctaneUI::Event::MouseMove((float)Event.mouseMove.x, (float)Event.mouseMove.y));
+			return OctaneGUI::Event(OctaneGUI::Event::MouseMove((float)Event.mouseMove.x, (float)Event.mouseMove.y));
 
 		case sf::Event::MouseButtonPressed:
-			return OctaneUI::Event(
-				OctaneUI::Event::Type::MousePressed,
-				OctaneUI::Event::MouseButton(GetMouseButton(Event.mouseButton.button), (float)Event.mouseButton.x, (float)Event.mouseButton.y));
+			return OctaneGUI::Event(
+				OctaneGUI::Event::Type::MousePressed,
+				OctaneGUI::Event::MouseButton(GetMouseButton(Event.mouseButton.button), (float)Event.mouseButton.x, (float)Event.mouseButton.y));
 
 		case sf::Event::MouseButtonReleased:
-			return OctaneUI::Event(
-				OctaneUI::Event::Type::MouseReleased,
-				OctaneUI::Event::MouseButton(GetMouseButton(Event.mouseButton.button), (float)Event.mouseButton.x, (float)Event.mouseButton.y));
+			return OctaneGUI::Event(
+				OctaneGUI::Event::Type::MouseReleased,
+				OctaneGUI::Event::MouseButton(GetMouseButton(Event.mouseButton.button), (float)Event.mouseButton.x, (float)Event.mouseButton.y));
 
 		case sf::Event::TextEntered:
-			return OctaneUI::Event(OctaneUI::Event::Text(Event.text.unicode));
+			return OctaneGUI::Event(OctaneGUI::Event::Text(Event.text.unicode));
 
 		case sf::Event::Resized:
 			Item.Renderer->setView(sf::View(sf::FloatRect(0.0f, 0.0f, (float)Event.size.width, (float)Event.size.height)));
-			return OctaneUI::Event(OctaneUI::Event::WindowResized((float)Event.size.width, (float)Event.size.height));
+			return OctaneGUI::Event(OctaneGUI::Event::WindowResized((float)Event.size.width, (float)Event.size.height));
 
 		default: break;
 		}
 	}
 
-	return OctaneUI::Event(OctaneUI::Event::Type::None);
+	return OctaneGUI::Event(OctaneGUI::Event::Type::None);
 }
 
-void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& Buffer)
+void OnPaint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& Buffer)
 {
 	if (Windows.find(Window) == Windows.end())
 	{
@@ -175,10 +175,10 @@ void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& Buffer)
 
 	Item.Renderer->clear();
 
-	const std::vector<OctaneUI::Vertex>& Vertices = Buffer.GetVertices();
+	const std::vector<OctaneGUI::Vertex>& Vertices = Buffer.GetVertices();
 	const std::vector<uint32_t>& Indices = Buffer.GetIndices();
 
-	for (const OctaneUI::DrawCommand& Command : Buffer.Commands())
+	for (const OctaneGUI::DrawCommand& Command : Buffer.Commands())
 	{
 		sf::VertexArray Array(sf::Triangles, Command.IndexCount());
 		sf::Texture* Texture = nullptr;
@@ -198,10 +198,10 @@ void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& Buffer)
 		for (size_t I = 0; I < Command.IndexCount(); I++)
 		{
 			uint32_t Index = Indices[I + Command.IndexOffset()];
-			const OctaneUI::Vertex& Vertex = Vertices[Index + Command.VertexOffset()];
-			OctaneUI::Vector2 Position = Vertex.Position;
-			OctaneUI::Vector2 TexCoords = Vertex.TexCoords;
-			OctaneUI::Color Color = Vertex.Col;
+			const OctaneGUI::Vertex& Vertex = Vertices[Index + Command.VertexOffset()];
+			OctaneGUI::Vector2 Position = Vertex.Position;
+			OctaneGUI::Vector2 TexCoords = Vertex.TexCoords;
+			OctaneGUI::Color Color = Vertex.Col;
 
 			if (Texture != nullptr)
 			{
@@ -218,11 +218,11 @@ void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& Buffer)
 		sf::RenderStates RenderStates;
 		RenderStates.texture = Texture;
 
-		const OctaneUI::Rect Clip = Command.Clip();
+		const OctaneGUI::Rect Clip = Command.Clip();
 		if (!Clip.IsZero())
 		{
 			const sf::Vector2f Size((float)Item.Renderer->getSize().x, (float)Item.Renderer->getSize().y);
-			const OctaneUI::Vector2 ClipSize = Clip.GetSize();
+			const OctaneGUI::Vector2 ClipSize = Clip.GetSize();
 			sf::View View(sf::FloatRect(Clip.Min.X, Clip.Min.Y, ClipSize.X, ClipSize.Y));
 			View.setViewport(sf::FloatRect(Clip.Min.X / Size.x, Clip.Min.Y / Size.y, ClipSize.X / Size.x, ClipSize.Y / Size.y));
 			Item.Renderer->setView(View);
@@ -264,7 +264,7 @@ void OnExit()
 	Windows.clear();
 }
 
-void Initialize(OctaneUI::Application& Application)
+void Initialize(OctaneGUI::Application& Application)
 {
 	Application
 		.SetOnCreateWindow(OnCreateWindow)

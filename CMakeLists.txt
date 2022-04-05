@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(OctaneUI)
+project(OctaneGUI)
 
 set(CMAKE_CXX_STANDARD 17)
 set(BIN_DIR ${PROJECT_SOURCE_DIR}/bin)
@@ -51,8 +51,8 @@ else()
 endif()
 
 set(FRONTEND_INCLUDE ${FRONTEND_INCLUDE} "${PROJECT_SOURCE_DIR}/Frontends")
-set(OCTANEUI_INCLUDE "${PROJECT_SOURCE_DIR}/Source")
+set(OctaneGUI_INCLUDE "${PROJECT_SOURCE_DIR}/Source")
 
-add_subdirectory(Source/OctaneUI)
+add_subdirectory(Source/OctaneGUI)
 add_subdirectory(Frontends)
 add_subdirectory(Apps)

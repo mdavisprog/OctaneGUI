@@ -24,25 +24,25 @@ SOFTWARE.
 
 */
 
-#include "OctaneUI/OctaneUI.h"
+#include "OctaneGUI/OctaneGUI.h"
 #include "TestSuite.h"
 
 uint32_t TextureID = 0;
 
-void OnCreateWindow(OctaneUI::Window* Window)
+void OnCreateWindow(OctaneGUI::Window* Window)
 {
 }
 
-void OnDestroyWindow(OctaneUI::Window* Window)
+void OnDestroyWindow(OctaneGUI::Window* Window)
 {
 }
 
-OctaneUI::Event OnEvent(OctaneUI::Window* Window)
+OctaneGUI::Event OnEvent(OctaneGUI::Window* Window)
 {
-	return OctaneUI::Event(OctaneUI::Event::Type::WindowClosed);
+	return OctaneGUI::Event(OctaneGUI::Event::Type::WindowClosed);
 }
 
-void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& Buffers)
+void OnPaint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& Buffers)
 {
 }
 
@@ -57,7 +57,7 @@ void OnExit()
 
 int main(int argc, char** argv)
 {
-	OctaneUI::Application Application;
+	OctaneGUI::Application Application;
 	Application
 		.SetOnCreateWindow(OnCreateWindow)
 		.SetOnDestroyWindow(OnDestroyWindow)
@@ -72,7 +72,7 @@ int main(int argc, char** argv)
 		"\"Windows\": {\"Main\": {\"Title\": \"Unit Tests\", \"Width\": 1280, \"Height\": 720}}"
 	"}";
 	
-	std::unordered_map<std::string, OctaneUI::ControlList> WindowControls;
+	std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
 	if (!Application.Initialize(Json, WindowControls))
 	{
 		printf("Failed to initialize application.\n");

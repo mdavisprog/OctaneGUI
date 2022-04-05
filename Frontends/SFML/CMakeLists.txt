@@ -15,5 +15,5 @@ target_include_directories(
 	${TARGET}
 	PUBLIC ${SFML_INCLUDE}
 	PUBLIC ${STB_INCLUDE}
-	PUBLIC ${OCTANEUI_INCLUDE}
+	PUBLIC ${OctaneGUI_INCLUDE}
 )

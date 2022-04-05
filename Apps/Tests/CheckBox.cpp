@@ -24,7 +24,7 @@ SOFTWARE.
 
 */
 
-#include "OctaneUI/OctaneUI.h"
+#include "OctaneGUI/OctaneGUI.h"
 #include "TestSuite.h"
 
 namespace Tests
@@ -45,49 +45,49 @@ TEST_SUITE(CheckBox,
 
 TEST_CASE(TwoState,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Application.GetMainWindow()->Load(CheckBoxJson("CheckBox", "CheckBox", false).c_str(), List);
 	Application.GetMainWindow()->Update();
 
-	std::shared_ptr<OctaneUI::CheckBox> CheckBox = List.To<OctaneUI::CheckBox>("CheckBox");
+	std::shared_ptr<OctaneGUI::CheckBox> CheckBox = List.To<OctaneGUI::CheckBox>("CheckBox");
 
-	const OctaneUI::Vector2 Position = CheckBox->GetAbsoluteBounds().GetCenter();
+	const OctaneGUI::Vector2 Position = CheckBox->GetAbsoluteBounds().GetCenter();
 	Application.GetMainWindow()->OnMouseMove(Position);
-	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
-	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMousePressed(Position, OctaneGUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMouseReleased(Position, OctaneGUI::Mouse::Button::Left);
 
-	VERIFYF(CheckBox->GetState() == OctaneUI::CheckBox::State::Checked, "TwoState: CheckBox is not checked!");
+	VERIFYF(CheckBox->GetState() == OctaneGUI::CheckBox::State::Checked, "TwoState: CheckBox is not checked!");
 
-	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
-	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMousePressed(Position, OctaneGUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMouseReleased(Position, OctaneGUI::Mouse::Button::Left);
 
-	return CheckBox->GetState() == OctaneUI::CheckBox::State::None;
+	return CheckBox->GetState() == OctaneGUI::CheckBox::State::None;
 })
 
 TEST_CASE(TriState,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Application.GetMainWindow()->Load(CheckBoxJson("CheckBox", "CheckBox", true).c_str(), List);
 	Application.GetMainWindow()->Update();
 
-	std::shared_ptr<OctaneUI::CheckBox> CheckBox = List.To<OctaneUI::CheckBox>("CheckBox");
+	std::shared_ptr<OctaneGUI::CheckBox> CheckBox = List.To<OctaneGUI::CheckBox>("CheckBox");
 
-	const OctaneUI::Vector2 Position = CheckBox->GetAbsoluteBounds().GetCenter();
+	const OctaneGUI::Vector2 Position = CheckBox->GetAbsoluteBounds().GetCenter();
 	Application.GetMainWindow()->OnMouseMove(Position);
-	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
-	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMousePressed(Position, OctaneGUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMouseReleased(Position, OctaneGUI::Mouse::Button::Left);
 
-	VERIFYF(CheckBox->GetState() == OctaneUI::CheckBox::State::Intermediate, "TriState: CheckBox is not intermediate!\n");
+	VERIFYF(CheckBox->GetState() == OctaneGUI::CheckBox::State::Intermediate, "TriState: CheckBox is not intermediate!\n");
 
-	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
-	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMousePressed(Position, OctaneGUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMouseReleased(Position, OctaneGUI::Mouse::Button::Left);
 
-	VERIFYF(CheckBox->GetState() == OctaneUI::CheckBox::State::Checked, "TriState: CheckBox is not checked!\n");
+	VERIFYF(CheckBox->GetState() == OctaneGUI::CheckBox::State::Checked, "TriState: CheckBox is not checked!\n");
 
-	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
-	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMousePressed(Position, OctaneGUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMouseReleased(Position, OctaneGUI::Mouse::Button::Left);
 
-	return CheckBox->GetState() == OctaneUI::CheckBox::State::None;
+	return CheckBox->GetState() == OctaneGUI::CheckBox::State::None;
 })
 
 )

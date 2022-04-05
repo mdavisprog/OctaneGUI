@@ -15,7 +15,7 @@ target_include_directories(
 	${TARGET}
 	PUBLIC ${SDL_INCLUDE}
 	PUBLIC ${STB_INCLUDE}
-	PUBLIC ${OCTANEUI_INCLUDE}
+	PUBLIC ${OctaneGUI_INCLUDE}
 )
 
 find_library(COCOA Cocoa)

@@ -26,7 +26,7 @@ SOFTWARE.
 
 #pragma once
 
-namespace OctaneUI
+namespace OctaneGUI
 {
 
 class Application;
@@ -36,6 +36,6 @@ class Application;
 namespace Interface
 {
 
-void Initialize(OctaneUI::Application&);
+void Initialize(OctaneGUI::Application&);
 
 }

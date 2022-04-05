@@ -25,7 +25,7 @@ SOFTWARE.
 */
 
 #include "Interface.h"
-#include "OctaneUI/OctaneUI.h"
+#include "OctaneGUI/OctaneGUI.h"
 
 int main(int argc, char** argv)
 {
@@ -58,19 +58,19 @@ int main(int argc, char** argv)
 		"}"
 	"}";
 
-	OctaneUI::Application Application;
+	OctaneGUI::Application Application;
 	Interface::Initialize(Application);
 
-	std::unordered_map<std::string, OctaneUI::ControlList> WindowControls;
+	std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
 	Application.Initialize(Stream, WindowControls);
 
-	const OctaneUI::ControlList& List = WindowControls["Main"];
-	List.To<OctaneUI::Button>("Container.Button")->SetOnClicked([&](const OctaneUI::Button&) -> void
+	const OctaneGUI::ControlList& List = WindowControls["Main"];
+	List.To<OctaneGUI::Button>("Container.Button")->SetOnClicked([&](const OctaneGUI::Button&) -> void
 	{
 		static bool DidClick = false;
 		if (!DidClick)
 		{
-			List.To<OctaneUI::Container>("Container")->AddControl<OctaneUI::Text>()->SetText("Welcome to the program :^)!");
+			List.To<OctaneGUI::Container>("Container")->AddControl<OctaneGUI::Text>()->SetText("Welcome to the program :^)!");
 			DidClick = true;
 		}
 	});

@@ -31,7 +31,7 @@ SOFTWARE.
 #include <string>
 #include <vector>
 
-namespace OctaneUI
+namespace OctaneGUI
 {
 
 class Application;
@@ -44,16 +44,16 @@ namespace Tests
 class TestSuite
 {
 public:
-	typedef std::function<bool(OctaneUI::Application&)> OnTestCaseSignature;
+	typedef std::function<bool(OctaneGUI::Application&)> OnTestCaseSignature;
 	typedef std::map<std::string, OnTestCaseSignature> TestCasesMap;
 
-	static void Run(OctaneUI::Application& Application, int Argc, char** Argv);
+	static void Run(OctaneGUI::Application& Application, int Argc, char** Argv);
 
 	TestSuite(const char* Name, const TestCasesMap& TestCases);
 	~TestSuite();
 
 private:
-	static bool Run(OctaneUI::Application& Application, const TestSuite& Suite, uint32_t& Passed, uint32_t& Failed);
+	static bool Run(OctaneGUI::Application& Application, const TestSuite& Suite, uint32_t& Passed, uint32_t& Failed);
 
 	TestSuite();
 
@@ -66,7 +66,7 @@ private:
 };
 
 #define TEST_SUITE(Name, Cases) TestSuite Name(#Name, {Cases});
-#define TEST_CASE(Name, Fn) {#Name, [](OctaneUI::Application& Application) -> bool Fn},
+#define TEST_CASE(Name, Fn) {#Name, [](OctaneGUI::Application& Application) -> bool Fn},
 #define VERIFY(Condition) if (Condition == false) { return false; }
 #define VERIFYF(Condition, Message, ...) if (Condition == false) { printf(Message, ##__VA_ARGS__); return false; }
 

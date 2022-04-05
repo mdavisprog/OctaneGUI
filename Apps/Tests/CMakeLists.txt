@@ -13,12 +13,12 @@ add_executable(
 
 target_include_directories(
 	${TARGET}
-	PUBLIC ${OCTANEUI_INCLUDE}
+	PUBLIC ${OctaneGUI_INCLUDE}
 )
 
 target_link_libraries(
 	${TARGET}
-	OctaneUI
+	OctaneGUI
 )
 
 set_target_properties(

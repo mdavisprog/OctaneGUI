@@ -25,7 +25,7 @@ SOFTWARE.
 */
 
 #include "../Interface.h"
-#include "OctaneUI/OctaneUI.h"
+#include "OctaneGUI/OctaneGUI.h"
 #include "SDL.h"
 
 #include <cassert>
@@ -83,7 +83,7 @@ private:
 
 uint32_t TextureID::GlobalID = 0;
 
-std::unordered_map<OctaneUI::Window*, Container> Windows;
+std::unordered_map<OctaneGUI::Window*, Container> Windows;
 std::vector<TextureID> Textures;
 id<MTLDevice> g_Device;
 id<MTLCommandQueue> g_Queue;
@@ -152,38 +152,38 @@ id<MTLTexture> GetTexture(uint32_t ID)
 	return nullptr;
 }
 
-OctaneUI::Keyboard::Key GetKey(SDL_Keycode Code)
+OctaneGUI::Keyboard::Key GetKey(SDL_Keycode Code)
 {
 	switch (Code)
 	{
-	case SDLK_BACKSPACE: return OctaneUI::Keyboard::Key::Backspace;
-	case SDLK_DELETE: return OctaneUI::Keyboard::Key::Delete;
-	case SDLK_LEFT: return OctaneUI::Keyboard::Key::Left;
-	case SDLK_RIGHT: return OctaneUI::Keyboard::Key::Right;
-	case SDLK_UP: return OctaneUI::Keyboard::Key::Up;
-	case SDLK_DOWN: return OctaneUI::Keyboard::Key::Down;
-	case SDLK_HOME: return OctaneUI::Keyboard::Key::Home;
-	case SDLK_END: return OctaneUI::Keyboard::Key::End;
-	case SDLK_LSHIFT: return OctaneUI::Keyboard::Key::LeftShift;
-	case SDLK_RSHIFT: return OctaneUI::Keyboard::Key::RightShift;
-	case SDLK_RETURN: return OctaneUI::Keyboard::Key::Enter;
+	case SDLK_BACKSPACE: return OctaneGUI::Keyboard::Key::Backspace;
+	case SDLK_DELETE: return OctaneGUI::Keyboard::Key::Delete;
+	case SDLK_LEFT: return OctaneGUI::Keyboard::Key::Left;
+	case SDLK_RIGHT: return OctaneGUI::Keyboard::Key::Right;
+	case SDLK_UP: return OctaneGUI::Keyboard::Key::Up;
+	case SDLK_DOWN: return OctaneGUI::Keyboard::Key::Down;
+	case SDLK_HOME: return OctaneGUI::Keyboard::Key::Home;
+	case SDLK_END: return OctaneGUI::Keyboard::Key::End;
+	case SDLK_LSHIFT: return OctaneGUI::Keyboard::Key::LeftShift;
+	case SDLK_RSHIFT: return OctaneGUI::Keyboard::Key::RightShift;
+	case SDLK_RETURN: return OctaneGUI::Keyboard::Key::Enter;
 	default: break;
 	}
 
-	return OctaneUI::Keyboard::Key::None;
+	return OctaneGUI::Keyboard::Key::None;
 }
 
-OctaneUI::Mouse::Button GetMouseButton(uint8_t Button)
+OctaneGUI::Mouse::Button GetMouseButton(uint8_t Button)
 {
 	switch (Button)
 	{
-	case SDL_BUTTON_RIGHT: return OctaneUI::Mouse::Button::Right;
-	case SDL_BUTTON_MIDDLE: return OctaneUI::Mouse::Button::Middle;
+	case SDL_BUTTON_RIGHT: return OctaneGUI::Mouse::Button::Right;
+	case SDL_BUTTON_MIDDLE: return OctaneGUI::Mouse::Button::Middle;
 	case SDL_BUTTON_LEFT:
 	default: break;
 	}
 
-	return OctaneUI::Mouse::Button::Left;
+	return OctaneGUI::Mouse::Button::Left;
 }
 
 void DestroyWindow(const Container& InContainer)
@@ -221,18 +221,18 @@ void InitializeDevice(id<MTLDevice> Device)
 	}
 
 	MTLVertexDescriptor* VertexDesc = [MTLVertexDescriptor vertexDescriptor];
-	VertexDesc.attributes[0].offset = offsetof(OctaneUI::Vertex, Position);
+	VertexDesc.attributes[0].offset = offsetof(OctaneGUI::Vertex, Position);
 	VertexDesc.attributes[0].format = MTLVertexFormatFloat2;
 	VertexDesc.attributes[0].bufferIndex = 0;
-	VertexDesc.attributes[1].offset = offsetof(OctaneUI::Vertex, TexCoords);
+	VertexDesc.attributes[1].offset = offsetof(OctaneGUI::Vertex, TexCoords);
 	VertexDesc.attributes[1].format = MTLVertexFormatFloat2;
 	VertexDesc.attributes[1].bufferIndex = 0;
-	VertexDesc.attributes[2].offset = offsetof(OctaneUI::Vertex, Col);
+	VertexDesc.attributes[2].offset = offsetof(OctaneGUI::Vertex, Col);
 	VertexDesc.attributes[2].format = MTLVertexFormatUChar4;
 	VertexDesc.attributes[2].bufferIndex = 0;
 	VertexDesc.layouts[0].stepRate = 1;
 	VertexDesc.layouts[0].stepFunction = MTLVertexStepFunctionPerVertex;
-	VertexDesc.layouts[0].stride = sizeof(OctaneUI::Vertex);
+	VertexDesc.layouts[0].stride = sizeof(OctaneGUI::Vertex);
 
 	MTLRenderPipelineDescriptor* PipelineDesc = [[MTLRenderPipelineDescriptor alloc] init];
 	PipelineDesc.vertexFunction = VertexFn;
@@ -261,7 +261,7 @@ void InitializeDevice(id<MTLDevice> Device)
 	}
 }
 
-void OnCreateWindow(OctaneUI::Window* Window)
+void OnCreateWindow(OctaneGUI::Window* Window)
 {
 	SDL_Window* Instance = SDL_CreateWindow(
 		Window->GetTitle(),
@@ -299,7 +299,7 @@ void OnCreateWindow(OctaneUI::Window* Window)
 	Item.IndexBuffer = [g_Device newBufferWithLength:1024 * 1024 options:MTLResourceStorageModeShared];
 }
 
-void OnDestroyWindow(OctaneUI::Window* Window)
+void OnDestroyWindow(OctaneGUI::Window* Window)
 {
 	if (Windows.find(Window) == Windows.end())
 	{
@@ -310,11 +310,11 @@ void OnDestroyWindow(OctaneUI::Window* Window)
 	Windows.erase(Window);
 }
 
-OctaneUI::Event OnEvent(OctaneUI::Window* Window)
+OctaneGUI::Event OnEvent(OctaneGUI::Window* Window)
 {
 	if (Windows.find(Window) == Windows.end())
 	{
-		return OctaneUI::Event(OctaneUI::Event::Type::WindowClosed);
+		return OctaneGUI::Event(OctaneGUI::Event::Type::WindowClosed);
 	}
 
 	std::vector<SDL_Event> EventsToPush;
@@ -325,7 +325,7 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 	{
 		switch (Event.type)
 		{
-		case SDL_QUIT: return OctaneUI::Event(OctaneUI::Event::Type::WindowClosed);
+		case SDL_QUIT: return OctaneGUI::Event(OctaneGUI::Event::Type::WindowClosed);
 
 		case SDL_KEYDOWN:
 		case SDL_KEYUP:
@@ -336,9 +336,9 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 				break;
 			}
 
-			return OctaneUI::Event(
-				Event.key.type == SDL_KEYDOWN ? OctaneUI::Event::Type::KeyPressed : OctaneUI::Event::Type::KeyReleased,
-				OctaneUI::Event::Key(GetKey(Event.key.keysym.sym))
+			return OctaneGUI::Event(
+				Event.key.type == SDL_KEYDOWN ? OctaneGUI::Event::Type::KeyPressed : OctaneGUI::Event::Type::KeyReleased,
+				OctaneGUI::Event::Key(GetKey(Event.key.keysym.sym))
 			);
 		}
 		
@@ -350,8 +350,8 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 				break;
 			}
 
-			return OctaneUI::Event(
-				OctaneUI::Event::MouseMove(Event.motion.x, Event.motion.y)
+			return OctaneGUI::Event(
+				OctaneGUI::Event::MouseMove(Event.motion.x, Event.motion.y)
 			);
 		}
 
@@ -364,9 +364,9 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 				break;
 			}
 
-			return OctaneUI::Event(
-				Event.button.type == SDL_MOUSEBUTTONDOWN ? OctaneUI::Event::Type::MousePressed : OctaneUI::Event::Type::MouseReleased,
-				OctaneUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y)
+			return OctaneGUI::Event(
+				Event.button.type == SDL_MOUSEBUTTONDOWN ? OctaneGUI::Event::Type::MousePressed : OctaneGUI::Event::Type::MouseReleased,
+				OctaneGUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y)
 			);
 		}
 
@@ -378,8 +378,8 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 				break;
 			}
 
-			return OctaneUI::Event(
-				OctaneUI::Event::Text(*(uint32_t*)Event.text.text)
+			return OctaneGUI::Event(
+				OctaneGUI::Event::Text(*(uint32_t*)Event.text.text)
 			);
 		}
 
@@ -393,12 +393,12 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 
 			switch (Event.window.event)
 			{
-			case SDL_WINDOWEVENT_RESIZED: return OctaneUI::Event(
-				OctaneUI::Event::WindowResized((float)Event.window.data1, (float)Event.window.data2)
+			case SDL_WINDOWEVENT_RESIZED: return OctaneGUI::Event(
+				OctaneGUI::Event::WindowResized((float)Event.window.data1, (float)Event.window.data2)
 			);
 
-			case SDL_WINDOWEVENT_CLOSE: return OctaneUI::Event(
-				OctaneUI::Event::Event::Type::WindowClosed
+			case SDL_WINDOWEVENT_CLOSE: return OctaneGUI::Event(
+				OctaneGUI::Event::Event::Type::WindowClosed
 			);
 			}
 		}
@@ -412,10 +412,10 @@ OctaneUI::Event OnEvent(OctaneUI::Window* Window)
 		SDL_PushEvent(&Value);
 	}
 
-	return OctaneUI::Event(OctaneUI::Event::Type::None);
+	return OctaneGUI::Event(OctaneGUI::Event::Type::None);
 }
 
-void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& VertexBuffer)
+void OnPaint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& VertexBuffer)
 {
 	if (Windows.find(Window) == Windows.end())
 	{
@@ -442,8 +442,8 @@ void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& VertexBuffe
 		SDL_GetRendererOutputSize(Item.Renderer, &Width, &Height);
 		Layer.drawableSize = CGSizeMake(Width, Height);
 
-		OctaneUI::Vector2 WindowSize = Window->GetSize();
-		OctaneUI::Vector2 Scale((float)Width / WindowSize.X, (float)Height / WindowSize.Y);
+		OctaneGUI::Vector2 WindowSize = Window->GetSize();
+		OctaneGUI::Vector2 Scale((float)Width / WindowSize.X, (float)Height / WindowSize.Y);
 
 		[Encoder setCullMode:MTLCullModeNone];
 		[Encoder setDepthStencilState:g_DepthStencil];
@@ -482,10 +482,10 @@ void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& VertexBuffe
 
 		// TODO: Callback should give a buffer object that contains the full list of vertices and indices,
 		// and a vector of draw commands to issue.
-		const std::vector<OctaneUI::Vertex>& Vertices = VertexBuffer.GetVertices();
+		const std::vector<OctaneGUI::Vertex>& Vertices = VertexBuffer.GetVertices();
 		const std::vector<uint32_t>& Indices = VertexBuffer.GetIndices();
 
-		const size_t VertexBufferSize = Vertices.size() * sizeof(OctaneUI::Vertex);
+		const size_t VertexBufferSize = Vertices.size() * sizeof(OctaneGUI::Vertex);
 		const size_t IndexBufferSize = Indices.size() * sizeof(uint32_t);
 
 		assert(VertexBufferSize < Item.VertexBuffer.length);
@@ -494,7 +494,7 @@ void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& VertexBuffe
 		memcpy(Item.VertexBuffer.contents, Vertices.data(), VertexBufferSize);
 		memcpy(Item.IndexBuffer.contents, Indices.data(), IndexBufferSize);
 
-		for (const OctaneUI::DrawCommand& Command : VertexBuffer.Commands())
+		for (const OctaneGUI::DrawCommand& Command : VertexBuffer.Commands())
 		{
 			MTLScissorRect Scissor =
 			{
@@ -504,18 +504,18 @@ void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& VertexBuffe
 				.height = (NSUInteger)(WindowSize.Y * Scale.Y)
 			};
 
-			const OctaneUI::Rect Clip = Command.Clip();
+			const OctaneGUI::Rect Clip = Command.Clip();
 			if (!Clip.IsZero())
 			{
-				OctaneUI::Vector2 Min = Clip.Min * Scale;
-				OctaneUI::Vector2 Max = Clip.Max * Scale;
+				OctaneGUI::Vector2 Min = Clip.Min * Scale;
+				OctaneGUI::Vector2 Max = Clip.Max * Scale;
 
 				Min.X = std::max<float>(Min.X, 0.0f);
 				Min.Y = std::max<float>(Min.Y, 0.0f);
 				Max.X = std::min<float>(Max.X, WindowSize.X * Scale.X);
 				Max.Y = std::min<float>(Max.Y, WindowSize.Y * Scale.Y);
 
-				const OctaneUI::Vector2 ClipSize = Max - Min;
+				const OctaneGUI::Vector2 ClipSize = Max - Min;
 				Scissor =
 				{
 					.x = (NSUInteger)Min.X,
@@ -541,7 +541,7 @@ void OnPaint(OctaneUI::Window* Window, const OctaneUI::VertexBuffer& VertexBuffe
 				[Encoder setRenderPipelineState:g_RenderPipeline];
 			}
 
-			[Encoder setVertexBufferOffset:Command.VertexOffset() * sizeof(OctaneUI::Vertex) atIndex:0];
+			[Encoder setVertexBufferOffset:Command.VertexOffset() * sizeof(OctaneGUI::Vertex) atIndex:0];
 			[Encoder
 				drawIndexedPrimitives:MTLPrimitiveTypeTriangle
 				indexCount:Command.IndexCount()
@@ -594,7 +594,7 @@ void OnExit()
 	SDL_Quit();
 }
 
-void Initialize(OctaneUI::Application& Application)
+void Initialize(OctaneGUI::Application& Application)
 {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
 	{

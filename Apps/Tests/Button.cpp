@@ -24,7 +24,7 @@ SOFTWARE.
 
 */
 
-#include "OctaneUI/OctaneUI.h"
+#include "OctaneGUI/OctaneGUI.h"
 #include "TestSuite.h"
 
 namespace Tests
@@ -36,24 +36,24 @@ TEST_SUITE(Button,
 
 TEST_CASE(Press,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Application.GetMainWindow()->Load(Json, List);
 	Application.GetMainWindow()->Update();
 
 	VERIFY(List.Contains("Button"))
 
-	std::shared_ptr<OctaneUI::Button> Button = List.To<OctaneUI::Button>("Button");
+	std::shared_ptr<OctaneGUI::Button> Button = List.To<OctaneGUI::Button>("Button");
 
 	bool Pressed = false;
-	Button->SetOnPressed([&](const OctaneUI::Button&) -> void
+	Button->SetOnPressed([&](const OctaneGUI::Button&) -> void
 	{
 		Pressed = true;
 	});
 
-	OctaneUI::Vector2 Position = Button->GetAbsoluteBounds().GetCenter();
+	OctaneGUI::Vector2 Position = Button->GetAbsoluteBounds().GetCenter();
 
 	Application.GetMainWindow()->OnMouseMove(Position);
-	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMousePressed(Position, OctaneGUI::Mouse::Button::Left);
 	VERIFY(Pressed)
 	VERIFY(Button->IsPressed());
 
@@ -62,28 +62,28 @@ TEST_CASE(Press,
 
 TEST_CASE(Click,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Application.GetMainWindow()->Load(Json, List);
 	Application.GetMainWindow()->Update();
 
 	VERIFY(List.Contains("Button"))
 
-	std::shared_ptr<OctaneUI::Button> Button = List.To<OctaneUI::Button>("Button");
+	std::shared_ptr<OctaneGUI::Button> Button = List.To<OctaneGUI::Button>("Button");
 
 	bool Clicked = false;
-	Button->SetOnClicked([&](const OctaneUI::Button&) -> void
+	Button->SetOnClicked([&](const OctaneGUI::Button&) -> void
 	{
 		Clicked = true;
 	});
 
-	OctaneUI::Vector2 Position = Button->GetAbsoluteBounds().GetCenter();
+	OctaneGUI::Vector2 Position = Button->GetAbsoluteBounds().GetCenter();
 
 	Application.GetMainWindow()->OnMouseMove(Position);
-	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMousePressed(Position, OctaneGUI::Mouse::Button::Left);
 	VERIFY(!Clicked)
 	VERIFY(Button->IsPressed());
 
-	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMouseReleased(Position, OctaneGUI::Mouse::Button::Left);
 	VERIFY(Clicked)
 
 	return true;
@@ -91,22 +91,22 @@ TEST_CASE(Click,
 
 TEST_CASE(Disabled,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Application.GetMainWindow()->Load(Json, List);
 	Application.GetMainWindow()->Update();
 
 	bool Pressed = false;
-	List.To<OctaneUI::Button>("Button")->SetOnPressed([&](const OctaneUI::Button&) -> void
+	List.To<OctaneGUI::Button>("Button")->SetOnPressed([&](const OctaneGUI::Button&) -> void
 	{
 		Pressed = true;
 	})
 	.SetDisabled(true);
 
-	OctaneUI::Vector2 Position = List.To<OctaneUI::Button>("Button")->GetAbsoluteBounds().GetCenter();
+	OctaneGUI::Vector2 Position = List.To<OctaneGUI::Button>("Button")->GetAbsoluteBounds().GetCenter();
 
 	Application.GetMainWindow()->OnMouseMove(Position);
-	Application.GetMainWindow()->OnMousePressed(Position, OctaneUI::Mouse::Button::Left);
-	Application.GetMainWindow()->OnMouseReleased(Position, OctaneUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMousePressed(Position, OctaneGUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMouseReleased(Position, OctaneGUI::Mouse::Button::Left);
 
 	return !Pressed;
 })

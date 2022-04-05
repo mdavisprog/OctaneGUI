@@ -24,7 +24,7 @@ SOFTWARE.
 
 */
 
-#include "OctaneUI/OctaneUI.h"
+#include "OctaneGUI/OctaneGUI.h"
 #include "TestSuite.h"
 
 #include <cmath>
@@ -32,7 +32,7 @@ SOFTWARE.
 namespace Tests
 {
 
-static void Load(OctaneUI::Application& Application, const char* JsonControls, OctaneUI::ControlList& List)
+static void Load(OctaneGUI::Application& Application, const char* JsonControls, OctaneGUI::ControlList& List)
 {
 	static const char* Base = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [";
 	std::string Json = Base;
@@ -46,64 +46,64 @@ TEST_SUITE(Container,
 
 TEST_CASE(ExpandWidth,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application, "{\"ID\": \"Container\", \"Type\": \"Container\", \"Expand\": \"Width\"}", List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	std::shared_ptr<OctaneUI::Container> Container = List.To<OctaneUI::Container>("Container");
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	std::shared_ptr<OctaneGUI::Container> Container = List.To<OctaneGUI::Container>("Container");
 	return Container->GetSize().X == WindowSize.X && Container->GetSize().Y != WindowSize.Y;
 })
 
 TEST_CASE(ExpandHeight,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application, "{\"ID\": \"Container\", \"Type\": \"Container\", \"Expand\": \"Height\"}", List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	std::shared_ptr<OctaneUI::Container> Container = List.To<OctaneUI::Container>("Container");
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	std::shared_ptr<OctaneGUI::Container> Container = List.To<OctaneGUI::Container>("Container");
 	return Container->GetSize().X != WindowSize.X && Container->GetSize().Y == WindowSize.Y;
 })
 
 TEST_CASE(ExpandBoth,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application, "{\"ID\": \"Container\", \"Type\": \"Container\", \"Expand\": \"Both\"}", List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	std::shared_ptr<OctaneUI::Container> Container = List.To<OctaneUI::Container>("Container");
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	std::shared_ptr<OctaneGUI::Container> Container = List.To<OctaneGUI::Container>("Container");
 	return Container->GetSize().X == WindowSize.X && Container->GetSize().Y == WindowSize.Y;
 })
 
 TEST_CASE(FillWidthControl,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application, "{\"Type\": \"HorizontalContainer\", \"Expand\": \"Width\", \"Controls\": ["
 		"{\"ID\": \"Button\", \"Type\": \"TextButton\", \"Expand\": \"Width\", \"Text\": {\"Text\": \"Button\"}}]}",
 	List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	const std::shared_ptr<OctaneUI::Button> Button = List.To<OctaneUI::Button>("Button");
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	const std::shared_ptr<OctaneGUI::Button> Button = List.To<OctaneGUI::Button>("Button");
 	return Button->GetAbsolutePosition().X == 0.0f && Button->GetSize().X == WindowSize.X;
 })
 
 TEST_CASE(FillHeightControl,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application, "{\"Type\": \"VerticalContainer\", \"Expand\": \"Height\", \"Controls\": [{\"ID\": \"Button\", \"Type\": \"TextButton\", \"Expand\": \"Height\", \"Text\": {\"Text\": \"Button\"}}]}", List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	const std::shared_ptr<OctaneUI::Button> Button = List.To<OctaneUI::Button>("Button");
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	const std::shared_ptr<OctaneGUI::Button> Button = List.To<OctaneGUI::Button>("Button");
 	return Button->GetAbsolutePosition().Y == 0.0f && Button->GetSize().Y == WindowSize.Y;
 })
 
 TEST_CASE(FillWidthMultiControls,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application, 
 		"{\"ID\": \"Container\", \"Type\": \"HorizontalContainer\", \"Expand\": \"Width\", \"Controls\": ["
 			"{\"ID\": \"Button1\", \"Type\": \"TextButton\", \"Expand\": \"Width\", \"Text\": {\"Text\": \"Button\"}},"
 			"{\"ID\": \"Button2\", \"Type\": \"TextButton\", \"Expand\": \"Width\", \"Text\": {\"Text\": \"Button\"}}"
 		"]}", 
 	List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	const std::shared_ptr<OctaneUI::BoxContainer> Container = List.To<OctaneUI::BoxContainer>("Container");
-	const std::shared_ptr<OctaneUI::Button> Button1 = List.To<OctaneUI::Button>("Container.Button1");
-	const std::shared_ptr<OctaneUI::Button> Button2 = List.To<OctaneUI::Button>("Container.Button2");
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	const std::shared_ptr<OctaneGUI::BoxContainer> Container = List.To<OctaneGUI::BoxContainer>("Container");
+	const std::shared_ptr<OctaneGUI::Button> Button1 = List.To<OctaneGUI::Button>("Container.Button1");
+	const std::shared_ptr<OctaneGUI::Button> Button2 = List.To<OctaneGUI::Button>("Container.Button2");
 	const float HalfWindowWidth = WindowSize.X * 0.5f;
 	const float HalfSpacingWidth = Container->Spacing().X * 0.5f;
 	return
@@ -113,7 +113,7 @@ TEST_CASE(FillWidthMultiControls,
 
 TEST_CASE(FillWidthMultiMixControls,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application, 
 		"{\"ID\": \"Container\", \"Type\": \"HorizontalContainer\", \"Expand\": \"Width\", \"Controls\": ["
 			"{\"ID\": \"Button1\", \"Type\": \"TextButton\", \"Expand\": \"Width\", \"Text\": {\"Text\": \"Button\"}},"
@@ -121,11 +121,11 @@ TEST_CASE(FillWidthMultiMixControls,
 			"{\"ID\": \"Button2\", \"Type\": \"TextButton\", \"Expand\": \"Width\", \"Text\": {\"Text\": \"Button\"}}"
 		"]}", 
 	List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	const std::shared_ptr<OctaneUI::BoxContainer> Container = List.To<OctaneUI::BoxContainer>("Container");
-	const std::shared_ptr<OctaneUI::Button> Button1 = List.To<OctaneUI::Button>("Container.Button1");
-	const std::shared_ptr<OctaneUI::Button> Button2 = List.To<OctaneUI::Button>("Container.Button2");
-	const std::shared_ptr<OctaneUI::Text> Text = List.To<OctaneUI::Text>("Container.Text");
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	const std::shared_ptr<OctaneGUI::BoxContainer> Container = List.To<OctaneGUI::BoxContainer>("Container");
+	const std::shared_ptr<OctaneGUI::Button> Button1 = List.To<OctaneGUI::Button>("Container.Button1");
+	const std::shared_ptr<OctaneGUI::Button> Button2 = List.To<OctaneGUI::Button>("Container.Button2");
+	const std::shared_ptr<OctaneGUI::Text> Text = List.To<OctaneGUI::Text>("Container.Text");
 	const float HalfWindowWidth = (WindowSize.X - Text->GetSize().X) * 0.5f;
 	const float HalfSpacingWidth = Container->Spacing().X * (float)(Container->Controls().size() - 1) * 0.5f;
 	return
@@ -136,7 +136,7 @@ TEST_CASE(FillWidthMultiMixControls,
 
 TEST_CASE(FillHeightMultiMixControls,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application, 
 		"{\"ID\": \"Container\", \"Type\": \"VerticalContainer\", \"Expand\": \"Height\", \"Controls\": ["
 			"{\"ID\": \"Button1\", \"Type\": \"TextButton\", \"Expand\": \"Height\", \"Text\": {\"Text\": \"Button\"}},"
@@ -144,11 +144,11 @@ TEST_CASE(FillHeightMultiMixControls,
 			"{\"ID\": \"Button2\", \"Type\": \"TextButton\", \"Expand\": \"Height\", \"Text\": {\"Text\": \"Button\"}}"
 		"]}", 
 	List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	const std::shared_ptr<OctaneUI::BoxContainer> Container = List.To<OctaneUI::BoxContainer>("Container");
-	const std::shared_ptr<OctaneUI::Button> Button1 = List.To<OctaneUI::Button>("Container.Button1");
-	const std::shared_ptr<OctaneUI::Button> Button2 = List.To<OctaneUI::Button>("Container.Button2");
-	const std::shared_ptr<OctaneUI::Text> Text = List.To<OctaneUI::Text>("Container.Text");
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	const std::shared_ptr<OctaneGUI::BoxContainer> Container = List.To<OctaneGUI::BoxContainer>("Container");
+	const std::shared_ptr<OctaneGUI::Button> Button1 = List.To<OctaneGUI::Button>("Container.Button1");
+	const std::shared_ptr<OctaneGUI::Button> Button2 = List.To<OctaneGUI::Button>("Container.Button2");
+	const std::shared_ptr<OctaneGUI::Text> Text = List.To<OctaneGUI::Text>("Container.Text");
 	const float HalfWindowHeight = (WindowSize.Y - Text->GetSize().Y) * 0.5f;
 	const float HalfSpacingHeight = Container->Spacing().Y * (float)(Container->Controls().size() - 1) * 0.5f;
 	return
@@ -159,17 +159,17 @@ TEST_CASE(FillHeightMultiMixControls,
 
 TEST_CASE(FillHeighthMultiControls,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application, 
 		"{\"ID\": \"Container\", \"Type\": \"VerticalContainer\", \"Expand\": \"Height\", \"Controls\": ["
 			"{\"ID\": \"Button1\", \"Type\": \"TextButton\", \"Expand\": \"Height\", \"Text\": {\"Text\": \"Button\"}},"
 			"{\"ID\": \"Button2\", \"Type\": \"TextButton\", \"Expand\": \"Height\", \"Text\": {\"Text\": \"Button\"}}"
 		"]}", 
 	List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	const std::shared_ptr<OctaneUI::BoxContainer> Container = List.To<OctaneUI::BoxContainer>("Container");
-	const std::shared_ptr<OctaneUI::Button> Button1 = List.To<OctaneUI::Button>("Container.Button1");
-	const std::shared_ptr<OctaneUI::Button> Button2 = List.To<OctaneUI::Button>("Container.Button2");
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	const std::shared_ptr<OctaneGUI::BoxContainer> Container = List.To<OctaneGUI::BoxContainer>("Container");
+	const std::shared_ptr<OctaneGUI::Button> Button1 = List.To<OctaneGUI::Button>("Container.Button1");
+	const std::shared_ptr<OctaneGUI::Button> Button2 = List.To<OctaneGUI::Button>("Container.Button2");
 	const float HalfWindowHeight = WindowSize.Y * 0.5f;
 	const float HalfSpacingHeight = Container->Spacing().Y * 0.5f;
 	return
@@ -179,70 +179,70 @@ TEST_CASE(FillHeighthMultiControls,
 
 TEST_CASE(HGrowCenter,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application,
 		"{\"Type\": \"HorizontalContainer\", \"Expand\": \"Width\", \"Grow\": \"Center\", \"Controls\": ["
 			"{\"ID\": \"Button\", \"Type\": \"TextButton\", \"Text\": {\"Text\": \"Button\"}}"
 		"]}",
 	List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	const std::shared_ptr<OctaneUI::Button> Button = List.To<OctaneUI::Button>("Button");
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	const std::shared_ptr<OctaneGUI::Button> Button = List.To<OctaneGUI::Button>("Button");
 	return Button->GetAbsolutePosition().X == std::floor(WindowSize.X * 0.5f - Button->GetSize().X * 0.5f);
 })
 
 TEST_CASE(HGrowEnd,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application,
 		"{\"Type\": \"HorizontalContainer\", \"Expand\": \"Width\", \"Grow\": \"End\", \"Controls\": ["
 			"{\"ID\": \"Button\", \"Type\": \"TextButton\", \"Text\": {\"Text\": \"Button\"}}"
 		"]}",
 	List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	const std::shared_ptr<OctaneUI::Button> Button = List.To<OctaneUI::Button>("Button");
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	const std::shared_ptr<OctaneGUI::Button> Button = List.To<OctaneGUI::Button>("Button");
 	return Button->GetAbsolutePosition().X == std::floor(WindowSize.X - Button->GetSize().X);
 })
 
 TEST_CASE(VGrowCenter,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application,
 		"{\"Type\": \"VerticalContainer\", \"Expand\": \"Height\", \"Grow\": \"Center\", \"Controls\": ["
 			"{\"ID\": \"Button\", \"Type\": \"TextButton\", \"Text\": {\"Text\": \"Button\"}}"
 		"]}",
 	List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	const std::shared_ptr<OctaneUI::Button> Button = List.To<OctaneUI::Button>("Button");
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	const std::shared_ptr<OctaneGUI::Button> Button = List.To<OctaneGUI::Button>("Button");
 	return Button->GetAbsolutePosition().Y == std::floor(WindowSize.Y * 0.5f - Button->GetSize().Y * 0.5f);
 })
 
 TEST_CASE(VGrowEnd,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application,
 		"{\"Type\": \"VerticalContainer\", \"Expand\": \"Height\", \"Grow\": \"End\", \"Controls\": ["
 			"{\"ID\": \"Button\", \"Type\": \"TextButton\", \"Text\": {\"Text\": \"Button\"}}"
 		"]}",
 	List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	const std::shared_ptr<OctaneUI::Button> Button = List.To<OctaneUI::Button>("Button");
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	const std::shared_ptr<OctaneGUI::Button> Button = List.To<OctaneGUI::Button>("Button");
 	return Button->GetAbsolutePosition().Y == std::floor(WindowSize.Y - Button->GetSize().Y);
 })
 
 TEST_CASE(HGrowCenterMultiControls,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application,
 		"{\"ID\": \"Container\", \"Type\": \"HorizontalContainer\", \"Expand\": \"Width\", \"Grow\": \"Center\", \"Controls\": ["
 			"{\"ID\": \"Button1\", \"Type\": \"TextButton\", \"Text\": {\"Text\": \"Button\"}},"
 			"{\"ID\": \"Button2\", \"Type\": \"TextButton\", \"Text\": {\"Text\": \"Button\"}}"
 		"]}",
 	List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	const std::shared_ptr<OctaneUI::BoxContainer> Container = List.To<OctaneUI::BoxContainer>("Container");
-	const std::shared_ptr<OctaneUI::Button> Button1 = List.To<OctaneUI::Button>("Container.Button1");
-	const std::shared_ptr<OctaneUI::Button> Button2 = List.To<OctaneUI::Button>("Container.Button2");
-	const OctaneUI::Vector2 TotalSize(Button1->GetSize().X + Button2->GetSize().X + Container->Spacing().X, Button1->GetSize().Y);
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	const std::shared_ptr<OctaneGUI::BoxContainer> Container = List.To<OctaneGUI::BoxContainer>("Container");
+	const std::shared_ptr<OctaneGUI::Button> Button1 = List.To<OctaneGUI::Button>("Container.Button1");
+	const std::shared_ptr<OctaneGUI::Button> Button2 = List.To<OctaneGUI::Button>("Container.Button2");
+	const OctaneGUI::Vector2 TotalSize(Button1->GetSize().X + Button2->GetSize().X + Container->Spacing().X, Button1->GetSize().Y);
 	const float HalfWindowWidth = WindowSize.X * 0.5f;
 	const float HalfTotalWidth = TotalSize.X * 0.5f;
 	const float HalfSpacingWidth = Container->Spacing().X * 0.5f;
@@ -253,18 +253,18 @@ TEST_CASE(HGrowCenterMultiControls,
 
 TEST_CASE(HGrowEndMultiControls,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application,
 		"{\"ID\": \"Container\", \"Type\": \"HorizontalContainer\", \"Expand\": \"Width\", \"Grow\": \"End\", \"Controls\": ["
 			"{\"ID\": \"Button1\", \"Type\": \"TextButton\", \"Text\": {\"Text\": \"Button\"}},"
 			"{\"ID\": \"Button2\", \"Type\": \"TextButton\", \"Text\": {\"Text\": \"Button\"}}"
 		"]}",
 	List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	const std::shared_ptr<OctaneUI::BoxContainer> Container = List.To<OctaneUI::BoxContainer>("Container");
-	const std::shared_ptr<OctaneUI::Button> Button1 = List.To<OctaneUI::Button>("Container.Button1");
-	const std::shared_ptr<OctaneUI::Button> Button2 = List.To<OctaneUI::Button>("Container.Button2");
-	const OctaneUI::Vector2 TotalSize(Button1->GetSize().X + Button2->GetSize().X + Container->Spacing().X, Button1->GetSize().Y);
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	const std::shared_ptr<OctaneGUI::BoxContainer> Container = List.To<OctaneGUI::BoxContainer>("Container");
+	const std::shared_ptr<OctaneGUI::Button> Button1 = List.To<OctaneGUI::Button>("Container.Button1");
+	const std::shared_ptr<OctaneGUI::Button> Button2 = List.To<OctaneGUI::Button>("Container.Button2");
+	const OctaneGUI::Vector2 TotalSize(Button1->GetSize().X + Button2->GetSize().X + Container->Spacing().X, Button1->GetSize().Y);
 	const float HalfTotalWidth = TotalSize.X * 0.5f;
 	const float HalfSpacingWidth = Container->Spacing().X * 0.5f;
 	return 
@@ -274,18 +274,18 @@ TEST_CASE(HGrowEndMultiControls,
 
 TEST_CASE(VGrowCenterMultiControls,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application,
 		"{\"ID\": \"Container\", \"Type\": \"VerticalContainer\", \"Expand\": \"Height\", \"Grow\": \"Center\", \"Controls\": ["
 			"{\"ID\": \"Button1\", \"Type\": \"TextButton\", \"Text\": {\"Text\": \"Button\"}},"
 			"{\"ID\": \"Button2\", \"Type\": \"TextButton\", \"Text\": {\"Text\": \"Button\"}}"
 		"]}",
 	List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	const std::shared_ptr<OctaneUI::BoxContainer> Container = List.To<OctaneUI::BoxContainer>("Container");
-	const std::shared_ptr<OctaneUI::Button> Button1 = List.To<OctaneUI::Button>("Container.Button1");
-	const std::shared_ptr<OctaneUI::Button> Button2 = List.To<OctaneUI::Button>("Container.Button2");
-	const OctaneUI::Vector2 TotalSize(Button1->GetSize().X, Button1->GetSize().Y + Button2->GetSize().Y + Container->Spacing().Y);
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	const std::shared_ptr<OctaneGUI::BoxContainer> Container = List.To<OctaneGUI::BoxContainer>("Container");
+	const std::shared_ptr<OctaneGUI::Button> Button1 = List.To<OctaneGUI::Button>("Container.Button1");
+	const std::shared_ptr<OctaneGUI::Button> Button2 = List.To<OctaneGUI::Button>("Container.Button2");
+	const OctaneGUI::Vector2 TotalSize(Button1->GetSize().X, Button1->GetSize().Y + Button2->GetSize().Y + Container->Spacing().Y);
 	const float HalfWindowHeight = WindowSize.Y * 0.5f;
 	const float HalfTotalHeight = TotalSize.Y * 0.5f;
 	const float HalfSpacingHeight = Container->Spacing().Y * 0.5f;
@@ -296,18 +296,18 @@ TEST_CASE(VGrowCenterMultiControls,
 
 TEST_CASE(VGrowEndMultiControls,
 {
-	OctaneUI::ControlList List;
+	OctaneGUI::ControlList List;
 	Load(Application,
 		"{\"ID\": \"Container\", \"Type\": \"VerticalContainer\", \"Expand\": \"Height\", \"Grow\": \"End\", \"Controls\": ["
 			"{\"ID\": \"Button1\", \"Type\": \"TextButton\", \"Text\": {\"Text\": \"Button\"}},"
 			"{\"ID\": \"Button2\", \"Type\": \"TextButton\", \"Text\": {\"Text\": \"Button\"}}"
 		"]}",
 	List);
-	const OctaneUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
-	const std::shared_ptr<OctaneUI::BoxContainer> Container = List.To<OctaneUI::BoxContainer>("Container");
-	const std::shared_ptr<OctaneUI::Button> Button1 = List.To<OctaneUI::Button>("Container.Button1");
-	const std::shared_ptr<OctaneUI::Button> Button2 = List.To<OctaneUI::Button>("Container.Button2");
-	const OctaneUI::Vector2 TotalSize(Button1->GetSize().X, Button1->GetSize().Y + Button2->GetSize().Y + Container->Spacing().Y);
+	const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
+	const std::shared_ptr<OctaneGUI::BoxContainer> Container = List.To<OctaneGUI::BoxContainer>("Container");
+	const std::shared_ptr<OctaneGUI::Button> Button1 = List.To<OctaneGUI::Button>("Container.Button1");
+	const std::shared_ptr<OctaneGUI::Button> Button2 = List.To<OctaneGUI::Button>("Container.Button2");
+	const OctaneGUI::Vector2 TotalSize(Button1->GetSize().X, Button1->GetSize().Y + Button2->GetSize().Y + Container->Spacing().Y);
 	const float HalfTotalHeight = TotalSize.Y * 0.5f;
 	const float HalfSpacingHeight = Container->Spacing().Y * 0.5f;
 	return 

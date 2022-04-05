@@ -7,7 +7,7 @@ add_executable(
 
 target_include_directories(
 	${TARGET}
-	PUBLIC ${OCTANEUI_INCLUDE}
+	PUBLIC ${OctaneGUI_INCLUDE}
 	PUBLIC ${FRONTEND_INCLUDE}
 )
 
@@ -19,7 +19,7 @@ target_link_directories(
 target_link_libraries(
 	${TARGET}
 	${FRONTEND_LIBS}
-	OctaneUI
+	OctaneGUI
 )
 
 set_target_properties(

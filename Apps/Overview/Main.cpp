@@ -25,7 +25,7 @@ SOFTWARE.
 */
 
 #include "Interface.h"
-#include "OctaneUI/OctaneUI.h"
+#include "OctaneGUI/OctaneGUI.h"
 
 #include <filesystem>
 #include <fstream>
@@ -61,47 +61,47 @@ int main(int argc, char **argv)
 		}
 	}
 
-	OctaneUI::Application Application;
+	OctaneGUI::Application Application;
 	Interface::Initialize(Application);
 
-	std::unordered_map<std::string, OctaneUI::ControlList> WindowControls;
+	std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
 	Application.Initialize(GetContents("Overview.json").c_str(), WindowControls);
 	
-	const OctaneUI::ControlList& List = WindowControls["Main"];
-	List.To<OctaneUI::MenuItem>("File.Quit")->SetOnPressed([&](const OctaneUI::TextSelectable&) -> void
+	const OctaneGUI::ControlList& List = WindowControls["Main"];
+	List.To<OctaneGUI::MenuItem>("File.Quit")->SetOnPressed([&](const OctaneGUI::TextSelectable&) -> void
 	{
 		Application.Quit();
 	});
 
-	std::shared_ptr<OctaneUI::Menu> ThemesMenu = List.To<OctaneUI::MenuItem>("Themes")->CreateMenu();
+	std::shared_ptr<OctaneGUI::Menu> ThemesMenu = List.To<OctaneGUI::MenuItem>("Themes")->CreateMenu();
 	for (const std::pair<std::string, std::string>& Theme : Themes)
 	{
 		const char* Name = Theme.first.c_str();
 		ThemesMenu->AddItem(Name);
-		ThemesMenu->GetItem(Name)->SetOnPressed([&](const OctaneUI::TextSelectable& Item) -> void
+		ThemesMenu->GetItem(Name)->SetOnPressed([&](const OctaneGUI::TextSelectable& Item) -> void
 		{
 			const char* Name = Item.GetText();
 			if (Themes.find(Name) != Themes.end())
 			{
 				const std::string& Path = Themes[Name];
 				const std::string Buffer = GetContents(Path.c_str());
-				Application.GetTheme()->Load(OctaneUI::Json::Parse(Buffer.c_str()));
+				Application.GetTheme()->Load(OctaneGUI::Json::Parse(Buffer.c_str()));
 			}
 		});
 	}
 
-	List.To<OctaneUI::MenuItem>("Help.About")->SetOnPressed([&](const OctaneUI::TextSelectable&) -> void
+	List.To<OctaneGUI::MenuItem>("Help.About")->SetOnPressed([&](const OctaneGUI::TextSelectable&) -> void
 	{
 		Application.DisplayWindow("About");
 	});
 
-	List.To<OctaneUI::Button>("OKBtn")->SetOnClicked([&](const OctaneUI::Button& Button) -> void
+	List.To<OctaneGUI::Button>("OKBtn")->SetOnClicked([&](const OctaneGUI::Button& Button) -> void
 	{
 		printf("OK\n");
 	});
 
-	std::shared_ptr<OctaneUI::ListBox> ListBox = List.To<OctaneUI::ListBox>("List");
-	ListBox->SetOnSelect([](int Index, std::weak_ptr<OctaneUI::Control>) -> void
+	std::shared_ptr<OctaneGUI::ListBox> ListBox = List.To<OctaneGUI::ListBox>("List");
+	ListBox->SetOnSelect([](int Index, std::weak_ptr<OctaneGUI::Control>) -> void
 	{
 		printf("OnSelect: %d\n", Index);
 	});
@@ -109,11 +109,11 @@ int main(int argc, char **argv)
 	for (int I = 0; I < 10; I++)
 	{
 		std::string Text = std::string("Item added through code: ") + std::to_string(I);
-		ListBox->AddItem<OctaneUI::Text>()->SetText(Text.c_str());
+		ListBox->AddItem<OctaneGUI::Text>()->SetText(Text.c_str());
 	}
 
-	const OctaneUI::ControlList& AboutList = WindowControls["About"];
-	AboutList.To<OctaneUI::Button>("OK")->SetOnClicked([](const OctaneUI::Button& Button) -> void
+	const OctaneGUI::ControlList& AboutList = WindowControls["About"];
+	AboutList.To<OctaneGUI::Button>("OK")->SetOnClicked([](const OctaneGUI::Button& Button) -> void
 	{
 		Button.GetWindow()->RequestClose();
 	});
