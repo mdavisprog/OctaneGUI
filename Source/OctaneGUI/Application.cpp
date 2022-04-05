@@ -193,6 +193,19 @@ std::shared_ptr<Window> Application::GetMainWindow() const
 	return m_Windows.at("Main");
 }
 
+bool Application::IsMainWindow(Window* InWindow) const
+{
+	for (std::unordered_map<std::string, std::shared_ptr<Window>>::const_iterator It = m_Windows.begin(); It != m_Windows.end(); ++It)
+	{
+		if (It->second.get() == InWindow)
+		{
+			return It->first == "Main";
+		}
+	}
+
+	return false;
+}
+
 std::shared_ptr<Window> Application::NewWindow(const char* ID, const char* JsonStream)
 {
 	ControlList List;
@@ -294,11 +307,11 @@ void Application::OnPaint(Window* InWindow, const VertexBuffer& Buffers)
 std::shared_ptr<Window> Application::CreateWindow(const char* ID, const Json& Root, ControlList& List)
 {
 	std::shared_ptr<Window> Result = std::make_shared<Window>(this);
+	m_Windows[ID] = Result;
 	Result->CreateContainer();
 	Result->Load(Root, List);
 	Result->SetOnPaint(std::bind(&Application::OnPaint, this, std::placeholders::_1, std::placeholders::_2));
 	Result->SetID(ID);
-	m_Windows[ID] = Result;
 	return Result;
 }
 
