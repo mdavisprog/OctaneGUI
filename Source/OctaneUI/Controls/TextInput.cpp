@@ -62,6 +62,9 @@ public:
 
 	virtual void OnKeyPressed(Keyboard::Key Key) override
 	{
+		m_Input->m_DrawCursor = true;
+		m_Input->m_BlinkTimer->Stop();
+
 		switch (Key)
 		{
 		case Keyboard::Key::Backspace: m_Input->Delete(m_Input->GetRangeOr(-1)); break;
@@ -75,6 +78,11 @@ public:
 		case Keyboard::Key::Enter: m_Input->AddText('\n'); break;
 		default: break;
 		}
+	}
+
+	virtual void OnKeyReleased(Keyboard::Key Key) override
+	{
+		m_Input->ResetCursorTimer();
 	}
 
 	virtual void OnMouseMove(const Vector2& Position) override
@@ -181,7 +189,7 @@ TextInput::TextInput(Window* InWindow)
 	Margins->SetMargins({ 2.0, 0.0, 2.0f, 0.0f });
 	m_Text = Margins->AddControl<Text>();
 
-	m_Interaction = AddControl<TextInputInteraction>(this);
+	AddControl<TextInputInteraction>(this);
 
 	SetSize({ 100.0f, m_Text->LineHeight() });
 
@@ -384,6 +392,7 @@ bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button)
 	m_Anchor = m_Position;
 	m_Drag = true;
 	m_Text->ClearFormats();
+	ResetCursorTimer();
 	Invalidate();
 
 	return true;

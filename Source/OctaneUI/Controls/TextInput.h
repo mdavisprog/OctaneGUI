@@ -118,8 +118,6 @@ private:
 
 	std::shared_ptr<Timer> m_BlinkTimer { nullptr };
 	bool m_DrawCursor { false };
-
-	std::shared_ptr<TextInputInteraction> m_Interaction { nullptr };
 };
 
 }
