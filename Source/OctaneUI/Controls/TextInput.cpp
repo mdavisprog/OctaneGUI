@@ -31,6 +31,7 @@ SOFTWARE.
 #include "../Theme.h"
 #include "../Timer.h"
 #include "../Window.h"
+#include "MarginContainer.h"
 #include "ScrollableContainer.h"
 #include "Text.h"
 
@@ -176,7 +177,9 @@ uint32_t TextInput::TextPosition::Index() const
 TextInput::TextInput(Window* InWindow)
 	: ScrollableViewControl(InWindow)
 {
-	m_Text = Scrollable()->AddControl<Text>();
+	std::shared_ptr<MarginContainer> Margins = Scrollable()->AddControl<MarginContainer>();
+	Margins->SetMargins({ 2.0, 0.0, 2.0f, 0.0f });
+	m_Text = Margins->AddControl<Text>();
 
 	m_Interaction = AddControl<TextInputInteraction>(this);
 
@@ -622,7 +625,8 @@ TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
 
 	// Transform into local space.
 	const Vector2 LocalPosition = Position - Scrollable()->GetAbsolutePosition();
-	// TODO: Take into account any scrolling once contained within a ScrollableContainer.
+	// The text control is offset by a margin container so this needs to be taken into account.
+	const Vector2 TextOffset = m_Text->GetAbsolutePosition() - Scrollable()->GetAbsolutePosition();
 
 	// Find the starting index based on what line the position is on.
 	size_t StartIndex = 0;
@@ -632,7 +636,7 @@ TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
 	Vector2 Offset = { 0.0f, LineHeight };
 	while (StartIndex != std::string::npos)
 	{
-		if (Offset.Y > LocalPosition.Y)
+		if (Offset.Y > LocalPosition.Y + TextOffset.Y)
 		{
 			Index = StartIndex;
 			break;
@@ -667,7 +671,7 @@ TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
 		const Vector2 Size = GetTheme()->GetFont()->Measure(Ch);
 		Offset.X += Size.X;
 
-		if (Position.X - Scrollable()->GetPosition().X <= GetAbsolutePosition().X + Offset.X)
+		if (Position.X - Scrollable()->GetPosition().X - TextOffset.X <= GetAbsolutePosition().X + Offset.X)
 		{
 			break;
 		}
@@ -731,26 +735,27 @@ uint32_t TextInput::LineSize(uint32_t Index) const
 void TextInput::ScrollIntoView()
 {
 	const float LineHeight = m_Text->LineHeight();
-	const Vector2 Position = GetPositionLocation(m_Position) + Scrollable()->GetPosition();
+	const Vector2 TextOffset = m_Text->GetAbsolutePosition() - Scrollable()->GetAbsolutePosition();
+	const Vector2 Position = GetPositionLocation(m_Position) + Scrollable()->GetPosition() + TextOffset;
 	const Vector2 Size = Scrollable()->GetScrollableSize();
 	Vector2 Offset;
 
 	if (Position.X < 0.0f)
 	{
-		Offset.X = Position.X - 2.0f;
+		Offset.X = Position.X - 2.0f - TextOffset.X;
 	}
 	if (Position.Y < 0.0f)
 	{
-		Offset.Y = Position.Y;
+		Offset.Y = Position.Y - TextOffset.Y;
 	}
 
 	if (Position.X > Size.X)
 	{
-		Offset.X = Position.X - Size.X;
+		Offset.X = Position.X - Size.X + TextOffset.X;
 	}
 	if (Position.Y + LineHeight > Size.Y)
 	{
-		Offset.Y = Position.Y + LineHeight - Size.Y;
+		Offset.Y = Position.Y + LineHeight - Size.Y + TextOffset.Y;
 	}
 
 	Scrollable()->AddOffset(Offset);
