@@ -273,8 +273,9 @@ void Control::OnLoad(const Json& Root)
 	}
 }
 
-void Control::OnKeyPressed(Keyboard::Key Key)
+bool Control::OnKeyPressed(Keyboard::Key Key)
 {
+	return false;
 }
 
 void Control::OnKeyReleased(Keyboard::Key Key)

@@ -60,24 +60,26 @@ public:
 		m_Input->Unfocus();
 	}
 
-	virtual void OnKeyPressed(Keyboard::Key Key) override
+	virtual bool OnKeyPressed(Keyboard::Key Key) override
 	{
 		m_Input->m_DrawCursor = true;
 		m_Input->m_BlinkTimer->Stop();
 
 		switch (Key)
 		{
-		case Keyboard::Key::Backspace: m_Input->Delete(m_Input->GetRangeOr(-1)); break;
-		case Keyboard::Key::Delete: m_Input->Delete(m_Input->GetRangeOr(1)); break;
-		case Keyboard::Key::Left: m_Input->MovePosition(0, -1, m_Input->IsShiftPressed()); break;
-		case Keyboard::Key::Right: m_Input->MovePosition(0, 1, m_Input->IsShiftPressed()); break;
-		case Keyboard::Key::Up: m_Input->MovePosition(-1, 0, m_Input->IsShiftPressed()); break;
-		case Keyboard::Key::Down: m_Input->MovePosition(1, 0, m_Input->IsShiftPressed()); break;
-		case Keyboard::Key::Home: m_Input->MoveHome(); break;
-		case Keyboard::Key::End: m_Input->MoveEnd(); break;
-		case Keyboard::Key::Enter: m_Input->AddText('\n'); break;
+		case Keyboard::Key::Backspace: m_Input->Delete(m_Input->GetRangeOr(-1)); return true;
+		case Keyboard::Key::Delete: m_Input->Delete(m_Input->GetRangeOr(1)); return true;
+		case Keyboard::Key::Left: m_Input->MovePosition(0, -1, m_Input->IsShiftPressed()); return true;
+		case Keyboard::Key::Right: m_Input->MovePosition(0, 1, m_Input->IsShiftPressed()); return true;
+		case Keyboard::Key::Up: m_Input->MovePosition(-1, 0, m_Input->IsShiftPressed()); return true;
+		case Keyboard::Key::Down: m_Input->MovePosition(1, 0, m_Input->IsShiftPressed()); return true;
+		case Keyboard::Key::Home: m_Input->MoveHome(); return true;
+		case Keyboard::Key::End: m_Input->MoveEnd(); return true;
+		case Keyboard::Key::Enter: m_Input->AddText('\n'); return true;
 		default: break;
 		}
+
+		return false;
 	}
 
 	virtual void OnKeyReleased(Keyboard::Key Key) override

@@ -119,7 +119,7 @@ public:
 	virtual void OnFocused();
 	virtual void OnUnfocused();
 	virtual void OnLoad(const Json& Root);
-	virtual void OnKeyPressed(Keyboard::Key Key);
+	virtual bool OnKeyPressed(Keyboard::Key Key);
 	virtual void OnKeyReleased(Keyboard::Key Key);
 	virtual void OnMouseMove(const Vector2& Position);
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button);
