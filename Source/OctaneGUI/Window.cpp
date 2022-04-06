@@ -210,7 +210,6 @@ void Window::OnMouseMove(const Vector2& Position)
 
 void Window::OnMousePressed(const Vector2& Position, Mouse::Button MouseButton)
 {
-	std::shared_ptr<Control> Focused = m_Focus.lock();
 	std::shared_ptr<Control> New = nullptr;
 	if (!m_Hovered.expired())
 	{
@@ -223,31 +222,7 @@ void Window::OnMousePressed(const Vector2& Position, Mouse::Button MouseButton)
 		}
 	}
 
-	bool ShouldClosePopup = false;
-	if (New != Focused)
-	{
-		if (Focused)
-		{
-			Focused->OnUnfocused();
-		}
-
-		m_Focus = New;
-
-		if (New)
-		{
-			ShouldClosePopup = !m_Popup.HasControl(New);
-			New->OnFocused();
-		}
-		else
-		{
-			ShouldClosePopup = true;
-		}
-	}
-
-	if (ShouldClosePopup)
-	{
-		m_Popup.Close();
-	}
+	UpdateFocus(New);
 }
 
 void Window::OnMouseReleased(const Vector2& Position, Mouse::Button MouseButton)
@@ -537,6 +512,37 @@ void Window::UpdateTimers()
 		{
 			It++;
 		}
+	}
+}
+
+void Window::UpdateFocus(const std::shared_ptr<Control>& Focus)
+{
+	std::shared_ptr<Control> Focused = m_Focus.lock();
+
+	bool ShouldClosePopup = false;
+	if (Focus != Focused)
+	{
+		if (Focused)
+		{
+			Focused->OnUnfocused();
+		}
+
+		m_Focus = Focus;
+
+		if (Focus)
+		{
+			ShouldClosePopup = !m_Popup.HasControl(Focus);
+			Focus->OnFocused();
+		}
+		else
+		{
+			ShouldClosePopup = true;
+		}
+	}
+
+	if (ShouldClosePopup)
+	{
+		m_Popup.Close();
 	}
 }
 

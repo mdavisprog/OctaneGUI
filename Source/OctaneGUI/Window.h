@@ -133,6 +133,7 @@ private:
 	void Populate(ControlList& List) const;
 	void RequestLayout(Container* Request);
 	void UpdateTimers();
+	void UpdateFocus(const std::shared_ptr<Control>& Focus);
 
 	Application* m_Application { nullptr };
 	std::string m_Title {};
