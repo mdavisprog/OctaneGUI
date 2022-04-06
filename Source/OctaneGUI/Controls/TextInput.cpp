@@ -237,6 +237,11 @@ bool TextInput::ReadOnly() const
 
 void TextInput::Focus()
 {
+	if (!m_Position.IsValid())
+	{
+		m_Position = { 0, 0, 0 };
+	}
+
 	m_Focused = true;
 	ResetCursorTimer();
 	Invalidate();
