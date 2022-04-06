@@ -24,33 +24,49 @@ SOFTWARE.
 
 */
 
-#pragma once
+#include "CommandPalette.h"
+#include "../Controls/MarginContainer.h"
+#include "../Controls/Panel.h"
+#include "../Controls/TextInput.h"
+#include "../Controls/VerticalContainer.h"
+#include "../Window.h"
 
 namespace OctaneGUI
 {
 
-class Keyboard
+namespace Tools
 {
-public:
-	enum class Key : unsigned short
-	{
-		None,
-		P,
-		Backspace,
-		Delete,
-		Left,
-		Right,
-		Up,
-		Down,
-		Home,
-		End,
-		LeftShift,
-		RightShift,
-		LeftControl,
-		RightControl,
-		Enter,
-		Tilde,
-	};
-};
+
+CommandPalette::CommandPalette(Window* InWindow)
+	: Container(InWindow)
+{
+	std::shared_ptr<Panel> Background = AddControl<Panel>();
+	Background->SetExpand(Expand::Both);
+
+	m_Container = AddControl<VerticalContainer>();
+	m_Container->SetExpand(Expand::Both);
+
+	std::shared_ptr<MarginContainer> Margins = m_Container->AddControl<MarginContainer>();
+	Margins->SetMargins({ 4.0f, 4.0f, 4.0f, 4.0f });
+
+	m_Input = Margins->AddControl<TextInput>();
+	m_Input->SetExpand(Expand::Width);
+}
+
+void CommandPalette::Show()
+{
+	const Vector2 ContentSize = m_Container->DesiredSize();
+	const Vector2 WindowSize = GetWindow()->GetSize();
+	const Vector2 Size = { WindowSize.X * 0.6f, ContentSize.Y };
+	SetSize(Size);
+	SetPosition({ WindowSize.X * 0.5f - Size.X * 0.5f, 30.0f });
+}
+
+std::shared_ptr<Control> CommandPalette::Input() const
+{
+	return m_Input->GetControl(m_Input->GetAbsolutePosition()).lock();
+}
+
+}
 
 }

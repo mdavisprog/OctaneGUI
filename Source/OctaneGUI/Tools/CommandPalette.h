@@ -26,31 +26,33 @@ SOFTWARE.
 
 #pragma once
 
+#include "../Controls/Container.h"
+
 namespace OctaneGUI
 {
 
-class Keyboard
+class TextInput;
+class VerticalContainer;
+
+namespace Tools
 {
+
+class CommandPalette : public Container
+{
+	CLASS(CommandPalette)
+
 public:
-	enum class Key : unsigned short
-	{
-		None,
-		P,
-		Backspace,
-		Delete,
-		Left,
-		Right,
-		Up,
-		Down,
-		Home,
-		End,
-		LeftShift,
-		RightShift,
-		LeftControl,
-		RightControl,
-		Enter,
-		Tilde,
-	};
+	CommandPalette(Window* InWindow);
+
+	void Show();
+
+	std::shared_ptr<Control> Input() const;
+
+private:
+	std::shared_ptr<VerticalContainer> m_Container { nullptr };
+	std::shared_ptr<TextInput> m_Input { nullptr };
 };
+
+}
 
 }

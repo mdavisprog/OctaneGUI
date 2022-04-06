@@ -50,6 +50,14 @@ set(SOURCE
 	Window.cpp
 )
 
+if(TOOLS)
+	add_compile_definitions(TOOLS=1)
+	set(SOURCE
+		${SOURCE}
+		Tools/CommandPalette.cpp
+	)
+endif()
+
 add_library(
 	${TARGET}
 	STATIC

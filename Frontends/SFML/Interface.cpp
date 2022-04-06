@@ -54,6 +54,7 @@ OctaneGUI::Keyboard::Key GetKeyCode(sf::Keyboard::Key Key)
 {
 	switch (Key)
 	{
+	case sf::Keyboard::P: return OctaneGUI::Keyboard::Key::P;
 	case sf::Keyboard::Backspace: return OctaneGUI::Keyboard::Key::Backspace;
 	case sf::Keyboard::Delete: return OctaneGUI::Keyboard::Key::Delete;
 	case sf::Keyboard::Left: return OctaneGUI::Keyboard::Key::Left;
@@ -64,7 +65,10 @@ OctaneGUI::Keyboard::Key GetKeyCode(sf::Keyboard::Key Key)
 	case sf::Keyboard::End: return OctaneGUI::Keyboard::Key::End;
 	case sf::Keyboard::LShift: return OctaneGUI::Keyboard::Key::LeftShift;
 	case sf::Keyboard::RShift: return OctaneGUI::Keyboard::Key::RightShift;
+	case sf::Keyboard::LControl: return OctaneGUI::Keyboard::Key::LeftControl;
+	case sf::Keyboard::RControl: return OctaneGUI::Keyboard::Key::RightControl;
 	case sf::Keyboard::Enter: return OctaneGUI::Keyboard::Key::Enter;
+	case sf::Keyboard::Tilde: return OctaneGUI::Keyboard::Key::Tilde;
 	default: break;
 	}
 
