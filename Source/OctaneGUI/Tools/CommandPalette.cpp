@@ -44,6 +44,7 @@ CommandPalette::CommandPalette(Window* InWindow)
 	Background->SetExpand(Expand::Both);
 
 	m_Container = AddControl<VerticalContainer>();
+	m_Container->SetSpacing({ 0.0f, 0.0f });
 	m_Container->SetExpand(Expand::Both);
 
 	std::shared_ptr<MarginContainer> Margins = m_Container->AddControl<MarginContainer>();
