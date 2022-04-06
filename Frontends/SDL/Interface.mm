@@ -156,6 +156,7 @@ OctaneGUI::Keyboard::Key GetKey(SDL_Keycode Code)
 {
 	switch (Code)
 	{
+	case SDLK_p: return OctaneGUI::Keyboard::Key::P;
 	case SDLK_BACKSPACE: return OctaneGUI::Keyboard::Key::Backspace;
 	case SDLK_DELETE: return OctaneGUI::Keyboard::Key::Delete;
 	case SDLK_LEFT: return OctaneGUI::Keyboard::Key::Left;
@@ -166,6 +167,8 @@ OctaneGUI::Keyboard::Key GetKey(SDL_Keycode Code)
 	case SDLK_END: return OctaneGUI::Keyboard::Key::End;
 	case SDLK_LSHIFT: return OctaneGUI::Keyboard::Key::LeftShift;
 	case SDLK_RSHIFT: return OctaneGUI::Keyboard::Key::RightShift;
+	case SDLK_LCTRL: return OctaneGUI::Keyboard::Key::LeftControl;
+	case SDLK_RCTRL: return OctaneGUI::Keyboard::Key::RightControl;
 	case SDLK_RETURN: return OctaneGUI::Keyboard::Key::Enter;
 	default: break;
 	}

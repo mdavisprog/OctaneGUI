@@ -51,6 +51,7 @@ set(SOURCE
 )
 
 if(TOOLS)
+	message("Building Tools...")
 	add_compile_definitions(TOOLS=1)
 	set(SOURCE
 		${SOURCE}
