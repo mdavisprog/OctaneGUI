@@ -48,6 +48,8 @@ public:
 
 	std::shared_ptr<Control> Input() const;
 
+	virtual bool OnKeyPressed(Keyboard::Key Key) override;
+
 private:
 	std::shared_ptr<VerticalContainer> m_Container { nullptr };
 	std::shared_ptr<TextInput> m_Input { nullptr };

@@ -44,8 +44,9 @@ CommandPalette::CommandPalette(Window* InWindow)
 	Background->SetExpand(Expand::Both);
 
 	m_Container = AddControl<VerticalContainer>();
-	m_Container->SetSpacing({ 0.0f, 0.0f });
-	m_Container->SetExpand(Expand::Both);
+	m_Container
+		->SetSpacing({ 0.0f, 0.0f })
+		->SetExpand(Expand::Both);
 
 	std::shared_ptr<MarginContainer> Margins = m_Container->AddControl<MarginContainer>();
 	Margins->SetMargins({ 4.0f, 4.0f, 4.0f, 4.0f });
@@ -66,6 +67,24 @@ void CommandPalette::Show()
 std::shared_ptr<Control> CommandPalette::Input() const
 {
 	return m_Input->GetControl(m_Input->GetAbsolutePosition()).lock();
+}
+
+bool CommandPalette::OnKeyPressed(Keyboard::Key Key)
+{
+	if (Key == Keyboard::Key::Enter)
+	{
+		std::string Command = m_Input->GetText();
+		m_Input->SetText("");
+		GetWindow()->ClosePopup();
+		return true;
+	}
+	else if (Key == Keyboard::Key::Escape)
+	{
+		GetWindow()->ClosePopup();
+		return true;
+	}
+
+	return false;
 }
 
 }
