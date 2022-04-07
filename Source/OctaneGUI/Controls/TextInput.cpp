@@ -217,6 +217,7 @@ TextInput& TextInput::SetText(const char* InText)
 {
 	InternalSetText(InText);
 	m_Anchor.Invalidate();
+	m_Position = { 0, 0, 0 };
 	UpdateFormats();
 	Invalidate();
 	return *this;
