@@ -48,6 +48,7 @@ public:
 		, m_Input(Input)
 	{
 		SetExpand(Expand::Both);
+		SetForwardKeyEvents(true);
 	}
 
 	virtual void OnFocused() override
@@ -62,6 +63,11 @@ public:
 
 	virtual bool OnKeyPressed(Keyboard::Key Key) override
 	{
+		if (Control::OnKeyPressed(Key))
+		{
+			return true;
+		}
+
 		m_Input->m_DrawCursor = true;
 		m_Input->m_BlinkTimer->Stop();
 
@@ -84,6 +90,7 @@ public:
 
 	virtual void OnKeyReleased(Keyboard::Key Key) override
 	{
+		Control::OnKeyReleased(Key);
 		m_Input->ResetCursorTimer();
 	}
 

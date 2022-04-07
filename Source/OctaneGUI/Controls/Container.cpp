@@ -51,6 +51,7 @@ namespace OctaneGUI
 Container::Container(Window* InWindow)
 	: Control(InWindow)
 {
+	SetForwardKeyEvents(true);
 }
 
 Container::~Container()

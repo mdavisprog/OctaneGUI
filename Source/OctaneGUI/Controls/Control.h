@@ -94,6 +94,9 @@ public:
 	Control* SetExpand(Expand InExpand);
 	Expand GetExpand() const;
 
+	Control& SetForwardKeyEvents(bool Forward);
+	bool ShouldForwardKeyEvents() const;
+
 	Control* SetID(const char* ID);
 	const char* GetID() const;
 	std::string GetFullID() const;
@@ -137,13 +140,15 @@ protected:
 private:
 	Control();
 
-	Window* m_Window;
-	Control* m_Parent;
-	Rect m_Bounds;
-	Expand m_Expand;
-	std::string m_ID;
-	OnInvalidateSignature m_OnInvalidate;
+	Window* m_Window { nullptr };
+	Control* m_Parent { nullptr };
+	Rect m_Bounds {};
+	Expand m_Expand { Expand::None };
+	std::string m_ID {};
+	OnInvalidateSignature m_OnInvalidate { nullptr };
 	ThemeProperties m_ThemeProperties {};
+
+	bool m_ForwardKeyEvents { false };
 };
 
 }

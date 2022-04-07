@@ -57,11 +57,6 @@ Expand ToExpand(const std::string& Value)
 Control::Control(Window* InWindow)
 	: Class()
 	, m_Window(InWindow)
-	, m_Parent(nullptr)
-	, m_Bounds()
-	, m_Expand(Expand::None)
-	, m_ID("")
-	, m_OnInvalidate(nullptr)
 {
 }
 
@@ -128,6 +123,17 @@ Control* Control::SetExpand(Expand InExpand)
 Expand Control::GetExpand() const
 {
 	return m_Expand;
+}
+
+Control& Control::SetForwardKeyEvents(bool Forward)
+{
+	m_ForwardKeyEvents = Forward;
+	return *this;
+}
+
+bool Control::ShouldForwardKeyEvents() const
+{
+	return m_ForwardKeyEvents;
 }
 
 Control* Control::SetID(const char* ID)
@@ -275,11 +281,20 @@ void Control::OnLoad(const Json& Root)
 
 bool Control::OnKeyPressed(Keyboard::Key Key)
 {
+	if (m_ForwardKeyEvents && m_Parent != nullptr)
+	{
+		return m_Parent->OnKeyPressed(Key);
+	}
+
 	return false;
 }
 
 void Control::OnKeyReleased(Keyboard::Key Key)
 {
+	if (m_ForwardKeyEvents && m_Parent != nullptr)
+	{
+		m_Parent->OnKeyReleased(Key);
+	}
 }
 
 void Control::OnMouseMove(const Vector2& Position)
