@@ -113,7 +113,7 @@ public:
 	Control* SetOnInvalidate(OnInvalidateSignature Fn);
 	void Invalidate(InvalidateType Type = InvalidateType::Paint);
 
-	void SetProperty(ThemeProperties::Property Property, const Variant& Value);
+	Control& SetProperty(ThemeProperties::Property Property, const Variant& Value);
 	const Variant& GetProperty(ThemeProperties::Property Property) const;
 	void ClearProperty(ThemeProperties::Property Property);
 

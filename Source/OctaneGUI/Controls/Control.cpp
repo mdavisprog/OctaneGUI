@@ -227,15 +227,17 @@ void Control::Invalidate(InvalidateType Type)
 	}
 }
 
-void Control::SetProperty(ThemeProperties::Property Property, const Variant& Value)
+Control& Control::SetProperty(ThemeProperties::Property Property, const Variant& Value)
 {
 	if (Value.IsNull())
 	{
-		return;
+		return *this;
 	}
 
 	assert(Property < ThemeProperties::Max);
 	m_ThemeProperties[Property] = Value;
+
+	return *this;
 }
 
 const Variant& Control::GetProperty(ThemeProperties::Property Property) const
