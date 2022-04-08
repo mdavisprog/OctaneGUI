@@ -46,6 +46,8 @@ public:
 		ArrowUp,
 		ArrowDown,
 		Check,
+		Expand,
+		Collapse,
 		Max
 	};
 
