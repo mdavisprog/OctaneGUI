@@ -181,6 +181,18 @@
 														"Text": "Multiple items can be added to this control."
 													}
 												]
+											},
+											{
+												"Type": "Tree",
+												"Text": "Tree",
+												"Items": [
+													{
+														"Text": "Child 1"
+													},
+													{
+														"Text": "Child 2"
+													}
+												]
 											}
 										]
 									}

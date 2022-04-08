@@ -25,6 +25,7 @@ set(SOURCE
 	Controls/TextButton.cpp
 	Controls/TextInput.cpp
 	Controls/TextSelectable.cpp
+	Controls/Tree.cpp
 	Controls/VerticalContainer.cpp
 	Application.cpp
 	Class.cpp

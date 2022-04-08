@@ -41,6 +41,7 @@ SOFTWARE.
 #include "TextButton.h"
 #include "TextInput.h"
 #include "TextSelectable.h"
+#include "Tree.h"
 #include "VerticalContainer.h"
 
 #include <algorithm>
@@ -63,29 +64,21 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 {
 	std::shared_ptr<Control> Result;
 
-	if (Type == Text::TypeName())
-	{
-		Result = AddControl<Text>();
-	}
-	else if (Type == TextButton::TypeName())
-	{
-		Result = AddControl<TextButton>();
-	}
-	else if (Type == TextSelectable::TypeName())
-	{
-		Result = AddControl<TextSelectable>();
-	}
-	else if (Type == TextInput::TypeName())
-	{
-		Result = AddControl<TextInput>();
-	}
-	else if (Type == CheckBox::TypeName())
+	if (Type == CheckBox::TypeName())
 	{
 		Result = AddControl<CheckBox>();
 	}
 	else if (Type == ComboBox::TypeName())
 	{
 		Result = AddControl<ComboBox>();
+	}
+	else if (Type == Container::TypeName())
+	{
+		Result = AddControl<Container>();
+	}
+	else if (Type == HorizontalContainer::TypeName())
+	{
+		Result = AddControl<HorizontalContainer>();
 	}
 	else if (Type == Image::TypeName())
 	{
@@ -99,29 +92,41 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 	{
 		Result = AddControl<ListBox>();
 	}
+	else if (Type == MarginContainer::TypeName())
+	{
+		Result = AddControl<MarginContainer>();
+	}
 	else if (Type == Panel::TypeName())
 	{
 		Result = AddControl<Panel>();
+	}
+	else if (Type == ScrollableContainer::TypeName())
+	{
+		Result = AddControl<ScrollableContainer>();
 	}
 	else if (Type == Separator::TypeName())
 	{
 		Result = AddControl<Separator>();
 	}
-	else if (Type == Container::TypeName())
+	else if (Type == Text::TypeName())
 	{
-		Result = AddControl<Container>();
+		Result = AddControl<Text>();
 	}
-	else if (Type == HorizontalContainer::TypeName())
+	else if (Type == TextButton::TypeName())
 	{
-		Result = AddControl<HorizontalContainer>();
+		Result = AddControl<TextButton>();
 	}
-	else if (Type == MarginContainer::TypeName())
+	else if (Type == TextInput::TypeName())
 	{
-		Result = AddControl<MarginContainer>();
+		Result = AddControl<TextInput>();
 	}
-	else if (Type == ScrollableContainer::TypeName())
+	else if (Type == TextSelectable::TypeName())
 	{
-		Result = AddControl<ScrollableContainer>();
+		Result = AddControl<TextSelectable>();
+	}
+	else if (Type == Tree::TypeName())
+	{
+		Result = AddControl<Tree>();
 	}
 	else if (Type == VerticalContainer::TypeName())
 	{
