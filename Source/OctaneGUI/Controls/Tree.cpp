@@ -92,7 +92,9 @@ Vector2 Tree::DesiredSize() const
 
 	if (m_List && m_Expand)
 	{
-		Result += m_List->DesiredSize();
+		const Vector2 Size = m_List->DesiredSize();
+		Result.X = std::max<float>(Result.X, m_List->GetPosition().X + Size.X);
+		Result.Y += Size.Y;
 	}
 
 	return Result;
