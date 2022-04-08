@@ -77,6 +77,7 @@ public:
 	unsigned int Count() const;
 
 	void ForEach(std::function<void(const std::string&, const Json&)> Callback) const;
+	void ForEach(std::function<void(const Json&)> Callback) const;
 
 	Json& operator=(bool Value);
 	Json& operator=(float Value);

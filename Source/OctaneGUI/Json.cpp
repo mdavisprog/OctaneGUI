@@ -205,6 +205,19 @@ void Json::ForEach(std::function<void(const std::string&, const Json&)> Callback
 	}
 }
 
+void Json::ForEach(std::function<void(const Json&)> Callback) const
+{
+	if (Callback == nullptr || !IsArray())
+	{
+		return;
+	}
+
+	for (const Json& Item : *m_Data.Array)
+	{
+		Callback(Item);
+	}
+}
+
 Json& Json::operator=(bool Value)
 {
 	Clear();
