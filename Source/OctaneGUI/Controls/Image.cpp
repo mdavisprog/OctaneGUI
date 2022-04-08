@@ -46,6 +46,12 @@ Image::~Image()
 
 Image& Image::SetTexture(const char* Path)
 {
+	if (Path == nullptr)
+	{
+		m_Texture = nullptr;
+		return *this;
+	}
+
 	if (!m_Texture)
 	{
 		m_Texture = GetWindow()->GetTextureCache().Load(Path);
