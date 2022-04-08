@@ -43,7 +43,7 @@ public:
 	Button& SetOnClicked(OnButtonSignature&& Fn);
 	Button& SetOnReleased(OnButtonSignature&& Fn);
 
-	void SetDisabled(bool Disabled);
+	Button& SetDisabled(bool Disabled);
 	bool IsDisabled() const;
 	bool IsHovered() const;
 	bool IsPressed() const;

@@ -54,9 +54,10 @@ Button& Button::SetOnReleased(OnButtonSignature&& Fn)
 	return *this;
 }
 
-void Button::SetDisabled(bool Disabled)
+Button& Button::SetDisabled(bool Disabled)
 {
 	m_Disabled = Disabled;
+	return *this;
 }
 
 bool Button::IsDisabled() const
