@@ -271,6 +271,11 @@ Tree& Tree::SetExpand(bool Expand)
 		return *this;
 	}
 
+	if (!m_List)
+	{
+		return *this;
+	}
+
 	m_Expand = Expand;
 	m_Item->SetToggle(m_Expand);
 
