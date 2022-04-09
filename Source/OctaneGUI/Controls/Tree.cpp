@@ -27,70 +27,258 @@ SOFTWARE.
 #include "Tree.h"
 #include "../Icons.h"
 #include "../Json.h"
+#include "../Paint.h"
 #include "../ThemeProperties.h"
 #include "../Window.h"
-#include "HorizontalContainer.h"
-#include "ImageButton.h"
+#include "Image.h"
 #include "Text.h"
 #include "VerticalContainer.h"
 
 namespace OctaneGUI
 {
 
+#define TOGGLE_SIZE 16.0f
+
+class TreeItem : public Control
+{
+	CLASS(TreeItem)
+
+public:
+	TreeItem(Window* InWindow)
+		: Control(InWindow)
+	{
+		m_Toggle = std::make_shared<Image>(InWindow);
+		m_Text = std::make_shared<Text>(InWindow);
+
+		m_Toggle
+			->SetTexture(InWindow->GetIcons()->GetTexture())
+			.SetParent(this);
+
+		m_Text
+			->SetParent(this)
+			->SetPosition({ TOGGLE_SIZE, 0.0f });
+	}
+
+	TreeItem& SetText(const char* Text)
+	{
+		m_Text->SetText(Text);
+		UpdateSize();
+		Invalidate();
+		return *this;
+	}
+
+	const char* GetText() const
+	{
+		return m_Text->GetText();
+	}
+
+	TreeItem& SetToggle(bool Expand)
+	{
+		const Icons::Type IconType = Expand ? Icons::Type::Expand : Icons::Type::Collapse;
+		const Rect UVs = GetWindow()->GetIcons()->GetUVs(IconType);
+		m_Toggle->SetUVs(UVs);
+		m_Toggle->SetPosition({ TOGGLE_SIZE * 0.5f - UVs.GetSize().X * 0.5f, TOGGLE_SIZE * 0.5f - UVs.GetSize().Y * 0.5f });
+		return *this;
+	}
+
+	TreeItem& SetOnToggle(OnEmptySignature&& Fn)
+	{
+		m_OnToggle = std::move(Fn);
+		return *this;
+	}
+
+	TreeItem& SetOnPress(OnEmptySignature&& Fn)
+	{
+		m_OnPress = std::move(Fn);
+		return *this;
+	}
+
+	TreeItem& SetOnHovered(Tree::OnTreeItemHoveredSignature&& Fn)
+	{
+		m_OnHovered = std::move(Fn);
+		return *this;
+	}
+
+	virtual void OnPaint(Paint& Brush) const override
+	{
+		m_Toggle->OnPaint(Brush);
+		m_Text->OnPaint(Brush);
+	}
+
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override
+	{
+		const Rect ToggleBounds = { GetAbsolutePosition(), GetAbsolutePosition() + Vector2(TOGGLE_SIZE, TOGGLE_SIZE) };
+		if (ToggleBounds.Contains(Position))
+		{
+			if (m_OnToggle)
+			{
+				m_OnToggle();
+			}
+		}
+		else
+		{
+			if (m_OnPress)
+			{
+				m_OnPress();
+			}
+		}
+
+		return true;
+	}
+
+	virtual void OnMouseEnter() override
+	{
+		if (m_OnHovered)
+		{
+			m_OnHovered(true, *this);
+		}
+	}
+
+	virtual void OnMouseLeave() override
+	{
+		if (m_OnHovered)
+		{
+			m_OnHovered(false, *this);
+		}
+	}
+
+	virtual void OnThemeLoaded() override
+	{
+		Control::OnThemeLoaded();
+		m_Toggle->SetTint(GetProperty(ThemeProperties::Check).ToColor());
+	}
+
+private:
+	void UpdateSize()
+	{
+		Vector2 Size = { TOGGLE_SIZE, TOGGLE_SIZE };
+		Size.X += m_Text->GetSize().X;
+		Size.Y = std::max<float>(Size.Y, m_Text->GetSize().Y);
+		SetSize(Size);
+	}
+
+	std::shared_ptr<Image> m_Toggle { nullptr };
+	std::shared_ptr<Text> m_Text { nullptr };
+
+	OnEmptySignature m_OnToggle { nullptr };
+	OnEmptySignature m_OnPress { nullptr };
+	Tree::OnTreeItemHoveredSignature m_OnHovered { nullptr };
+};
+
 Tree::Tree(Window* InWindow)
 	: Container(InWindow)
 {
-	m_Row = AddControl<HorizontalContainer>();
-	m_Toggle = m_Row->AddControl<ImageButton>();
-	m_Toggle
-		->SetOnClicked([this](const Button&) -> void
+	m_Item = AddControl<TreeItem>();
+	m_Item
+		->SetOnToggle([this]() -> void
 			{
 				SetExpand(!m_Expand);
 			})
-		.SetProperty(ThemeProperties::Button_Padding, Vector2())
-		.SetProperty(ThemeProperties::Button, Color())
-		.SetProperty(ThemeProperties::Button_Hovered, Color())
-		.SetProperty(ThemeProperties::Button_Pressed, Color())
-		.SetProperty(ThemeProperties::Button_3D, false);
-
-	m_Text = m_Row->AddControl<Text>();
-
-	EnableToggle(false);
+		.SetOnPress([this]() -> void
+			{
+			})
+		.SetOnHovered([this](bool Hovered, const TreeItem& Item) -> void
+			{
+				if (m_OnHovered)
+				{
+					m_OnHovered(Hovered, Item);
+				}
+				else
+				{
+					SetHovered(Hovered, Item);
+				}
+			});
 }
 
-std::shared_ptr<Tree> Tree::AddChild(const char* Label)
+std::shared_ptr<Tree> Tree::AddChild(const char* Text)
 {
 	if (!m_List)
 	{
 		m_List = AddControl<VerticalContainer>();
-		m_List->SetPosition({ m_Toggle->GetSize().X + 4.0f, m_Row->DesiredSize().Y });
-		EnableToggle(true);
+		m_List
+			->SetSpacing({ 0.0f, 0.0f })
+			->SetPosition({ TOGGLE_SIZE + 4.0f, m_Item->GetSize().Y });
 		SetExpand(true);
 	}
 
 	std::shared_ptr<Tree> Result = m_List->AddControl<Tree>();
-	Result->SetLabel(Label);
+	Result
+		->SetText(Text)
+		.SetOnHovered([this](bool Hovered, const TreeItem& Item) -> void
+			{
+				if (m_OnHovered)
+				{
+					m_OnHovered(Hovered, Item);
+				}
+				else
+				{
+					SetHovered(Hovered, Item);
+				}
+			});
 	InvalidateLayout();
 	return Result;
 }
 
-Tree& Tree::SetLabel(const char* Label)
+Tree& Tree::SetText(const char* Text)
 {
-	m_Text->SetText(Label);
-	Invalidate();
+	m_Item->SetText(Text);
 	return *this;
 }
 
-const char* Tree::Label() const
+const char* Tree::GetText() const
 {
-	return m_Text->GetText();
+	return m_Item->GetText();
+}
+
+Tree& Tree::SetExpand(bool Expand)
+{
+	if (m_Expand == Expand)
+	{
+		return *this;
+	}
+
+	m_Expand = Expand;
+	m_Item->SetToggle(m_Expand);
+
+	if (m_List)
+	{
+		if (m_Expand)
+		{
+			if (!HasControl(m_List))
+			{
+				InsertControl(m_List);
+			}
+		}
+		else
+		{
+			RemoveControl(m_List);
+		}
+	}
+
+	return *this;
+}
+
+bool Tree::IsExpanded() const
+{
+	return m_Expand;
+}
+
+Tree& Tree::SetOnHovered(OnTreeItemHoveredSignature&& Fn)
+{
+	m_OnHovered = std::move(Fn);
+	return *this;
+}
+
+std::weak_ptr<Control> Tree::GetControl(const Vector2& Point) const
+{
+	return GetControl(Point, GetAbsoluteBounds());
 }
 
 Vector2 Tree::DesiredSize() const
 {
-	Vector2 Result = m_Row->DesiredSize();
+	Vector2 Result = m_Item->GetSize();
 
-	if (m_List && m_Expand)
+	if (m_List)
 	{
 		const Vector2 Size = m_List->DesiredSize();
 		Result.X = std::max<float>(Result.X, m_List->GetPosition().X + Size.X);
@@ -104,7 +292,7 @@ void Tree::OnLoad(const Json& Root)
 {
 	Container::OnLoad(Root);
 
-	SetLabel(Root["Text"].String());
+	SetText(Root["Text"].String());
 
 	const Json& Items = Root["Items"];
 	Items.ForEach([this](const Json& Item) -> void
@@ -114,63 +302,68 @@ void Tree::OnLoad(const Json& Root)
 		});
 }
 
-void Tree::OnThemeLoaded()
+void Tree::OnPaint(Paint& Brush) const
 {
-	m_Toggle->SetProperty(ThemeProperties::ImageButton, GetProperty(ThemeProperties::Check).ToColor());
-	Container::OnThemeLoaded();
+	if (m_Hovered)
+	{
+		const Vector2 Position = m_Hovered->GetAbsolutePosition();
+		const Vector2 Min = { GetAbsolutePosition().X, Position.Y };
+		const Vector2 Max = { GetAbsoluteBounds().Max.X, Position.Y + m_Hovered->GetSize().Y };
+		Brush.Rectangle({ Min, Max }, GetProperty(ThemeProperties::TextSelectable_Hovered).ToColor());
+	}
+
+	Container::OnPaint(Brush);
 }
 
-void Tree::EnableToggle(bool Enable)
+std::weak_ptr<Control> Tree::GetControl(const Vector2& Point, const Rect& RootBounds) const
 {
-	if (Enable && m_Toggle->IsDisabled())
+	const Vector2 Min = { RootBounds.Min.X, m_Item->GetAbsolutePosition().Y };
+	const Vector2 Max = { RootBounds.Max.X, m_Item->GetAbsolutePosition().Y + m_Item->GetSize().Y };
+	const Rect Bounds = { Min, Max };
+
+	if (Bounds.Contains(Point))
 	{
-		m_Toggle
-			->SetTexture(GetWindow()->GetIcons()->GetTexture())
-			.SetDisabled(false);
-	}
-	else if (!m_Toggle->IsDisabled())
-	{
-		m_Toggle->SetTexture(nullptr);
-		m_Toggle->SetDisabled(true);
+		return m_Item;
 	}
 
-	// Overriding the texture resets the size so need to update here.
-	m_Toggle->SetSize({ 16.0f, 16.0f });
-}
-
-void Tree::SetExpand(bool Expand)
-{
-	if (m_Expand == Expand)
+	std::weak_ptr<Control> Result;
+	if (!m_List || !m_Expand)
 	{
-		return;
+		return Result;
 	}
 
-	if (!m_List)
+	for (const std::shared_ptr<Control>& Child : m_List->Controls())
 	{
-		m_Expand = false;
-		return;
-	}
+		const std::shared_ptr<Tree>& ChildTree = std::static_pointer_cast<Tree>(Child);
+		Result = ChildTree->GetControl(Point, RootBounds);
 
-	m_Expand = Expand;
-	const Rect UVs = m_Expand ? GetWindow()->GetIcons()->GetUVs(Icons::Type::Expand) : GetWindow()->GetIcons()->GetUVs(Icons::Type::Collapse);
-	m_Toggle
-		->SetUVs(UVs)
-		.SetSize({ 16.0f, 16.0f });
-	m_Toggle->Update();
-
-	if (m_Expand)
-	{
-		if (!HasControl(m_List))
+		if (!Result.expired())
 		{
-			InsertControl(m_List);
+			break;
 		}
 	}
-	else
+
+	return Result;
+}
+
+void Tree::SetHovered(bool Hovered, const TreeItem& Item)
+{
+	if (m_Hovered == &Item)
 	{
-		RemoveControl(m_List);
+		if (!Hovered)
+		{
+			m_Hovered = nullptr;
+			Invalidate();
+		}
+
+		return;
 	}
 
-	Invalidate(InvalidateType::Both);
+	if (Hovered)
+	{
+		m_Hovered = &Item;
+		Invalidate();
+	}
 }
 
 }

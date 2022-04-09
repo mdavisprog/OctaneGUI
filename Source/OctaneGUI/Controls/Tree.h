@@ -31,9 +31,7 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
-class HorizontalContainer;
-class ImageButton;
-class Text;
+class TreeItem;
 class VerticalContainer;
 
 class Tree : public Container
@@ -41,26 +39,35 @@ class Tree : public Container
 	CLASS(Tree)
 
 public:
+	typedef std::function<void(bool, const TreeItem&)> OnTreeItemHoveredSignature;
+
 	Tree(Window* InWindow);
 
-	std::shared_ptr<Tree> AddChild(const char* Label);
+	std::shared_ptr<Tree> AddChild(const char* Text);
 
-	Tree& SetLabel(const char* Label);
-	const char* Label() const;
+	Tree& SetText(const char* Text);
+	const char* GetText() const;
 
+	Tree& SetExpand(bool Expand);
+	bool IsExpanded() const;
+
+	Tree& SetOnHovered(OnTreeItemHoveredSignature&& Fn);
+
+	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 	virtual Vector2 DesiredSize() const override;
 
 	virtual void OnLoad(const Json& Root) override;
-	virtual void OnThemeLoaded() override;
+	virtual void OnPaint(Paint& Brush) const override;
 
 private:
-	void EnableToggle(bool Enable);
-	void SetExpand(bool Expand);
+	std::weak_ptr<Control> GetControl(const Vector2& Point, const Rect& RootBounds) const;
+	void SetHovered(bool Hovered, const TreeItem& Item);
 
-	std::shared_ptr<HorizontalContainer> m_Row { nullptr };
-	std::shared_ptr<ImageButton> m_Toggle { nullptr };
-	std::shared_ptr<Text> m_Text { nullptr };
+	std::shared_ptr<TreeItem> m_Item { nullptr };
 	std::shared_ptr<VerticalContainer> m_List { nullptr };
+
+	TreeItem const* m_Hovered { nullptr };
+	OnTreeItemHoveredSignature m_OnHovered { nullptr };
 
 	bool m_Expand { false };
 };

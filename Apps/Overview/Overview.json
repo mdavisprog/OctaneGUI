@@ -187,7 +187,15 @@
 												"Text": "Tree",
 												"Items": [
 													{
-														"Text": "Child 1"
+														"Text": "Child 1",
+														"Items": [
+															{
+																"Text": "Sub-Child 1"
+															},
+															{
+																"Text": "Sub-Child 2"
+															}
+														]
 													},
 													{
 														"Text": "Child 2"
