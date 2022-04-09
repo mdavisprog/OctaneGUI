@@ -81,6 +81,21 @@ public:
 		return *this;
 	}
 
+	TreeItem& SetHoveredColors()
+	{
+		const Variant& Color = GetProperty(ThemeProperties::TextSelectable_Text_Hovered);
+		m_Text->SetProperty(ThemeProperties::Text, Color);
+		m_Toggle->SetTint(Color.ToColor());
+		return *this;
+	}
+
+	TreeItem& ClearHoveredColors()
+	{
+		m_Text->ClearProperty(ThemeProperties::Text);
+		m_Toggle->SetTint(GetProperty(ThemeProperties::Check).ToColor());
+		return *this;
+	}
+
 	TreeItem& SetOnToggle(OnEmptySignature&& Fn)
 	{
 		m_OnToggle = std::move(Fn);
@@ -145,7 +160,7 @@ public:
 	virtual void OnThemeLoaded() override
 	{
 		Control::OnThemeLoaded();
-		m_Toggle->SetTint(GetProperty(ThemeProperties::Check).ToColor());
+		ClearHoveredColors();
 	}
 
 private:
@@ -348,10 +363,12 @@ std::weak_ptr<Control> Tree::GetControl(const Vector2& Point, const Rect& RootBo
 
 void Tree::SetHovered(bool Hovered, const TreeItem& Item)
 {
+	TreeItem& Item_ = const_cast<TreeItem&>(Item);
 	if (m_Hovered == &Item)
 	{
 		if (!Hovered)
 		{
+			Item_.ClearHoveredColors();
 			m_Hovered = nullptr;
 			Invalidate();
 		}
@@ -361,6 +378,7 @@ void Tree::SetHovered(bool Hovered, const TreeItem& Item)
 
 	if (Hovered)
 	{
+		Item_.SetHoveredColors();
 		m_Hovered = &Item;
 		Invalidate();
 	}
