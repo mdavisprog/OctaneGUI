@@ -39,6 +39,7 @@ class Tree : public Container
 	CLASS(Tree)
 
 public:
+	typedef std::function<void(const TreeItem&)> OnTreeItemSignature;
 	typedef std::function<void(bool, const TreeItem&)> OnTreeItemHoveredSignature;
 
 	Tree(Window* InWindow);
@@ -52,6 +53,7 @@ public:
 	bool IsExpanded() const;
 
 	Tree& SetOnHovered(OnTreeItemHoveredSignature&& Fn);
+	Tree& SetOnSelected(OnTreeItemSignature&& Fn);
 
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 	virtual Vector2 DesiredSize() const override;
@@ -62,12 +64,17 @@ public:
 private:
 	std::weak_ptr<Control> GetControl(const Vector2& Point, const Rect& RootBounds) const;
 	void SetHovered(bool Hovered, const TreeItem& Item);
+	void SetSelected(const TreeItem& Item);
+	void PaintSelection(Paint& Brush, const TreeItem& Item) const;
 
 	std::shared_ptr<TreeItem> m_Item { nullptr };
 	std::shared_ptr<VerticalContainer> m_List { nullptr };
 
 	TreeItem const* m_Hovered { nullptr };
 	OnTreeItemHoveredSignature m_OnHovered { nullptr };
+
+	TreeItem const* m_Selected { nullptr };
+	OnTreeItemSignature m_OnSelected { nullptr };
 
 	bool m_Expand { false };
 };
