@@ -182,7 +182,7 @@ private:
 	void UpdateSize()
 	{
 		Vector2 Size = { TOGGLE_SIZE, TOGGLE_SIZE };
-		Size.X += m_Text->GetSize().X;
+		Size.X += m_Text->GetSize().X + 4.0f;
 		Size.Y = std::max<float>(Size.Y, m_Text->GetSize().Y);
 		SetSize(Size);
 	}
