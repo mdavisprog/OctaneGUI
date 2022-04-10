@@ -48,6 +48,8 @@ public:
 		Check,
 		Expand,
 		Collapse,
+		Plus,
+		Minus,
 		Max
 	};
 

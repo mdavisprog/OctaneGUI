@@ -47,23 +47,23 @@ void Icons::Initialize()
 		return;
 	}
 
-	const uint32_t Width = 84;
+	const uint32_t Width = 102;
 	const uint32_t Height = 13;
 	const char* Data =
-		"x               x               xx                                                  "
-		"x.x           x.x              x..x                                                 "
-		"x..x         x..x             x..x                                           ..     "
-		"x...x       x...x            x..x                                             ..    "
-		"x....x     x....x           x..x    xxxxxxxxxxxxx       x       ..       ..    ..   "
-		"x.....x   x.....x          x..x      x.........x       x.x       ..     ..      ..  "
-		"x......x x......x  xx     x..x        x.......x       x...x       ..   ..        .. "
-		"x.....x   x.....x x..x   x..x          x.....x       x.....x       .. ..        ..  "
-		"x....x     x....x  x..x x..x            x...x       x.......x       ...        ..   "
-		"x...x       x...x   x..x..x              x.x       x.........x       .        ..    "
-		"x..x         x..x    x...x                x       xxxxxxxxxxxxx              ..     "
-		"x.x           x.x     xxx                                                           "
-		"x               x                                                                   "
-		"                                                                                    ";
+		"x               x               xx                                                                    "
+		"x.x           x.x              x..x                                                                   "
+		"x..x         x..x             x..x                                           ..        ..             "
+		"x...x       x...x            x..x                                             ..       ..             "
+		"x....x     x....x           x..x    xxxxxxxxxxxxx       x       ..       ..    ..      ..             "
+		"x.....x   x.....x          x..x      x.........x       x.x       ..     ..      ..  ........ ........ "
+		"x......x x......x  xx     x..x        x.......x       x...x       ..   ..        .. ........ ........ "
+		"x.....x   x.....x x..x   x..x          x.....x       x.....x       .. ..        ..     ..             "
+		"x....x     x....x  x..x x..x            x...x       x.......x       ...        ..      ..             "
+		"x...x       x...x   x..x..x              x.x       x.........x       .        ..       ..             "
+		"x..x         x..x    x...x                x       xxxxxxxxxxxxx              ..                       "
+		"x.x           x.x     xxx                                                                             "
+		"x               x                                                                                     "
+		"                                                                                                      ";
 
 	std::vector<uint8_t> Buffer;
 	Buffer.resize(Width * Height * 4);
@@ -100,6 +100,8 @@ void Icons::Initialize()
 	m_UVs[(int)Type::Check] = { 18.0f, 0.0f, 35.0f, 12.0f };
 	m_UVs[(int)Type::Expand] = { 64.0f, 4.0f, 75.0f, 9.0f };
 	m_UVs[(int)Type::Collapse] = { 77.0f, 2.0f, 83.0f, 11.0f };
+	m_UVs[(int)Type::Plus] = { 84.0f, 2.0f, 92.0f, 10.0f };
+	m_UVs[(int)Type::Minus] = { 93.0f, 5.0f, 101.0f, 7.0f };
 }
 
 std::shared_ptr<Texture> Icons::GetTexture() const
