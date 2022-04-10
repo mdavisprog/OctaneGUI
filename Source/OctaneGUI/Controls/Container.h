@@ -71,6 +71,8 @@ public:
 	virtual void OnThemeLoaded() override;
 
 protected:
+	bool IsInLayout() const;
+
 	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const;
 
 private:

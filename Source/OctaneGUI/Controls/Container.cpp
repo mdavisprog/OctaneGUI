@@ -311,6 +311,11 @@ void Container::OnThemeLoaded()
 	}
 }
 
+bool Container::IsInLayout() const
+{
+	return m_InLayout;
+}
+
 void Container::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
 {
 	for (const std::shared_ptr<Control>& Item : Controls)
