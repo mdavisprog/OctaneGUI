@@ -49,6 +49,9 @@ public:
 	Tree& SetExpand(bool Expand);
 	bool IsExpanded() const;
 
+	Tree& SetRowSelect(bool RowSelect);
+	bool ShouldRowSelect() const;
+
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 	virtual Vector2 DesiredSize() const override;
 
@@ -67,6 +70,7 @@ private:
 	void SetSelected(const std::shared_ptr<TreeItem>& Item);
 	void PaintSelection(Paint& Brush, const std::shared_ptr<TreeItem>& Item) const;
 	bool IsHidden(const std::shared_ptr<TreeItem>& Item) const;
+	void RowSelect(const std::shared_ptr<TreeItem>& Item) const;
 
 	std::shared_ptr<TreeItem> m_Item { nullptr };
 	std::shared_ptr<VerticalContainer> m_List { nullptr };
@@ -78,6 +82,7 @@ private:
 	OnTreeItemSignature m_OnSelected { nullptr };
 
 	bool m_Expand { false };
+	bool m_RowSelect { false };
 };
 
 }

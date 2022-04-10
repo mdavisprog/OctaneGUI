@@ -315,6 +315,17 @@ bool Tree::IsExpanded() const
 	return m_Expand;
 }
 
+Tree& Tree::SetRowSelect(bool RowSelect)
+{
+	m_RowSelect = RowSelect;
+	return *this;
+}
+
+bool Tree::ShouldRowSelect() const
+{
+	return m_RowSelect;
+}
+
 std::weak_ptr<Control> Tree::GetControl(const Vector2& Point) const
 {
 	return GetControl(Point, GetAbsoluteBounds());
@@ -339,6 +350,7 @@ void Tree::OnLoad(const Json& Root)
 	Container::OnLoad(Root);
 
 	SetText(Root["Text"].String());
+	SetRowSelect(Root["RowSelect"].Boolean());
 
 	const Json& Items = Root["Items"];
 	Items.ForEach([this](const Json& Item) -> void
@@ -443,6 +455,7 @@ void Tree::SetSelected(const std::shared_ptr<TreeItem>& Item)
 
 	if (Select == Item)
 	{
+		RowSelect(Item);
 		return;
 	}
 
@@ -456,8 +469,9 @@ void Tree::SetSelected(const std::shared_ptr<TreeItem>& Item)
 	if (Item)
 	{
 		Item->SetHoveredColors();
+		RowSelect(Item);
 	}
-	
+
 	Invalidate();
 }
 
@@ -492,6 +506,20 @@ bool Tree::IsHidden(const std::shared_ptr<TreeItem>& Item) const
 	}
 
 	return false;
+}
+
+void Tree::RowSelect(const std::shared_ptr<TreeItem>& Item) const
+{
+	if (!m_RowSelect)
+	{
+		return;
+	}
+
+	Tree* Parent = static_cast<Tree*>(Item->GetParent());
+	if (Parent != nullptr)
+	{
+		Parent->SetExpand(!Parent->IsExpanded());
+	}
 }
 
 }
