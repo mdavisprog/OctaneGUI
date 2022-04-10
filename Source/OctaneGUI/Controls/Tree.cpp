@@ -44,6 +44,8 @@ class TreeItem : public Control
 	CLASS(TreeItem)
 
 public:
+	typedef std::function<void(bool)> OnHoveredSignature;
+
 	TreeItem(Window* InWindow)
 		: Control(InWindow)
 	{
@@ -102,13 +104,13 @@ public:
 		return *this;
 	}
 
-	TreeItem& SetOnHovered(Tree::OnTreeItemHoveredSignature&& Fn)
+	TreeItem& SetOnHovered(OnHoveredSignature&& Fn)
 	{
 		m_OnHovered = std::move(Fn);
 		return *this;
 	}
 
-	TreeItem& SetOnSelected(Tree::OnTreeItemSignature&& Fn)
+	TreeItem& SetOnSelected(OnEmptySignature&& Fn)
 	{
 		m_OnSelected = std::move(Fn);
 		return *this;
@@ -134,7 +136,7 @@ public:
 		{
 			if (m_OnSelected)
 			{
-				m_OnSelected(*this);
+				m_OnSelected();
 			}
 		}
 
@@ -145,7 +147,7 @@ public:
 	{
 		if (m_OnHovered)
 		{
-			m_OnHovered(true, *this);
+			m_OnHovered(true);
 		}
 	}
 
@@ -153,7 +155,7 @@ public:
 	{
 		if (m_OnHovered)
 		{
-			m_OnHovered(false, *this);
+			m_OnHovered(false);
 		}
 	}
 
@@ -176,8 +178,8 @@ private:
 	std::shared_ptr<Text> m_Text { nullptr };
 
 	OnEmptySignature m_OnToggle { nullptr };
-	Tree::OnTreeItemHoveredSignature m_OnHovered { nullptr };
-	Tree::OnTreeItemSignature m_OnSelected { nullptr };
+	OnHoveredSignature m_OnHovered { nullptr };
+	OnEmptySignature m_OnSelected { nullptr };
 };
 
 Tree::Tree(Window* InWindow)
@@ -189,26 +191,26 @@ Tree::Tree(Window* InWindow)
 			{
 				SetExpand(!m_Expand);
 			})
-		.SetOnHovered([this](bool Hovered, const TreeItem& Item) -> void
+		.SetOnHovered([this](bool Hovered) -> void
 			{
 				if (m_OnHovered)
 				{
-					m_OnHovered(Hovered, Item);
+					m_OnHovered(Hovered, m_Item);
 				}
 				else
 				{
-					SetHovered(Hovered, Item);
+					SetHovered(Hovered, m_Item);
 				}
 			})
-		.SetOnSelected([this](const TreeItem& Item) -> void
+		.SetOnSelected([this]() -> void
 			{
 				if (m_OnSelected)
 				{
-					m_OnSelected(Item);
+					m_OnSelected(m_Item);
 				}
 				else
 				{
-					SetSelected(Item);
+					SetSelected(m_Item);
 				}
 			});
 }
@@ -227,7 +229,7 @@ std::shared_ptr<Tree> Tree::AddChild(const char* Text)
 	std::shared_ptr<Tree> Result = m_List->AddControl<Tree>();
 	Result
 		->SetText(Text)
-		.SetOnHovered([this](bool Hovered, const TreeItem& Item) -> void
+		.SetOnHovered([this](bool Hovered, const std::shared_ptr<TreeItem>& Item) -> void
 			{
 				if (m_OnHovered)
 				{
@@ -238,7 +240,7 @@ std::shared_ptr<Tree> Tree::AddChild(const char* Text)
 					SetHovered(Hovered, Item);
 				}
 			})
-		.SetOnSelected([this](const TreeItem& Item) -> void
+		.SetOnSelected([this](const std::shared_ptr<TreeItem>& Item) -> void
 			{
 				if (m_OnSelected)
 				{
@@ -248,7 +250,18 @@ std::shared_ptr<Tree> Tree::AddChild(const char* Text)
 				{
 					SetSelected(Item);
 				}
+			})
+		.SetOnInvalidate([this](Control* Focus, InvalidateType Type) -> void
+			{
+				if (IsInLayout() && Type != InvalidateType::Paint)
+				{
+					return;
+				}
+
+				Invalidate(Focus, Type);
+				InvalidateLayout();
 			});
+
 	InvalidateLayout();
 	return Result;
 }
@@ -302,18 +315,6 @@ bool Tree::IsExpanded() const
 	return m_Expand;
 }
 
-Tree& Tree::SetOnHovered(OnTreeItemHoveredSignature&& Fn)
-{
-	m_OnHovered = std::move(Fn);
-	return *this;
-}
-
-Tree& Tree::SetOnSelected(OnTreeItemSignature&& Fn)
-{
-	m_OnSelected = std::move(Fn);
-	return *this;
-}
-
 std::weak_ptr<Control> Tree::GetControl(const Vector2& Point) const
 {
 	return GetControl(Point, GetAbsoluteBounds());
@@ -323,7 +324,7 @@ Vector2 Tree::DesiredSize() const
 {
 	Vector2 Result = m_Item->GetSize();
 
-	if (m_List)
+	if (m_List && m_Expand)
 	{
 		const Vector2 Size = m_List->DesiredSize();
 		Result.X = std::max<float>(Result.X, m_List->GetPosition().X + Size.X);
@@ -349,17 +350,32 @@ void Tree::OnLoad(const Json& Root)
 
 void Tree::OnPaint(Paint& Brush) const
 {
-	if (m_Hovered != nullptr && m_Hovered != m_Selected)
+	std::shared_ptr<TreeItem> Hovered = m_Hovered.lock();
+	std::shared_ptr<TreeItem> Selected = m_Selected.lock();
+
+	if (Hovered && Hovered != Selected)
 	{
-		PaintSelection(Brush, *m_Hovered);
+		PaintSelection(Brush, Hovered);
 	}
 
-	if (m_Selected != nullptr)
+	if (Selected && !IsHidden(Selected))
 	{
-		PaintSelection(Brush, *m_Selected);
+		PaintSelection(Brush, Selected);
 	}
 
 	Container::OnPaint(Brush);
+}
+
+Tree& Tree::SetOnHovered(OnHoveredTreeItemSignature&& Fn)
+{
+	m_OnHovered = std::move(Fn);
+	return *this;
+}
+
+Tree& Tree::SetOnSelected(OnTreeItemSignature&& Fn)
+{
+	m_OnSelected = std::move(Fn);
+	return *this;
 }
 
 std::weak_ptr<Control> Tree::GetControl(const Vector2& Point, const Rect& RootBounds) const
@@ -393,18 +409,20 @@ std::weak_ptr<Control> Tree::GetControl(const Vector2& Point, const Rect& RootBo
 	return Result;
 }
 
-void Tree::SetHovered(bool Hovered, const TreeItem& Item)
+void Tree::SetHovered(bool Hovered, const std::shared_ptr<TreeItem>& Item)
 {
-	TreeItem& Item_ = const_cast<TreeItem&>(Item);
-	if (m_Hovered == &Item)
+	std::shared_ptr<TreeItem> Hover = m_Hovered.lock();
+	std::shared_ptr<TreeItem> Select = m_Selected.lock();
+
+	if (Hover == Item)
 	{
 		if (!Hovered)
 		{
-			if (m_Selected != &Item)
+			if (Select != Item)
 			{
-				Item_.ClearHoveredColors();
+				Item->ClearHoveredColors();
 			}
-			m_Hovered = nullptr;
+			m_Hovered.reset();
 			Invalidate();
 		}
 
@@ -413,37 +431,67 @@ void Tree::SetHovered(bool Hovered, const TreeItem& Item)
 
 	if (Hovered)
 	{
-		Item_.SetHoveredColors();
-		m_Hovered = &Item;
+		Item->SetHoveredColors();
+		m_Hovered = Item;
 		Invalidate();
 	}
 }
 
-void Tree::SetSelected(const TreeItem& Item)
+void Tree::SetSelected(const std::shared_ptr<TreeItem>& Item)
 {
-	if (m_Selected == &Item)
+	std::shared_ptr<TreeItem> Select = m_Selected.lock();
+
+	if (Select == Item)
 	{
 		return;
 	}
 
-	if (m_Selected)
+	if (Select)
 	{
-		TreeItem* Selected = const_cast<TreeItem*>(m_Selected);
-		Selected->ClearHoveredColors();
+		Select->ClearHoveredColors();
 	}
 
-	m_Selected = &Item;
-	TreeItem* Selected = const_cast<TreeItem*>(m_Selected);
-	Selected->SetHoveredColors();
+	m_Selected = Item;
+
+	if (Item)
+	{
+		Item->SetHoveredColors();
+	}
+	
 	Invalidate();
 }
 
-void Tree::PaintSelection(Paint& Brush, const TreeItem& Item) const
+void Tree::PaintSelection(Paint& Brush, const std::shared_ptr<TreeItem>& Item) const
 {
-	const Vector2 Position = Item.GetAbsolutePosition();
+	const Vector2 Position = Item->GetAbsolutePosition();
 	const Vector2 Min = { GetAbsolutePosition().X, Position.Y };
-	const Vector2 Max = { GetAbsoluteBounds().Max.X, Position.Y + Item.GetSize().Y };
+	const Vector2 Max = { GetAbsoluteBounds().Max.X, Position.Y + Item->GetSize().Y };
 	Brush.Rectangle({ Min, Max }, GetProperty(ThemeProperties::TextSelectable_Hovered).ToColor());
+}
+
+bool Tree::IsHidden(const std::shared_ptr<TreeItem>& Item) const
+{
+	if (!m_List)
+	{
+		return false;
+	}
+
+	if (m_List->HasControl(Item))
+	{
+		return !m_Expand;
+	}
+
+	for (const std::shared_ptr<Control>& Child : m_List->Controls())
+	{
+		const std::shared_ptr<Tree>& ChildTree = std::static_pointer_cast<Tree>(Child);
+		
+		if (ChildTree->IsHidden(Item))
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 }

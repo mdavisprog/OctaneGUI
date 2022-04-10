@@ -37,6 +37,7 @@ class Control;
 class MenuItem;
 class ScrollBar;
 class TextSelectable;
+class Tree;
 
 enum class InvalidateType : unsigned char
 {
@@ -52,5 +53,6 @@ typedef std::function<void(const Control&)> OnControlSignature;
 typedef std::function<void(Control*, InvalidateType)> OnInvalidateSignature;
 typedef std::function<void(const ScrollBar&)> OnScrollBarSignature;
 typedef std::function<void(const TextSelectable&)> OnTextSelectableSignature;
+typedef std::function<void(const Tree&)> OnTreeSignature;
 
 }
