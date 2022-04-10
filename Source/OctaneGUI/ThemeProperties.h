@@ -82,6 +82,8 @@ public:
 		ScrollBar_3D,
 		ScrollBar_AlwaysPaint,
 		ScrollBar_Buttons,
+		Tree_Classic_Icons,
+		Tree_Highlight_Row,
 
 		// Strings
 		FontPath,

@@ -52,11 +52,14 @@ public:
 	Tree& SetRowSelect(bool RowSelect);
 	bool ShouldRowSelect() const;
 
+	bool HasChildren() const;
+
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 	virtual Vector2 DesiredSize() const override;
 
 	virtual void OnLoad(const Json& Root) override;
 	virtual void OnPaint(Paint& Brush) const override;
+	virtual void OnThemeLoaded() override;
 
 private:
 	typedef std::function<void(bool, const std::shared_ptr<TreeItem>&)> OnHoveredTreeItemSignature;

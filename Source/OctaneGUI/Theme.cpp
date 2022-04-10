@@ -156,6 +156,8 @@ void Theme::Load(const Json& Root)
 	Set(ThemeProperties::ScrollBar_3D, Root["ScrollBar_3D"]);
 	Set(ThemeProperties::ScrollBar_AlwaysPaint, Root["ScrollBar_AlwaysPaint"]);
 	Set(ThemeProperties::ScrollBar_Buttons, Root["ScrollBar_Buttons"]);
+	Set(ThemeProperties::Tree_Classic_Icons, Root["Tree_Classic_Icons"]);
+	Set(ThemeProperties::Tree_Highlight_Row, Root["Tree_Highlight_Row"]);
 
 	Set(ThemeProperties::FontPath, Root["FontPath"]);
 
@@ -210,6 +212,8 @@ void Theme::InitializeDefault()
 	m_Properties[ThemeProperties::ScrollBar_3D] = false;
 	m_Properties[ThemeProperties::ScrollBar_AlwaysPaint] = false;
 	m_Properties[ThemeProperties::ScrollBar_Buttons] = false;
+	m_Properties[ThemeProperties::Tree_Classic_Icons] = false;
+	m_Properties[ThemeProperties::Tree_Highlight_Row] = true;
 
 	m_Properties[ThemeProperties::FontPath] = "";
 }

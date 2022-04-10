@@ -58,7 +58,7 @@ public:
 
 		m_Text
 			->SetParent(this)
-			->SetPosition({ TOGGLE_SIZE, 0.0f });
+			->SetPosition({ TOGGLE_SIZE + 4.0f, 0.0f });
 	}
 
 	TreeItem& SetText(const char* Text)
@@ -74,10 +74,14 @@ public:
 		return m_Text->GetText();
 	}
 
+	Rect TextBounds()
+	{
+		return m_Text->GetAbsoluteBounds();
+	}
+
 	TreeItem& SetToggle(bool Expand)
 	{
-		const Icons::Type IconType = Expand ? Icons::Type::Expand : Icons::Type::Collapse;
-		const Rect UVs = GetWindow()->GetIcons()->GetUVs(IconType);
+		const Rect UVs = GetUVs(Expand);
 		m_Toggle->SetUVs(UVs);
 		m_Toggle->SetPosition({ TOGGLE_SIZE * 0.5f - UVs.GetSize().X * 0.5f, TOGGLE_SIZE * 0.5f - UVs.GetSize().Y * 0.5f });
 		return *this;
@@ -87,7 +91,10 @@ public:
 	{
 		const Variant& Color = GetProperty(ThemeProperties::TextSelectable_Text_Hovered);
 		m_Text->SetProperty(ThemeProperties::Text, Color);
-		m_Toggle->SetTint(Color.ToColor());
+		if (GetProperty(ThemeProperties::Tree_Highlight_Row).Bool())
+		{
+			m_Toggle->SetTint(Color.ToColor());
+		}
 		return *this;
 	}
 
@@ -118,6 +125,12 @@ public:
 
 	virtual void OnPaint(Paint& Brush) const override
 	{
+		Tree const* Parent = static_cast<Tree const*>(GetParent());
+		if (Parent->HasChildren() && GetProperty(ThemeProperties::Tree_Classic_Icons).Bool())
+		{
+			const Vector2 Position = GetAbsolutePosition() + Vector2(1.0f, 1.0f);
+			Brush.RectangleOutline({ Position, Position + Vector2(TOGGLE_SIZE - 1.0f, TOGGLE_SIZE - 1.0f) }, m_Toggle->Tint());
+		}
 		m_Toggle->OnPaint(Brush);
 		m_Text->OnPaint(Brush);
 	}
@@ -172,6 +185,23 @@ private:
 		Size.X += m_Text->GetSize().X;
 		Size.Y = std::max<float>(Size.Y, m_Text->GetSize().Y);
 		SetSize(Size);
+	}
+
+	Rect GetUVs(bool Expand) const
+	{
+		Rect Result;
+
+		std::shared_ptr<Icons> Icons = GetWindow()->GetIcons();
+		if (GetProperty(ThemeProperties::Tree_Classic_Icons).Bool())
+		{
+			Result = Expand ? Icons->GetUVs(Icons::Type::Minus) : Icons->GetUVs(Icons::Type::Plus);
+		}
+		else
+		{
+			Result = Expand ? Icons->GetUVs(Icons::Type::Expand) : Icons->GetUVs(Icons::Type::Collapse);
+		}
+
+		return Result;
 	}
 
 	std::shared_ptr<Image> m_Toggle { nullptr };
@@ -326,6 +356,11 @@ bool Tree::ShouldRowSelect() const
 	return m_RowSelect;
 }
 
+bool Tree::HasChildren() const
+{
+	return m_List && m_List->Controls().size() > 0;
+}
+
 std::weak_ptr<Control> Tree::GetControl(const Vector2& Point) const
 {
 	return GetControl(Point, GetAbsoluteBounds());
@@ -376,6 +411,21 @@ void Tree::OnPaint(Paint& Brush) const
 	}
 
 	Container::OnPaint(Brush);
+}
+
+void Tree::OnThemeLoaded()
+{
+	Container::OnThemeLoaded();
+
+	if (m_List)
+	{
+		m_Item->SetToggle(m_Expand);
+	}
+
+	if (!m_Selected.expired())
+	{
+		m_Selected.lock()->SetHoveredColors();
+	}
 }
 
 Tree& Tree::SetOnHovered(OnHoveredTreeItemSignature&& Fn)
@@ -477,10 +527,17 @@ void Tree::SetSelected(const std::shared_ptr<TreeItem>& Item)
 
 void Tree::PaintSelection(Paint& Brush, const std::shared_ptr<TreeItem>& Item) const
 {
-	const Vector2 Position = Item->GetAbsolutePosition();
-	const Vector2 Min = { GetAbsolutePosition().X, Position.Y };
-	const Vector2 Max = { GetAbsoluteBounds().Max.X, Position.Y + Item->GetSize().Y };
-	Brush.Rectangle({ Min, Max }, GetProperty(ThemeProperties::TextSelectable_Hovered).ToColor());
+	if (GetProperty(ThemeProperties::Tree_Highlight_Row).Bool())
+	{
+		const Vector2 Position = Item->GetAbsolutePosition();
+		const Vector2 Min = { GetAbsolutePosition().X, Position.Y };
+		const Vector2 Max = { GetAbsoluteBounds().Max.X, Position.Y + Item->GetSize().Y };
+		Brush.Rectangle({ Min, Max }, GetProperty(ThemeProperties::TextSelectable_Hovered).ToColor());
+	}
+	else
+	{
+		Brush.Rectangle(Item->TextBounds(), GetProperty(ThemeProperties::TextSelectable_Hovered).ToColor());
+	}
 }
 
 bool Tree::IsHidden(const std::shared_ptr<TreeItem>& Item) const
@@ -498,7 +555,7 @@ bool Tree::IsHidden(const std::shared_ptr<TreeItem>& Item) const
 	for (const std::shared_ptr<Control>& Child : m_List->Controls())
 	{
 		const std::shared_ptr<Tree>& ChildTree = std::static_pointer_cast<Tree>(Child);
-		
+
 		if (ChildTree->IsHidden(Item))
 		{
 			return true;

@@ -39,6 +39,8 @@
 	"ScrollBar_3D": true,
 	"ScrollBar_AlwaysPaint": true,
 	"ScrollBar_Buttons": true,
+	"Tree_Classic_Icons": true,
+	"Tree_Highlight_Row": false,
 
 	"FontPath": "Roboto-Regular.ttf"
 }
