@@ -20,6 +20,7 @@
 	"ScrollBar": [48, 48, 48, 255],
 	"ScrollBar_Handle": [64, 64, 64, 255],
 	"ScrollBar_HandleHovered": [96, 96, 96, 255],
+	"Tree_Toggle_Icon": [255, 255, 255, 255],
 
 	"Separator_Thickness": 1.5,
 	"Separator_Margins": 8.0,

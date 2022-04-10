@@ -101,7 +101,7 @@ public:
 	TreeItem& ClearHoveredColors()
 	{
 		m_Text->ClearProperty(ThemeProperties::Text);
-		m_Toggle->SetTint(GetProperty(ThemeProperties::Check).ToColor());
+		m_Toggle->SetTint(GetProperty(ThemeProperties::Tree_Toggle_Icon).ToColor());
 		return *this;
 	}
 

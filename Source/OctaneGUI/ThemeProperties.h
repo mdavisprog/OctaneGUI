@@ -60,6 +60,7 @@ public:
 		ScrollBar,
 		ScrollBar_Handle,
 		ScrollBar_HandleHovered,
+		Tree_Toggle_Icon,
 
 		// Floats
 		Separator_Thickness,

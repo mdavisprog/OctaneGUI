@@ -137,6 +137,7 @@ void Theme::Load(const Json& Root)
 	Set(ThemeProperties::ScrollBar, Root["ScrollBar"]);
 	Set(ThemeProperties::ScrollBar_Handle, Root["ScrollBar_Handle"]);
 	Set(ThemeProperties::ScrollBar_HandleHovered, Root["ScrollBar_HandleHovered"]);
+	Set(ThemeProperties::Tree_Toggle_Icon, Root["Tree_Toggle_Icon"]);
 
 	Set(ThemeProperties::Separator_Thickness, Root["Separator_Thickness"]);
 	Set(ThemeProperties::Separator_Margins, Root["Separator_Margins"]);
@@ -193,6 +194,7 @@ void Theme::InitializeDefault()
 	m_Properties[ThemeProperties::ScrollBar] = Color(48, 48, 48, 255);
 	m_Properties[ThemeProperties::ScrollBar_Handle] = Color(64, 64, 64, 255);
 	m_Properties[ThemeProperties::ScrollBar_HandleHovered] = Color(96, 96, 96, 255);
+	m_Properties[ThemeProperties::Tree_Toggle_Icon] = Color(255, 255, 255, 255);
 
 	m_Properties[ThemeProperties::Separator_Thickness] = 1.5f;
 	m_Properties[ThemeProperties::Separator_Margins] = 8.0f;
