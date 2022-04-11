@@ -93,6 +93,9 @@ public:
 	Json& operator[](const std::string& Key);
 	Json& operator[](unsigned int Index);
 
+	Json& Push(const Json& Value);
+	Json& Push(Json&& Value);
+
 	const Json& operator[](const char* Key) const;
 	const Json& operator[](const std::string& Key) const;
 	const Json& operator[](unsigned int Index) const;

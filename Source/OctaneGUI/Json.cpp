@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "Json.h"
 
+#include <cassert>
 #include <cctype>
 #include <cstring>
 #include <utility>
@@ -291,6 +292,20 @@ Json& Json::operator[](const std::string& Key)
 Json& Json::operator[](unsigned int Index)
 {
 	return (*m_Data.Array)[Index];
+}
+
+Json& Json::Push(const Json& Value)
+{
+	assert(IsArray());
+	m_Data.Array->push_back(Value);
+	return *this;
+}
+
+Json& Json::Push(Json&& Value)
+{
+	assert(IsArray());
+	m_Data.Array->push_back(std::move(Value));
+	return *this;
 }
 
 const Json& Json::operator[](const char* Key) const
