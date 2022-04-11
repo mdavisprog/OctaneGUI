@@ -266,6 +266,29 @@ void ScrollableContainer::OnThemeLoaded()
 	UpdateScrollBars();
 }
 
+void ScrollableContainer::OnInsertControl(const std::shared_ptr<Control>& Item)
+{
+	if (!Item)
+	{
+		return;
+	}
+
+	Item->SetOnInvalidate([this](Control* Focus, InvalidateType Type) -> void
+		{
+			HandleInvalidate(Focus, Type);
+
+			if (!IsInLayout() && Type != InvalidateType::Paint && !IsScrollBarControl(Focus))
+			{
+				Update();
+				Vector2 Overflow = GetOverflow();
+				Vector2 Position = GetPosition();
+				Position.X = std::min<float>(-Position.X, Overflow.X);
+				Position.Y = std::min<float>(-Position.Y, Overflow.Y);
+				SetOffset(Position, false);
+			}
+		});
+}
+
 Rect ScrollableContainer::TranslatedBounds() const
 {
 	const Vector2 Position = GetAbsolutePosition() - GetPosition();
@@ -341,6 +364,14 @@ void ScrollableContainer::UpdateScrollBars()
 		->SetScrollBarSize({ SBSize, Size.Y - (m_HorizontalSB->ShouldPaint() ? SBSize : 0.0f) })
 		.SetPosition({ -GetPosition().X + Size.X - SBSize, -GetPosition().Y });
 	m_VerticalSB->Handle()->SetHandleSize(Overflow.Y > 0.0f ? m_VerticalSB->GetScrollBarSize().Y - Overflow.Y : 0.0f);
+}
+
+bool ScrollableContainer::IsScrollBarControl(Control* Focus) const
+{
+	return m_HorizontalSB.get() == Focus
+		|| m_HorizontalSB->Handle().get() == Focus
+		|| m_VerticalSB.get() == Focus
+		|| m_VerticalSB->Handle().get() == Focus;
 }
 
 }
