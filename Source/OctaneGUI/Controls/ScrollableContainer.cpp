@@ -196,10 +196,7 @@ std::weak_ptr<Control> ScrollableContainer::GetControl(const Vector2& Point) con
 
 void ScrollableContainer::Update()
 {
-	std::vector<std::shared_ptr<Control>> AllControls;
-	GetControls(AllControls);
-
-	m_ContentSize = GetContentSize(AllControls);
+	m_ContentSize = GetContentSize(Controls());
 	UpdateScrollBars();
 }
 
