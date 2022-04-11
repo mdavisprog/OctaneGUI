@@ -146,12 +146,7 @@ Container* Container::InsertControl(const std::shared_ptr<Control>& Item, int Po
 	Item->SetParent(this);
 	Item->SetOnInvalidate([this](Control* Focus, InvalidateType Type)
 		{
-			if (m_InLayout && Type != InvalidateType::Paint)
-			{
-				return;
-			}
-
-			Invalidate(Focus, Type);
+			HandleInvalidate(Focus, Type);
 		});
 
 	if (Position >= 0)
@@ -165,6 +160,7 @@ Container* Container::InsertControl(const std::shared_ptr<Control>& Item, int Po
 
 	Invalidate(Item.get(), InvalidateType::Paint);
 	Invalidate(InvalidateType::Layout);
+	OnInsertControl(Item);
 
 	return this;
 }
@@ -176,6 +172,7 @@ Container* Container::RemoveControl(const std::shared_ptr<Control>& Item)
 	{
 		m_Controls.erase(Iter);
 		Invalidate(InvalidateType::Both);
+		OnRemoveControl(Item);
 	}
 
 	return this;
@@ -316,6 +313,16 @@ bool Container::IsInLayout() const
 	return m_InLayout;
 }
 
+void Container::HandleInvalidate(Control* Focus, InvalidateType Type)
+{
+	if (m_InLayout && Type != InvalidateType::Paint)
+	{
+		return;
+	}
+
+	Invalidate(Focus, Type);
+}
+
 void Container::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
 {
 	for (const std::shared_ptr<Control>& Item : Controls)
@@ -339,6 +346,14 @@ void Container::PlaceControls(const std::vector<std::shared_ptr<Control>>& Contr
 
 		Item->SetSize(ItemSize);
 	}
+}
+
+void Container::OnInsertControl(const std::shared_ptr<Control>& Item)
+{
+}
+
+void Container::OnRemoveControl(const std::shared_ptr<Control>& Item)
+{
 }
 
 }
