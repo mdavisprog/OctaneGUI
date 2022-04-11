@@ -219,7 +219,7 @@ Tree::Tree(Window* InWindow)
 	m_Item
 		->SetOnToggle([this]() -> void
 			{
-				SetExpand(!m_Expand);
+				SetExpanded(!m_Expand);
 			})
 		.SetOnHovered([this](bool Hovered) -> void
 			{
@@ -310,7 +310,7 @@ const char* Tree::GetText() const
 	return m_Item->GetText();
 }
 
-Tree& Tree::SetExpand(bool Expand)
+Tree& Tree::SetExpanded(bool Expand)
 {
 	if (m_Expand == Expand)
 	{
@@ -362,6 +362,7 @@ bool Tree::ShouldRowSelect() const
 void Tree::Clear()
 {
 	m_List = nullptr;
+	Invalidate();
 }
 
 bool Tree::HasChildren() const
@@ -583,7 +584,7 @@ void Tree::RowSelect(const std::shared_ptr<TreeItem>& Item) const
 	Tree* Parent = static_cast<Tree*>(Item->GetParent());
 	if (Parent != nullptr)
 	{
-		Parent->SetExpand(!Parent->IsExpanded());
+		Parent->SetExpanded(!Parent->IsExpanded());
 	}
 }
 

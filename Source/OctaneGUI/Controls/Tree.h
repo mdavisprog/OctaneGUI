@@ -46,7 +46,7 @@ public:
 	Tree& SetText(const char* Text);
 	const char* GetText() const;
 
-	Tree& SetExpand(bool Expand);
+	Tree& SetExpanded(bool Expand);
 	bool IsExpanded() const;
 
 	Tree& SetRowSelect(bool RowSelect);
