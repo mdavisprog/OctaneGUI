@@ -253,7 +253,9 @@ std::shared_ptr<Tree> Tree::AddChild(const char* Text)
 		m_List
 			->SetSpacing({ 0.0f, 0.0f })
 			->SetPosition({ TOGGLE_SIZE + 4.0f, m_Item->GetSize().Y });
-		SetExpand(true);
+		
+		m_Item->SetToggle(false);
+		RemoveControl(m_List);
 	}
 
 	std::shared_ptr<Tree> Result = m_List->AddControl<Tree>();
@@ -283,12 +285,13 @@ std::shared_ptr<Tree> Tree::AddChild(const char* Text)
 			})
 		.SetOnInvalidate([this](Control* Focus, InvalidateType Type) -> void
 			{
+				HandleInvalidate(Focus, Type);
+
 				if (IsInLayout() && Type != InvalidateType::Paint)
 				{
 					return;
 				}
 
-				Invalidate(Focus, Type);
 				InvalidateLayout();
 			});
 
@@ -354,6 +357,11 @@ Tree& Tree::SetRowSelect(bool RowSelect)
 bool Tree::ShouldRowSelect() const
 {
 	return m_RowSelect;
+}
+
+void Tree::Clear()
+{
+	m_List = nullptr;
 }
 
 bool Tree::HasChildren() const

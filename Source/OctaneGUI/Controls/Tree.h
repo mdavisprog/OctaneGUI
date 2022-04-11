@@ -52,6 +52,7 @@ public:
 	Tree& SetRowSelect(bool RowSelect);
 	bool ShouldRowSelect() const;
 
+	void Clear();
 	bool HasChildren() const;
 
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
