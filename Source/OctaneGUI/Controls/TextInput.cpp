@@ -198,7 +198,7 @@ TextInput::TextInput(Window* InWindow)
 	Margins->SetMargins({ 2.0, 0.0, 2.0f, 0.0f });
 	m_Text = Margins->AddControl<Text>();
 
-	AddControl<TextInputInteraction>(this);
+	m_Interaction = AddControl<TextInputInteraction>(this);
 
 	SetSize({ 100.0f, m_Text->LineHeight() });
 
@@ -243,6 +243,11 @@ TextInput& TextInput::SetReadOnly(bool Value)
 bool TextInput::ReadOnly() const
 {
 	return m_ReadOnly;
+}
+
+std::shared_ptr<Control> TextInput::Interaction() const
+{
+	return m_Interaction;
 }
 
 void TextInput::Focus()
