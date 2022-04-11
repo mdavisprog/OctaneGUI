@@ -84,6 +84,8 @@ public:
 	void RequestClose(bool Request = true);
 	bool ShouldClose() const;
 
+	Application& App() const;
+
 	void SetPopup(const std::shared_ptr<Container>& Popup, OnContainerSignature Callback = nullptr, bool Modal = false);
 	void ClosePopup();
 	const std::shared_ptr<Container>& GetPopup() const;

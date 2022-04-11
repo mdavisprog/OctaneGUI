@@ -132,6 +132,11 @@ bool Window::ShouldClose() const
 	return m_RequestClose;
 }
 
+Application& Window::App() const
+{
+	return *m_Application;
+}
+
 void Window::SetPopup(const std::shared_ptr<Container>& Popup, OnContainerSignature Callback, bool Modal)
 {
 	m_Popup.Open(Popup, Modal);
