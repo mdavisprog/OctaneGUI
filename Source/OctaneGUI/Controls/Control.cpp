@@ -54,6 +54,19 @@ Expand ToExpand(const std::string& Value)
 	return Expand::None;
 }
 
+const char* ToString(Expand Value)
+{
+	switch (Value)
+	{
+	case Expand::Width: return "Width";
+	case Expand::Height: return "Height";
+	case Expand::Both: return "Both";
+	default: break;
+	}
+
+	return "None";
+}
+
 Control::Control(Window* InWindow)
 	: Class()
 	, m_Window(InWindow)
@@ -279,6 +292,13 @@ void Control::OnLoad(const Json& Root)
 	{
 		m_Expand = ToExpand(Root["Expand"].String());
 	}
+}
+
+void Control::OnSave(Json& Root) const
+{
+	Root["ID"] = m_ID;
+	Root["Expand"] = ToString(m_Expand);
+	Root["Size"] = std::move(Vector2::ToJson(GetSize()));
 }
 
 bool Control::OnKeyPressed(Keyboard::Key Key)
