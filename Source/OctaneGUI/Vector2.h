@@ -29,10 +29,13 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+class Json;
+
 struct Vector2
 {
 public:
 	static Vector2 Zero;
+	static Json ToJson(const Vector2& Value);
 
 	float X { 0.0f };
 	float Y { 0.0f };

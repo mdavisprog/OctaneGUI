@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "Vector2.h"
+#include "Json.h"
 
 #include <cmath>
 
@@ -32,6 +33,14 @@ namespace OctaneGUI
 {
 
 Vector2 Vector2::Zero;
+
+Json Vector2::ToJson(const Vector2& Value)
+{
+	Json Result(Json::Type::Array);
+	Result.Push(Value.X);
+	Result.Push(Value.Y);
+	return std::move(Result);
+}
 
 Vector2::Vector2()
 {
