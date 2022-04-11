@@ -26,37 +26,35 @@ SOFTWARE.
 
 #pragma once
 
-#include "../Controls/Container.h"
+#include <memory>
 
 namespace OctaneGUI
 {
 
-class TextInput;
-class VerticalContainer;
+class Container;
+class Tree;
+class Window;
 
 namespace Tools
 {
 
-class CommandPalette : public Container
+class Inspector
 {
-	CLASS(CommandPalette)
-
 public:
-	CommandPalette(Window* InWindow);
+	static Inspector& Get();
 
-	void Show();
-
-	std::shared_ptr<Control> Input() const;
-
-	virtual bool OnKeyPressed(Keyboard::Key Key) override;
+	void Inspect(const std::shared_ptr<Container>& Target);
 
 private:
-	bool Process(const std::string& Command);
+	static Inspector s_Inspector;
 
-	std::shared_ptr<VerticalContainer> m_Container { nullptr };
-	std::shared_ptr<TextInput> m_Input { nullptr };
+	Inspector();
+	void Populate();
+
+	std::weak_ptr<Container> m_Target {};
+	std::weak_ptr<Container> m_Root {};
+	std::weak_ptr<Window> m_Window {};
 };
 
 }
-
 }

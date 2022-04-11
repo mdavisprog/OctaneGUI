@@ -253,7 +253,7 @@ std::shared_ptr<Tree> Tree::AddChild(const char* Text)
 		m_List
 			->SetSpacing({ 0.0f, 0.0f })
 			->SetPosition({ TOGGLE_SIZE + 4.0f, m_Item->GetSize().Y });
-		
+
 		m_Item->SetToggle(false);
 		RemoveControl(m_List);
 	}

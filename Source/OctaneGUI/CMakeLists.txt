@@ -57,6 +57,7 @@ if(TOOLS)
 	set(SOURCE
 		${SOURCE}
 		Tools/CommandPalette.cpp
+		Tools/Inspector.cpp
 	)
 endif()
 

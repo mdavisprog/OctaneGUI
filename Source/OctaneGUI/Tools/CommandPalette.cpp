@@ -29,7 +29,9 @@ SOFTWARE.
 #include "../Controls/Panel.h"
 #include "../Controls/TextInput.h"
 #include "../Controls/VerticalContainer.h"
+#include "../Json.h"
 #include "../Window.h"
+#include "Inspector.h"
 
 namespace OctaneGUI
 {
@@ -66,7 +68,7 @@ void CommandPalette::Show()
 
 std::shared_ptr<Control> CommandPalette::Input() const
 {
-	return m_Input->GetControl(m_Input->GetAbsolutePosition()).lock();
+	return m_Input->Interaction();
 }
 
 bool CommandPalette::OnKeyPressed(Keyboard::Key Key)
@@ -76,11 +78,23 @@ bool CommandPalette::OnKeyPressed(Keyboard::Key Key)
 		std::string Command = m_Input->GetText();
 		m_Input->SetText("");
 		GetWindow()->ClosePopup();
-		return true;
+		return Process(Command);
 	}
 	else if (Key == Keyboard::Key::Escape)
 	{
 		GetWindow()->ClosePopup();
+		return true;
+	}
+
+	return false;
+}
+
+bool CommandPalette::Process(const std::string& Command)
+{
+	const std::string Lower = Json::ToLower(Command);
+	if (Lower == "inspector")
+	{
+		Inspector::Get().Inspect(GetWindow()->GetContainer());
 		return true;
 	}
 
