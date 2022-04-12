@@ -57,7 +57,7 @@ void Inspector::Inspect(const std::shared_ptr<Container>& Target)
 			   << "\"Width\": 600,"
 			   << "\"Height\": 300,"
 			   << "\"Body\": {\"Controls\": ["
-			   << "{\"ID\": \"Root\", \"Type\": \"HorizontalContainer\", \"Expand\": \"Both\"}"
+			   << "{\"ID\": \"Root\", \"Type\": \"HorizontalContainer\", \"Expand\": \"Both\", \"Spacing\": [0, 0]}"
 			   << "]}}";
 
 		ControlList List;
@@ -106,7 +106,9 @@ void Inspector::Populate()
 {
 	std::shared_ptr<Container> RootContainer = m_Root.lock();
 	std::shared_ptr<Container> TreeView = RootContainer->AddControl<ScrollableContainer>();
-	m_Properties = RootContainer->AddControl<Properties>();
+	std::shared_ptr<Properties> Props = RootContainer->AddControl<Properties>();
+	Props->SetSize({ 300.0f, 0.0f });
+	m_Properties = Props;
 
 	std::shared_ptr<Tree> Root = TreeView->AddControl<Tree>();
 	Root

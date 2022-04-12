@@ -25,13 +25,12 @@ SOFTWARE.
 */
 
 #include "Properties.h"
+#include "../Controls/HorizontalContainer.h"
 #include "../Controls/Panel.h"
 #include "../Controls/ScrollableContainer.h"
 #include "../Controls/Text.h"
 #include "../Controls/VerticalContainer.h"
 #include "../Json.h"
-
-#include <sstream>
 
 namespace OctaneGUI
 {
@@ -44,8 +43,10 @@ Properties::Properties(Window* InWindow)
 	AddControl<Panel>()->SetExpand(Expand::Both);
 
 	std::shared_ptr<ScrollableContainer> Scrollable = AddControl<ScrollableContainer>();
-	m_List = Scrollable->AddControl<VerticalContainer>();
-	m_List->SetExpand(Expand::Both);
+	std::shared_ptr<HorizontalContainer> Row = Scrollable->AddControl<HorizontalContainer>();
+	Row->SetSpacing({ 8.0f, 0.0f });
+	m_KeyList = Row->AddControl<VerticalContainer>();
+	m_ValueList = Row->AddControl<VerticalContainer>();
 
 	SetSize({ 150.0f, 0.0f });
 	SetExpand(Expand::Height);
@@ -53,16 +54,13 @@ Properties::Properties(Window* InWindow)
 
 void Properties::Parse(const Json& Root)
 {
-	m_List->ClearControls();
+	m_KeyList->ClearControls();
+	m_ValueList->ClearControls();
 
 	Root.ForEach([this](const std::string& Key, const Json& Value) -> void
 		{
-			std::stringstream Stream;
-			Stream << Key
-				   << ": "
-				   << Value.ToString();
-
-			m_List->AddControl<Text>()->SetText(Stream.str().c_str());
+			m_KeyList->AddControl<Text>()->SetText(Key.c_str());
+			m_ValueList->AddControl<Text>()->SetText(Value.ToString().c_str());
 		});
 }
 

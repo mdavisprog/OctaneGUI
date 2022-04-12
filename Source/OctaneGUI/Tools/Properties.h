@@ -43,7 +43,8 @@ public:
 	void Parse(const Json& Root);
 
 private:
-	std::shared_ptr<Container> m_List { nullptr };
+	std::shared_ptr<Container> m_KeyList { nullptr };
+	std::shared_ptr<Container> m_ValueList { nullptr };
 };
 
 }
