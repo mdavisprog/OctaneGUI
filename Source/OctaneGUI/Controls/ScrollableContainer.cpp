@@ -275,16 +275,26 @@ void ScrollableContainer::OnInsertControl(const std::shared_ptr<Control>& Item)
 
 	Item->SetOnInvalidate([this](Control* Focus, InvalidateType Type) -> void
 		{
+			if (m_ContentSizeLock)
+			{
+				return;
+			}
+
 			HandleInvalidate(Focus, Type);
 
 			if (!IsInLayout() && Type != InvalidateType::Paint && !IsScrollBarControl(Focus))
 			{
+				// An infinite loop is occurring here where updating the scrollbars is calling invalidate
+				// which will enter here to update the scrollbars over and over. A lock will be
+				// engaged to prevent the recursion to occur.
+				m_ContentSizeLock = true;
 				Update();
 				Vector2 Overflow = GetOverflow();
 				Vector2 Position = GetPosition();
 				Position.X = std::min<float>(-Position.X, Overflow.X);
 				Position.Y = std::min<float>(-Position.Y, Overflow.Y);
 				SetOffset(Position, false);
+				m_ContentSizeLock = false;
 			}
 		});
 }
