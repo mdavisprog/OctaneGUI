@@ -234,9 +234,9 @@ Tree::Tree(Window* InWindow)
 			})
 		.SetOnSelected([this]() -> void
 			{
-				if (m_OnSelected)
+				if (m_OnItemSelected)
 				{
-					m_OnSelected(m_Item);
+					m_OnItemSelected(m_Item);
 				}
 				else
 				{
@@ -274,9 +274,9 @@ std::shared_ptr<Tree> Tree::AddChild(const char* Text)
 			})
 		.SetOnSelected([this](const std::shared_ptr<TreeItem>& Item) -> void
 			{
-				if (m_OnSelected)
+				if (m_OnItemSelected)
 				{
-					m_OnSelected(Item);
+					m_OnItemSelected(Item);
 				}
 				else
 				{
@@ -357,6 +357,23 @@ Tree& Tree::SetRowSelect(bool RowSelect)
 bool Tree::ShouldRowSelect() const
 {
 	return m_RowSelect;
+}
+
+Tree& Tree::SetMetaData(void* MetaData)
+{
+	m_MetaData = MetaData;
+	return *this;
+}
+
+void* Tree::MetaData() const
+{
+	return m_MetaData;
+}
+
+Tree& Tree::SetOnSelected(OnTreeSignature&& Fn)
+{
+	m_OnSelected = std::move(Fn);
+	return *this;
 }
 
 void Tree::Clear()
@@ -445,7 +462,7 @@ Tree& Tree::SetOnHovered(OnHoveredTreeItemSignature&& Fn)
 
 Tree& Tree::SetOnSelected(OnTreeItemSignature&& Fn)
 {
-	m_OnSelected = std::move(Fn);
+	m_OnItemSelected = std::move(Fn);
 	return *this;
 }
 
@@ -510,6 +527,8 @@ void Tree::SetHovered(bool Hovered, const std::shared_ptr<TreeItem>& Item)
 
 void Tree::SetSelected(const std::shared_ptr<TreeItem>& Item)
 {
+	// This function should be called on the root tree.
+	// It should be safe to call m_OnSelected here for outstide controls.
 	std::shared_ptr<TreeItem> Select = m_Selected.lock();
 
 	if (Select == Item)
@@ -529,6 +548,12 @@ void Tree::SetSelected(const std::shared_ptr<TreeItem>& Item)
 	{
 		Item->SetHoveredColors();
 		RowSelect(Item);
+
+		if (m_OnSelected)
+		{
+			Tree const* Parent = static_cast<Tree const*>(Item->GetParent());
+			m_OnSelected(*Parent);
+		}
 	}
 
 	Invalidate();

@@ -52,6 +52,11 @@ public:
 	Tree& SetRowSelect(bool RowSelect);
 	bool ShouldRowSelect() const;
 
+	Tree& SetMetaData(void* MetaData);
+	void* MetaData() const;
+
+	Tree& SetOnSelected(OnTreeSignature&& Fn);
+
 	void Clear();
 	bool HasChildren() const;
 
@@ -83,10 +88,14 @@ private:
 	OnHoveredTreeItemSignature m_OnHovered { nullptr };
 
 	std::weak_ptr<TreeItem> m_Selected {};
-	OnTreeItemSignature m_OnSelected { nullptr };
+	OnTreeItemSignature m_OnItemSelected { nullptr };
+
+	OnTreeSignature m_OnSelected { nullptr };
 
 	bool m_Expand { false };
 	bool m_RowSelect { false };
+
+	void* m_MetaData { nullptr };
 };
 
 }
