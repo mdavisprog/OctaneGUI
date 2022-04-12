@@ -107,6 +107,7 @@ void BoxContainer::OnLoad(const Json& Root)
 	Container::OnLoad(Root);
 
 	m_Grow = ToGrow(Root["Grow"].String());
+	m_Spacing = Variant(Root["Spacing"]).Vector(m_Spacing);
 }
 
 void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
