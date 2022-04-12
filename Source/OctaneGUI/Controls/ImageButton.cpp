@@ -93,6 +93,15 @@ void ImageButton::OnLoad(const Json& Root)
 	}
 }
 
+void ImageButton::OnSave(Json& Root) const
+{
+	Button::OnSave(Root);
+
+	Json ImageRoot(Json::Type::Object);
+	m_Image->OnSave(ImageRoot);
+	Root["Image"] = std::move(ImageRoot);
+}
+
 void ImageButton::OnThemeLoaded()
 {
 	m_Image->SetTint(IsDisabled()
