@@ -124,6 +124,22 @@ void Image::OnLoad(const Json& Root)
 	}
 }
 
+void Image::OnSave(Json& Root) const
+{
+	Control::OnSave(Root);
+
+	Root["Texture"] = m_Texture->Path();
+
+	Json UVs(Json::Type::Object);
+	UVs["Left"] = m_UVs.Min.X;
+	UVs["Top"] = m_UVs.Min.Y;
+	UVs["Right"] = m_UVs.Max.X;
+	UVs["Bottom"] = m_UVs.Max.Y;
+	Root["UVs"] = std::move(UVs);
+
+	Root["Tint"] = std::move(Color::ToJson(m_Tint));
+}
+
 bool Image::IsFixedSize() const
 {
 	return true;
