@@ -115,6 +115,14 @@ void Button::OnLoad(const Json& Root)
 	SetProperty(ThemeProperties::Button_3D, Root["3D"]);
 }
 
+void Button::OnSave(Json& Root) const
+{
+	Control::OnSave(Root);
+
+	Root["Disabled"] = m_Disabled;
+	Root["State"] = ToString(m_State);
+}
+
 bool Button::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 {
 	if (m_State == State::Hovered)
@@ -211,6 +219,19 @@ void Button::OnReleased()
 
 void Button::OnClicked()
 {
+}
+
+const char* Button::ToString(State Type)
+{
+	switch (Type)
+	{
+	case State::Hovered: return "Hovered";
+	case State::Pressed: return "Pressed";
+	case State::None:
+	default: break;
+	}
+
+	return "None";
 }
 
 }

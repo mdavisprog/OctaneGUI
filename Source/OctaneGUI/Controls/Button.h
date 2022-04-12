@@ -50,6 +50,7 @@ public:
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
+	virtual void OnSave(Json& Root) const override;
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseEnter() override;
@@ -67,6 +68,8 @@ private:
 		Hovered,
 		Pressed
 	};
+
+	static const char* ToString(State Type);
 
 	State m_State { State::None };
 	OnButtonSignature m_OnPressed { nullptr };
