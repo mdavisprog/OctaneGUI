@@ -26,37 +26,24 @@ SOFTWARE.
 
 #pragma once
 
-#include <memory>
+#include "../Controls/Container.h"
 
 namespace OctaneGUI
 {
-
-class Container;
-class Tree;
-class Window;
-
 namespace Tools
 {
 
-class Properties;
-
-class Inspector
+class Properties : public Container
 {
-public:
-	static Inspector& Get();
+	CLASS(Properties)
 
-	void Inspect(const std::shared_ptr<Container>& Target);
+public:
+	Properties(Window* InWindow);
+
+	void Parse(const Json& Root);
 
 private:
-	static Inspector s_Inspector;
-
-	Inspector();
-	void Populate();
-
-	std::weak_ptr<Container> m_Target {};
-	std::weak_ptr<Container> m_Root {};
-	std::weak_ptr<Properties> m_Properties {};
-	std::weak_ptr<Window> m_Window {};
+	std::shared_ptr<Container> m_List { nullptr };
 };
 
 }

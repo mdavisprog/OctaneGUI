@@ -24,40 +24,47 @@ SOFTWARE.
 
 */
 
-#pragma once
+#include "Properties.h"
+#include "../Controls/Panel.h"
+#include "../Controls/ScrollableContainer.h"
+#include "../Controls/Text.h"
+#include "../Controls/VerticalContainer.h"
+#include "../Json.h"
 
-#include <memory>
+#include <sstream>
 
 namespace OctaneGUI
 {
-
-class Container;
-class Tree;
-class Window;
-
 namespace Tools
 {
 
-class Properties;
-
-class Inspector
+Properties::Properties(Window* InWindow)
+	: Container(InWindow)
 {
-public:
-	static Inspector& Get();
+	AddControl<Panel>()->SetExpand(Expand::Both);
 
-	void Inspect(const std::shared_ptr<Container>& Target);
+	std::shared_ptr<ScrollableContainer> Scrollable = AddControl<ScrollableContainer>();
+	m_List = Scrollable->AddControl<VerticalContainer>();
+	m_List->SetExpand(Expand::Both);
 
-private:
-	static Inspector s_Inspector;
+	SetSize({ 150.0f, 0.0f });
+	SetExpand(Expand::Height);
+}
 
-	Inspector();
-	void Populate();
+void Properties::Parse(const Json& Root)
+{
+	m_List->ClearControls();
 
-	std::weak_ptr<Container> m_Target {};
-	std::weak_ptr<Container> m_Root {};
-	std::weak_ptr<Properties> m_Properties {};
-	std::weak_ptr<Window> m_Window {};
-};
+	Root.ForEach([this](const std::string& Key, const Json& Value) -> void
+		{
+			std::stringstream Stream;
+			Stream << Key
+				   << ": "
+				   << Value.ToString();
+
+			m_List->AddControl<Text>()->SetText(Stream.str().c_str());
+		});
+}
 
 }
 }

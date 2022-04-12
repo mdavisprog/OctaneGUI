@@ -28,8 +28,11 @@ SOFTWARE.
 #include "../Application.h"
 #include "../Controls/Container.h"
 #include "../Controls/ControlList.h"
+#include "../Controls/ScrollableContainer.h"
 #include "../Controls/Tree.h"
+#include "../Json.h"
 #include "../Window.h"
+#include "Properties.h"
 
 #include <sstream>
 
@@ -51,15 +54,15 @@ void Inspector::Inspect(const std::shared_ptr<Container>& Target)
 		Stream << "{\"Title\": \"Inspecting "
 			   << Target->GetWindow()->GetTitle()
 			   << "\","
-			   << "\"Width\": 300,"
-			   << "\"Height\": 200,"
+			   << "\"Width\": 600,"
+			   << "\"Height\": 300,"
 			   << "\"Body\": {\"Controls\": ["
-			   << "{\"ID\": \"Scrollable\", \"Type\": \"ScrollableContainer\"}"
+			   << "{\"ID\": \"Root\", \"Type\": \"HorizontalContainer\", \"Expand\": \"Both\"}"
 			   << "]}}";
 
 		ControlList List;
 		m_Window = Target->GetWindow()->App().NewWindow("Inspector", Stream.str().c_str(), List);
-		m_Root = List.To<Container>("Scrollable");
+		m_Root = List.To<Container>("Root");
 	}
 
 	if (m_Window.lock()->IsVisible())
@@ -82,6 +85,7 @@ Inspector::Inspector()
 static void PopulateTree(const std::shared_ptr<Tree>& Root, const std::shared_ptr<Container>& Target)
 {
 	Root->SetText(Target->GetType());
+	Root->SetMetaData(Target.get());
 
 	for (const std::shared_ptr<Control>& Item : Target->Controls())
 	{
@@ -93,15 +97,27 @@ static void PopulateTree(const std::shared_ptr<Tree>& Root, const std::shared_pt
 		}
 		else
 		{
-			Root->AddChild(Item->GetType());
+			Root->AddChild(Item->GetType())->SetMetaData(Item.get());
 		}
 	}
 }
 
 void Inspector::Populate()
 {
-	std::shared_ptr<Tree> Root = m_Root.lock()->AddControl<Tree>();
-	Root->SetExpand(Expand::Width);
+	std::shared_ptr<Container> RootContainer = m_Root.lock();
+	std::shared_ptr<Container> TreeView = RootContainer->AddControl<ScrollableContainer>();
+	m_Properties = RootContainer->AddControl<Properties>();
+
+	std::shared_ptr<Tree> Root = TreeView->AddControl<Tree>();
+	Root
+		->SetOnSelected([this](const Tree& Item) -> void
+			{
+				Control const* MetaData = static_cast<Control const*>(Item.MetaData());
+				Json Root(Json::Type::Object);
+				MetaData->OnSave(Root);
+				m_Properties.lock()->Parse(Root);
+			})
+		.SetExpand(Expand::Width);
 	PopulateTree(Root, m_Target.lock());
 }
 

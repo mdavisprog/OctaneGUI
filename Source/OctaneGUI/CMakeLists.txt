@@ -58,6 +58,7 @@ if(TOOLS)
 		${SOURCE}
 		Tools/CommandPalette.cpp
 		Tools/Inspector.cpp
+		Tools/Properties.cpp
 	)
 endif()
 
