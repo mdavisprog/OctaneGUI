@@ -34,6 +34,19 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+const char* ToString(CheckBox::State Type)
+{
+	switch (Type)
+	{
+	case CheckBox::State::Intermediate: return "Intermediate";
+	case CheckBox::State::Checked: return "Checked";
+	case CheckBox::State::None:
+	default: break;
+	}
+
+	return "None";
+}
+
 CheckBox::CheckBox(Window* InWindow)
 	: Button(InWindow)
 {
@@ -157,6 +170,18 @@ void CheckBox::OnLoad(const Json& Root)
 
 	Update();
 	UpdateSize();
+}
+
+void CheckBox::OnSave(Json& Root) const
+{
+	Button::OnSave(Root);
+
+	Root["Check"] = ::OctaneGUI::ToString(m_State);
+	Root["TriState"] = m_TriState;
+
+	Json TextRoot(Json::Type::Object);
+	m_Text->OnSave(TextRoot);
+	Root["Text"] = std::move(TextRoot);
 }
 
 void CheckBox::OnThemeLoaded()
