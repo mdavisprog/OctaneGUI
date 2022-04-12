@@ -54,6 +54,7 @@ public:
 	virtual Vector2 DesiredSize() const override;
 
 	virtual void OnLoad(const Json& Root) override;
+	virtual void OnSave(Json& Root) const override;
 
 protected:
 	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const override;

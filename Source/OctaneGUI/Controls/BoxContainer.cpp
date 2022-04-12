@@ -45,6 +45,19 @@ static Grow ToGrow(const std::string& Value)
 	return Grow::Begin;
 }
 
+const char* ToString(Grow Type)
+{
+	switch (Type)
+	{
+	case Grow::Center: return "Center";
+	case Grow::End: return "End";
+	case Grow::Begin:
+	default: break;
+	}
+
+	return "Begin";
+}
+
 BoxContainer::BoxContainer(Orientation Orient, Window* InWindow)
 	: Container(InWindow)
 	, m_Orient(Orient)
@@ -108,6 +121,14 @@ void BoxContainer::OnLoad(const Json& Root)
 
 	m_Grow = ToGrow(Root["Grow"].String());
 	m_Spacing = Variant(Root["Spacing"]).Vector(m_Spacing);
+}
+
+void BoxContainer::OnSave(Json& Root) const
+{
+	Container::OnSave(Root);
+
+	Root["Grow"] = ToString(m_Grow);
+	Root["Spacing"] = Vector2::ToJson(m_Spacing);
 }
 
 void BoxContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
