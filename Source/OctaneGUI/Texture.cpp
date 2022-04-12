@@ -74,6 +74,7 @@ std::shared_ptr<Texture> Texture::Load(const char* Path)
 		stbi_image_free(Data);
 
 		Result = Load(Buffer, Width, Height);
+		Result->m_Path = Path;
 	}
 
 	return Result;
@@ -100,6 +101,11 @@ uint32_t Texture::GetID() const
 Vector2 Texture::GetSize() const
 {
 	return m_Size;
+}
+
+const char* Texture::Path() const
+{
+	return m_Path.c_str();
 }
 
 }

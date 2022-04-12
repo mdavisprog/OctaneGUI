@@ -31,6 +31,7 @@ SOFTWARE.
 #include <cstdint>
 #include <functional>
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace OctaneGUI
@@ -51,12 +52,14 @@ public:
 	bool IsValid() const;
 	uint32_t GetID() const;
 	Vector2 GetSize() const;
+	const char* Path() const;
 
 private:
 	static OnLoadSignature s_OnLoad;
 
 	uint32_t m_ID { 0 };
 	Vector2 m_Size {};
+	std::string m_Path {};
 };
 
 }
