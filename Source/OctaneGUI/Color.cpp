@@ -48,6 +48,18 @@ Color Color::Parse(const Json& Root)
 	};
 }
 
+Json Color::ToJson(const Color& Value)
+{
+	Json Result(Json::Type::Array);
+
+	Result.Push((float)Value.R);
+	Result.Push((float)Value.G);
+	Result.Push((float)Value.B);
+	Result.Push((float)Value.A);
+
+	return std::move(Result);
+}
+
 Color::Color()
 {
 }

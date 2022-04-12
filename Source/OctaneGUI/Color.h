@@ -40,6 +40,7 @@ public:
 	static const Color Black;
 
 	static Color Parse(const Json& Root);
+	static Json ToJson(const Color& Value);
 
 	uint8_t R { 0 };
 	uint8_t G { 0 };
