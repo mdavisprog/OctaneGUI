@@ -79,6 +79,15 @@ void TextButton::OnLoad(const Json& Root)
 	UpdateSize();
 }
 
+void TextButton::OnSave(Json& Root) const
+{
+	Button::OnSave(Root);
+
+	Json TextRoot(Json::Type::Object);
+	m_Text->OnSave(TextRoot);
+	Root["Text"] = std::move(TextRoot);
+}
+
 void TextButton::OnPressed()
 {
 	UpdateTextPosition(true);
