@@ -83,6 +83,16 @@ static const char* ToString(Orientation Type)
 	return "Horizontal";
 }
 
+static Orientation ToOrientation(const std::string& Type)
+{
+	if (Type == "Vertical")
+	{
+		return Orientation::Vertical;
+	}
+
+	return Orientation::Horizontal;
+}
+
 static const char* ToString(HorizontalAlignment Type)
 {
 	switch (Type)
