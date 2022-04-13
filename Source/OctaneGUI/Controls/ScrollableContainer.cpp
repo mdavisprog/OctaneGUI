@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "ScrollableContainer.h"
+#include "../Json.h"
 #include "../Paint.h"
 #include "../Timer.h"
 #include "../Window.h"
@@ -230,6 +231,14 @@ void ScrollableContainer::OnLoad(const Json& Root)
 {
 	Container::OnLoad(Root);
 	SetExpand(Expand::Both);
+}
+
+void ScrollableContainer::OnSave(Json& Root) const
+{
+	Container::OnSave(Root);
+
+	Root["ContentSize"] = std::move(Vector2::ToJson(m_ContentSize));
+	Root["ScrollOffset"] = std::move(Vector2::ToJson(m_ScrollOffset));
 }
 
 void ScrollableContainer::OnMouseMove(const Vector2& Position)
