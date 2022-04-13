@@ -135,6 +135,14 @@ void MenuItem::OnLoad(const Json& Root)
 	}
 }
 
+void MenuItem::OnSave(Json& Root) const
+{
+	TextSelectable::OnSave(Root);
+
+	Root["IsChecked"] = m_IsChecked;
+	Root["HasMenu"] = m_Menu != nullptr;
+}
+
 bool MenuItem::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 {
 	TextSelectable::OnMousePressed(Position, Button);

@@ -51,6 +51,7 @@ public:
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
 	virtual void OnLoad(const Json& Root) override;
+	virtual void OnSave(Json& Root) const override;
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
 
 private:
