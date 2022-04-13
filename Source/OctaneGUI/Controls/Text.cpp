@@ -114,6 +114,16 @@ void Text::OnLoad(const Json& Root)
 	SetText(Root["Text"].String());
 }
 
+void Text::OnSave(Json& Root) const
+{
+	Control::OnSave(Root);
+
+	Root["Text"] = m_Contents;
+	Root["ContentSize"] = std::move(Vector2::ToJson(m_ContentSize));
+	Root["Font"] = m_Font->Path();
+	Root["FontSize"] = GetProperty(ThemeProperties::FontSize).Float();
+}
+
 void Text::OnThemeLoaded()
 {
 	UpdateFont();
