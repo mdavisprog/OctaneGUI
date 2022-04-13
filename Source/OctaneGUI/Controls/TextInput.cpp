@@ -387,6 +387,27 @@ void TextInput::OnLoad(const Json& Root)
 	m_Text->OnLoad(Root["Text"]);
 }
 
+void TextInput::OnSave(Json& Root) const
+{
+	ScrollableViewControl::OnSave(Root);
+
+	Json Position(Json::Type::Array);
+	Position.Push((float)m_Position.Line());
+	Position.Push((float)m_Position.Column());
+	Position.Push((float)m_Position.Index());
+	Root["Position"] = std::move(Position);
+
+	Json Anchor(Json::Type::Array);
+	Anchor.Push((float)m_Anchor.Line());
+	Anchor.Push((float)m_Anchor.Column());
+	Anchor.Push((float)m_Anchor.Index());
+	Root["Anchor"] = std::move(Anchor);
+
+	Root["Multiline"] = m_Multiline;
+	Root["ReadOnly"] = m_ReadOnly;
+	Root["BlinkTimer"] = (float)m_BlinkTimer->Interval();
+}
+
 void TextInput::MouseMove(const Vector2& Position)
 {
 	if (m_Drag)

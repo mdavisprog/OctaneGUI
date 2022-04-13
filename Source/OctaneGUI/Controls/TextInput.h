@@ -87,6 +87,7 @@ public:
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
+	virtual void OnSave(Json& Root) const override;
 
 private:
 	void MouseMove(const Vector2& Position);
