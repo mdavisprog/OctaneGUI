@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "Separator.h"
+#include "../Json.h"
 #include "../Paint.h"
 
 namespace OctaneGUI
@@ -50,8 +51,19 @@ void Separator::OnPaint(Paint& Brush) const
 	const float Margins = GetProperty(ThemeProperties::Separator_Margins).Float();
 
 	const Vector2 HalfSize = GetSize() * 0.5f;
-	const Vector2 Start = GetAbsolutePosition() + Vector2(Margins, HalfSize.Y);
-	const Vector2 End = GetAbsolutePosition() + Vector2(GetSize().X - Margins, HalfSize.Y);
+	Vector2 Start;
+	Vector2 End;
+
+	if (m_Orientation == Orientation::Vertical)
+	{
+		Start = GetAbsolutePosition() + Vector2(HalfSize.X, Margins);
+		End = GetAbsolutePosition() + Vector2(HalfSize.X, GetSize().Y - Margins);
+	}
+	else
+	{
+		Start = GetAbsolutePosition() + Vector2(Margins, HalfSize.Y);
+		End = GetAbsolutePosition() + Vector2(GetSize().X - Margins, HalfSize.Y);
+	}
 
 	Brush.Line(Start, End, Fill, Thickness);
 }
@@ -60,7 +72,17 @@ void Separator::OnLoad(const Json& Root)
 {
 	Control::OnLoad(Root);
 
-	SetExpand(Expand::Width);
+	m_Orientation = ToOrientation(Root["Orientation"].String());
+	if (m_Orientation == Orientation::Vertical)
+	{
+		SetExpand(Expand::Height);
+		SetSize({ 16.0f, 0.0f });
+	}
+	else
+	{
+		SetExpand(Expand::Width);
+		SetSize({ 0.0f, 16.0f });
+	}
 }
 
 void Separator::OnMouseEnter()

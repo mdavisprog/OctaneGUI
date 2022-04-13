@@ -163,6 +163,10 @@
 														"Type": "TextInput"
 													},
 													{
+														"Type": "Separator",
+														"Orientation": "Vertical"
+													},
+													{
 														"Type": "TextInput",
 														"Multiline": true
 													}

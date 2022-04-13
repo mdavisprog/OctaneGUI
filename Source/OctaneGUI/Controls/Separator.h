@@ -46,6 +46,7 @@ public:
 
 private:
 	OnControlSignature m_OnHover { nullptr };
+	Orientation m_Orientation { Orientation::Horizontal };
 };
 
 }
