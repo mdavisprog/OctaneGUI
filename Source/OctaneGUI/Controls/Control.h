@@ -73,6 +73,16 @@ enum class Orientation : uint8_t
 	Vertical
 };
 
+static const char* ToString(Orientation Type)
+{
+	if (Type == Orientation::Vertical)
+	{
+		return "Vertical";
+	}
+
+	return "Horizontal";
+}
+
 class Control : public Class
 {
 	CLASS(Control)
