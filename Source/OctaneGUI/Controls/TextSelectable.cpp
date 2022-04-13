@@ -133,6 +133,18 @@ void TextSelectable::OnLoad(const Json& Root)
 	UpdateSize();
 }
 
+void TextSelectable::OnSave(Json& Root) const
+{
+	Control::OnSave(Root);
+
+	Root["Selected"] = m_Selected;
+	Root["Alignment"] = ToString(m_Align);
+
+	Json TextRoot(Json::Type::Object);
+	m_Text->OnSave(TextRoot);
+	Root["Text"] = std::move(TextRoot);
+}
+
 bool TextSelectable::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 {
 	if (m_OnPressed)
