@@ -74,6 +74,16 @@ void MarginContainer::OnLoad(const Json& Root)
 	m_Margins.Max.Y = Root["Bottom"].Number();
 }
 
+void MarginContainer::OnSave(Json& Root) const
+{
+	Container::OnSave(Root);
+
+	Root["Left"] = m_Margins.Min.X;
+	Root["Top"] = m_Margins.Min.Y;
+	Root["Right"] = m_Margins.Max.X;
+	Root["Bottom"] = m_Margins.Max.Y;
+}
+
 void MarginContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
 {
 	for (const std::shared_ptr<Control>& Item : Controls)
