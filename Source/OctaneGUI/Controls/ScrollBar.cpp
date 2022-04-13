@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "ScrollBar.h"
 #include "../Icons.h"
+#include "../Json.h"
 #include "../Paint.h"
 #include "../ThemeProperties.h"
 #include "../Window.h"
@@ -132,6 +133,15 @@ void ScrollBarHandle::OnPaint(Paint& Brush) const
 			}
 		}
 	}
+}
+
+void ScrollBarHandle::OnSave(Json& Root) const
+{
+	Control::OnSave(Root);
+
+	Root["Orientation"] = ToString(m_Orientation);
+	Root["HandleSize"] = m_HandleSize;
+	Root["Offset"] = m_Offset;
 }
 
 void ScrollBarHandle::OnMouseMove(const Vector2& Position)
@@ -333,6 +343,15 @@ void ScrollBar::OnPaint(Paint& Brush) const
 	Brush.Rectangle(HandleBackgroundBounds(), GetProperty(ThemeProperties::ScrollBar).ToColor());
 
 	Container::OnPaint(Brush);
+}
+
+void ScrollBar::OnSave(Json& Root) const
+{
+	Container::OnSave(Root);
+
+	Root["AlwaysPaint"] = m_AlwaysPaint;
+	Root["Buttons"] = m_Buttons;
+	Root["Enabled"] = m_Enabled;
 }
 
 void ScrollBar::OnThemeLoaded()
