@@ -59,9 +59,27 @@ void Properties::Parse(const Json& Root)
 
 	Root.ForEach([this](const std::string& Key, const Json& Value) -> void
 		{
-			m_KeyList->AddControl<Text>()->SetText(Key.c_str());
-			m_ValueList->AddControl<Text>()->SetText(Value.ToString().c_str());
+			Parse(Key, Value);
 		});
+}
+
+void Properties::Parse(const std::string& Key, const Json& Value, int Indent)
+{
+	const std::string IndentStr(Indent, ' ');
+	m_KeyList->AddControl<Text>()->SetText((IndentStr + Key).c_str());
+	if (Value.IsObject())
+	{
+		m_ValueList->AddControl<Text>()->SetText(" ");
+
+		Value.ForEach([this, Indent](const std::string& Key, const Json& Value) -> void
+			{
+				Parse(Key, Value, Indent + 4);
+			});
+	}
+	else
+	{
+		m_ValueList->AddControl<Text>()->SetText(Value.ToString().c_str());
+	}
 }
 
 }
