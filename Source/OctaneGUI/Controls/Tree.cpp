@@ -123,6 +123,19 @@ public:
 		return *this;
 	}
 
+	virtual void OnSave(Json& Root) const override
+	{
+		Control::OnSave(Root);
+
+		Json Toggle(Json::Type::Object);
+		m_Toggle->OnSave(Toggle);
+		Root["Toggle"] = std::move(Toggle);
+
+		Json TextRoot(Json::Type::Object);
+		m_Text->OnSave(TextRoot);
+		Root["Text"] = std::move(TextRoot);
+	}
+
 	virtual void OnPaint(Paint& Brush) const override
 	{
 		Tree const* Parent = static_cast<Tree const*>(GetParent());
@@ -419,6 +432,20 @@ void Tree::OnLoad(const Json& Root)
 			std::shared_ptr<Tree> Child = AddChild("");
 			Child->OnLoad(Item);
 		});
+}
+
+void Tree::OnSave(Json& Root) const
+{
+	Container::OnSave(Root);
+
+	if (!m_Selected.expired())
+	{
+		Root["Selected"] = m_Selected.lock()->GetText();
+	}
+
+	Root["Expand"] = m_Expand;
+	Root["RowSelect"] = m_RowSelect;
+	Root["HasMetaData"] = m_MetaData != nullptr;
 }
 
 void Tree::OnPaint(Paint& Brush) const
