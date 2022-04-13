@@ -83,6 +83,19 @@ static const char* ToString(Orientation Type)
 	return "Horizontal";
 }
 
+static const char* ToString(HorizontalAlignment Type)
+{
+	switch (Type)
+	{
+	case HorizontalAlignment::Center: return "Center";
+	case HorizontalAlignment::Right: return "Right";
+	case HorizontalAlignment::Left:
+	default: break;
+	}
+
+	return "Left";
+}
+
 class Control : public Class
 {
 	CLASS(Control)
