@@ -102,6 +102,7 @@ public:
 
 	std::shared_ptr<Container> GetContainer() const;
 	std::shared_ptr<MenuBar> GetMenuBar() const;
+	std::shared_ptr<Container> GetRootContainer() const;
 	std::shared_ptr<Theme> GetTheme() const;
 	std::shared_ptr<Icons> GetIcons() const;
 	TextureCache& GetTextureCache() const;

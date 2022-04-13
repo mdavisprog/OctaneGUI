@@ -332,6 +332,11 @@ std::shared_ptr<MenuBar> Window::GetMenuBar() const
 	return m_MenuBar;
 }
 
+std::shared_ptr<Container> Window::GetRootContainer() const
+{
+	return m_Container;
+}
+
 std::shared_ptr<Theme> Window::GetTheme() const
 {
 	return m_Application->GetTheme();

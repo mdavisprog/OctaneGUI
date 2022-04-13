@@ -94,7 +94,7 @@ bool CommandPalette::Process(const std::string& Command)
 	const std::string Lower = Json::ToLower(Command);
 	if (Lower == "inspector")
 	{
-		Inspector::Get().Inspect(GetWindow()->GetContainer());
+		Inspector::Get().Inspect(GetWindow()->GetRootContainer());
 		return true;
 	}
 

@@ -57,6 +57,7 @@ void Inspector::Inspect(const std::shared_ptr<Container>& Target)
 			   << "\"Width\": 600,"
 			   << "\"Height\": 300,"
 			   << "\"Body\": {\"Controls\": ["
+			   << "{\"Type\": \"Panel\", \"Expand\": \"Both\"},"
 			   << "{\"ID\": \"Root\", \"Type\": \"HorizontalContainer\", \"Expand\": \"Both\", \"Spacing\": [0, 0]}"
 			   << "]}}";
 
