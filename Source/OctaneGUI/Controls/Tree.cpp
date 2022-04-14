@@ -59,7 +59,7 @@ public:
 		m_Text
 			->SetParent(this)
 			->SetPosition({ TOGGLE_SIZE + 4.0f, 0.0f });
-		
+
 		ClearHoveredColors();
 	}
 

@@ -128,7 +128,7 @@ std::shared_ptr<Container> Splitter::Second() const
 std::weak_ptr<Control> Splitter::GetControl(const Vector2& Point) const
 {
 	std::weak_ptr<Control> Result = Container::GetControl(Point);
-	
+
 	if (!Result.expired() && Result.lock() == m_Separator)
 	{
 		Result = m_Interaction;
