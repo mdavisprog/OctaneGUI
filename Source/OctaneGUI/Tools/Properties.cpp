@@ -26,7 +26,6 @@ SOFTWARE.
 
 #include "Properties.h"
 #include "../Controls/HorizontalContainer.h"
-#include "../Controls/Panel.h"
 #include "../Controls/ScrollableContainer.h"
 #include "../Controls/Text.h"
 #include "../Controls/VerticalContainer.h"
@@ -40,8 +39,6 @@ namespace Tools
 Properties::Properties(Window* InWindow)
 	: Container(InWindow)
 {
-	AddControl<Panel>()->SetExpand(Expand::Both);
-
 	std::shared_ptr<ScrollableContainer> Scrollable = AddControl<ScrollableContainer>();
 	std::shared_ptr<HorizontalContainer> Row = Scrollable->AddControl<HorizontalContainer>();
 	Row->SetSpacing({ 8.0f, 0.0f });
