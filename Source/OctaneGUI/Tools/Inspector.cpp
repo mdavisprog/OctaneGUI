@@ -29,6 +29,7 @@ SOFTWARE.
 #include "../Controls/Container.h"
 #include "../Controls/ControlList.h"
 #include "../Controls/ScrollableContainer.h"
+#include "../Controls/Splitter.h"
 #include "../Controls/Tree.h"
 #include "../Json.h"
 #include "../Window.h"
@@ -58,12 +59,12 @@ void Inspector::Inspect(const std::shared_ptr<Container>& Target)
 			   << "\"Height\": 300,"
 			   << "\"Body\": {\"Controls\": ["
 			   << "{\"Type\": \"Panel\", \"Expand\": \"Both\"},"
-			   << "{\"ID\": \"Root\", \"Type\": \"HorizontalContainer\", \"Expand\": \"Both\", \"Spacing\": [0, 0]}"
+			   << "{\"ID\": \"Root\", \"Type\": \"Splitter\", \"Orientation\": \"Vertical\", \"Expand\": \"Both\"}"
 			   << "]}}";
 
 		ControlList List;
 		m_Window = Target->GetWindow()->App().NewWindow("Inspector", Stream.str().c_str(), List);
-		m_Root = List.To<Container>("Root");
+		m_Root = List.To<Splitter>("Root");
 	}
 
 	if (m_Window.lock()->IsVisible())
@@ -73,7 +74,10 @@ void Inspector::Inspect(const std::shared_ptr<Container>& Target)
 
 	m_Target = Target;
 	Target->GetWindow()->App().DisplayWindow("Inspector");
-	m_Root.lock()->ClearControls();
+
+	std::shared_ptr<Splitter> Split = m_Root.lock();
+	Split->First()->ClearControls();
+	Split->Second()->ClearControls();
 	Populate();
 }
 
@@ -105,10 +109,11 @@ static void PopulateTree(const std::shared_ptr<Tree>& Root, const std::shared_pt
 
 void Inspector::Populate()
 {
-	std::shared_ptr<Container> RootContainer = m_Root.lock();
-	std::shared_ptr<Container> TreeView = RootContainer->AddControl<ScrollableContainer>();
-	std::shared_ptr<Properties> Props = RootContainer->AddControl<Properties>();
-	Props->SetSize({ 300.0f, 0.0f });
+	std::shared_ptr<Splitter> Split = m_Root.lock();
+	std::shared_ptr<Container> TreeView = Split->First()->AddControl<ScrollableContainer>();
+	std::shared_ptr<Container> PropertiesView = Split->Second()->AddControl<ScrollableContainer>();
+	std::shared_ptr<Properties> Props = PropertiesView->AddControl<Properties>();
+	Props->SetExpand(Expand::Both);
 	m_Properties = Props;
 
 	std::shared_ptr<Tree> Root = TreeView->AddControl<Tree>();

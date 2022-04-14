@@ -32,6 +32,7 @@ namespace OctaneGUI
 {
 
 class Container;
+class Splitter;
 class Tree;
 class Window;
 
@@ -54,7 +55,7 @@ private:
 	void Populate();
 
 	std::weak_ptr<Container> m_Target {};
-	std::weak_ptr<Container> m_Root {};
+	std::weak_ptr<Splitter> m_Root {};
 	std::weak_ptr<Properties> m_Properties {};
 	std::weak_ptr<Window> m_Window {};
 };
