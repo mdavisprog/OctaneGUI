@@ -37,6 +37,7 @@ SOFTWARE.
 #include "Panel.h"
 #include "ScrollableContainer.h"
 #include "Separator.h"
+#include "Splitter.h"
 #include "Text.h"
 #include "TextButton.h"
 #include "TextInput.h"
@@ -107,6 +108,10 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 	else if (Type == Separator::TypeName())
 	{
 		Result = AddControl<Separator>();
+	}
+	else if (Type == Splitter::TypeName())
+	{
+		Result = AddControl<Splitter>();
 	}
 	else if (Type == Text::TypeName())
 	{
