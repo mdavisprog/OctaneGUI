@@ -38,13 +38,18 @@ class Separator : public Control
 public:
 	Separator(Window* InWindow);
 
-	Separator& SetOnHover(OnControlSignature Fn);
+	Separator& SetOnHover(OnControlSignature&& Fn);
+
+	Separator& SetOrientation(Orientation InOrientation);
+	Orientation GetOrientation() const;
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
 	virtual void OnMouseEnter() override;
 
 private:
+	void UpdateLayout();
+
 	OnControlSignature m_OnHover { nullptr };
 	Orientation m_Orientation { Orientation::Horizontal };
 };

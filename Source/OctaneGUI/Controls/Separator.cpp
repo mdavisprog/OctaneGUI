@@ -38,10 +38,28 @@ Separator::Separator(Window* InWindow)
 	SetSize({ 0.0f, 16.0f });
 }
 
-Separator& Separator::SetOnHover(OnControlSignature Fn)
+Separator& Separator::SetOnHover(OnControlSignature&& Fn)
 {
-	m_OnHover = Fn;
+	m_OnHover = std::move(Fn);
 	return *this;
+}
+
+Separator& Separator::SetOrientation(Orientation InOrientation)
+{
+	if (m_Orientation == InOrientation)
+	{
+		return *this;
+	}
+
+	m_Orientation = InOrientation;
+	UpdateLayout();
+	Invalidate(InvalidateType::Both);
+	return *this;
+}
+
+Orientation Separator::GetOrientation() const
+{
+	return m_Orientation;
 }
 
 void Separator::OnPaint(Paint& Brush) const
@@ -73,6 +91,19 @@ void Separator::OnLoad(const Json& Root)
 	Control::OnLoad(Root);
 
 	m_Orientation = ToOrientation(Root["Orientation"].String());
+	UpdateLayout();
+}
+
+void Separator::OnMouseEnter()
+{
+	if (m_OnHover)
+	{
+		m_OnHover(*this);
+	}
+}
+
+void Separator::UpdateLayout()
+{
 	if (m_Orientation == Orientation::Vertical)
 	{
 		SetExpand(Expand::Height);
@@ -82,14 +113,6 @@ void Separator::OnLoad(const Json& Root)
 	{
 		SetExpand(Expand::Width);
 		SetSize({ 0.0f, 16.0f });
-	}
-}
-
-void Separator::OnMouseEnter()
-{
-	if (m_OnHover)
-	{
-		m_OnHover(*this);
 	}
 }
 
