@@ -51,7 +51,10 @@ public:
 	virtual bool OnKeyPressed(Keyboard::Key Key) override;
 
 private:
-	bool Process(const std::string& Command);
+	// TODO: Maybe create an args parser class that can be used in multiple places.
+	static std::vector<std::string> Tokenize(const std::string& Value);
+
+	bool Process(const std::string& Command, const std::vector<std::string>& Arguments);
 
 	std::shared_ptr<VerticalContainer> m_Container { nullptr };
 	std::shared_ptr<TextInput> m_Input { nullptr };

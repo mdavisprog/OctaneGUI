@@ -75,10 +75,17 @@ bool CommandPalette::OnKeyPressed(Keyboard::Key Key)
 {
 	if (Key == Keyboard::Key::Enter)
 	{
-		std::string Command = m_Input->GetText();
+		std::vector<std::string> Tokens = Tokenize(m_Input->GetText());
 		m_Input->SetText("");
 		GetWindow()->ClosePopup();
-		return Process(Command);
+
+		std::string Command;
+		if (!Tokens.empty())
+		{
+			Command = Tokens[0];
+			Tokens.erase(Tokens.begin());
+		}
+		return Process(Command, Tokens);
 	}
 	else if (Key == Keyboard::Key::Escape)
 	{
@@ -89,7 +96,30 @@ bool CommandPalette::OnKeyPressed(Keyboard::Key Key)
 	return false;
 }
 
-bool CommandPalette::Process(const std::string& Command)
+std::vector<std::string> CommandPalette::Tokenize(const std::string& Value)
+{
+	std::vector<std::string> Result;
+
+	if (Value.empty())
+	{
+		return std::move(Result);
+	}
+
+	size_t Start = 0;
+	size_t Pos = Value.find(' ');
+	while (Pos != std::string::npos)
+	{
+		Result.push_back(std::move(Value.substr(Start, Pos - Start)));
+		Start = Pos + 1;
+		Pos = Value.find(' ', Start);
+	}
+
+	Result.push_back(std::move(Value.substr(Start, Value.size() - Start)));
+
+	return std::move(Result);
+}
+
+bool CommandPalette::Process(const std::string& Command, const std::vector<std::string>& Arguments)
 {
 	const std::string Lower = Json::ToLower(Command);
 	if (Lower == "inspector")
