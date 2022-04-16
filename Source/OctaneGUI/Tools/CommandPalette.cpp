@@ -32,6 +32,7 @@ SOFTWARE.
 #include "../Json.h"
 #include "../Window.h"
 #include "Inspector.h"
+#include "Profiler.h"
 
 namespace OctaneGUI
 {
@@ -121,11 +122,31 @@ std::vector<std::string> CommandPalette::Tokenize(const std::string& Value)
 
 bool CommandPalette::Process(const std::string& Command, const std::vector<std::string>& Arguments)
 {
-	const std::string Lower = Json::ToLower(Command);
+	std::string Lower = Json::ToLower(Command);
 	if (Lower == "inspector")
 	{
 		Inspector::Get().Inspect(GetWindow()->GetRootContainer());
 		return true;
+	}
+	else if (Lower == "profile")
+	{
+		if (!Arguments.empty())
+		{
+			Lower = Json::ToLower(Arguments.front());
+
+			if (Lower == "enable" || Lower == "e")
+			{
+				Profiler::Get().Enable();
+			}
+			else if (Lower == "disable" || Lower == "d")
+			{
+				Profiler::Get().Disable();
+			}
+			else
+			{
+				printf("No proifle command given. Must be 'enable' or 'disable'.\n");
+			}
+		}
 	}
 
 	return false;
