@@ -32,6 +32,7 @@ SOFTWARE.
 #include "../Json.h"
 #include "../Window.h"
 #include "Inspector.h"
+#include "ProfileViewer.h"
 #include "Profiler.h"
 
 namespace OctaneGUI
@@ -140,7 +141,11 @@ bool CommandPalette::Process(const std::string& Command, const std::vector<std::
 			}
 			else if (Lower == "disable" || Lower == "d")
 			{
-				Profiler::Get().Disable();
+				if (Profiler::Get().IsEnabled())
+				{
+					Profiler::Get().Disable();
+					ProfileViewer::Get().View(GetWindow());
+				}
 			}
 			else
 			{

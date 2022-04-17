@@ -60,6 +60,7 @@ if(TOOLS)
 		Tools/CommandPalette.cpp
 		Tools/Inspector.cpp
 		Tools/Profiler.cpp
+		Tools/ProfileViewer.cpp
 		Tools/Properties.cpp
 	)
 endif()
