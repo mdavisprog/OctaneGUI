@@ -33,20 +33,36 @@ namespace OctaneGUI
 namespace Tools
 {
 
+Profiler::Event::Event(const std::string& Name, int64_t Elapsed)
+	: m_Name(std::move(Name))
+	, m_Elapsed(Elapsed)
+{
+}
+
+const char* Profiler::Event::Name() const
+{
+	return m_Name.c_str();
+}
+
+int64_t Profiler::Event::Elapsed() const
+{
+	return m_Elapsed;
+}
+
+unsigned int Profiler::Event::Count() const
+{
+	return m_Count;
+}
+
+Profiler::Sample::Sample()
+{
+}
+
 Profiler::Sample::Sample(const char* Name)
 	: m_Name(Name)
 	, m_Begin(true)
 {
 	Profiler::Get().BeginSample(*this);
-}
-
-Profiler::Sample::Sample(const Sample& Other)
-	: m_Name(std::move(Other.m_Name))
-	, m_Start(Other.m_Start)
-	, m_End(Other.m_End)
-	, m_TotalElapsed(Other.m_TotalElapsed)
-	, m_Calls(Other.m_Calls)
-{
 }
 
 Profiler::Sample::~Sample()
@@ -57,67 +73,61 @@ Profiler::Sample::~Sample()
 	}
 }
 
-const char* Profiler::Sample::Name() const
+Profiler::Frame::Frame(bool Begin)
+	: m_Begin(Begin)
 {
-	return m_Name.c_str();
+	if (Begin)
+	{
+		Profiler::Get().BeginFrame();
+	}
 }
 
-int64_t Profiler::Sample::Elapsed() const
+Profiler::Frame::~Frame()
 {
-	return m_End - m_Start;
-}
-
-unsigned int Profiler::Sample::Calls() const
-{
-	return m_Calls;
-}
-
-Profiler::Frame::Frame()
-{
-	Profiler::Get().BeginFrame(*this);
-}
-
-Profiler::Frame::Frame(const Frame& Other)
-	: m_Samples(std::move(Other.m_Samples))
-	, m_Elapsed(Other.m_Elapsed)
-{
+	if (m_Begin)
+	{
+		Profiler::Get().EndFrame();
+	}
 }
 
 int64_t Profiler::Frame::Elapsed() const
 {
-	return m_Elapsed;
+	if (m_Events.empty())
+	{
+		return 0;
+	}
+
+	return m_Events.back().Elapsed();
 }
 
-void Profiler::Frame::CoalesceSamples()
+const std::vector<Profiler::Event>& Profiler::Frame::Events() const
 {
-	std::vector<Sample> Samples;
+	return m_Events;
+}
 
-	size_t UnmergedSampleCount = m_Samples.size();
+void Profiler::Frame::CoalesceEvents()
+{
+	std::vector<Event> Events;
 
 	bool Found = false;
-	for (Sample& Sample_ : m_Samples)
+	for (const Event& Event_ : m_Events)
 	{
-		m_Elapsed += Sample_.Elapsed();
-
 		Found = false;
-		for (Sample& Item : Samples)
+		for (Event& Item : Events)
 		{
-			if (Item.m_Name == Sample_.m_Name)
-			{
-				Item.m_TotalElapsed += Sample_.Elapsed();
-				Item.m_Calls++;
-				Found = true;
-				break;
-			}
+			Item.m_Elapsed += Event_.m_Elapsed;
+			Item.m_Count++;
+			Found = true;
+			break;
 		}
 
 		if (!Found)
 		{
-			Samples.push_back(std::move(Sample_));
+			Events.push_back(Event_);
 		}
 	}
 
-	m_Samples = std::move(Samples);
+	m_Events = std::move(Events);
 }
 
 Profiler& Profiler::Get()
@@ -154,23 +164,47 @@ void Profiler::Disable()
 	uint32_t Count = 1;
 	for (Frame& Frame_ : m_Frames)
 	{
-		Frame_.CoalesceSamples();
+		Frame_.CoalesceEvents();
 	}
 	printf("Finished coalescing.\n");
+}
+
+bool Profiler::IsEnabled() const
+{
+	return m_Enabled;
+}
+
+const std::vector<Profiler::Frame>& Profiler::Frames() const
+{
+	return m_Frames;
 }
 
 Profiler::Profiler()
 {
 }
 
-void Profiler::BeginFrame(Frame& Frame_)
+void Profiler::BeginFrame()
 {
 	if (!m_Enabled)
 	{
 		return;
 	}
 
-	m_Frames.push_back(Frame_);
+	m_Frames.emplace_back(false);
+	Frame& Frame_ = m_Frames.back();
+	Frame_.m_Sample.m_Name = "Frame";
+	BeginSample(Frame_.m_Sample);
+}
+
+void Profiler::EndFrame()
+{
+	if (!m_Enabled || m_Frames.empty())
+	{
+		return;
+	}
+
+	Frame& Frame_ = m_Frames.back();
+	EndSample(Frame_.m_Sample);
 }
 
 void Profiler::BeginSample(Sample& Sample_)
@@ -192,7 +226,8 @@ void Profiler::EndSample(Sample& Sample_)
 
 	Sample_.m_End = m_Clock.MeasureMS();
 	Frame& Frame_ = m_Frames.back();
-	Frame_.m_Samples.push_back(Sample_);
+
+	Frame_.m_Events.emplace_back(Sample_.m_Name, Sample_.m_End - Sample_.m_Start);
 }
 
 }

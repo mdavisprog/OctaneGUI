@@ -34,8 +34,8 @@ namespace OctaneGUI
 {
 
 #if TOOLS
-	#define PROFILER_SAMPLE(Name) Tools::Profiler::Sample(Name)
-	#define PROFILER_FRAME() Tools::Profiler::Frame()
+	#define PROFILER_SAMPLE(Name) Tools::Profiler::Sample Sample(Name)
+	#define PROFILER_FRAME() Tools::Profiler::Frame Frame(true)
 #else
 	#define PROFILER_SAMPLE(Name)
 	#define PROFILER_FRAME()

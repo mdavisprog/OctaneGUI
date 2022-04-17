@@ -39,26 +39,36 @@ namespace Tools
 class Profiler
 {
 public:
+	class Event
+	{
+		friend Profiler;
+
+	public:
+		Event(const std::string& Name, int64_t Elapsed);
+
+		const char* Name() const;
+		int64_t Elapsed() const;
+		unsigned int Count() const;
+
+	private:
+		std::string m_Name;
+		int64_t m_Elapsed { 0 };
+		unsigned int m_Count { 1 };
+	};
+
 	class Sample
 	{
 		friend Profiler;
 
 	public:
+		Sample();
 		Sample(const char* Name);
-		Sample(const Sample& Other);
 		~Sample();
-
-		const char* Name() const;
-		int64_t Elapsed() const;
-		int64_t TotalElapsed() const;
-		unsigned int Calls() const;
 
 	private:
 		std::string m_Name {};
 		int64_t m_Start { 0 };
 		int64_t m_End { 0 };
-		int64_t m_TotalElapsed { 0 };
-		unsigned int m_Calls { 1 };
 		bool m_Begin { false };
 	};
 
@@ -67,27 +77,33 @@ public:
 		friend Profiler;
 
 	public:
-		Frame();
-		Frame(const Frame& Other);
+		Frame(bool Begin = true);
+		~Frame();
 
 		int64_t Elapsed() const;
+		const std::vector<Event>& Events() const;
 
 	private:
-		void CoalesceSamples();
+		void CoalesceEvents();
 
-		std::vector<Sample> m_Samples {};
-		int64_t m_Elapsed { 0 };
+		Sample m_Sample {};
+		std::vector<Event> m_Events {};
+		bool m_Begin { false };
 	};
 
 	static Profiler& Get();
 
 	void Enable();
 	void Disable();
+	bool IsEnabled() const;
+
+	const std::vector<Frame>& Frames() const;
 
 private:
 	Profiler();
 
-	void BeginFrame(Frame& Frame_);
+	void BeginFrame();
+	void EndFrame();
 
 	void BeginSample(Sample& Sample_);
 	void EndSample(Sample& Sample_);
