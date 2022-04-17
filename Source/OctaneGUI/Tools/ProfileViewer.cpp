@@ -83,8 +83,10 @@ public:
 		const Color BaseColor = GetProperty(ThemeProperties::Button).ToColor();
 		const Color HoveredColor = GetProperty(ThemeProperties::Button_Hovered).ToColor();
 
+		const size_t StartColumn = (size_t)m_Offset / m_ColumnSize;
+
 		float Offset = 0.0f;
-		for (size_t I = 0; I < Frames.size(); I++)
+		for (size_t I = StartColumn; I < Frames.size(); I++)
 		{
 			const Profiler::Frame& Frame_ = Frames[I];
 
@@ -101,15 +103,55 @@ public:
 				break;
 			}
 		}
+
+		Brush.RectangleOutline(GetAbsoluteBounds(), GetProperty(ThemeProperties::PanelOutline).ToColor());
 	}
 
 	virtual void OnMouseMove(const Vector2& Position) override
 	{
-		m_HoveredIndex = GetIndex(Position);
-
-		if (m_OnHovered)
+		if (m_Drag)
 		{
-			m_OnHovered(m_HoveredIndex);
+			const std::vector<Profiler::Frame>& Frames = Profiler::Get().Frames();
+
+			const Vector2 Delta = Position - m_Anchor;
+			const float TotalSize = (float)Frames.size() * m_ColumnSize;
+			const float Overflow = TotalSize - GetSize().X;
+
+			if (Overflow > 0.0f)
+			{
+				m_Offset = std::max<float>(0.0f, m_Offset - Delta.X);
+				m_Offset = std::min<float>(m_Offset, Overflow);
+				Invalidate();
+			}
+		}
+		else if (Contains(Position))
+		{
+			m_HoveredIndex = GetIndex(Position);
+
+			if (m_OnHovered)
+			{
+				m_OnHovered(m_HoveredIndex);
+			}
+		}
+
+		m_Anchor = Position;
+	}
+
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override
+	{
+		if (Button == Mouse::Button::Right)
+		{
+			m_Drag = true;
+		}
+
+		return true;
+	}
+
+	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override
+	{
+		if (Button == Mouse::Button::Right)
+		{
+			m_Drag = false;
 		}
 	}
 
@@ -117,12 +159,16 @@ private:
 	int GetIndex(const Vector2& Position) const
 	{
 		const Vector2 Local = Position - GetAbsolutePosition();
-		return Local.X / m_ColumnSize;
+		return (Local.X + m_Offset) / m_ColumnSize;
 	}
 
 	int64_t m_MaxElapsed { 75 };
 	int m_HoveredIndex { -1 };
 	float m_ColumnSize { 4.0f };
+	bool m_Drag { false };
+	float m_Offset { 0.0f };
+	Vector2 m_Anchor {};
+
 	OnIndexSignature m_OnSelected { nullptr };
 	OnIndexSignature m_OnHovered { nullptr };
 };
@@ -230,14 +276,15 @@ void ProfileViewer::SetFrame(size_t Index)
 	Tree_->Clear();
 
 	const std::vector<Profiler::Frame>& Frames = Profiler::Get().Frames();
-	if (Index < Frames.size() - 1)
+	if (Index < Frames.size())
 	{
 		const Profiler::Frame& Frame_ = Frames[Index];
-		const std::string Label = std::string("Frame [") + std::to_string(Index) + "]: " + std::to_string(Frame_.Events().back().Elapsed());
+		int64_t Elapsed = !Frame_.Events().empty() ? Frame_.Events().back().Elapsed() : 0;
+		const std::string Label = "Frame [" + std::to_string(Index) + "]: " + std::to_string(Elapsed);
 		Tree_->SetText(Label.c_str());
 
 		const std::vector<Profiler::Event>& Events = Frame_.Events();
-		for (size_t I = 0; I < Events.size() - 1; I++)
+		for (size_t I = 0; !Events.empty() && I < Events.size() - 1; I++)
 		{
 			const Profiler::Event& Event_ = Events[I];
 			Tree_->AddChild((std::string(Event_.Name()) + " " + std::to_string(Event_.Elapsed())).c_str());
