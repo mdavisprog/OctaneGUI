@@ -29,6 +29,7 @@ SOFTWARE.
 #include "../Controls/Container.h"
 #include "../Controls/ControlList.h"
 #include "../Controls/Panel.h"
+#include "../Controls/Text.h"
 #include "../Controls/Tree.h"
 #include "../Paint.h"
 #include "../ThemeProperties.h"
@@ -189,6 +190,9 @@ void ProfileViewer::View(Window* InWindow)
 		m_Window = InWindow->App().NewWindow("ProfileViewer", Stream.str().c_str(), List);
 		std::shared_ptr<Container> Root = List.To<Container>("Root");
 		m_Root = Root;
+
+		std::string TotalFrames = "Frame Count: " + std::to_string(Profiler::Get().Frames().size());
+		Root->AddControl<Text>()->SetText(TotalFrames.c_str());
 
 		std::shared_ptr<Timeline> Timeline_ = Root->AddControl<Timeline>();
 		Timeline_->Track()->SetOnHovered([this](int Index) -> void
