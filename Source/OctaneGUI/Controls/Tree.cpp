@@ -393,6 +393,8 @@ Tree& Tree::SetOnSelected(OnTreeSignature&& Fn)
 
 void Tree::Clear()
 {
+	SetExpanded(false);
+	RemoveControl(m_List);
 	m_List = nullptr;
 	Invalidate();
 }
