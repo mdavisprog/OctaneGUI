@@ -115,10 +115,13 @@ void Profiler::Frame::CoalesceEvents()
 		Found = false;
 		for (Event& Item : Events)
 		{
-			Item.m_Elapsed += Event_.m_Elapsed;
-			Item.m_Count++;
-			Found = true;
-			break;
+			if (Event_.m_Name == Item.m_Name)
+			{
+				Item.m_Elapsed += Event_.m_Elapsed;
+				Item.m_Count++;
+				Found = true;
+				break;
+			}
 		}
 
 		if (!Found)
