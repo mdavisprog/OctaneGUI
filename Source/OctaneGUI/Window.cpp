@@ -227,7 +227,11 @@ void Window::OnMouseMove(const Vector2& Position)
 	if (!m_Focus.expired())
 	{
 		std::shared_ptr<Control> Focused = m_Focus.lock();
-		Focused->OnMouseMove(Position);
+
+		if (Current != Focused)
+		{
+			Focused->OnMouseMove(Position);
+		}
 	}
 }
 
