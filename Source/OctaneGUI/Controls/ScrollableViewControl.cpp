@@ -36,6 +36,11 @@ ScrollableViewControl::ScrollableViewControl(Window* InWindow)
 	m_Scrollable = AddControl<ScrollableContainer>();
 }
 
+const std::shared_ptr<ScrollableContainer>& ScrollableViewControl::Scrollable() const
+{
+	return m_Scrollable;
+}
+
 std::weak_ptr<Control> ScrollableViewControl::GetControl(const Vector2& Point) const
 {
 	if (m_Scrollable->IsInScrollBar(Point))
@@ -44,11 +49,6 @@ std::weak_ptr<Control> ScrollableViewControl::GetControl(const Vector2& Point) c
 	}
 
 	return Container::GetControl(Point);
-}
-
-const std::shared_ptr<ScrollableContainer>& ScrollableViewControl::Scrollable() const
-{
-	return m_Scrollable;
 }
 
 }

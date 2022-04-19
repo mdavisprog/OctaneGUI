@@ -40,10 +40,9 @@ class ScrollableViewControl : public Container
 public:
 	ScrollableViewControl(Window* InWindow);
 
-	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
-
-protected:
 	const std::shared_ptr<ScrollableContainer>& Scrollable() const;
+
+	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 
 private:
 	std::shared_ptr<ScrollableContainer> m_Scrollable { nullptr };
