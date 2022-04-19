@@ -105,6 +105,11 @@ int64_t Profiler::Frame::Elapsed() const
 	return m_Root.Elapsed();
 }
 
+unsigned int Profiler::Frame::Count() const
+{
+	return m_Root.Count();
+}
+
 const std::vector<Profiler::Event>& Profiler::Frame::Events() const
 {
 	return m_Root.Events();
@@ -120,9 +125,11 @@ void Profiler::Frame::CoalesceEvents(Profiler::Event& Group)
 	std::vector<Event> Events;
 
 	bool Found = false;
+	unsigned int Count = Group.Count();
 	for (Event& Event_ : Group.m_Events)
 	{
 		CoalesceEvents(Event_);
+		Count += Event_.Count();
 
 		Found = false;
 		for (Event& Item : Events)
@@ -143,6 +150,7 @@ void Profiler::Frame::CoalesceEvents(Profiler::Event& Group)
 	}
 
 	Group.m_Events = std::move(Events);
+	Group.m_Count = Count;
 }
 
 Profiler& Profiler::Get()

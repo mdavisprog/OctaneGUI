@@ -84,6 +84,7 @@ public:
 		~Frame();
 
 		int64_t Elapsed() const;
+		unsigned int Count() const;
 		const std::vector<Event>& Events() const;
 
 	private:

@@ -293,7 +293,8 @@ void ProfileViewer::View(Window* InWindow)
 					const std::vector<Profiler::Frame>& Frames = Profiler::Get().Frames();
 					if (Index < Frames.size())
 					{
-						const std::string Contents = std::string("Frame [") + std::to_string(Index) + "]: " + std::to_string(Frames[Index].Elapsed());
+						std::string Contents = std::string("Frame [") + std::to_string(Index) + "]: " + std::to_string(Frames[Index].Elapsed());
+						Contents += " " + std::to_string(Frames[Index].Count());
 						m_HoveredFrame.lock()->SetText(Contents.c_str());
 					}
 				});
