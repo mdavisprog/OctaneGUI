@@ -28,6 +28,7 @@ SOFTWARE.
 #include "../Application.h"
 #include "../Controls/Container.h"
 #include "../Controls/ControlList.h"
+#include "../Controls/HorizontalContainer.h"
 #include "../Controls/Panel.h"
 #include "../Controls/Text.h"
 #include "../Controls/Tree.h"
@@ -63,6 +64,8 @@ public:
 		{
 			m_MaxElapsed = std::max<int64_t>(m_MaxElapsed, Frame_.Elapsed());
 		}
+
+		SetSelected(0);
 	}
 
 	TimelineTrack& SetOnSelected(OnIndexSignature&& Fn)
@@ -82,12 +85,23 @@ public:
 		const std::vector<Profiler::Frame>& Frames = Profiler::Get().Frames();
 		const Color BaseColor = GetProperty(ThemeProperties::Button).ToColor();
 		const Color HoveredColor = GetProperty(ThemeProperties::Button_Hovered).ToColor();
+		const Color SelectedColor = Color(255, 255, 0, 255);
 
 		const size_t StartColumn = (size_t)m_Offset / m_ColumnSize;
 
 		float Offset = 0.0f;
 		for (size_t I = StartColumn; I < Frames.size(); I++)
 		{
+			Color EventColor = BaseColor;
+			if (m_SelectedIndex == I)
+			{
+				EventColor = SelectedColor;
+			}
+			else if (m_HoveredIndex == I)
+			{
+				EventColor = HoveredColor;
+			}
+
 			const Profiler::Frame& Frame_ = Frames[I];
 
 			const float Pct = (float)Frame_.Elapsed() / (float)m_MaxElapsed;
@@ -95,7 +109,7 @@ public:
 			const Vector2 Bottom = GetAbsolutePosition() + Vector2(0.0f, GetSize().Y);
 			const Vector2 Min = Bottom + Vector2(Offset, -Height);
 			const Vector2 Max = Bottom + Vector2(Offset + m_ColumnSize, 0.0f);
-			Brush.Rectangle({ Min, Max }, m_HoveredIndex == I ? HoveredColor : BaseColor);
+			Brush.Rectangle({ Min, Max }, EventColor);
 			Offset += m_ColumnSize;
 
 			if (Offset >= GetSize().X)
@@ -132,6 +146,8 @@ public:
 			{
 				m_OnHovered(m_HoveredIndex);
 			}
+
+			Invalidate();
 		}
 
 		m_Anchor = Position;
@@ -139,7 +155,12 @@ public:
 
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override
 	{
-		if (Button == Mouse::Button::Right)
+		if (Button == Mouse::Button::Left)
+		{
+			SetSelected(GetIndex(Position));
+			Invalidate();
+		}
+		else if (Button == Mouse::Button::Right)
 		{
 			m_Drag = true;
 		}
@@ -162,8 +183,24 @@ private:
 		return (Local.X + m_Offset) / m_ColumnSize;
 	}
 
+	void SetSelected(int Index)
+	{
+		if (m_SelectedIndex == Index)
+		{
+			return;
+		}
+
+		m_SelectedIndex = Index;
+
+		if (m_OnSelected)
+		{
+			m_OnSelected(m_SelectedIndex);
+		}
+	}
+
 	int64_t m_MaxElapsed { 75 };
 	int m_HoveredIndex { -1 };
+	int m_SelectedIndex { 0 };
 	float m_ColumnSize { 4.0f };
 	bool m_Drag { false };
 	float m_Offset { 0.0f };
@@ -237,14 +274,27 @@ void ProfileViewer::View(Window* InWindow)
 		std::shared_ptr<Container> Root = List.To<Container>("Root");
 		m_Root = Root;
 
+		std::shared_ptr<HorizontalContainer> Info = Root->AddControl<HorizontalContainer>();
+		Info->SetSpacing({ 20.0f, 0.0f });
 		std::string TotalFrames = "Frame Count: " + std::to_string(Profiler::Get().Frames().size());
-		Root->AddControl<Text>()->SetText(TotalFrames.c_str());
+		Info->AddControl<Text>()->SetText(TotalFrames.c_str());
+		m_HoveredFrame = Info->AddControl<Text>();
 
 		std::shared_ptr<Timeline> Timeline_ = Root->AddControl<Timeline>();
-		Timeline_->Track()->SetOnHovered([this](int Index) -> void
-			{
-				SetFrame(Index);
-			});
+		Timeline_->Track()
+			->SetOnSelected([this](int Index) -> void
+				{
+					SetFrame(Index);
+				})
+			.SetOnHovered([this](int Index)
+				{
+					const std::vector<Profiler::Frame>& Frames = Profiler::Get().Frames();
+					if (Index < Frames.size())
+					{
+						const std::string Contents = std::string("Frame [") + std::to_string(Index) + "]: " + std::to_string(Frames[Index].Elapsed());
+						m_HoveredFrame.lock()->SetText(Contents.c_str());
+					}
+				});
 		m_Timeline = Timeline_;
 
 		m_Tree = Root->AddControl<Tree>();

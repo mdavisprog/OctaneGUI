@@ -32,6 +32,7 @@ namespace OctaneGUI
 {
 
 class Container;
+class Text;
 class Tree;
 class Window;
 
@@ -58,6 +59,7 @@ private:
 	std::weak_ptr<Container> m_Root {};
 	std::weak_ptr<Timeline> m_Timeline {};
 	std::weak_ptr<Tree> m_Tree {};
+	std::weak_ptr<Text> m_HoveredFrame {};
 };
 
 }
