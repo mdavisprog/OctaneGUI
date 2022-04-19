@@ -44,16 +44,19 @@ public:
 		friend Profiler;
 
 	public:
+		Event();
 		Event(const std::string& Name, int64_t Elapsed);
 
 		const char* Name() const;
 		int64_t Elapsed() const;
 		unsigned int Count() const;
+		const std::vector<Event>& Events() const;
 
 	private:
-		std::string m_Name;
+		std::string m_Name {};
 		int64_t m_Elapsed { 0 };
 		unsigned int m_Count { 1 };
+		std::vector<Event> m_Events {};
 	};
 
 	class Sample
@@ -62,14 +65,14 @@ public:
 
 	public:
 		Sample();
-		Sample(const char* Name);
+		Sample(const char* Name, bool Group);
 		~Sample();
 
 	private:
 		std::string m_Name {};
 		int64_t m_Start { 0 };
-		int64_t m_End { 0 };
 		bool m_Begin { false };
+		bool m_Group { false };
 	};
 
 	class Frame
@@ -85,9 +88,10 @@ public:
 
 	private:
 		void CoalesceEvents();
+		void CoalesceEvents(Event& Group);
 
 		Sample m_Sample {};
-		std::vector<Event> m_Events {};
+		Event m_Root {};
 		bool m_Begin { false };
 	};
 
@@ -110,6 +114,7 @@ private:
 
 	bool m_Enabled { false };
 	std::vector<Frame> m_Frames {};
+	std::vector<Event> m_Groups {};
 	Clock m_Clock {};
 };
 

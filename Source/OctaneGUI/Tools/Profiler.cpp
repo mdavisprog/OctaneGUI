@@ -33,6 +33,10 @@ namespace OctaneGUI
 namespace Tools
 {
 
+Profiler::Event::Event()
+{
+}
+
 Profiler::Event::Event(const std::string& Name, int64_t Elapsed)
 	: m_Name(std::move(Name))
 	, m_Elapsed(Elapsed)
@@ -54,13 +58,19 @@ unsigned int Profiler::Event::Count() const
 	return m_Count;
 }
 
+const std::vector<Profiler::Event>& Profiler::Event::Events() const
+{
+	return m_Events;
+}
+
 Profiler::Sample::Sample()
 {
 }
 
-Profiler::Sample::Sample(const char* Name)
+Profiler::Sample::Sample(const char* Name, bool Group)
 	: m_Name(Name)
 	, m_Begin(true)
+	, m_Group(Group)
 {
 	Profiler::Get().BeginSample(*this);
 }
@@ -92,26 +102,28 @@ Profiler::Frame::~Frame()
 
 int64_t Profiler::Frame::Elapsed() const
 {
-	if (m_Events.empty())
-	{
-		return 0;
-	}
-
-	return m_Events.back().Elapsed();
+	return m_Root.Elapsed();
 }
 
 const std::vector<Profiler::Event>& Profiler::Frame::Events() const
 {
-	return m_Events;
+	return m_Root.Events();
 }
 
 void Profiler::Frame::CoalesceEvents()
 {
+	CoalesceEvents(m_Root);
+}
+
+void Profiler::Frame::CoalesceEvents(Profiler::Event& Group)
+{
 	std::vector<Event> Events;
 
 	bool Found = false;
-	for (const Event& Event_ : m_Events)
+	for (Event& Event_ : Group.m_Events)
 	{
+		CoalesceEvents(Event_);
+
 		Found = false;
 		for (Event& Item : Events)
 		{
@@ -130,7 +142,7 @@ void Profiler::Frame::CoalesceEvents()
 		}
 	}
 
-	m_Events = std::move(Events);
+	Group.m_Events = std::move(Events);
 }
 
 Profiler& Profiler::Get()
@@ -196,6 +208,7 @@ void Profiler::BeginFrame()
 	m_Frames.emplace_back(false);
 	Frame& Frame_ = m_Frames.back();
 	Frame_.m_Sample.m_Name = "Frame";
+	Frame_.m_Sample.m_Group = true;
 	BeginSample(Frame_.m_Sample);
 }
 
@@ -218,6 +231,11 @@ void Profiler::BeginSample(Sample& Sample_)
 	}
 
 	Sample_.m_Start = m_Clock.MeasureMS();
+
+	if (Sample_.m_Group)
+	{
+		m_Groups.emplace_back(Sample_.m_Name.c_str(), 0);
+	}
 }
 
 void Profiler::EndSample(Sample& Sample_)
@@ -227,10 +245,38 @@ void Profiler::EndSample(Sample& Sample_)
 		return;
 	}
 
-	Sample_.m_End = m_Clock.MeasureMS();
+	int64_t End = m_Clock.MeasureMS();
+	int64_t Elapsed = End - Sample_.m_Start;
+
 	Frame& Frame_ = m_Frames.back();
 
-	Frame_.m_Events.emplace_back(Sample_.m_Name, Sample_.m_End - Sample_.m_Start);
+	if (Sample_.m_Group)
+	{
+		m_Groups.back().m_Elapsed = Elapsed;
+
+		if (m_Groups.size() > 1)
+		{
+			Event& Dest = m_Groups[m_Groups.size() - 2];
+			Dest.m_Events.push_back(std::move(m_Groups.back()));
+		}
+		else
+		{
+			Frame_.m_Root = std::move(m_Groups.back());
+		}
+
+		m_Groups.pop_back();
+	}
+	else
+	{
+		if (m_Groups.empty())
+		{
+			Frame_.m_Root.m_Elapsed = Elapsed;
+		}
+		else
+		{
+			m_Groups.back().m_Events.emplace_back(Sample_.m_Name, Elapsed);
+		}
+	}
 }
 
 }

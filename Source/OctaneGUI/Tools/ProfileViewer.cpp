@@ -270,26 +270,45 @@ void ProfileViewer::Populate()
 	SetFrame(0);
 }
 
+void AddEvents(const std::shared_ptr<Tree>& Root, const Profiler::Event& Event)
+{
+	for (const Profiler::Event& Item : Event.Events())
+	{
+		const std::string Name = std::string(Item.Name()) + " " + std::to_string(Item.Elapsed()) + " Count: " + std::to_string(Item.Count());
+		std::shared_ptr<Tree> Child = Root->AddChild(Name.c_str());
+
+		if (!Item.Events().empty())
+		{
+			AddEvents(Child, Item);
+		}
+	}
+}
+
 void ProfileViewer::SetFrame(size_t Index)
 {
 	std::shared_ptr<Tree> Tree_ = m_Tree.lock();
+	bool Expanded = Tree_->IsExpanded();
 	Tree_->Clear();
 
 	const std::vector<Profiler::Frame>& Frames = Profiler::Get().Frames();
 	if (Index < Frames.size())
 	{
-		const Profiler::Frame& Frame_ = Frames[Index];
-		int64_t Elapsed = !Frame_.Events().empty() ? Frame_.Events().back().Elapsed() : 0;
-		const std::string Label = "Frame [" + std::to_string(Index) + "]: " + std::to_string(Elapsed);
+		const Profiler::Frame& Frame = Frames[Index];
+		const std::string Label = "Frame [" + std::to_string(Index) + "]: " + std::to_string(Frame.Elapsed());
 		Tree_->SetText(Label.c_str());
 
-		const std::vector<Profiler::Event>& Events = Frame_.Events();
-		for (size_t I = 0; !Events.empty() && I < Events.size() - 1; I++)
+		const std::vector<Profiler::Event>& Events = Frame.Events();
+		for (const Profiler::Event& Event : Events)
 		{
-			const Profiler::Event& Event_ = Events[I];
-			Tree_->AddChild((std::string(Event_.Name()) + " " + std::to_string(Event_.Elapsed())).c_str());
+			std::shared_ptr<Tree> Child = Tree_->AddChild((std::string(Event.Name()) + " " + std::to_string(Event.Elapsed()) + " Count: " + std::to_string(Event.Count())).c_str());
+			if (!Event.Events().empty())
+			{
+				AddEvents(Child, Event);
+			}
 		}
 	}
+
+	Tree_->SetExpanded(Expanded);
 }
 
 }
