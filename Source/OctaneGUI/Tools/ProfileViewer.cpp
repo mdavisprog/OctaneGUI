@@ -32,6 +32,7 @@ SOFTWARE.
 #include "../Controls/Panel.h"
 #include "../Controls/ScrollableContainer.h"
 #include "../Controls/ScrollableViewControl.h"
+#include "../Controls/Table.h"
 #include "../Controls/Text.h"
 #include "../Controls/Tree.h"
 #include "../Paint.h"
@@ -300,9 +301,16 @@ void ProfileViewer::View(Window* InWindow)
 				});
 		m_Timeline = Timeline_;
 
-		std::shared_ptr<ScrollableViewControl> FrameDesc = Root->AddControl<ScrollableViewControl>();
-		FrameDesc->SetExpand(Expand::Both);
-		m_Tree = FrameDesc->Scrollable()->AddControl<Tree>();
+		std::shared_ptr<Table> FrameDesc = Root->AddControl<Table>();
+		FrameDesc
+			->SetColumns(3)
+			.SetHeader(0, "Frame")
+			.SetHeader(1, "Time")
+			.SetHeader(2, "Count")
+			.SetColumnWidth(0, 400)
+			.SetExpand(Expand::Both);
+
+		m_Tree = FrameDesc->Column(0)->AddControl<Tree>();
 		m_Tree.lock()->SetExpand(Expand::Width);
 	}
 
