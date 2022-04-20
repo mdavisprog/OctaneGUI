@@ -57,6 +57,9 @@ public:
 	bool HasControl(const std::shared_ptr<Control>& Item) const;
 	void ClearControls();
 
+	Container& SetClip(bool Clip);
+	bool ShouldClip() const;
+
 	Container* Layout();
 	void InvalidateLayout();
 
@@ -81,6 +84,7 @@ protected:
 private:
 	std::vector<std::shared_ptr<Control>> m_Controls;
 	bool m_InLayout { false };
+	bool m_Clip { false };
 };
 
 }

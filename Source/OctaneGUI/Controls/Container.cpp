@@ -197,6 +197,17 @@ void Container::ClearControls()
 	Invalidate(InvalidateType::Both);
 }
 
+Container& Container::SetClip(bool Clip)
+{
+	m_Clip = Clip;
+	return *this;
+}
+
+bool Container::ShouldClip() const
+{
+	return m_Clip;
+}
+
 Container* Container::Layout()
 {
 	m_InLayout = true;
@@ -280,9 +291,19 @@ Vector2 Container::DesiredSize() const
 
 void Container::OnPaint(Paint& Brush) const
 {
+	if (ShouldClip())
+	{
+		Brush.PushClip(GetAbsoluteBounds());
+	}
+
 	for (const std::shared_ptr<Control>& Item : m_Controls)
 	{
 		Item->OnPaint(Brush);
+	}
+
+	if (ShouldClip())
+	{
+		Brush.PopClip();
 	}
 }
 
