@@ -38,6 +38,7 @@ SOFTWARE.
 #include "ScrollableContainer.h"
 #include "Separator.h"
 #include "Splitter.h"
+#include "Table.h"
 #include "Text.h"
 #include "TextButton.h"
 #include "TextInput.h"
@@ -112,6 +113,10 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 	else if (Type == Splitter::TypeName())
 	{
 		Result = AddControl<Splitter>();
+	}
+	else if (Type == Table::TypeName())
+	{
+		Result = AddControl<Table>();
 	}
 	else if (Type == Text::TypeName())
 	{

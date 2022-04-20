@@ -22,6 +22,7 @@ set(SOURCE
 	Controls/ScrollBar.cpp
 	Controls/Separator.cpp
 	Controls/Splitter.cpp
+	Controls/Table.cpp
 	Controls/Text.cpp
 	Controls/TextButton.cpp
 	Controls/TextInput.cpp

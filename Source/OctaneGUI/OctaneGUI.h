@@ -48,6 +48,7 @@ SOFTWARE.
 #include "Controls/ScrollBar.h"
 #include "Controls/ScrollableContainer.h"
 #include "Controls/Splitter.h"
+#include "Controls/Table.h"
 #include "Controls/Text.h"
 #include "Controls/TextButton.h"
 #include "Controls/TextInput.h"
