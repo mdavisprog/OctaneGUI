@@ -87,8 +87,24 @@ Vector2 BoxContainer::Spacing() const
 	return m_Spacing;
 }
 
+BoxContainer& BoxContainer::SetIgnoreDesiredSize(bool IgnoreDesiredSize)
+{
+	m_IgnoreDesiredSize = IgnoreDesiredSize;
+	return *this;
+}
+
+bool BoxContainer::ShouldIgnoreDesiredSize() const
+{
+	return m_IgnoreDesiredSize;
+}
+
 Vector2 BoxContainer::DesiredSize() const
 {
+	if (ShouldIgnoreDesiredSize())
+	{
+		return Container::DesiredSize();
+	}
+
 	Vector2 Result;
 
 	for (const std::shared_ptr<Control>& Item : Controls())
