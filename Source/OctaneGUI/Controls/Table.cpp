@@ -118,6 +118,7 @@ Table::TableColumn::TableColumn(Window* InWindow)
 	m_Header = HeaderOuter->AddControl<Text>();
 
 	m_Body = m_Outer->AddControl<VerticalContainer>();
+	m_Body->SetExpand(Expand::Width);
 }
 
 Table::TableColumn& Table::TableColumn::SetHeader(const char* Header)
@@ -133,12 +134,18 @@ const std::shared_ptr<Container>& Table::TableColumn::Body() const
 
 Vector2 Table::TableColumn::DesiredSize() const
 {
+	Vector2 Result = m_Header->GetSize();
+
 	if (m_Body->Controls().size() == 0)
 	{
-		return m_Header->GetSize();
+		return Result;
 	}
 
-	return m_Body->DesiredSize();
+	Vector2 BodySize = m_Body->DesiredSize();
+	Result.X = std::max<float>(Result.X, BodySize.X);
+	Result.Y = std::max<float>(Result.Y, BodySize.Y);
+
+	return Result;
 }
 
 }
