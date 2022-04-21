@@ -86,6 +86,12 @@ const std::shared_ptr<Container>& Table::Column(int Index) const
 	return Column->Body();
 }
 
+Table& Table::SetColumnSpacing(float Spacing)
+{
+	m_Row->SetSpacing({ Spacing, 0.0f });
+	return *this;
+}
+
 Table& Table::SetHeader(int Index, const char* Text)
 {
 	assert(Columns() > 0);

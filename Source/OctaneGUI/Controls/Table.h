@@ -45,6 +45,8 @@ public:
 	int Columns() const;
 	const std::shared_ptr<Container>& Column(int Index) const;
 
+	Table& SetColumnSpacing(float Spacing);
+
 	Table& SetHeader(int Index, const char* Header);
 
 	virtual Vector2 DesiredSize() const override;
