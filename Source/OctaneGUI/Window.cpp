@@ -147,6 +147,15 @@ void Window::SetPopup(const std::shared_ptr<Container>& Popup, OnContainerSignat
 
 void Window::ClosePopup()
 {
+	if (!m_Focus.expired())
+	{
+		if (m_Popup.HasControl(m_Focus.lock()))
+		{
+			m_Focus.lock()->OnUnfocused();
+			m_Focus.reset();
+		}
+	}
+
 	m_Popup.Close();
 }
 
