@@ -29,6 +29,7 @@ SOFTWARE.
 #include "../Controls/Container.h"
 #include "../Controls/ControlList.h"
 #include "../Controls/HorizontalContainer.h"
+#include "../Controls/MenuItem.h"
 #include "../Controls/Panel.h"
 #include "../Controls/Table.h"
 #include "../Controls/Text.h"
@@ -264,6 +265,10 @@ void ProfileViewer::View(Window* InWindow)
 		Stream << "{\"Title\": \"ProfileViewer\","
 			   << "\"Width\": 800,"
 			   << "\"Height\": 400,"
+			   << "\"MenuBar\": {\"Items\": ["
+			   << "{\"ID\": \"View\", \"Text\": \"View\", \"Items\": ["
+			   << "{\"ID\": \"Elapsed\", \"Text\": \"Elapsed Time\"}, {\"ID\": \"Count\", \"Text\": \"Event Count\"}"
+			   << "]}]},"
 			   << "\"Body\": {\"Controls\": ["
 			   << "{\"Type\": \"Panel\", \"Expand\": \"Both\"},"
 			   << "{\"Type\": \"MarginContainer\", \"Left\": 4, \"Top\": 4, \"Right\": 4, \"Bottom\": 4, \"Controls\": ["
@@ -274,6 +279,25 @@ void ProfileViewer::View(Window* InWindow)
 
 		ControlList List;
 		m_Window = InWindow->App().NewWindow("ProfileViewer", Stream.str().c_str(), List);
+
+		std::shared_ptr<MenuItem> ViewElapsed = List.To<MenuItem>("View.Elapsed");
+		std::shared_ptr<MenuItem> ViewCount = List.To<MenuItem>("View.Count");
+
+		ViewElapsed->SetChecked(true)
+			.SetOnPressed([this, ViewElapsed, ViewCount](const TextSelectable&) -> void
+				{
+					ViewElapsed->SetChecked(true);
+					ViewCount->SetChecked(false);
+					SetViewMode(ViewMode::Elapsed);
+				});
+
+		ViewCount->SetOnPressed([this, ViewElapsed, ViewCount](const TextSelectable&) -> void
+			{
+				ViewElapsed->SetChecked(false);
+				ViewCount->SetChecked(true);
+				SetViewMode(ViewMode::Count);
+			});
+
 		std::shared_ptr<Container> Root = List.To<Container>("Root");
 		m_Root = Root;
 
@@ -336,6 +360,16 @@ void ProfileViewer::View(Window* InWindow)
 
 ProfileViewer::ProfileViewer()
 {
+}
+
+void ProfileViewer::SetViewMode(ViewMode Mode)
+{
+	if (m_ViewMode == Mode)
+	{
+		return;
+	}
+
+	m_ViewMode = Mode;
 }
 
 void ProfileViewer::Populate()

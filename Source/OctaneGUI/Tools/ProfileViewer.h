@@ -50,13 +50,22 @@ public:
 	void View(Window* InWindow);
 
 private:
+	enum class ViewMode
+	{
+		Elapsed,
+		Count
+	};
+
 	ProfileViewer();
 
+	void SetViewMode(ViewMode Mode);
 	void Populate();
 	void SetFrame(size_t Index);
 	void UpdateFrameInfo();
 
 	size_t m_FrameIndex { 0 };
+	ViewMode m_ViewMode { ViewMode::Elapsed };
+
 	std::weak_ptr<Window> m_Window {};
 	std::weak_ptr<Container> m_Root {};
 	std::weak_ptr<Timeline> m_Timeline {};
