@@ -62,7 +62,7 @@ private:
 		const std::shared_ptr<Container>& Body() const;
 
 		virtual Vector2 DesiredSize() const override;
-	
+
 	private:
 		std::shared_ptr<Container> m_Outer { nullptr };
 		std::shared_ptr<Text> m_Header { nullptr };

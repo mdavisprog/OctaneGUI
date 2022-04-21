@@ -30,16 +30,16 @@ SOFTWARE.
 #include "../Controls/ControlList.h"
 #include "../Controls/HorizontalContainer.h"
 #include "../Controls/Panel.h"
-#include "../Controls/ScrollableContainer.h"
-#include "../Controls/ScrollableViewControl.h"
 #include "../Controls/Table.h"
 #include "../Controls/Text.h"
 #include "../Controls/Tree.h"
+#include "../Controls/VerticalContainer.h"
 #include "../Paint.h"
 #include "../ThemeProperties.h"
 #include "../Window.h"
 #include "Profiler.h"
 
+#include <cassert>
 #include <sstream>
 
 namespace OctaneGUI
@@ -306,11 +306,23 @@ void ProfileViewer::View(Window* InWindow)
 			->SetColumns(3)
 			.SetHeader(0, "Frame")
 			.SetHeader(1, "Time")
-			.SetHeader(2, "Count")
-			.SetExpand(Expand::Both);
+			.SetHeader(2, "Count");
 
 		m_Tree = FrameDesc->Column(0)->AddControl<Tree>();
-		m_Tree.lock()->SetExpand(Expand::Width);
+		m_Tree.lock()
+			->SetOnToggled([this](const Tree& Root) -> void
+				{
+					UpdateFrameInfo();
+				})
+			.SetExpand(Expand::Width);
+
+		const std::shared_ptr<BoxContainer>& FrameTimes = std::static_pointer_cast<BoxContainer>(FrameDesc->Column(1));
+		FrameTimes->SetSpacing({ 0.0f, 0.0f });
+		m_FrameTimes = FrameTimes;
+
+		const std::shared_ptr<BoxContainer>& EventCount = std::static_pointer_cast<BoxContainer>(FrameDesc->Column(2));
+		EventCount->SetSpacing({ 0.0f, 0.0f });
+		m_EventCount = EventCount;
 	}
 
 	if (m_Window.lock()->IsVisible())
@@ -336,14 +348,19 @@ void AddEvents(const std::shared_ptr<Tree>& Root, const Profiler::Event& Event)
 {
 	for (const Profiler::Event& Item : Event.Events())
 	{
-		const std::string Name = std::string(Item.Name()) + " " + std::to_string(Item.Elapsed()) + " Count: " + std::to_string(Item.Count());
-		std::shared_ptr<Tree> Child = Root->AddChild(Name.c_str());
+		std::shared_ptr<Tree> Child = Root->AddChild(Item.Name());
 
 		if (!Item.Events().empty())
 		{
 			AddEvents(Child, Item);
 		}
 	}
+}
+
+const Profiler::Frame& GetFrame(size_t Index)
+{
+	assert(Index >= 0 && Index < Profiler::Get().Frames().size());
+	return Profiler::Get().Frames()[Index];
 }
 
 void ProfileViewer::SetFrame(size_t Index)
@@ -355,14 +372,15 @@ void ProfileViewer::SetFrame(size_t Index)
 	const std::vector<Profiler::Frame>& Frames = Profiler::Get().Frames();
 	if (Index < Frames.size())
 	{
+		m_FrameIndex = Index;
 		const Profiler::Frame& Frame = Frames[Index];
-		const std::string Label = "Frame [" + std::to_string(Index) + "]: " + std::to_string(Frame.Elapsed());
+		const std::string Label = "Frame [" + std::to_string(Index) + "]";
 		Tree_->SetText(Label.c_str());
 
 		const std::vector<Profiler::Event>& Events = Frame.Events();
 		for (const Profiler::Event& Event : Events)
 		{
-			std::shared_ptr<Tree> Child = Tree_->AddChild((std::string(Event.Name()) + " " + std::to_string(Event.Elapsed()) + " Count: " + std::to_string(Event.Count())).c_str());
+			std::shared_ptr<Tree> Child = Tree_->AddChild(Event.Name());
 			if (!Event.Events().empty())
 			{
 				AddEvents(Child, Event);
@@ -371,6 +389,60 @@ void ProfileViewer::SetFrame(size_t Index)
 	}
 
 	Tree_->SetExpanded(Expanded);
+	UpdateFrameInfo();
+}
+
+void AddRow(const std::shared_ptr<Container>& Column, int64_t Value)
+{
+	std::shared_ptr<HorizontalContainer> Outer = Column->AddControl<HorizontalContainer>();
+	Outer
+		->SetGrow(Grow::Center)
+		->SetExpand(Expand::Width);
+	Outer->AddControl<Text>()->SetText(std::to_string(Value).c_str());
+}
+
+void UpdateRow(const Tree& Root, const Profiler::Event& Event, const std::shared_ptr<Container>& FrameTimes, const std::shared_ptr<Container>& EventCount)
+{
+	AddRow(FrameTimes, Event.Elapsed());
+	AddRow(EventCount, Event.Count());
+
+	if (!Root.IsExpanded())
+	{
+		return;
+	}
+
+	int Index = 0;
+	Root.ForEachChild([&](const Tree& Child) -> void
+		{
+			UpdateRow(Child, Event.Events()[Index], FrameTimes, EventCount);
+			Index++;
+		});
+}
+
+void ProfileViewer::UpdateFrameInfo()
+{
+	std::shared_ptr<Tree> FrameTree = m_Tree.lock();
+	std::shared_ptr<Container> FrameTimes = m_FrameTimes.lock();
+	std::shared_ptr<Container> EventCount = m_EventCount.lock();
+
+	const Profiler::Frame& Frame = GetFrame(m_FrameIndex);
+
+	FrameTimes->ClearControls();
+	EventCount->ClearControls();
+
+	AddRow(FrameTimes, Frame.Elapsed());
+	AddRow(EventCount, Frame.Count());
+
+	if (!FrameTree->IsExpanded())
+	{
+		return;
+	}
+
+	int Index = 0;
+	FrameTree->ForEachChild([this, &Frame, &Index](const Tree& Child) -> void
+		{
+			UpdateRow(Child, Frame.Events()[Index], m_FrameTimes.lock(), m_EventCount.lock());
+		});
 }
 
 }
