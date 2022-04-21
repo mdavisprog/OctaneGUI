@@ -29,6 +29,7 @@ SOFTWARE.
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace OctaneGUI
 {
@@ -42,6 +43,7 @@ public:
 
 	void AddControl(const std::shared_ptr<Control>& InControl);
 	bool Contains(const char* ID) const;
+	std::vector<std::string> IDs() const;
 
 	template <class T>
 	std::shared_ptr<T> To(const char* ID) const

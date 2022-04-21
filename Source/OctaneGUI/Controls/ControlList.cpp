@@ -53,4 +53,16 @@ bool ControlList::Contains(const char* ID) const
 	return m_Controls.find(ID) != m_Controls.end();
 }
 
+std::vector<std::string> ControlList::IDs() const
+{
+	std::vector<std::string> Result;
+
+	for (Map::const_iterator It = m_Controls.begin(); It != m_Controls.end(); ++It)
+	{
+		Result.push_back(It->first);
+	}
+
+	return Result;
+}
+
 }
