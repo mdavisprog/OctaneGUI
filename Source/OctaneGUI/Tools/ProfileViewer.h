@@ -45,17 +45,17 @@ class Timeline;
 class ProfileViewer
 {
 public:
-	static ProfileViewer& Get();
-
-	void View(Window* InWindow);
-
-private:
 	enum class ViewMode
 	{
 		Elapsed,
 		Count
 	};
 
+	static ProfileViewer& Get();
+
+	void View(Window* InWindow);
+
+private:
 	ProfileViewer();
 
 	void SetViewMode(ViewMode Mode);
@@ -64,7 +64,6 @@ private:
 	void UpdateFrameInfo();
 
 	size_t m_FrameIndex { 0 };
-	ViewMode m_ViewMode { ViewMode::Elapsed };
 
 	std::weak_ptr<Window> m_Window {};
 	std::weak_ptr<Container> m_Root {};

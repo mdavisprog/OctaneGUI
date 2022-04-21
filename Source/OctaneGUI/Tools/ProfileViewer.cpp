@@ -63,13 +63,19 @@ public:
 
 	void Initialize(Profiler& Profile)
 	{
-		const std::vector<Profiler::Frame>& Frames = Profile.Frames();
-		for (const Profiler::Frame& Frame_ : Frames)
+		Update(Profile);
+		SetSelected(0);
+	}
+
+	void SetViewMode(ProfileViewer::ViewMode Mode)
+	{
+		if (m_ViewMode == Mode)
 		{
-			m_MaxElapsed = std::max<int64_t>(m_MaxElapsed, Frame_.Elapsed());
+			return;
 		}
 
-		SetSelected(0);
+		m_ViewMode = Mode;
+		Update(Profiler::Get());
 	}
 
 	TimelineTrack& SetOnSelected(OnIndexSignature&& Fn)
@@ -106,9 +112,10 @@ public:
 				EventColor = HoveredColor;
 			}
 
-			const Profiler::Frame& Frame_ = Frames[I];
+			const Profiler::Frame& Frame = Frames[I];
 
-			const float Pct = (float)Frame_.Elapsed() / (float)m_MaxElapsed;
+			int64_t Value = m_ViewMode == ProfileViewer::ViewMode::Elapsed ? Frame.Elapsed() : Frame.Count();
+			const float Pct = (float)Value / (float)m_MaxValue;
 			const float Height = GetSize().Y * Pct;
 			const Vector2 Bottom = GetAbsolutePosition() + Vector2(0.0f, GetSize().Y);
 			const Vector2 Min = Bottom + Vector2(Offset, -Height);
@@ -202,13 +209,31 @@ private:
 		}
 	}
 
-	int64_t m_MaxElapsed { 75 };
+	void Update(Profiler& Profile)
+	{
+		m_MaxValue = 50;
+		const std::vector<Profiler::Frame>& Frames = Profile.Frames();
+		for (const Profiler::Frame& Frame : Frames)
+		{
+			if (m_ViewMode == ProfileViewer::ViewMode::Elapsed)
+			{
+				m_MaxValue = std::max<int64_t>(m_MaxValue, Frame.Elapsed());
+			}
+			else
+			{
+				m_MaxValue = std::max<int64_t>(m_MaxValue, Frame.Count());
+			}
+		}
+	}
+
+	int64_t m_MaxValue { 50 };
 	int m_HoveredIndex { -1 };
 	int m_SelectedIndex { 0 };
 	float m_ColumnSize { 4.0f };
 	bool m_Drag { false };
 	float m_Offset { 0.0f };
 	Vector2 m_Anchor {};
+	ProfileViewer::ViewMode m_ViewMode { ProfileViewer::ViewMode::Elapsed };
 
 	OnIndexSignature m_OnSelected { nullptr };
 	OnIndexSignature m_OnHovered { nullptr };
@@ -364,12 +389,7 @@ ProfileViewer::ProfileViewer()
 
 void ProfileViewer::SetViewMode(ViewMode Mode)
 {
-	if (m_ViewMode == Mode)
-	{
-		return;
-	}
-
-	m_ViewMode = Mode;
+	m_Timeline.lock()->Track()->SetViewMode(Mode);
 }
 
 void ProfileViewer::Populate()
