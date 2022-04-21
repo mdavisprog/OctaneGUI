@@ -262,8 +262,8 @@ void ProfileViewer::View(Window* InWindow)
 	{
 		std::stringstream Stream;
 		Stream << "{\"Title\": \"ProfileViewer\","
-			   << "\"Width\": 600,"
-			   << "\"Height\": 300,"
+			   << "\"Width\": 800,"
+			   << "\"Height\": 400,"
 			   << "\"Body\": {\"Controls\": ["
 			   << "{\"Type\": \"Panel\", \"Expand\": \"Both\"},"
 			   << "{\"Type\": \"MarginContainer\", \"Left\": 4, \"Top\": 4, \"Right\": 4, \"Bottom\": 4, \"Controls\": ["
