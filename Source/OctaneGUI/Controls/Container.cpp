@@ -27,6 +27,7 @@ SOFTWARE.
 #include "Container.h"
 #include "../Json.h"
 #include "../Paint.h"
+#include "../Profiler.h"
 #include "CheckBox.h"
 #include "ComboBox.h"
 #include "HorizontalContainer.h"
@@ -215,9 +216,14 @@ bool Container::ShouldClip() const
 
 Container* Container::Layout()
 {
+	PROFILER_SAMPLE_GROUP((std::string(GetType()) + "::Layout").c_str());
+
 	m_InLayout = true;
 
-	PlaceControls(m_Controls);
+	{
+		PROFILER_SAMPLE("PlaceControls");
+		PlaceControls(m_Controls);
+	}
 
 	for (const std::shared_ptr<Control>& Item : m_Controls)
 	{
@@ -228,9 +234,12 @@ Container* Container::Layout()
 		}
 	}
 
-	for (const std::shared_ptr<Control>& Item : m_Controls)
 	{
-		Item->Update();
+		PROFILER_SAMPLE("Update");
+		for (const std::shared_ptr<Control>& Item : m_Controls)
+		{
+			Item->Update();
+		}
 	}
 
 	m_InLayout = false;

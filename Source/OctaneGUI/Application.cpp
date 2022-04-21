@@ -31,6 +31,7 @@ SOFTWARE.
 #include "Icons.h"
 #include "Json.h"
 #include "Paint.h"
+#include "Profiler.h"
 #include "Texture.h"
 #include "Theme.h"
 #include "Window.h"
@@ -155,6 +156,8 @@ int Application::Run()
 	{
 		while (m_IsRunning)
 		{
+			PROFILER_FRAME();
+
 			Update();
 
 			for (auto& Item : m_Windows)

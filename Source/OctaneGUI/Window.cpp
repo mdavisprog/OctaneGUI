@@ -32,6 +32,7 @@ SOFTWARE.
 #include "Controls/VerticalContainer.h"
 #include "Json.h"
 #include "Paint.h"
+#include "Profiler.h"
 #include "Timer.h"
 
 #if TOOLS
@@ -368,6 +369,8 @@ bool Window::IsKeyPressed(Keyboard::Key Key) const
 
 void Window::Update()
 {
+	PROFILER_SAMPLE_GROUP((std::string("Window::Update (") + GetTitle() + ")").c_str());
+
 	UpdateTimers();
 
 	for (Container* Item : m_LayoutRequests)
