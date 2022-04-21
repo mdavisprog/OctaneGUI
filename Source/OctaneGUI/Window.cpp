@@ -386,6 +386,8 @@ void Window::DoPaint(Paint& Brush)
 {
 	if (m_Repaint)
 	{
+		PROFILER_SAMPLE_GROUP((std::string("Window::OnPaint (") + GetTitle() + ")").c_str());
+
 		m_Container->OnPaint(Brush);
 		m_Popup.OnPaint(Brush);
 		m_Repaint = false;
