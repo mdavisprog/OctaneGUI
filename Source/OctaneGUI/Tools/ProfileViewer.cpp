@@ -307,7 +307,6 @@ void ProfileViewer::View(Window* InWindow)
 			.SetHeader(0, "Frame")
 			.SetHeader(1, "Time")
 			.SetHeader(2, "Count")
-			.SetColumnWidth(0, 400)
 			.SetExpand(Expand::Both);
 
 		m_Tree = FrameDesc->Column(0)->AddControl<Tree>();

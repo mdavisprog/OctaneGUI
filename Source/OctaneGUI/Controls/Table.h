@@ -32,28 +32,7 @@ namespace OctaneGUI
 {
 
 class BoxContainer;
-class ScrollableViewControl;
-class Table;
-
-class TableHeader : public Container
-{
-	friend Table;
-
-	CLASS(TableHeader)
-
-public:
-	TableHeader(Window* InWindow);
-
-private:
-	TableHeader& SetColumns(int Columns);
-	int Columns() const;
-	std::shared_ptr<Container> Column(int Index) const;
-
-	TableHeader& SetHeader(int Column, const char* Header);
-	TableHeader& SetHeaderWidth(int Column, float Width);
-
-	std::shared_ptr<BoxContainer> m_Row { nullptr };
-};
+class Text;
 
 class Table : public Container
 {
@@ -64,14 +43,32 @@ public:
 
 	Table& SetColumns(int Columns);
 	int Columns() const;
-	std::shared_ptr<Container> Column(int Index) const;
+	const std::shared_ptr<Container>& Column(int Index) const;
 
-	Table& SetHeader(int Column, const char* Header);
-	Table& SetColumnWidth(int Index, float Width);
+	Table& SetHeader(int Index, const char* Header);
+
+	virtual Vector2 DesiredSize() const override;
 
 private:
-	std::shared_ptr<TableHeader> m_Header { nullptr };
-	std::shared_ptr<ScrollableViewControl> m_Body { nullptr };
+	class TableColumn : public Container
+	{
+		CLASS(TableColumn)
+
+	public:
+		TableColumn(Window* InWindow);
+
+		TableColumn& SetHeader(const char* Header);
+
+		const std::shared_ptr<Container>& Body() const;
+
+		virtual Vector2 DesiredSize() const override;
+	
+	private:
+		std::shared_ptr<Container> m_Outer { nullptr };
+		std::shared_ptr<Text> m_Header { nullptr };
+		std::shared_ptr<Container> m_Body { nullptr };
+	};
+
 	std::shared_ptr<BoxContainer> m_Row { nullptr };
 };
 

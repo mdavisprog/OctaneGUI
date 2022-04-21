@@ -25,10 +25,7 @@ SOFTWARE.
 */
 
 #include "Table.h"
-#include "../Font.h"
-#include "../Theme.h"
 #include "HorizontalContainer.h"
-#include "ScrollableViewControl.h"
 #include "Text.h"
 #include "VerticalContainer.h"
 
@@ -38,23 +35,17 @@ namespace OctaneGUI
 {
 
 //
-// TableHeader
+// Table
 //
 
-TableHeader::TableHeader(Window* InWindow)
+Table::Table(Window* InWindow)
 	: Container(InWindow)
 {
-	SetExpand(Expand::Width);
-
 	m_Row = AddControl<HorizontalContainer>();
-	m_Row
-		->SetSpacing({ 0.0f, 0.0f })
-		->SetExpand(Expand::Width);
-	
-	m_Row->SetID("Row");
+	m_Row->SetSpacing({ 0.0f, 0.0f });
 }
 
-TableHeader& TableHeader::SetColumns(int Columns)
+Table& Table::SetColumns(int Columns)
 {
 	if (m_Row->Controls().size() == Columns)
 	{
@@ -65,88 +56,17 @@ TableHeader& TableHeader::SetColumns(int Columns)
 	m_Row->ClearControls();
 	for (int I = 0; I < Columns; I++)
 	{
-		std::shared_ptr<BoxContainer> Column = m_Row->AddControl<HorizontalContainer>();
-		Column
-			->SetGrow(Grow::Center)
-			->SetIgnoreDesiredSize(true)
-			.SetExpand(Expand::Width);
-		Column->AddControl<Text>();
-	}
-
-	SetSize({ 0.0f, GetTheme()->GetFont()->Size() });
-
-	return *this;
-}
-
-int TableHeader::Columns() const
-{
-	return m_Row->Controls().size();
-}
-
-std::shared_ptr<Container> TableHeader::Column(int Index) const
-{
-	assert(Columns() > 0);
-	assert(Index >= 0 && Index < Columns());
-
-	std::shared_ptr<Container> Result = std::static_pointer_cast<Container>(m_Row->Controls()[Index]);
-	return Result;
-}
-
-TableHeader& TableHeader::SetHeader(int Column, const char* Header)
-{
-	std::shared_ptr<Container> HeaderColumn = this->Column(Column);
-	std::shared_ptr<Text> HeaderLabel = std::static_pointer_cast<Text>(HeaderColumn->Controls()[0]);
-	HeaderLabel->SetText(Header);
-	return *this;
-}
-
-TableHeader& TableHeader::SetHeaderWidth(int Column, float Width)
-{
-	std::shared_ptr<Container> HeaderColumn = this->Column(Column);
-	HeaderColumn->SetSize({ Width, GetTheme()->GetFont()->Size() });
-	HeaderColumn->SetExpand(Expand::None);
-	return *this;
-}
-
-//
-// Table
-//
-
-Table::Table(Window* InWindow)
-	: Container(InWindow)
-{
-	std::shared_ptr<BoxContainer> Outer = AddControl<VerticalContainer>();
-	Outer
-		->SetSpacing({ 0.0f, 0.0f })
-		->SetExpand(Expand::Both);
-
-	m_Header = Outer->AddControl<TableHeader>();
-	m_Body = Outer->AddControl<ScrollableViewControl>();
-	m_Body->SetExpand(Expand::Both);
-
-	m_Row = m_Body->AddControl<HorizontalContainer>();
-	m_Row
-		->SetSpacing({ 0.0f, 0.0f })
-		->SetExpand(Expand::Both);
-}
-
-Table& Table::SetColumns(int Columns)
-{
-	if (m_Header->Columns() == Columns)
-	{
-		return *this;
-	}
-
-	m_Header->SetColumns(Columns);
-
-	// TODO: Look into only remove/adding necessary controls.
-	m_Row->ClearControls();
-	for (int I = 0; I < Columns; I++)
-	{
-		std::shared_ptr<Container> Column = m_Row->AddControl<Container>();
-		Column
-			->SetClip(true)
-			.SetExpand(Expand::Both);
+		m_Row->AddControl<TableColumn>()->SetOnInvalidate([this](Control* Focus, InvalidateType Type) -> void
+			{
+				if (Type != InvalidateType::Paint)
+				{
+					Invalidate(this, Type);
+				}
+				else
+				{
+					HandleInvalidate(Focus, Type);
+				}
+			});
 	}
 
 	return *this;
@@ -154,34 +74,71 @@ Table& Table::SetColumns(int Columns)
 
 int Table::Columns() const
 {
-	return m_Header->Columns();
+	return m_Row->Controls().size();
 }
 
-std::shared_ptr<Container> Table::Column(int Index) const
+const std::shared_ptr<Container>& Table::Column(int Index) const
 {
 	assert(Columns() > 0);
 	assert(Index >= 0 && Index < Columns());
 
-	std::shared_ptr<Container> Result = std::static_pointer_cast<Container>(m_Row->Controls()[Index]);
-	return Result;
+	std::shared_ptr<TableColumn> Column = std::static_pointer_cast<TableColumn>(m_Row->Controls()[Index]);
+	return Column->Body();
 }
 
-Table& Table::SetHeader(int Column, const char* Text)
+Table& Table::SetHeader(int Index, const char* Text)
 {
-	m_Header->SetHeader(Column, Text);
+	assert(Columns() > 0);
+	assert(Index >= 0 && Index < Columns());
+
+	std::shared_ptr<TableColumn> Column = std::static_pointer_cast<TableColumn>(m_Row->Controls()[Index]);
+	Column->SetHeader(Text);
 	return *this;
 }
 
-Table& Table::SetColumnWidth(int Index, float Width)
+Vector2 Table::DesiredSize() const
 {
-	std::shared_ptr<Container> Column = this->Column(Index);
-	Column
-		->SetExpand(Expand::Height)
-		->SetSize({ Width, Column->GetSize().Y });
+	return m_Row->DesiredSize();
+}
 
-	m_Header->SetHeaderWidth(Index, Width);	
+//
+// TableColumn
+//
 
+Table::TableColumn::TableColumn(Window* InWindow)
+	: Container(InWindow)
+{
+	std::shared_ptr<BoxContainer> m_Outer = AddControl<VerticalContainer>();
+	m_Outer->SetSpacing({ 0.0f, 0.0f });
+
+	std::shared_ptr<BoxContainer> HeaderOuter = m_Outer->AddControl<HorizontalContainer>();
+	HeaderOuter
+		->SetGrow(Grow::Center)
+		->SetExpand(Expand::Width);
+	m_Header = HeaderOuter->AddControl<Text>();
+
+	m_Body = m_Outer->AddControl<VerticalContainer>();
+}
+
+Table::TableColumn& Table::TableColumn::SetHeader(const char* Header)
+{
+	m_Header->SetText(Header);
 	return *this;
+}
+
+const std::shared_ptr<Container>& Table::TableColumn::Body() const
+{
+	return m_Body;
+}
+
+Vector2 Table::TableColumn::DesiredSize() const
+{
+	if (m_Body->Controls().size() == 0)
+	{
+		return m_Header->GetSize();
+	}
+
+	return m_Body->DesiredSize();
 }
 
 }
