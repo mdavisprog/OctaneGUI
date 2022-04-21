@@ -355,7 +355,8 @@ void ProfileViewer::View(Window* InWindow)
 			->SetColumns(3)
 			.SetHeader(0, "Frame")
 			.SetHeader(1, "Time")
-			.SetHeader(2, "Count");
+			.SetHeader(2, "Count")
+			.SetColumnSpacing(8.0f);
 
 		m_Tree = FrameDesc->Column(0)->AddControl<Tree>();
 		m_Tree.lock()
@@ -496,6 +497,7 @@ void ProfileViewer::UpdateFrameInfo()
 	FrameTree->ForEachChild([this, &Frame, &Index](const Tree& Child) -> void
 		{
 			UpdateRow(Child, Frame.Events()[Index], m_FrameTimes.lock(), m_EventCount.lock());
+			Index++;
 		});
 }
 
