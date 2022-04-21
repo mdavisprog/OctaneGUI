@@ -298,6 +298,13 @@ std::shared_ptr<Tree> Tree::AddChild(const char* Text)
 					SetSelected(Item);
 				}
 			})
+		.SetOnToggled([this](const Tree& Item) -> void
+			{
+				if (m_OnToggled)
+				{
+					m_OnToggled(Item);
+				}
+			})
 		.SetOnInvalidate([this](Control* Focus, InvalidateType Type) -> void
 			{
 				HandleInvalidate(Focus, Type);
@@ -355,6 +362,11 @@ Tree& Tree::SetExpanded(bool Expand)
 		}
 	}
 
+	if (m_OnToggled)
+	{
+		m_OnToggled(*this);
+	}
+
 	return *this;
 }
 
@@ -391,6 +403,12 @@ Tree& Tree::SetOnSelected(OnTreeSignature&& Fn)
 	return *this;
 }
 
+Tree& Tree::SetOnToggled(OnTreeSignature&& Fn)
+{
+	m_OnToggled = std::move(Fn);
+	return *this;
+}
+
 void Tree::Clear()
 {
 	SetExpanded(false);
@@ -402,6 +420,22 @@ void Tree::Clear()
 bool Tree::HasChildren() const
 {
 	return m_List && m_List->Controls().size() > 0;
+}
+
+const Tree& Tree::ForEachChild(OnTreeSignature Callback) const
+{
+	if (!Callback || !m_List || !m_Expand)
+	{
+		return *this;
+	}
+
+	for (const std::shared_ptr<Control>& Item : m_List->Controls())
+	{
+		const std::shared_ptr<Tree>& Child = std::static_pointer_cast<Tree>(Item);
+		Callback(*Child.get());
+	}
+
+	return *this;
 }
 
 std::weak_ptr<Control> Tree::GetControl(const Vector2& Point) const

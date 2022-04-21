@@ -56,9 +56,11 @@ public:
 	void* MetaData() const;
 
 	Tree& SetOnSelected(OnTreeSignature&& Fn);
+	Tree& SetOnToggled(OnTreeSignature&& Fn);
 
 	void Clear();
 	bool HasChildren() const;
+	const Tree& ForEachChild(OnTreeSignature Callback) const;
 
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 	virtual Vector2 DesiredSize() const override;
@@ -92,6 +94,7 @@ private:
 	OnTreeItemSignature m_OnItemSelected { nullptr };
 
 	OnTreeSignature m_OnSelected { nullptr };
+	OnTreeSignature m_OnToggled { nullptr };
 
 	bool m_Expand { false };
 	bool m_RowSelect { false };
