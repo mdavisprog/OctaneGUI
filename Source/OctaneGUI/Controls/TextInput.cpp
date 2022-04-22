@@ -457,7 +457,7 @@ void TextInput::AddText(uint32_t Code)
 		return;
 	}
 
-	if (!std::isalnum(Code) && Code != '\n' && Code != ' ')
+	if (!std::isalnum(Code) && Code != '\n' && Code != ' ' && !std::ispunct(Code))
 	{
 		return;
 	}
