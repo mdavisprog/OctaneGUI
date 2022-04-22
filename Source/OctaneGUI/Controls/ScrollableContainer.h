@@ -63,9 +63,6 @@ public:
 	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnThemeLoaded() override;
 
-protected:
-	void OnInsertControl(const std::shared_ptr<Control>& Item) override;
-
 private:
 	Rect TranslatedBounds() const;
 	Vector2 GetContentSize(const std::vector<std::shared_ptr<Control>>& Controls) const;
@@ -81,7 +78,6 @@ private:
 	Vector2 m_ScrollOffset { Vector2() };
 	std::shared_ptr<Timer> m_ScrollTimer { nullptr };
 	bool m_InitialScroll { true };
-	bool m_ContentSizeLock { false };
 };
 
 }
