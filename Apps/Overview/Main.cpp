@@ -50,6 +50,18 @@ std::string GetContents(const char* Filename)
 	return Result;
 }
 
+void LoadTheme(OctaneGUI::Application& Application, const char* Name)
+{
+	if (Themes.find(Name) == Themes.end())
+	{
+		return;
+	}
+
+	const std::string& Path = Themes[Name];
+	const std::string Buffer = GetContents(Path.c_str());
+	Application.GetTheme()->Load(OctaneGUI::Json::Parse(Buffer.c_str()));
+}
+
 int main(int argc, char **argv)
 {
 	if (std::filesystem::exists("./Themes"))
@@ -61,11 +73,21 @@ int main(int argc, char **argv)
 		}
 	}
 
+	std::string Theme = "Dark";
+	for (int I = 0; I < argc; I++)
+	{
+		if (std::string(argv[I]) == "--theme" && I < argc - 1)
+		{
+			Theme = argv[I + 1];
+		}
+	}
+
 	OctaneGUI::Application Application;
 	Interface::Initialize(Application);
 
 	std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
 	Application.Initialize(GetContents("Overview.json").c_str(), WindowControls);
+	LoadTheme(Application, Theme.c_str());
 	
 	const OctaneGUI::ControlList& List = WindowControls["Main"];
 	List.To<OctaneGUI::MenuItem>("File.Quit")->SetOnPressed([&](const OctaneGUI::TextSelectable&) -> void
@@ -81,12 +103,7 @@ int main(int argc, char **argv)
 		ThemesMenu->GetItem(Name)->SetOnPressed([&](const OctaneGUI::TextSelectable& Item) -> void
 		{
 			const char* Name = Item.GetText();
-			if (Themes.find(Name) != Themes.end())
-			{
-				const std::string& Path = Themes[Name];
-				const std::string Buffer = GetContents(Path.c_str());
-				Application.GetTheme()->Load(OctaneGUI::Json::Parse(Buffer.c_str()));
-			}
+			LoadTheme(Application, Name);
 		});
 	}
 
