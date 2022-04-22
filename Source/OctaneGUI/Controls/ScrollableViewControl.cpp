@@ -34,6 +34,17 @@ ScrollableViewControl::ScrollableViewControl(Window* InWindow)
 	: Container(InWindow)
 {
 	m_Scrollable = AddControl<ScrollableContainer>();
+	m_Scrollable->SetOnInvalidate([this](Control* Focus, InvalidateType Type) -> void
+		{
+			if (Type == InvalidateType::Paint)
+			{
+				HandleInvalidate(Focus, Type);
+			}
+			else
+			{
+				Invalidate(this, Type);
+			}
+		});
 }
 
 const std::shared_ptr<ScrollableContainer>& ScrollableViewControl::Scrollable() const
