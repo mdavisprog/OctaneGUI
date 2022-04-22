@@ -26,14 +26,14 @@ SOFTWARE.
 
 #pragma once
 
-#include "../Controls/Container.h"
+#include "../Controls/HorizontalContainer.h"
 
 namespace OctaneGUI
 {
 namespace Tools
 {
 
-class Properties : public Container
+class Properties : public HorizontalContainer
 {
 	CLASS(Properties)
 

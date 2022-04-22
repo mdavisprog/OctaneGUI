@@ -25,8 +25,6 @@ SOFTWARE.
 */
 
 #include "Properties.h"
-#include "../Controls/HorizontalContainer.h"
-#include "../Controls/ScrollableContainer.h"
 #include "../Controls/Text.h"
 #include "../Controls/VerticalContainer.h"
 #include "../Json.h"
@@ -37,16 +35,12 @@ namespace Tools
 {
 
 Properties::Properties(Window* InWindow)
-	: Container(InWindow)
+	: HorizontalContainer(InWindow)
 {
-	std::shared_ptr<ScrollableContainer> Scrollable = AddControl<ScrollableContainer>();
-	std::shared_ptr<HorizontalContainer> Row = Scrollable->AddControl<HorizontalContainer>();
-	Row->SetSpacing({ 8.0f, 0.0f });
-	m_KeyList = Row->AddControl<VerticalContainer>();
-	m_ValueList = Row->AddControl<VerticalContainer>();
+	SetSpacing({ 8.0f, 0.0f });
 
-	SetSize({ 150.0f, 0.0f });
-	SetExpand(Expand::Height);
+	m_KeyList = AddControl<VerticalContainer>();
+	m_ValueList = AddControl<VerticalContainer>();
 }
 
 void Properties::Parse(const Json& Root)
@@ -58,6 +52,8 @@ void Properties::Parse(const Json& Root)
 		{
 			Parse(Key, Value);
 		});
+	
+	InvalidateLayout();
 }
 
 void Properties::Parse(const std::string& Key, const Json& Value, int Indent)
