@@ -149,7 +149,7 @@ Vector2 Table::TableColumn::DesiredSize() const
 
 	Vector2 BodySize = m_Body->DesiredSize();
 	Result.X = std::max<float>(Result.X, BodySize.X);
-	Result.Y = std::max<float>(Result.Y, BodySize.Y);
+	Result.Y += BodySize.Y;
 
 	return Result;
 }
