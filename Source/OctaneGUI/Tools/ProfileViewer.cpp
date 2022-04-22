@@ -31,6 +31,8 @@ SOFTWARE.
 #include "../Controls/HorizontalContainer.h"
 #include "../Controls/MenuItem.h"
 #include "../Controls/Panel.h"
+#include "../Controls/ScrollableContainer.h"
+#include "../Controls/ScrollableViewControl.h"
 #include "../Controls/Table.h"
 #include "../Controls/Text.h"
 #include "../Controls/Tree.h"
@@ -350,7 +352,10 @@ void ProfileViewer::View(Window* InWindow)
 				});
 		m_Timeline = Timeline_;
 
-		std::shared_ptr<Table> FrameDesc = Root->AddControl<Table>();
+		std::shared_ptr<ScrollableViewControl> FrameDescView = Root->AddControl<ScrollableViewControl>();
+		FrameDescView->SetExpand(Expand::Both);
+
+		std::shared_ptr<Table> FrameDesc = FrameDescView->Scrollable()->AddControl<Table>();
 		FrameDesc
 			->SetColumns(3)
 			.SetHeader(0, "Frame")
