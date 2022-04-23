@@ -444,6 +444,8 @@ void Window::Clear()
 {
 	m_MenuBar->ClearControls();
 	m_Body->ClearControls();
+	m_Popup.Close();
+	m_LayoutRequests.clear();
 }
 
 std::shared_ptr<Timer> Window::CreateTimer(int Interval, bool Repeat, OnEmptySignature&& Callback)
