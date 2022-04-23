@@ -29,6 +29,7 @@ SOFTWARE.
 #include "../Controls/Container.h"
 #include "../Controls/ControlList.h"
 #include "../Controls/ScrollableContainer.h"
+#include "../Controls/ScrollableViewControl.h"
 #include "../Controls/Splitter.h"
 #include "../Controls/Tree.h"
 #include "../Json.h"
@@ -110,13 +111,17 @@ static void PopulateTree(const std::shared_ptr<Tree>& Root, const std::shared_pt
 void Inspector::Populate()
 {
 	std::shared_ptr<Splitter> Split = m_Root.lock();
-	std::shared_ptr<Container> TreeView = Split->First()->AddControl<ScrollableContainer>();
-	std::shared_ptr<Container> PropertiesView = Split->Second()->AddControl<ScrollableContainer>();
-	std::shared_ptr<Properties> Props = PropertiesView->AddControl<Properties>();
+	std::shared_ptr<ScrollableViewControl> TreeView = Split->First()->AddControl<ScrollableViewControl>();
+	std::shared_ptr<ScrollableViewControl> PropertiesView = Split->Second()->AddControl<ScrollableViewControl>();
+
+	TreeView->SetExpand(Expand::Both);
+	PropertiesView->SetExpand(Expand::Both);
+
+	std::shared_ptr<Properties> Props = PropertiesView->Scrollable()->AddControl<Properties>();
 	Props->SetExpand(Expand::Both);
 	m_Properties = Props;
 
-	std::shared_ptr<Tree> Root = TreeView->AddControl<Tree>();
+	std::shared_ptr<Tree> Root = TreeView->Scrollable()->AddControl<Tree>();
 	Root
 		->SetOnSelected([this](const Tree& Item) -> void
 			{

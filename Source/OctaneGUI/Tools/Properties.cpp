@@ -52,7 +52,7 @@ void Properties::Parse(const Json& Root)
 		{
 			Parse(Key, Value);
 		});
-	
+
 	InvalidateLayout();
 }
 
