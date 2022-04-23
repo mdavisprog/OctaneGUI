@@ -57,6 +57,8 @@ ComboBox::ComboBox(Window* InWindow)
 				}
 				else
 				{
+					// Update the list size before opening the popup.
+					Update();
 					GetWindow()->SetPopup(m_List);
 				}
 			})
@@ -80,13 +82,21 @@ ComboBox::ComboBox(Window* InWindow)
 				}
 
 				std::shared_ptr<Text> TextItem = std::dynamic_pointer_cast<Text>(Item.lock());
+				std::string ItemText;
 				if (TextItem)
 				{
-					m_Input->SetText(TextItem->GetText());
+					ItemText = TextItem->GetText();
 				}
 				else
 				{
-					m_Input->SetText((std::string("Item ") + std::to_string(Index)).c_str());
+					ItemText = std::string("Item ") + std::to_string(Index);
+				}
+
+				m_Input->SetText(ItemText.c_str());
+
+				if (m_OnSelected)
+				{
+					m_OnSelected(ItemText);
 				}
 			})
 		->SetParent(this)
@@ -114,6 +124,25 @@ std::shared_ptr<Text> ComboBox::AddItem(const char* Item)
 	std::shared_ptr<Text> Result = m_List->AddItem<Text>();
 	Result->SetText(Item);
 	return Result;
+}
+
+void ComboBox::Close()
+{
+	if (IsOpen())
+	{
+		GetWindow()->ClosePopup();
+	}
+}
+
+bool ComboBox::IsOpen() const
+{
+	return GetWindow()->GetPopup() == m_List;
+}
+
+ComboBox& ComboBox::SetOnSelected(OnSelectedSignature&& Fn)
+{
+	m_OnSelected = std::move(Fn);
+	return *this;
 }
 
 void ComboBox::Update()

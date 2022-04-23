@@ -41,11 +41,18 @@ class ComboBox : public HorizontalContainer
 	CLASS(ComboBox)
 
 public:
+	typedef std::function<void(const std::string&)> OnSelectedSignature;
+
 	ComboBox(Window* InWindow);
 
 	ComboBox& SetExpand(Expand InExpand);
 
 	std::shared_ptr<Text> AddItem(const char* Item);
+
+	void Close();
+	bool IsOpen() const;
+
+	ComboBox& SetOnSelected(OnSelectedSignature&& Fn);
 
 	virtual void Update() override;
 	virtual void OnLoad(const Json& Root) override;
@@ -59,6 +66,7 @@ private:
 	std::shared_ptr<TextInput> m_Input { nullptr };
 	std::shared_ptr<ImageButton> m_Button { nullptr };
 	std::shared_ptr<ListBox> m_List { nullptr };
+	OnSelectedSignature m_OnSelected { nullptr };
 };
 
 }
