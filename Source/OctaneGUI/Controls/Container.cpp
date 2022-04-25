@@ -37,6 +37,7 @@ SOFTWARE.
 #include "MarginContainer.h"
 #include "Panel.h"
 #include "ScrollableContainer.h"
+#include "ScrollableViewControl.h"
 #include "Separator.h"
 #include "Splitter.h"
 #include "Table.h"
@@ -106,6 +107,10 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 	else if (Type == ScrollableContainer::TypeName())
 	{
 		Result = AddControl<ScrollableContainer>();
+	}
+	else if (Type == ScrollableViewControl::TypeName())
+	{
+		Result = AddControl<ScrollableViewControl>();
 	}
 	else if (Type == Separator::TypeName())
 	{
