@@ -83,6 +83,18 @@ bool LoadFont(const std::vector<char>& FontData, float FontSize, std::vector<uin
 	return Result > 0;
 }
 
+void IncreaseSize(Vector2& TextureSize, float Delta)
+{
+	if (TextureSize.Y < TextureSize.X)
+	{
+		TextureSize.Y = TextureSize.X;
+	}
+	else
+	{
+		TextureSize.X += Delta;
+	}
+}
+
 bool Font::Load(const char* Path, float Size)
 {
 	std::ifstream Stream;
@@ -108,15 +120,13 @@ bool Font::Load(const char* Path, float Size)
 	m_Size = Size;
 	m_Path = Path;
 
-	const float TextureBaseSize = 128.0f;
-	Vector2 TextureSize;
+	Vector2 TextureSize { 128.0f, 128.0f };
 	std::vector<uint8_t> Texture;
 	std::vector<stbtt_packedchar> Chars;
-	do
+	while (!LoadFont(Buffer, Size, Texture, TextureSize, Chars))
 	{
-		TextureSize = { TextureSize.X + TextureBaseSize, TextureSize.Y + TextureBaseSize };
+		IncreaseSize(TextureSize, 128.0f);
 	}
-	while (!LoadFont(Buffer, Size, Texture, TextureSize, Chars));
 
 	// Convert data to RGBA32
 	std::vector<uint8_t> RGBA32;
