@@ -233,6 +233,12 @@ ListBox::ListBox(Window* InWindow)
 	SetSize({ 200.0f, 200.0f });
 }
 
+ListBox& ListBox::ClearItems()
+{
+	m_List->ClearControls();
+	return *this;
+}
+
 int ListBox::Index() const
 {
 	return m_Interaction->Index();

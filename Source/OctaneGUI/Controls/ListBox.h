@@ -52,6 +52,8 @@ public:
 		return Result;
 	}
 
+	ListBox& ClearItems();
+
 	int Index() const;
 	ListBox* SetOnSelect(OnSelectSignature Fn);
 	Vector2 ListSize() const;
@@ -61,6 +63,7 @@ public:
 
 private:
 	using Container::AddControl;
+	using Container::ClearControls;
 	using Container::InsertControl;
 
 	void InsertItem(const std::shared_ptr<Control>& Item);
