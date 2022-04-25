@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "ScrollableViewControl.h"
+#include "../Json.h"
 #include "ScrollableContainer.h"
 
 namespace OctaneGUI
@@ -60,6 +61,16 @@ std::weak_ptr<Control> ScrollableViewControl::GetControl(const Vector2& Point) c
 	}
 
 	return Container::GetControl(Point);
+}
+
+void ScrollableViewControl::OnLoad(const Json& Root)
+{
+	Json Copy = Root;
+	Copy["Controls"] = Json();
+
+	Container::OnLoad(Copy);
+
+	m_Scrollable->OnLoad(Root);
 }
 
 }

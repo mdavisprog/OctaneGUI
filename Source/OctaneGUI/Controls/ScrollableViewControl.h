@@ -44,6 +44,8 @@ public:
 
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 
+	virtual void OnLoad(const Json& Root) override;
+
 private:
 	std::shared_ptr<ScrollableContainer> m_Scrollable { nullptr };
 };
