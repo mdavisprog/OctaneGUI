@@ -63,6 +63,7 @@ if(TOOLS)
 		Tools/Profiler.cpp
 		Tools/ProfileViewer.cpp
 		Tools/Properties.cpp
+		Tools/TextureViewer.cpp
 	)
 endif()
 

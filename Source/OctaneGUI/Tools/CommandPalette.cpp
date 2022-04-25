@@ -34,6 +34,7 @@ SOFTWARE.
 #include "Inspector.h"
 #include "ProfileViewer.h"
 #include "Profiler.h"
+#include "TextureViewer.h"
 
 namespace OctaneGUI
 {
@@ -152,6 +153,10 @@ bool CommandPalette::Process(const std::string& Command, const std::vector<std::
 				printf("No proifle command given. Must be 'enable' or 'disable'.\n");
 			}
 		}
+	}
+	else if (Lower == "textureviewer" || Lower == "tv")
+	{
+		TextureViewer::Get().Show(GetWindow()->App());
 	}
 
 	return false;
