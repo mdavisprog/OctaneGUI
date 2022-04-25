@@ -38,13 +38,16 @@ class Texture;
 class TextureCache
 {
 public:
+	typedef std::unordered_map<std::string, std::shared_ptr<Texture>> CacheMap;
+
 	TextureCache();
 	~TextureCache();
 
 	std::shared_ptr<Texture> Load(const char* Path);
+	const CacheMap& Cache() const;
 
 private:
-	std::unordered_map<std::string, std::shared_ptr<Texture>> m_Textures;
+	CacheMap m_Cache;
 };
 
 }

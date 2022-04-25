@@ -36,17 +36,27 @@ TextureCache::TextureCache()
 
 TextureCache::~TextureCache()
 {
-	m_Textures.clear();
+	m_Cache.clear();
 }
 
 std::shared_ptr<Texture> TextureCache::Load(const char* Path)
 {
-	if (m_Textures.find(Path) == m_Textures.end())
+	if (m_Cache.find(Path) == m_Cache.end() && std::strlen(Path) > 0)
 	{
-		m_Textures[Path] = Texture::Load(Path);
+		std::shared_ptr<Texture> Result = Texture::Load(Path);
+
+		if (Result && Result->IsValid())
+		{
+			m_Cache[Path] = Result;
+		}
 	}
 
-	return m_Textures[Path];
+	return m_Cache[Path];
+}
+
+const TextureCache::CacheMap& TextureCache::Cache() const
+{
+	return m_Cache;
 }
 
 }
