@@ -54,6 +54,8 @@ public:
 	void Load(const char* Path);
 	void Load(const Json& Root);
 
+	const std::vector<std::shared_ptr<Font>>& Fonts() const;
+
 private:
 	void InitializeDefault();
 	void Set(ThemeProperties::Property Property, const Variant& Value);

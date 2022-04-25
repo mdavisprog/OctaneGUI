@@ -171,6 +171,11 @@ void Theme::Load(const Json& Root)
 	}
 }
 
+const std::vector<std::shared_ptr<Font>>& Theme::Fonts() const
+{
+	return m_Fonts;
+}
+
 void Theme::InitializeDefault()
 {
 	m_Properties[ThemeProperties::Text] = Color(255, 255, 255, 255);
