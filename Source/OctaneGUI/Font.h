@@ -48,10 +48,10 @@ public:
 	public:
 		Glyph();
 
-		Vector2 m_Min {};
-		Vector2 m_Max {};
-		Vector2 m_Offset {};
-		Vector2 m_Advance {};
+		Vector2 Min {};
+		Vector2 Max {};
+		Vector2 Offset {};
+		Vector2 Advance {};
 	};
 
 	static std::shared_ptr<Font> Create(const char* Path, float Size);
@@ -72,6 +72,7 @@ public:
 	float Descent() const;
 	Vector2 SpaceSize() const;
 	const char* Path() const;
+	const std::shared_ptr<Texture>& GetTexture() const;
 
 private:
 	std::vector<Glyph> m_Glyphs;

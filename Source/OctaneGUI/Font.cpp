@@ -140,10 +140,10 @@ bool Font::Load(const char* Path, float Size)
 	for (const stbtt_packedchar& Char : Chars)
 	{
 		Glyph Item;
-		Item.m_Min = Vector2(Char.x0, Char.y0);
-		Item.m_Max = Vector2(Char.x1, Char.y1);
-		Item.m_Offset = Vector2(Char.xoff, Char.yoff);
-		Item.m_Advance = Vector2(Char.xadvance, 0.0f);
+		Item.Min = Vector2(Char.x0, Char.y0);
+		Item.Max = Vector2(Char.x1, Char.y1);
+		Item.Offset = Vector2(Char.xoff, Char.yoff);
+		Item.Advance = Vector2(Char.xadvance, 0.0f);
 		m_Glyphs.push_back(Item);
 	}
 
@@ -160,19 +160,19 @@ bool Font::Draw(int32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoords
 	}
 
 	const Glyph& Item = m_Glyphs[Char];
-	const Vector2 ItemSize = Item.m_Max - Item.m_Min;
+	const Vector2 ItemSize = Item.Max - Item.Min;
 	const Vector2 InvertedSize = m_Texture->GetSize().Invert();
 
-	int X = (int)floor(Position.X + Item.m_Offset.X + 0.5f);
-	int Y = (int)floor(Position.Y + Item.m_Offset.Y + m_Ascent + 0.5f);
+	int X = (int)floor(Position.X + Item.Offset.X + 0.5f);
+	int Y = (int)floor(Position.Y + Item.Offset.Y + m_Ascent + 0.5f);
 
 	Vertices.Min = Vector2((float)X, (float)Y);
 	Vertices.Max = Vertices.Min + ItemSize;
 
-	TexCoords.Min = Item.m_Min * InvertedSize;
-	TexCoords.Max = Item.m_Max * InvertedSize;
+	TexCoords.Min = Item.Min * InvertedSize;
+	TexCoords.Max = Item.Max * InvertedSize;
 
-	Position += Item.m_Advance;
+	Position += Item.Advance;
 
 	return true;
 }
@@ -271,6 +271,11 @@ Vector2 Font::SpaceSize() const
 const char* Font::Path() const
 {
 	return m_Path.c_str();
+}
+
+const std::shared_ptr<Texture>& Font::GetTexture() const
+{
+	return m_Texture;
 }
 
 }
