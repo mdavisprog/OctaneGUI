@@ -154,6 +154,8 @@ void Splitter::OnLoad(const Json& Root)
 	Container::OnLoad(Root);
 
 	SetOrientation(ToOrientation(Root["Orientation"].String()));
+	m_First->OnLoad(Root["First"]);
+	m_Second->OnLoad(Root["Second"]);
 }
 
 void Splitter::UpdateLayout()
