@@ -44,9 +44,10 @@ class Text : public Control
 public:
 	Text(Window* InWindow);
 
-	Text* SetText(const char* InContents);
-	const char* GetText() const;
-	const std::string& GetString() const;
+	Text& SetText(const char* InContents);
+	Text& SetText(const char32_t* InContents);
+	const char32_t* GetText() const;
+	const std::u32string& GetString() const;
 	uint32_t Length() const;
 	const std::shared_ptr<Font>& GetFont() const;
 	float LineHeight() const;
@@ -66,7 +67,7 @@ private:
 	void UpdateFont();
 	void UpdateSize();
 
-	std::string m_Contents {};
+	std::u32string m_Contents {};
 	Vector2 m_ContentSize {};
 	std::vector<Paint::TextFormat> m_Formats {};
 	std::shared_ptr<Font> m_Font { nullptr };

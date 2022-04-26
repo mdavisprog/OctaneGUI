@@ -29,6 +29,7 @@ SOFTWARE.
 #include <cassert>
 #include <cctype>
 #include <cstring>
+#include <cuchar>
 #include <utility>
 
 namespace OctaneGUI
@@ -41,6 +42,56 @@ std::string Json::ToLower(const std::string& Value)
 	for (const char Ch : Value)
 	{
 		Result += std::tolower(Ch);
+	}
+
+	return Result;
+}
+
+std::u32string Json::ToLower(const std::u32string& Value)
+{
+	std::u32string Result;
+
+	for (const char32_t Ch : Value)
+	{
+		Result += std::tolower(Ch);
+	}
+
+	return Result;
+}
+
+std::string Json::ToMultiByte(const std::u32string& Value)
+{
+	std::string Result;
+
+	std::mbstate_t State {};
+	char Character[MB_LEN_MAX];
+	for (char32_t Ch : Value)
+	{
+		size_t Length = std::c32rtomb(Character, Ch, &State);
+		for (size_t I = 0; I < Length; I++)
+		{
+			Result += Character[I];
+		}
+	}
+
+	return Result;
+}
+
+std::u32string Json::ToUTF32(const std::string& Value)
+{
+	std::u32string Result;
+
+	std::mbstate_t State {};
+	char32_t Character;
+	const char* Ptr = Value.data();
+	for (size_t I = 0; I < Value.length(); I++)
+	{
+		size_t Length = std::mbrtoc32(&Character, Ptr, 1, &State);
+		if (Length < (std::size_t)-3)
+		{
+			Result += Character;
+		}
+		Ptr++;
 	}
 
 	return Result;

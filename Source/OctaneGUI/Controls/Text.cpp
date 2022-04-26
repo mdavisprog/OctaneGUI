@@ -44,19 +44,25 @@ Text::Text(Window* InWindow)
 	}
 }
 
-Text* Text::SetText(const char* InContents)
+Text& Text::SetText(const char* InContents)
+{
+	SetText(Json::ToUTF32(InContents).c_str());
+	return *this;
+}
+
+Text& Text::SetText(const char32_t* InContents)
 {
 	m_Contents = InContents;
 	UpdateSize();
-	return this;
+	return *this;
 }
 
-const char* Text::GetText() const
+const char32_t* Text::GetText() const
 {
 	return m_Contents.c_str();
 }
 
-const std::string& Text::GetString() const
+const std::u32string& Text::GetString() const
 {
 	return m_Contents;
 }
@@ -118,7 +124,7 @@ void Text::OnSave(Json& Root) const
 {
 	Control::OnSave(Root);
 
-	Root["Text"] = m_Contents;
+	Root["Text"] = Json::ToMultiByte(m_Contents);
 	Root["ContentSize"] = std::move(Vector2::ToJson(m_ContentSize));
 	Root["Font"] = m_Font->Path();
 	Root["FontSize"] = GetProperty(ThemeProperties::FontSize).Float();

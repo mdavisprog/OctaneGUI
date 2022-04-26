@@ -62,7 +62,7 @@ TextSelectable& TextSelectable::SetText(const char* Contents)
 	return *this;
 }
 
-const char* TextSelectable::GetText() const
+const char32_t* TextSelectable::GetText() const
 {
 	return m_Text->GetText();
 }

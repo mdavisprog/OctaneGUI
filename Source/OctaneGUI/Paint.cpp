@@ -95,13 +95,13 @@ void Paint::RectangleOutline(const Rect& Bounds, const Color& Col, float Thickne
 	AddLine(BottomLeft, Bounds.Min, Col, Thickness, 12);
 }
 
-size_t StripInvalidCharactersLength(const std::string_view& Contents)
+size_t StripInvalidCharactersLength(const std::u32string_view& Contents)
 {
 	size_t Start = 0;
 	size_t InvalidChars = 0;
 	while (Start < Contents.size())
 	{
-		size_t End = Contents.find_first_of("\n", Start);
+		size_t End = Contents.find_first_of(U"\n", Start);
 		if (End != std::string::npos)
 		{
 			InvalidChars++;
@@ -116,7 +116,7 @@ size_t StripInvalidCharactersLength(const std::string_view& Contents)
 	return InvalidChars;
 }
 
-void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::string& Contents, const Color& Col)
+void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string& Contents, const Color& Col)
 {
 	if (Contents.empty())
 	{
@@ -128,7 +128,7 @@ void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, c
 	PushCommand(6 * Count, InFont->ID());
 	Vector2 Pos = Position;
 	uint32_t Offset = 0;
-	for (char Char : Contents)
+	for (char32_t Char : Contents)
 	{
 		if (Char == '\n')
 		{
@@ -146,7 +146,7 @@ void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, c
 	}
 }
 
-void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::string& Contents, const std::vector<TextFormat>& Formats)
+void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string& Contents, const std::vector<TextFormat>& Formats)
 {
 	if (Contents.empty())
 	{
@@ -154,7 +154,7 @@ void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, 
 	}
 
 	size_t InvalidChars = 0;
-	std::vector<std::string_view> Views;
+	std::vector<std::u32string_view> Views;
 	for (const TextFormat& Item : Formats)
 	{
 		Views.emplace_back(&Contents[Item.Start], Item.End - Item.Start);
@@ -168,7 +168,7 @@ void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, 
 	for (size_t I = 0; I < Formats.size(); I++)
 	{
 		const TextFormat& Format = Formats[I];
-		const std::string_view& View = Views[I];
+		const std::u32string_view& View = Views[I];
 		for (char Char : View)
 		{
 			if (Char == '\n')

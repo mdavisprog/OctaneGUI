@@ -45,7 +45,7 @@ Button* TextButton::SetText(const char* InText)
 	return this;
 }
 
-const char* TextButton::GetText() const
+const char32_t* TextButton::GetText() const
 {
 	return m_Text->GetText();
 }

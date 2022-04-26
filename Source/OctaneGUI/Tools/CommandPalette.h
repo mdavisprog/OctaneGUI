@@ -52,9 +52,9 @@ public:
 
 private:
 	// TODO: Maybe create an args parser class that can be used in multiple places.
-	static std::vector<std::string> Tokenize(const std::string& Value);
+	static std::vector<std::u32string> Tokenize(const std::u32string& Value);
 
-	bool Process(const std::string& Command, const std::vector<std::string>& Arguments);
+	bool Process(const std::u32string& Command, const std::vector<std::u32string>& Arguments);
 
 	std::shared_ptr<VerticalContainer> m_Container { nullptr };
 	std::shared_ptr<TextInput> m_Input { nullptr };

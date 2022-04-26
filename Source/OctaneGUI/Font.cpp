@@ -157,7 +157,7 @@ bool Font::Load(const char* Path, float Size)
 		m_Glyphs.push_back(Item);
 	}
 
-	m_SpaceSize = Measure(" ");
+	m_SpaceSize = Measure(U" ");
 
 	return true;
 }
@@ -187,7 +187,7 @@ bool Font::Draw(int32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoords
 	return true;
 }
 
-Vector2 Font::Measure(const std::string& Text) const
+Vector2 Font::Measure(const std::u32string& Text) const
 {
 	Vector2 Result;
 
@@ -201,7 +201,7 @@ Vector2 Font::Measure(const std::string& Text) const
 	return Result;
 }
 
-Vector2 Font::Measure(const std::string& Text, int& Lines) const
+Vector2 Font::Measure(const std::u32string& Text, int& Lines) const
 {
 	Vector2 Result;
 	Lines = 1;

@@ -66,7 +66,7 @@ CheckBox& CheckBox::SetText(const char* InText)
 	return *this;
 }
 
-const char* CheckBox::GetText() const
+const char32_t* CheckBox::GetText() const
 {
 	return m_Text->GetText();
 }

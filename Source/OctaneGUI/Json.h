@@ -47,7 +47,12 @@ public:
 		Array
 	};
 
+	// TODO: Maybe move these functions to a Utility namespace?
 	static std::string ToLower(const std::string& Value);
+	static std::u32string ToLower(const std::u32string& Value);
+	static std::string ToMultiByte(const std::u32string& Value);
+	static std::u32string ToUTF32(const std::string& Value);
+
 	static Json Parse(const char* Stream);
 
 	// TODO: Maybe not allow declaring a Null type due to no memory allocation

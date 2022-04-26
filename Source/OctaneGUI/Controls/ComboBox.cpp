@@ -82,14 +82,14 @@ ComboBox::ComboBox(Window* InWindow)
 				}
 
 				std::shared_ptr<Text> TextItem = std::dynamic_pointer_cast<Text>(Item.lock());
-				std::string ItemText;
+				std::u32string ItemText;
 				if (TextItem)
 				{
 					ItemText = TextItem->GetText();
 				}
 				else
 				{
-					ItemText = std::string("Item ") + std::to_string(Index);
+					ItemText = Json::ToUTF32(std::string("Item ") + std::to_string(Index));
 				}
 
 				m_Input->SetText(ItemText.c_str());

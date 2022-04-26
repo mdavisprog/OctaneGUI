@@ -102,8 +102,8 @@ int main(int argc, char **argv)
 		ThemesMenu->AddItem(Name);
 		ThemesMenu->GetItem(Name)->SetOnPressed([&](const OctaneGUI::TextSelectable& Item) -> void
 		{
-			const char* Name = Item.GetText();
-			LoadTheme(Application, Name);
+			const std::string Name = OctaneGUI::Json::ToMultiByte(Item.GetText());
+			LoadTheme(Application, Name.c_str());
 		});
 	}
 

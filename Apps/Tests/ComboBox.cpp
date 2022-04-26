@@ -43,8 +43,8 @@ TEST_CASE(Select,
 	VERIFY(List.Contains("ComboBox"))
 	std::shared_ptr<OctaneGUI::ComboBox> ComboBox = List.To<OctaneGUI::ComboBox>("ComboBox");
 
-	std::string Selected;
-	ComboBox->SetOnSelected([&Selected](const std::string& Item) -> void
+	std::u32string Selected;
+	ComboBox->SetOnSelected([&Selected](const std::u32string& Item) -> void
 		{
 			Selected = Item;
 		});
@@ -78,7 +78,7 @@ TEST_CASE(Select,
 	Application.GetMainWindow()->OnMouseReleased(Position, OctaneGUI::Mouse::Button::Left);
 	Application.GetMainWindow()->Update();
 
-	VERIFYF(Selected == "Red", "Selected item does not match the expected result: %s != Red\n", Selected.c_str());
+	VERIFYF(Selected == U"Red", "Selected item does not match the expected result: %s != Red\n", OctaneGUI::Json::ToMultiByte(Selected).c_str());
 	VERIFY(!ComboBox->IsOpen());
 
 	return true;

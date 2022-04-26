@@ -215,6 +215,12 @@ TextInput::~TextInput()
 
 TextInput& TextInput::SetText(const char* InText)
 {
+	SetText(Json::ToUTF32(InText).c_str());
+	return *this;
+}
+
+TextInput& TextInput::SetText(const char32_t* InText)
+{
 	InternalSetText(InText);
 	m_Anchor.Invalidate();
 	m_Position = { 0, 0, 0 };
@@ -223,7 +229,7 @@ TextInput& TextInput::SetText(const char* InText)
 	return *this;
 }
 
-const char* TextInput::GetText() const
+const char32_t* TextInput::GetText() const
 {
 	return m_Text->GetText();
 }
@@ -302,7 +308,7 @@ void TextInput::OnPaint(Paint& Brush) const
 		const TextPosition Min = m_Anchor < m_Position ? m_Anchor : m_Position;
 		const TextPosition Max = m_Anchor < m_Position ? m_Position : m_Anchor;
 
-		const std::string& String = m_Text->GetString();
+		const std::u32string& String = m_Text->GetString();
 		if (Min.Line() == Max.Line())
 		{
 			const Vector2 MinPos = GetPositionLocation(Min);
@@ -322,7 +328,7 @@ void TextInput::OnPaint(Paint& Brush) const
 			{
 				if (Line == Min.Line())
 				{
-					const std::string Sub = String.substr(Min.Index(), LineEndIndex(Min.Index()) - Min.Index());
+					const std::u32string Sub = String.substr(Min.Index(), LineEndIndex(Min.Index()) - Min.Index());
 					const Vector2 Size = m_Text->GetFont()->Measure(Sub);
 					const Vector2 Position = GetPositionLocation(Min);
 					const Rect SelectBounds = {
@@ -334,7 +340,7 @@ void TextInput::OnPaint(Paint& Brush) const
 				else if (Line == Max.Line())
 				{
 					const uint32_t Start = LineStartIndex(Max.Index());
-					const std::string Sub = String.substr(Start, Max.Index() - Start);
+					const std::u32string Sub = String.substr(Start, Max.Index() - Start);
 					const Vector2 Size = m_Text->GetFont()->Measure(Sub);
 					const Vector2 Position = GetPositionLocation(Max);
 					const Rect SelectBounds = {
@@ -345,7 +351,7 @@ void TextInput::OnPaint(Paint& Brush) const
 				}
 				else
 				{
-					const std::string Sub = String.substr(Index, LineEndIndex(Index) - Index);
+					const std::u32string Sub = String.substr(Index, LineEndIndex(Index) - Index);
 					const Vector2 Size = m_Text->GetFont()->Measure(Sub);
 					const Vector2 Position = GetPositionLocation({ Line, 0, Index });
 					const Rect SelectBounds = {
@@ -473,8 +479,8 @@ void TextInput::AddText(uint32_t Code)
 		Delete(GetRangeOr(0));
 	}
 
-	std::string Contents = m_Text->GetText();
-	Contents.insert(Contents.begin() + m_Position.Index(), (int8_t)Code);
+	std::u32string Contents = m_Text->GetText();
+	Contents.insert(Contents.begin() + m_Position.Index(), Code);
 	InternalSetText(Contents.c_str());
 	Scrollable()->Update();
 	MovePosition(0, 1);
@@ -498,7 +504,7 @@ void TextInput::Delete(int32_t Range)
 	MovePosition(0, Move);
 
 	// TODO: Maybe allow altering the contents in-place and repaint?
-	std::string Contents = m_Text->GetText();
+	std::u32string Contents = m_Text->GetText();
 	Contents.erase(Contents.begin() + (uint32_t)Min, Contents.begin() + (uint32_t)Max);
 
 	InternalSetText(Contents.c_str());
@@ -535,7 +541,7 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 		m_Anchor.Invalidate();
 	}
 
-	const std::string& String = m_Text->GetString();
+	const std::u32string& String = m_Text->GetString();
 
 	// Prevent any update if trying to go before the beginning or moveing past the end.
 	if ((Line < 0 && m_Position.Line() == 0) || (Column < 0 && m_Position.Index() == 0) || (Column > 0 && m_Position.Index() == String.size()))
@@ -661,17 +667,17 @@ Vector2 TextInput::GetPositionLocation(const TextPosition& Position) const
 		return { 0.0f, 0.0f };
 	}
 
-	const std::string& String = m_Text->GetString();
+	const std::u32string& String = m_Text->GetString();
 	uint32_t Start = LineStartIndex(Position.Index());
 
-	const std::string Sub = String.substr(Start, Position.Index() - Start);
+	const std::u32string Sub = String.substr(Start, Position.Index() - Start);
 	return { m_Text->GetFont()->Measure(Sub).X, Position.Line() * m_Text->LineHeight() };
 }
 
 TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
 {
 	const float LineHeight = m_Text->LineHeight();
-	const std::string& String = m_Text->GetString();
+	const std::u32string& String = m_Text->GetString();
 
 	// Transform into local space.
 	const Vector2 LocalPosition = Position - Scrollable()->GetAbsolutePosition();
@@ -747,7 +753,7 @@ int32_t TextInput::GetRangeOr(int32_t Value) const
 
 uint32_t TextInput::LineStartIndex(uint32_t Index) const
 {
-	const std::string& String = m_Text->GetString();
+	const std::u32string& String = m_Text->GetString();
 
 	// The index may already be on a newline character. Start the search at the character
 	// before this one.
@@ -758,7 +764,7 @@ uint32_t TextInput::LineStartIndex(uint32_t Index) const
 
 uint32_t TextInput::LineEndIndex(uint32_t Index) const
 {
-	const std::string& String = m_Text->GetString();
+	const std::u32string& String = m_Text->GetString();
 
 	if (String[Index] == '\n')
 	{
@@ -771,7 +777,7 @@ uint32_t TextInput::LineEndIndex(uint32_t Index) const
 
 uint32_t TextInput::LineSize(uint32_t Index) const
 {
-	const std::string& String = m_Text->GetString();
+	const std::u32string& String = m_Text->GetString();
 	uint32_t Start = LineStartIndex(Index);
 	// The line should start at the character after the newline character.
 	if (String[Start] == '\n')
@@ -830,7 +836,7 @@ void TextInput::UpdateFormats()
 	}
 }
 
-void TextInput::InternalSetText(const char* InText)
+void TextInput::InternalSetText(const char32_t* InText)
 {
 	m_Text->SetText(InText);
 	Invalidate();

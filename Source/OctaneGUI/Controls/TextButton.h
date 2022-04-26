@@ -41,7 +41,7 @@ public:
 	TextButton(Window* InWindow);
 
 	Button* SetText(const char* InText);
-	const char* GetText() const;
+	const char32_t* GetText() const;
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;

@@ -49,7 +49,7 @@ public:
 	virtual ~CheckBox();
 
 	CheckBox& SetText(const char* InText);
-	const char* GetText() const;
+	const char32_t* GetText() const;
 
 	CheckBox& SetState(State InState);
 	State GetState() const;

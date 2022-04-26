@@ -41,7 +41,7 @@ class ComboBox : public HorizontalContainer
 	CLASS(ComboBox)
 
 public:
-	typedef std::function<void(const std::string&)> OnSelectedSignature;
+	typedef std::function<void(const std::u32string&)> OnSelectedSignature;
 
 	ComboBox(Window* InWindow);
 

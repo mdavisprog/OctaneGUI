@@ -75,7 +75,8 @@ public:
 	virtual ~TextInput();
 
 	TextInput& SetText(const char* InText);
-	const char* GetText() const;
+	TextInput& SetText(const char32_t* InText);
+	const char32_t* GetText() const;
 
 	TextInput& SetReadOnly(bool Value);
 	bool ReadOnly() const;
@@ -108,7 +109,7 @@ private:
 	uint32_t LineSize(uint32_t Index) const;
 	void ScrollIntoView();
 	void UpdateFormats();
-	void InternalSetText(const char* InText);
+	void InternalSetText(const char32_t* InText);
 	void ResetCursorTimer();
 
 	std::shared_ptr<Text> m_Text { nullptr };

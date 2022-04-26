@@ -79,7 +79,7 @@ std::shared_ptr<MenuItem> Menu::GetItem(const char* InText) const
 	const std::string Value = InText;
 	for (const std::shared_ptr<MenuItem>& Item : m_Items)
 	{
-		if (Value == Item->GetText())
+		if (Value == Json::ToMultiByte(Item->GetText()))
 		{
 			Result = Item;
 			break;

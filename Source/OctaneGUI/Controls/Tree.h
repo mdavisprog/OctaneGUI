@@ -44,7 +44,7 @@ public:
 	std::shared_ptr<Tree> AddChild(const char* Text);
 
 	Tree& SetText(const char* Text);
-	const char* GetText() const;
+	const char32_t* GetText() const;
 
 	Tree& SetExpanded(bool Expand);
 	bool IsExpanded() const;

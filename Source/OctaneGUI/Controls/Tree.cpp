@@ -71,7 +71,7 @@ public:
 		return *this;
 	}
 
-	const char* GetText() const
+	const char32_t* GetText() const
 	{
 		return m_Text->GetText();
 	}
@@ -327,7 +327,7 @@ Tree& Tree::SetText(const char* Text)
 	return *this;
 }
 
-const char* Tree::GetText() const
+const char32_t* Tree::GetText() const
 {
 	return m_Item->GetText();
 }

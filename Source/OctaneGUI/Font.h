@@ -61,8 +61,8 @@ public:
 
 	bool Load(const char* Path, float Size);
 	bool Draw(int32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoords) const;
-	Vector2 Measure(const std::string& Text) const;
-	Vector2 Measure(const std::string& Text, int& Lines) const;
+	Vector2 Measure(const std::u32string& Text) const;
+	Vector2 Measure(const std::u32string& Text, int& Lines) const;
 	Vector2 Measure(char Ch) const;
 	Vector2 Measure(int32_t CodePoint) const;
 

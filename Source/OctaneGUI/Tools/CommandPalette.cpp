@@ -78,11 +78,11 @@ bool CommandPalette::OnKeyPressed(Keyboard::Key Key)
 {
 	if (Key == Keyboard::Key::Enter)
 	{
-		std::vector<std::string> Tokens = Tokenize(m_Input->GetText());
-		m_Input->SetText("");
+		std::vector<std::u32string> Tokens = Tokenize(m_Input->GetText());
+		m_Input->SetText(U"");
 		GetWindow()->ClosePopup();
 
-		std::string Command;
+		std::u32string Command;
 		if (!Tokens.empty())
 		{
 			Command = Tokens[0];
@@ -99,9 +99,9 @@ bool CommandPalette::OnKeyPressed(Keyboard::Key Key)
 	return false;
 }
 
-std::vector<std::string> CommandPalette::Tokenize(const std::string& Value)
+std::vector<std::u32string> CommandPalette::Tokenize(const std::u32string& Value)
 {
-	std::vector<std::string> Result;
+	std::vector<std::u32string> Result;
 
 	if (Value.empty())
 	{
@@ -122,25 +122,25 @@ std::vector<std::string> CommandPalette::Tokenize(const std::string& Value)
 	return std::move(Result);
 }
 
-bool CommandPalette::Process(const std::string& Command, const std::vector<std::string>& Arguments)
+bool CommandPalette::Process(const std::u32string& Command, const std::vector<std::u32string>& Arguments)
 {
-	std::string Lower = Json::ToLower(Command);
-	if (Lower == "inspector")
+	std::u32string Lower = Json::ToLower(Command);
+	if (Lower == U"inspector")
 	{
 		Inspector::Get().Inspect(GetWindow()->GetRootContainer());
 		return true;
 	}
-	else if (Lower == "profile")
+	else if (Lower == U"profile")
 	{
 		if (!Arguments.empty())
 		{
 			Lower = Json::ToLower(Arguments.front());
 
-			if (Lower == "enable" || Lower == "e")
+			if (Lower == U"enable" || Lower == U"e")
 			{
 				Profiler::Get().Enable();
 			}
-			else if (Lower == "disable" || Lower == "d")
+			else if (Lower == U"disable" || Lower == U"d")
 			{
 				if (Profiler::Get().IsEnabled())
 				{
@@ -154,7 +154,7 @@ bool CommandPalette::Process(const std::string& Command, const std::vector<std::
 			}
 		}
 	}
-	else if (Lower == "textureviewer" || Lower == "tv")
+	else if (Lower == U"textureviewer" || Lower == U"tv")
 	{
 		TextureViewer::Get().Show(GetWindow()->App());
 	}
