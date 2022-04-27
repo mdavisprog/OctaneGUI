@@ -94,7 +94,9 @@ private:
 	void MouseMove(const Vector2& Position);
 	bool MousePressed(const Vector2& Position, Mouse::Button Button);
 	void MouseReleased(const Vector2& Position, Mouse::Button Button);
+
 	void AddText(uint32_t Code);
+	void AddText(const std::u32string& Contents);
 
 	void Delete(int32_t Range);
 	void MoveHome();
@@ -103,6 +105,7 @@ private:
 	Vector2 GetPositionLocation(const TextPosition& Position) const;
 	TextPosition GetPosition(const Vector2& Position) const;
 	bool IsShiftPressed() const;
+	bool IsCtrlPressed() const;
 	int32_t GetRangeOr(int32_t Value) const;
 	uint32_t LineStartIndex(uint32_t Index) const;
 	uint32_t LineEndIndex(uint32_t Index) const;

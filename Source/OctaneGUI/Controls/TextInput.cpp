@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "TextInput.h"
+#include "../Application.h"
 #include "../Font.h"
 #include "../Json.h"
 #include "../Paint.h"
@@ -73,6 +74,14 @@ public:
 
 		switch (Key)
 		{
+		case Keyboard::Key::V:
+		{
+			if (m_Input->IsCtrlPressed())
+			{
+				m_Input->AddText(ClipboardContents());
+			}
+			return true;
+		}
 		case Keyboard::Key::Backspace: m_Input->Delete(m_Input->GetRangeOr(-1)); return true;
 		case Keyboard::Key::Delete: m_Input->Delete(m_Input->GetRangeOr(1)); return true;
 		case Keyboard::Key::Left: m_Input->MovePosition(0, -1, m_Input->IsShiftPressed()); return true;
@@ -115,6 +124,11 @@ public:
 	}
 
 private:
+	std::u32string ClipboardContents() const
+	{
+		return GetWindow()->App().ClipboardContents();
+	}
+
 	TextInput* m_Input { nullptr };
 };
 
@@ -487,6 +501,47 @@ void TextInput::AddText(uint32_t Code)
 	ResetCursorTimer();
 }
 
+void Remove(std::u32string& Contents, char32_t Character)
+{
+	size_t Length = Contents.length();
+
+	size_t Offset = Contents.find(Character);
+	while (Offset != std::string::npos)
+	{
+		Contents.erase(Offset, 1);
+		Offset = Contents.find(Character, Offset);
+	}
+}
+
+void TextInput::AddText(const std::u32string& Contents)
+{
+	if (m_ReadOnly)
+	{
+		return;
+	}
+
+	if (m_Anchor.IsValid())
+	{
+		Delete(GetRangeOr(0));
+	}
+
+	// TODO: Look into if we can avoid a copy.
+	std::u32string Stripped = std::move(Contents);
+	Remove(Stripped, '\r');
+
+	if (!m_Multiline)
+	{
+		Remove(Stripped, '\n');
+	}
+
+	std::u32string Current = m_Text->GetText();
+	Current.insert(Current.begin() + m_Position.Index(), Stripped.begin(), Stripped.end());
+	InternalSetText(Current.c_str());
+	Scrollable()->Update();
+	MovePosition(0, Contents.length());
+	ResetCursorTimer();
+}
+
 void TextInput::Delete(int32_t Range)
 {
 	uint32_t Index = m_Position.Index();
@@ -739,6 +794,11 @@ TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
 bool TextInput::IsShiftPressed() const
 {
 	return IsKeyPressed(Keyboard::Key::LeftShift) || IsKeyPressed(Keyboard::Key::RightShift);
+}
+
+bool TextInput::IsCtrlPressed() const
+{
+	return IsKeyPressed(Keyboard::Key::LeftControl) || IsKeyPressed(Keyboard::Key::RightControl);
 }
 
 int32_t TextInput::GetRangeOr(int32_t Value) const
