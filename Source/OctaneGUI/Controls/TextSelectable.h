@@ -50,8 +50,8 @@ public:
 	TextSelectable& SetAlignment(HorizontalAlignment Align);
 	HorizontalAlignment GetAlignment() const;
 
-	TextSelectable& SetOnHovered(OnTextSelectableSignature Fn);
-	TextSelectable& SetOnPressed(OnTextSelectableSignature Fn);
+	TextSelectable& SetOnHovered(OnTextSelectableSignature&& Fn);
+	TextSelectable& SetOnPressed(OnTextSelectableSignature&& Fn);
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;

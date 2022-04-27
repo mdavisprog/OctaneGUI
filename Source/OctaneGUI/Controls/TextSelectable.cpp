@@ -79,15 +79,15 @@ HorizontalAlignment TextSelectable::GetAlignment() const
 	return m_Align;
 }
 
-TextSelectable& TextSelectable::SetOnHovered(OnTextSelectableSignature Fn)
+TextSelectable& TextSelectable::SetOnHovered(OnTextSelectableSignature&& Fn)
 {
-	m_OnHovered = Fn;
+	m_OnHovered = std::move(Fn);
 	return *this;
 }
 
-TextSelectable& TextSelectable::SetOnPressed(OnTextSelectableSignature Fn)
+TextSelectable& TextSelectable::SetOnPressed(OnTextSelectableSignature&& Fn)
 {
-	m_OnPressed = Fn;
+	m_OnPressed = std::move(Fn);
 	return *this;
 }
 
