@@ -54,6 +54,7 @@ public:
 	typedef std::function<void(Window*, const VertexBuffer&)> OnWindowPaintSignature;
 	typedef std::function<Event(Window*)> OnWindowEventSignature;
 	typedef std::function<uint32_t(const std::vector<uint8_t>&, uint32_t, uint32_t)> OnLoadTextureSignature;
+	typedef std::function<std::u32string(void)> OnGetClipboardContentsSignature;
 
 	Application();
 	virtual ~Application();
@@ -73,13 +74,15 @@ public:
 	std::shared_ptr<Icons> GetIcons() const;
 	TextureCache& GetTextureCache();
 	bool IsKeyPressed(Keyboard::Key Key) const;
+	std::u32string ClipboardContents() const;
 
-	Application& SetOnCreateWindow(OnWindowSignature Fn);
-	Application& SetOnDestroyWindow(OnWindowSignature Fn);
-	Application& SetOnPaint(OnWindowPaintSignature Fn);
-	Application& SetOnEvent(OnWindowEventSignature Fn);
-	Application& SetOnLoadTexture(OnLoadTextureSignature Fn);
-	Application& SetOnExit(OnEmptySignature Fn);
+	Application& SetOnCreateWindow(OnWindowSignature&& Fn);
+	Application& SetOnDestroyWindow(OnWindowSignature&& Fn);
+	Application& SetOnPaint(OnWindowPaintSignature&& Fn);
+	Application& SetOnEvent(OnWindowEventSignature&& Fn);
+	Application& SetOnLoadTexture(OnLoadTextureSignature&& Fn);
+	Application& SetOnExit(OnEmptySignature&& Fn);
+	Application& SetOnGetClipboardContents(OnGetClipboardContentsSignature&& Fn);
 
 private:
 	void OnPaint(Window* InWindow, const VertexBuffer& Buffer);
@@ -94,12 +97,14 @@ private:
 	bool m_IsRunning { false };
 	std::vector<Keyboard::Key> m_PressedKeys {};
 	TextureCache m_TextureCache {};
+
 	OnWindowSignature m_OnCreateWindow { nullptr };
 	OnWindowSignature m_OnDestroyWindow { nullptr };
 	OnWindowPaintSignature m_OnPaint { nullptr };
 	OnWindowEventSignature m_OnEvent { nullptr };
 	OnLoadTextureSignature m_OnLoadTexture { nullptr };
 	OnEmptySignature m_OnExit { nullptr };
+	OnGetClipboardContentsSignature m_OnGetClipboardContents { nullptr };
 };
 
 }

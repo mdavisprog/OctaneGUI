@@ -263,39 +263,55 @@ bool Application::IsKeyPressed(Keyboard::Key Key) const
 	return std::find(m_PressedKeys.begin(), m_PressedKeys.end(), Key) != m_PressedKeys.end();
 }
 
-Application& Application::SetOnCreateWindow(OnWindowSignature Fn)
+std::u32string Application::ClipboardContents() const
 {
-	m_OnCreateWindow = Fn;
+	if (m_OnGetClipboardContents)
+	{
+		return m_OnGetClipboardContents();
+	}
+
+	return U"";
+}
+
+Application& Application::SetOnCreateWindow(OnWindowSignature&& Fn)
+{
+	m_OnCreateWindow = std::move(Fn);
 	return *this;
 }
 
-Application& Application::SetOnDestroyWindow(OnWindowSignature Fn)
+Application& Application::SetOnDestroyWindow(OnWindowSignature&& Fn)
 {
-	m_OnDestroyWindow = Fn;
+	m_OnDestroyWindow = std::move(Fn);
 	return *this;
 }
 
-Application& Application::SetOnPaint(OnWindowPaintSignature Fn)
+Application& Application::SetOnPaint(OnWindowPaintSignature&& Fn)
 {
-	m_OnPaint = Fn;
+	m_OnPaint = std::move(Fn);
 	return *this;
 }
 
-Application& Application::SetOnEvent(OnWindowEventSignature Fn)
+Application& Application::SetOnEvent(OnWindowEventSignature&& Fn)
 {
-	m_OnEvent = Fn;
+	m_OnEvent = std::move(Fn);
 	return *this;
 }
 
-Application& Application::SetOnLoadTexture(OnLoadTextureSignature Fn)
+Application& Application::SetOnLoadTexture(OnLoadTextureSignature&& Fn)
 {
-	m_OnLoadTexture = Fn;
+	m_OnLoadTexture = std::move(Fn);
 	return *this;
 }
 
-Application& Application::SetOnExit(OnEmptySignature Fn)
+Application& Application::SetOnExit(OnEmptySignature&& Fn)
 {
-	m_OnExit = Fn;
+	m_OnExit = std::move(Fn);
+	return *this;
+}
+
+Application& Application::SetOnGetClipboardContents(OnGetClipboardContentsSignature&& Fn)
+{
+	m_OnGetClipboardContents = std::move(Fn);
 	return *this;
 }
 

@@ -270,6 +270,18 @@ void OnExit()
 	Windows.clear();
 }
 
+std::u32string OnGetClipboardContents()
+{
+	std::u32string Result;
+
+	for (const sf::Uint32 Ch : sf::Clipboard::getString().toUtf32())
+	{
+		Result += Ch;
+	}
+
+	return Result;
+}
+
 void Initialize(OctaneGUI::Application& Application)
 {
 	Application
@@ -278,7 +290,8 @@ void Initialize(OctaneGUI::Application& Application)
 		.SetOnPaint(OnPaint)
 		.SetOnEvent(OnEvent)
 		.SetOnLoadTexture(OnLoadTexture)
-		.SetOnExit(OnExit);
+		.SetOnExit(OnExit)
+		.SetOnGetClipboardContents(OnGetClipboardContents);
 }
 
 }
