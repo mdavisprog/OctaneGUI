@@ -157,6 +157,7 @@ OctaneGUI::Keyboard::Key GetKey(SDL_Keycode Code)
 	switch (Code)
 	{
 	case SDLK_p: return OctaneGUI::Keyboard::Key::P;
+	case SDLK_v: return OctaneGUI::Keyboard::Key::V;
 	case SDLK_ESCAPE: return OctaneGUI::Keyboard::Key::Escape;
 	case SDLK_BACKSPACE: return OctaneGUI::Keyboard::Key::Backspace;
 	case SDLK_DELETE: return OctaneGUI::Keyboard::Key::Delete;

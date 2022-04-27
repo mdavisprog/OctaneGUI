@@ -36,6 +36,7 @@ public:
 	{
 		None,
 		P,
+		V,
 		Escape,
 		Backspace,
 		Delete,
