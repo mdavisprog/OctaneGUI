@@ -488,6 +488,11 @@ void TextInput::AddText(uint32_t Code)
 		return;
 	}
 
+	if (!m_Position.IsValid())
+	{
+		m_Position = { 0, 0, 0 };
+	}
+
 	if (m_Anchor.IsValid())
 	{
 		Delete(GetRangeOr(0));
@@ -520,6 +525,11 @@ void TextInput::AddText(const std::u32string& Contents)
 		return;
 	}
 
+	if (!m_Position.IsValid())
+	{
+		m_Position = { 0, 0, 0 };
+	}
+
 	if (m_Anchor.IsValid())
 	{
 		Delete(GetRangeOr(0));
@@ -538,7 +548,7 @@ void TextInput::AddText(const std::u32string& Contents)
 	Current.insert(Current.begin() + m_Position.Index(), Stripped.begin(), Stripped.end());
 	InternalSetText(Current.c_str());
 	Scrollable()->Update();
-	MovePosition(0, Contents.length());
+	MovePosition(0, Stripped.length());
 	ResetCursorTimer();
 }
 
