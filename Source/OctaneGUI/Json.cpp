@@ -28,8 +28,8 @@ SOFTWARE.
 
 #include <cassert>
 #include <cctype>
+#include <codecvt>
 #include <cstring>
-#include <cuchar>
 #include <utility>
 
 namespace OctaneGUI
@@ -59,20 +59,34 @@ std::u32string Json::ToLower(const std::u32string& Value)
 	return Result;
 }
 
+class Converter : public std::codecvt<char32_t, char, std::mbstate_t>
+{
+public:
+	Converter()
+		: std::codecvt<char32_t, char, std::mbstate_t>()
+	{
+	}
+
+	~Converter()
+	{
+	}
+};
+
 std::string Json::ToMultiByte(const std::u32string& Value)
 {
 	std::string Result;
 
 	std::mbstate_t State {};
-	char Character[MB_LEN_MAX];
-	for (char32_t Ch : Value)
-	{
-		size_t Length = std::c32rtomb(Character, Ch, &State);
-		for (size_t I = 0; I < Length; I++)
-		{
-			Result += Character[I];
-		}
-	}
+	Converter Convert;
+
+	Result.resize(Value.length() * sizeof(char32_t));
+
+	const char32_t* From = nullptr;
+	char* To = nullptr;
+	Convert.out(State, Value.data(), &Value[Value.size()], From, Result.data(), &Result[Result.size()], To);
+
+	// TODO: Should probably do some error checking here.
+	Result.resize(To - Result.data());
 
 	return Result;
 }
@@ -82,17 +96,13 @@ std::u32string Json::ToUTF32(const std::string& Value)
 	std::u32string Result;
 
 	std::mbstate_t State {};
-	char32_t Character;
-	const char* Ptr = Value.data();
-	for (size_t I = 0; I < Value.length(); I++)
-	{
-		size_t Length = std::mbrtoc32(&Character, Ptr, 1, &State);
-		if (Length < (std::size_t)-3)
-		{
-			Result += Character;
-		}
-		Ptr++;
-	}
+	Converter Convert;
+
+	Result.resize(Value.length());
+
+	const char* From = nullptr;
+	char32_t* To = nullptr;
+	Convert.in(State, Value.data(), &Value[Value.size()], From, Result.data(), &Result[Result.size()], To);
 
 	return Result;
 }
