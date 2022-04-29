@@ -900,9 +900,21 @@ void TextInput::UpdateFormats()
 	{
 		TextPosition Min = m_Anchor < m_Position ? m_Anchor : m_Position;
 		TextPosition Max = m_Anchor < m_Position ? m_Position : m_Anchor;
-		m_Text->PushFormat({ 0, Min.Index(), GetProperty(ThemeProperties::Text).ToColor() });
-		m_Text->PushFormat({ Min.Index(), Max.Index(), GetProperty(ThemeProperties::TextSelectable_Text_Hovered).ToColor() });
-		m_Text->PushFormat({ Max.Index(), m_Text->Length(), GetProperty(ThemeProperties::Text).ToColor() });
+
+		if (Min.Index() > 0)
+		{
+			m_Text->PushFormat({ 0, Min.Index(), GetProperty(ThemeProperties::Text).ToColor() });
+		}
+
+		if (Min.Index() < Max.Index())
+		{
+			m_Text->PushFormat({ Min.Index(), Max.Index(), GetProperty(ThemeProperties::TextSelectable_Text_Hovered).ToColor() });
+		}
+
+		if (Max.Index() < m_Text->Length())
+		{
+			m_Text->PushFormat({ Max.Index(), m_Text->Length(), GetProperty(ThemeProperties::Text).ToColor() });
+		}
 	}
 }
 
