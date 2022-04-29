@@ -32,6 +32,7 @@ SOFTWARE.
 #include <functional>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace OctaneGUI
@@ -43,6 +44,17 @@ class Texture;
 class Font
 {
 public:
+	struct Range
+	{
+		uint32_t Min { 0 };
+		uint32_t Max { 0 };
+	};
+
+	static Range BasicLatin;
+	static Range Latin1Supplement;
+	static Range LatinExtended1;
+	static Range LatinExtended2;
+
 	struct Glyph
 	{
 	public:
@@ -54,12 +66,12 @@ public:
 		Vector2 Advance {};
 	};
 
-	static std::shared_ptr<Font> Create(const char* Path, float Size);
+	static std::shared_ptr<Font> Create(const char* Path, float Size, const std::vector<Range>& Ranges = { BasicLatin });
 
 	Font();
 	~Font();
 
-	bool Load(const char* Path, float Size);
+	bool Load(const char* Path, float Size, const std::vector<Range>& Ranges);
 	bool Draw(int32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoords) const;
 	Vector2 Measure(const std::u32string& Text) const;
 	Vector2 Measure(const std::u32string& Text, int& Lines) const;
@@ -75,7 +87,9 @@ public:
 	const std::shared_ptr<Texture>& GetTexture() const;
 
 private:
-	std::vector<Glyph> m_Glyphs;
+	typedef std::unordered_map<unsigned int, Glyph> GlyphMap;
+
+	GlyphMap m_Glyphs;
 	float m_Size { 0.0f };
 	float m_Ascent { 0.0f };
 	float m_Descent { 0.0f };

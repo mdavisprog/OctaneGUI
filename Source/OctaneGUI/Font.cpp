@@ -38,15 +38,20 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+Font::Range Font::BasicLatin { 0x20, 0x7F };
+Font::Range Font::Latin1Supplement { 0xA0, 0xFF };
+Font::Range Font::LatinExtended1 { 0x100, 0x17F };
+Font::Range Font::LatinExtended2 { 0x180, 0x24F };
+
 Font::Glyph::Glyph()
 {
 }
 
-std::shared_ptr<Font> Font::Create(const char* Path, float Size)
+std::shared_ptr<Font> Font::Create(const char* Path, float Size, const std::vector<Range>& Ranges)
 {
 	std::shared_ptr<Font> Result = std::make_shared<Font>();
 
-	if (!Result->Load(Path, Size))
+	if (!Result->Load(Path, Size, Ranges))
 	{
 		return nullptr;
 	}
@@ -62,27 +67,6 @@ Font::~Font()
 {
 }
 
-// TODO: Do our own rect packing so that we can avoid a loop that just increases the texture size.
-bool LoadFont(const std::vector<char>& FontData, float FontSize, std::vector<uint8_t>& Data, const Vector2& Size, std::vector<stbtt_packedchar>& Glyphs)
-{
-	Data.clear();
-	Data.resize((int)Size.X * (int)Size.Y);
-
-	stbtt_pack_context PackContext;
-	if (stbtt_PackBegin(&PackContext, Data.data(), (int)Size.X, (int)Size.Y, 0, 1, nullptr) == 0)
-	{
-		return false;
-	}
-
-	Glyphs.clear();
-	Glyphs.resize(96);
-	int Result = stbtt_PackFontRange(&PackContext, (uint8_t*)FontData.data(), 0, FontSize, 32, Glyphs.size(), Glyphs.data());
-
-	stbtt_PackEnd(&PackContext);
-
-	return Result > 0;
-}
-
 void IncreaseSize(Vector2& TextureSize, float Delta)
 {
 	if (TextureSize.Y < TextureSize.X)
@@ -95,7 +79,7 @@ void IncreaseSize(Vector2& TextureSize, float Delta)
 	}
 }
 
-bool Font::Load(const char* Path, float Size)
+bool Font::Load(const char* Path, float Size, const std::vector<Range>& Ranges)
 {
 	std::ifstream Stream;
 	Stream.open(Path, std::ios_base::in | std::ios_base::binary);
@@ -120,13 +104,80 @@ bool Font::Load(const char* Path, float Size)
 	m_Size = Size;
 	m_Path = Path;
 
+	// 1. Initialize the font data from the input stream.
 	Vector2 TextureSize { 128.0f, 128.0f };
-	std::vector<uint8_t> Texture;
+	const uint8_t* Data = (uint8_t*)Buffer.data();
+	stbtt_fontinfo Info {};
+	stbtt_InitFont(&Info, Data, stbtt_GetFontOffsetForIndex(Data, 0));
+
+	// 2. Begin our pack context. This initializes the stbtt_pack_context struct
+	stbtt_pack_context PackContext {};
+	stbtt_PackBegin(&PackContext, nullptr, TextureSize.X, TextureSize.Y, 0, 1, nullptr);
+
+	// 3. Gather all rects to be rendered based on the desired character ranges.
 	std::vector<stbtt_packedchar> Chars;
-	while (!LoadFont(Buffer, Size, Texture, TextureSize, Chars))
+	std::vector<stbrp_rect> AllRects;
+	std::vector<stbtt_pack_range> PackRanges;
+	for (const Range& Range_ : Ranges)
 	{
-		IncreaseSize(TextureSize, 128.0f);
+		PackRanges.push_back({});
+		stbtt_pack_range& PackRange = PackRanges.back();
+		PackRange.font_size = Size;
+		PackRange.first_unicode_codepoint_in_range = Range_.Min;
+		PackRange.num_chars = Range_.Max - Range_.Min + 1; // Include the final character 'Max'
+		PackRange.array_of_unicode_codepoints = nullptr;
+
+		Chars.resize(Chars.size() + PackRange.num_chars);
+
+		std::vector<stbrp_rect> Rects;
+		Rects.resize(PackRange.num_chars);
+
+		int PackedCount = stbtt_PackFontRangesGatherRects(&PackContext, &Info, &PackRange, 1, Rects.data());
+		AllRects.insert(AllRects.end(), Rects.begin(), Rects.end());
+
+		// Turn on skipping missing codepoints after the first range.
+		stbtt_PackSetSkipMissingCodepoints(&PackContext, 1);
 	}
+
+	// 4. Determine an appropriate texture size to render all of the glyphs into.
+	int Success = 0;
+	do
+	{
+		stbrp_context Context {};
+		std::vector<stbrp_node> Nodes;
+		Nodes.resize((int)TextureSize.X - PackContext.padding);
+		stbrp_init_target(&Context, (int)TextureSize.X - PackContext.padding, (int)TextureSize.Y - PackContext.padding, Nodes.data(), Nodes.size());
+		Success = stbrp_pack_rects(&Context, AllRects.data(), AllRects.size());
+		if (Success == 0)
+		{
+			IncreaseSize(TextureSize, 128.0f);
+		}
+	}
+	while (Success == 0);
+
+	// Reset to not skip when rendering each rect.
+	stbtt_PackSetSkipMissingCodepoints(&PackContext, 0);
+
+	std::vector<uint8_t> Texture;
+	Texture.resize((int)TextureSize.X * (int)TextureSize.Y);
+
+	PackContext.width = (int)TextureSize.X;
+	PackContext.height = (int)TextureSize.Y;
+	PackContext.pixels = Texture.data();
+	PackContext.stride_in_bytes = PackContext.width;
+
+	// Need to update the pointers for chardata_for_range
+	size_t Offset = 0;
+	for (stbtt_pack_range& Range_ : PackRanges)
+	{
+		Range_.chardata_for_range = &Chars[Offset];
+		Offset += Range_.num_chars;
+	}
+
+	// 5. Perform the render.
+	Success = stbtt_PackFontRangesRenderIntoRects(&PackContext, &Info, PackRanges.data(), PackRanges.size(), AllRects.data());
+
+	stbtt_PackEnd(&PackContext);
 
 	// Convert data to RGBA32
 	std::vector<uint8_t> RGBA32;
@@ -147,14 +198,19 @@ bool Font::Load(const char* Path, float Size)
 		return false;
 	}
 
-	for (const stbtt_packedchar& Char : Chars)
+	// 6. Map each character rect to a glyph object.
+	Index = 0;
+	for (const Range& Range_ : Ranges)
 	{
-		Glyph Item;
-		Item.Min = Vector2(Char.x0, Char.y0);
-		Item.Max = Vector2(Char.x1, Char.y1);
-		Item.Offset = Vector2(Char.xoff, Char.yoff);
-		Item.Advance = Vector2(Char.xadvance, 0.0f);
-		m_Glyphs.push_back(Item);
+		for (unsigned int Codepoint = Range_.Min; Codepoint <= Range_.Max; Codepoint++)
+		{
+			const stbtt_packedchar& PackedChar = Chars[Index++];
+			Glyph& Item = m_Glyphs[Codepoint];
+			Item.Min = { (float)PackedChar.x0, (float)PackedChar.y0 };
+			Item.Max = { (float)PackedChar.x1, (float)PackedChar.y1 };
+			Item.Offset = { (float)PackedChar.xoff, (float)PackedChar.yoff };
+			Item.Advance = { (float)PackedChar.xadvance, 0.0f };
+		}
 	}
 
 	m_SpaceSize = Measure(U" ");
@@ -164,12 +220,14 @@ bool Font::Load(const char* Path, float Size)
 
 bool Font::Draw(int32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoords) const
 {
-	if (Char < 0 || Char >= m_Glyphs.size())
+	if (m_Glyphs.find(Char) == m_Glyphs.end())
 	{
-		return false;
+		// TODO: Currently, we are hardcoding the missing character glyph to this character.
+		// Should come up with a more generic solution.
+		Char = 127;
 	}
 
-	const Glyph& Item = m_Glyphs[Char];
+	const Glyph& Item = m_Glyphs.at(Char);
 	const Vector2 ItemSize = Item.Max - Item.Min;
 	const Vector2 InvertedSize = m_Texture->GetSize().Invert();
 
@@ -193,6 +251,12 @@ Vector2 Font::Measure(const std::u32string& Text) const
 
 	for (char Ch : Text)
 	{
+		// Should ignore newlines here. If newlines are desired, then Measure(const u32string&, int&) should be used.
+		if (Ch == '\n')
+		{
+			continue;
+		}
+
 		const Vector2 Size = Measure(Ch);
 		Result.X += Size.X;
 		Result.Y = std::max<float>(Result.Y, Size.Y);
@@ -230,9 +294,7 @@ Vector2 Font::Measure(const std::u32string& Text, int& Lines) const
 
 Vector2 Font::Measure(char Ch) const
 {
-	// TODO: Refactor how we match the character index with the glyph in the array.
-	int32_t CodePoint = Ch - 32;
-	return Measure(CodePoint);
+	return Measure((int32_t)Ch);
 }
 
 Vector2 Font::Measure(int32_t CodePoint) const
