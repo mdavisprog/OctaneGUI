@@ -27,6 +27,8 @@ SOFTWARE.
 #include "TextureCache.h"
 #include "Texture.h"
 
+#include <cstring>
+
 namespace OctaneGUI
 {
 
