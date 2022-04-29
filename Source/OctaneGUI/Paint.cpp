@@ -140,7 +140,7 @@ void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, c
 		Rect Vertices;
 		Rect TexCoords;
 
-		InFont->Draw((int32_t)Char, Pos, Vertices, TexCoords);
+		InFont->Draw((uint32_t)Char, Pos, Vertices, TexCoords);
 		AddTriangles(Vertices, TexCoords, Col, Offset);
 		Offset += 4;
 	}
@@ -169,7 +169,7 @@ void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, 
 	{
 		const TextFormat& Format = Formats[I];
 		const std::u32string_view& View = Views[I];
-		for (char Char : View)
+		for (char32_t Char : View)
 		{
 			if (Char == '\n')
 			{
@@ -181,7 +181,7 @@ void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, 
 			Rect Vertices;
 			Rect TexCoords;
 
-			InFont->Draw((int32_t)Char, Pos, Vertices, TexCoords);
+			InFont->Draw((uint32_t)Char, Pos, Vertices, TexCoords);
 			AddTriangles(Vertices, TexCoords, Format.TextColor, Offset);
 			Offset += 4;
 		}

@@ -209,7 +209,8 @@ bool Font::Load(const char* Path, float Size, const std::vector<Range>& Ranges)
 			Item.Min = { (float)PackedChar.x0, (float)PackedChar.y0 };
 			Item.Max = { (float)PackedChar.x1, (float)PackedChar.y1 };
 			Item.Offset = { (float)PackedChar.xoff, (float)PackedChar.yoff };
-			Item.Advance = { (float)PackedChar.xadvance, 0.0f };
+			Item.Offset2 = { (float)PackedChar.xoff2, (float)PackedChar.yoff2 };
+			Item.Advance = { PackedChar.xadvance, 0.0f };
 		}
 	}
 
@@ -218,24 +219,16 @@ bool Font::Load(const char* Path, float Size, const std::vector<Range>& Ranges)
 	return true;
 }
 
-bool Font::Draw(int32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoords) const
+bool Font::Draw(uint32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoords) const
 {
-	if (m_Glyphs.find(Char) == m_Glyphs.end())
-	{
-		// TODO: Currently, we are hardcoding the missing character glyph to this character.
-		// Should come up with a more generic solution.
-		Char = 127;
-	}
-
-	const Glyph& Item = m_Glyphs.at(Char);
-	const Vector2 ItemSize = Item.Max - Item.Min;
+	const Glyph& Item = GetGlyph(Char);
 	const Vector2 InvertedSize = m_Texture->GetSize().Invert();
 
 	int X = (int)floor(Position.X + Item.Offset.X + 0.5f);
 	int Y = (int)floor(Position.Y + Item.Offset.Y + m_Ascent + 0.5f);
 
 	Vertices.Min = Vector2((float)X, (float)Y);
-	Vertices.Max = Vertices.Min + ItemSize;
+	Vertices.Max = Vertices.Min + (Item.Offset2 - Item.Offset);
 
 	TexCoords.Min = Item.Min * InvertedSize;
 	TexCoords.Max = Item.Max * InvertedSize;
@@ -249,7 +242,7 @@ Vector2 Font::Measure(const std::u32string& Text) const
 {
 	Vector2 Result;
 
-	for (char Ch : Text)
+	for (char32_t Ch : Text)
 	{
 		// Should ignore newlines here. If newlines are desired, then Measure(const u32string&, int&) should be used.
 		if (Ch == '\n')
@@ -271,7 +264,7 @@ Vector2 Font::Measure(const std::u32string& Text, int& Lines) const
 	Lines = 1;
 
 	Vector2 LineSize;
-	for (char Ch : Text)
+	for (char32_t Ch : Text)
 	{
 		if (Ch == '\n')
 		{
@@ -294,10 +287,10 @@ Vector2 Font::Measure(const std::u32string& Text, int& Lines) const
 
 Vector2 Font::Measure(char Ch) const
 {
-	return Measure((int32_t)Ch);
+	return Measure((uint32_t)Ch);
 }
 
-Vector2 Font::Measure(int32_t CodePoint) const
+Vector2 Font::Measure(uint32_t CodePoint) const
 {
 	Vector2 Result;
 
@@ -348,6 +341,18 @@ const char* Font::Path() const
 const std::shared_ptr<Texture>& Font::GetTexture() const
 {
 	return m_Texture;
+}
+
+const Font::Glyph& Font::GetGlyph(uint32_t CodePoint) const
+{
+	if (m_Glyphs.find(CodePoint) == m_Glyphs.end())
+	{
+		// TODO: Currently, we are hardcoding the missing character glyph to this character.
+		// Should come up with a more generic solution.
+		CodePoint = 127;
+	}
+
+	return m_Glyphs.at(CodePoint);
 }
 
 }

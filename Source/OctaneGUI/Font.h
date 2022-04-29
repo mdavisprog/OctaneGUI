@@ -63,20 +63,21 @@ public:
 		Vector2 Min {};
 		Vector2 Max {};
 		Vector2 Offset {};
+		Vector2 Offset2 {};
 		Vector2 Advance {};
 	};
 
-	static std::shared_ptr<Font> Create(const char* Path, float Size, const std::vector<Range>& Ranges = { BasicLatin });
+	static std::shared_ptr<Font> Create(const char* Path, float Size, const std::vector<Range>& Ranges = { BasicLatin, Latin1Supplement });
 
 	Font();
 	~Font();
 
 	bool Load(const char* Path, float Size, const std::vector<Range>& Ranges);
-	bool Draw(int32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoords) const;
+	bool Draw(uint32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoords) const;
 	Vector2 Measure(const std::u32string& Text) const;
 	Vector2 Measure(const std::u32string& Text, int& Lines) const;
 	Vector2 Measure(char Ch) const;
-	Vector2 Measure(int32_t CodePoint) const;
+	Vector2 Measure(uint32_t CodePoint) const;
 
 	uint32_t ID() const;
 	float Size() const;
@@ -88,6 +89,8 @@ public:
 
 private:
 	typedef std::unordered_map<unsigned int, Glyph> GlyphMap;
+
+	const Glyph& GetGlyph(uint32_t CodePoint) const;
 
 	GlyphMap m_Glyphs;
 	float m_Size { 0.0f };
