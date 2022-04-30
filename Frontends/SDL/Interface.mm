@@ -599,6 +599,11 @@ void OnExit()
 	SDL_Quit();
 }
 
+std::u32string OnClipboardContents()
+{
+	return OctaneGUI::Json::ToUTF32(SDL_GetClipboardText());
+}
+
 void Initialize(OctaneGUI::Application& Application)
 {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
@@ -614,12 +619,14 @@ void Initialize(OctaneGUI::Application& Application)
 	g_Device = MTLCreateSystemDefaultDevice();
 	InitializeDevice(g_Device);
 
-	Application.SetOnCreateWindow(OnCreateWindow);
-	Application.SetOnDestroyWindow(OnDestroyWindow);
-	Application.SetOnEvent(OnEvent);
-	Application.SetOnPaint(OnPaint);
-	Application.SetOnLoadTexture(OnLoadTexture);
-	Application.SetOnExit(OnExit);
+	Application
+		.SetOnCreateWindow(OnCreateWindow)
+		.SetOnDestroyWindow(OnDestroyWindow)
+		.SetOnEvent(OnEvent)
+		.SetOnPaint(OnPaint)
+		.SetOnLoadTexture(OnLoadTexture)
+		.SetOnExit(OnExit)
+		.SetOnGetClipboardContents(OnClipboardContents);
 }
 
 }
