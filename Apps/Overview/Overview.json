@@ -54,7 +54,8 @@
 						"Expand": "Both"
 					},
 					{
-						"Type": "ScrollableContainer",
+						"Type": "ScrollableViewControl",
+						"Expand": "Both",
 						"Controls": [
 							{
 								"Type": "MarginContainer",
