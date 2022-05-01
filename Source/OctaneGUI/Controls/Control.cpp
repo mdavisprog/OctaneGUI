@@ -103,6 +103,7 @@ Control* Control::SetSize(const Vector2& Size)
 {
 	m_Bounds.Max = m_Bounds.Min + Size;
 	Invalidate(InvalidateType::Layout);
+	OnResized();
 	return this;
 }
 
@@ -337,6 +338,10 @@ void Control::OnMouseEnter()
 }
 
 void Control::OnMouseLeave()
+{
+}
+
+void Control::OnResized()
 {
 }
 

@@ -163,6 +163,7 @@ public:
 	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button);
 	virtual void OnMouseEnter();
 	virtual void OnMouseLeave();
+	virtual void OnResized();
 	virtual void OnText(uint32_t Code);
 	virtual void OnThemeLoaded();
 
