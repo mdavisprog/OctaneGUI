@@ -158,6 +158,22 @@ void Splitter::OnLoad(const Json& Root)
 	m_Second->OnLoad(Root["Second"]);
 }
 
+void Splitter::OnResized()
+{
+	float Position = 0.0f;
+
+	if (m_Separator->GetOrientation() == Orientation::Vertical)
+	{
+		Position = m_First->GetSize().X;
+	}
+	else
+	{
+		Position = m_First->GetSize().Y;
+	}
+
+	SetSplitterPosition(Position);
+}
+
 void Splitter::UpdateLayout()
 {
 	ClearControls();

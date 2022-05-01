@@ -53,6 +53,7 @@ public:
 
 	virtual void Update() override;
 	virtual void OnLoad(const Json& Root) override;
+	virtual void OnResized() override;
 
 private:
 	void UpdateLayout();
