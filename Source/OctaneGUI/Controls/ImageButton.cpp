@@ -67,6 +67,12 @@ ImageButton& ImageButton::SetTint(const Color& Tint)
 	return *this;
 }
 
+void ImageButton::SetWindow(Window* InWindow)
+{
+	Button::SetWindow(InWindow);
+	m_Image->SetWindow(InWindow);
+}
+
 void ImageButton::OnPaint(Paint& Brush) const
 {
 	Button::OnPaint(Brush);

@@ -103,6 +103,12 @@ bool CheckBox::IsTriState() const
 	return m_TriState;
 }
 
+void CheckBox::SetWindow(Window* InWindow)
+{
+	Control::SetWindow(InWindow);
+	m_Text->SetWindow(InWindow);
+}
+
 void CheckBox::OnPaint(Paint& Brush) const
 {
 	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);

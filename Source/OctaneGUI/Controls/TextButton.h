@@ -43,6 +43,7 @@ public:
 	Button* SetText(const char* InText);
 	const char32_t* GetText() const;
 
+	virtual void SetWindow(Window* InWindow) override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
 	virtual void OnLoad(const Json& Root) override;

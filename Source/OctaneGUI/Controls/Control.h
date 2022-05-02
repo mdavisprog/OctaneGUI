@@ -138,7 +138,10 @@ public:
 	bool Contains(const Vector2& Position) const;
 	Rect GetBounds() const;
 	Rect GetAbsoluteBounds() const;
+
+	virtual void SetWindow(Window* InWindow);
 	Window* GetWindow() const;
+
 	Vector2 GetMousePosition() const;
 	std::shared_ptr<Theme> GetTheme() const;
 	bool IsKeyPressed(Keyboard::Key Key) const;

@@ -308,6 +308,16 @@ Vector2 Container::DesiredSize() const
 	return GetSize();
 }
 
+void Container::SetWindow(Window* InWindow)
+{
+	Control::SetWindow(InWindow);
+
+	for (const std::shared_ptr<Control>& Item : m_Controls)
+	{
+		Item->SetWindow(InWindow);
+	}
+}
+
 void Container::OnPaint(Paint& Brush) const
 {
 	if (ShouldClip())

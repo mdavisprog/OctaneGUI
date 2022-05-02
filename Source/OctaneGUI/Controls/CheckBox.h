@@ -57,6 +57,7 @@ public:
 	CheckBox& SetTriState(bool IsTriState);
 	bool IsTriState() const;
 
+	virtual void SetWindow(Window* InWindow) override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
 	virtual void OnLoad(const Json& Root) override;

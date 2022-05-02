@@ -50,6 +50,12 @@ const char32_t* TextButton::GetText() const
 	return m_Text->GetText();
 }
 
+void TextButton::SetWindow(Window* InWindow)
+{
+	Control::SetWindow(InWindow);
+	m_Text->SetWindow(InWindow);
+}
+
 void TextButton::OnPaint(Paint& Brush) const
 {
 	Button::OnPaint(Brush);

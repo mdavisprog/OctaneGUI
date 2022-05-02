@@ -53,6 +53,7 @@ public:
 	TextSelectable& SetOnHovered(OnTextSelectableSignature&& Fn);
 	TextSelectable& SetOnPressed(OnTextSelectableSignature&& Fn);
 
+	virtual void SetWindow(Window* InWindow) override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
 	virtual void OnLoad(const Json& Root) override;

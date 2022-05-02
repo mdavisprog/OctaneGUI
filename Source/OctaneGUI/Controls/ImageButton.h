@@ -46,6 +46,7 @@ public:
 	ImageButton& SetUVs(const Rect& UVs);
 	ImageButton& SetTint(const Color& Tint);
 
+	virtual void SetWindow(Window* InWindow) override;
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
 	virtual void OnLoad(const Json& Root) override;

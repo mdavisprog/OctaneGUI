@@ -91,6 +91,12 @@ TextSelectable& TextSelectable::SetOnPressed(OnTextSelectableSignature&& Fn)
 	return *this;
 }
 
+void TextSelectable::SetWindow(Window* InWindow)
+{
+	Control::SetWindow(InWindow);
+	m_Text->SetWindow(InWindow);
+}
+
 void TextSelectable::OnPaint(Paint& Brush) const
 {
 	if (m_Hovered || m_Selected)
