@@ -42,6 +42,20 @@ namespace OctaneGUI
 namespace Tools
 {
 
+std::shared_ptr<CommandPalette> CommandPalette::Get(Window* InWindow)
+{
+	if (!s_Root)
+	{
+		s_Root = std::make_shared<CommandPalette>(InWindow);
+	}
+	else
+	{
+		s_Root->SetWindow(InWindow);
+	}
+
+	return s_Root;
+}
+
 CommandPalette::CommandPalette(Window* InWindow)
 	: Container(InWindow)
 {
@@ -98,6 +112,8 @@ bool CommandPalette::OnKeyPressed(Keyboard::Key Key)
 
 	return false;
 }
+
+std::shared_ptr<CommandPalette> CommandPalette::s_Root { nullptr };
 
 std::vector<std::u32string> CommandPalette::Tokenize(const std::u32string& Value)
 {

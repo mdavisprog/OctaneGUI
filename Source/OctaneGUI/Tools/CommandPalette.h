@@ -42,6 +42,8 @@ class CommandPalette : public Container
 	CLASS(CommandPalette)
 
 public:
+	static std::shared_ptr<CommandPalette> Get(Window* InWindow);
+
 	CommandPalette(Window* InWindow);
 
 	void Show();
@@ -51,6 +53,8 @@ public:
 	virtual bool OnKeyPressed(Keyboard::Key Key) override;
 
 private:
+	static std::shared_ptr<CommandPalette> s_Root;
+
 	// TODO: Maybe create an args parser class that can be used in multiple places.
 	static std::vector<std::u32string> Tokenize(const std::u32string& Value);
 

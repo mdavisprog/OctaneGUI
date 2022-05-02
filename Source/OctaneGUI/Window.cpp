@@ -169,11 +169,12 @@ void Window::OnKeyPressed(Keyboard::Key Key)
 #if TOOLS
 	if (Key == Keyboard::Key::P && (IsKeyPressed(Keyboard::Key::LeftControl) || IsKeyPressed(Keyboard::Key::RightControl)))
 	{
-		if (m_Popup.GetContainer() != m_CommandPalette)
+		std::shared_ptr<Tools::CommandPalette> CommandPalette = Tools::CommandPalette::Get(this);
+		if (m_Popup.GetContainer() != CommandPalette)
 		{
-			m_CommandPalette->Show();
-			SetPopup(m_CommandPalette);
-			UpdateFocus(m_CommandPalette->Input());
+			CommandPalette->Show();
+			SetPopup(CommandPalette);
+			UpdateFocus(CommandPalette->Input());
 			m_Repaint = true;
 		}
 		return;
@@ -325,13 +326,6 @@ void Window::CreateContainer()
 
 	m_Body = m_Container->AddControl<Container>();
 	m_Body->SetExpand(Expand::Both);
-
-#if TOOLS
-	if (m_Application->IsMainWindow(this))
-	{
-		m_CommandPalette = std::make_shared<Tools::CommandPalette>(this);
-	}
-#endif
 
 	m_Repaint = true;
 }

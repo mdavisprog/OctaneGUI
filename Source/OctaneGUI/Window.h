@@ -53,12 +53,6 @@ class Theme;
 class Timer;
 class VertexBuffer;
 class VerticalContainer;
-#if TOOLS
-namespace Tools
-{
-class CommandPalette;
-}
-#endif
 
 class Window
 {
@@ -161,10 +155,6 @@ private:
 	std::vector<Container*> m_LayoutRequests;
 
 	std::vector<TimerHandle> m_Timers {};
-
-#if TOOLS
-	std::shared_ptr<Tools::CommandPalette> m_CommandPalette { nullptr };
-#endif
 
 	OnPaintSignature m_OnPaint { nullptr };
 	OnContainerSignature m_OnPopupClose { nullptr };
