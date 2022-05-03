@@ -190,6 +190,12 @@ std::weak_ptr<Control> ScrollableContainer::GetControl(const Vector2& Point) con
 		return m_VerticalSB->GetControl(Point);
 	}
 
+	const Rect Bounds = TranslatedBounds();
+	if (!Bounds.Contains(Point))
+	{
+		return std::weak_ptr<Control>();
+	}
+
 	// This still may return a scrollbar. Parent containers can check for scrollbar visibility
 	// with IsScrollBarVisible function.
 	return Container::GetControl(Point);
