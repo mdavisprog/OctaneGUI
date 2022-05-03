@@ -282,6 +282,17 @@ std::u32string OnGetClipboardContents()
 	return Result;
 }
 
+void OnSetWindowTitle(OctaneGUI::Window* Window, const char* Title)
+{
+	if (Windows.find(Window) == Windows.end())
+	{
+		return;
+	}
+
+	Container& Item = Windows[Window];
+	Item.Renderer->setTitle(Title);
+}
+
 void Initialize(OctaneGUI::Application& Application)
 {
 	Application
@@ -291,7 +302,8 @@ void Initialize(OctaneGUI::Application& Application)
 		.SetOnEvent(OnEvent)
 		.SetOnLoadTexture(OnLoadTexture)
 		.SetOnExit(OnExit)
-		.SetOnGetClipboardContents(OnGetClipboardContents);
+		.SetOnGetClipboardContents(OnGetClipboardContents)
+		.SetOnSetWindowTitle(OnSetWindowTitle);
 }
 
 }

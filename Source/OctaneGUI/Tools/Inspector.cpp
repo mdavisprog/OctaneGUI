@@ -67,6 +67,10 @@ void Inspector::Inspect(const std::shared_ptr<Container>& Target)
 		m_Window = Target->GetWindow()->App().NewWindow("Inspector", Stream.str().c_str(), List);
 		m_Root = List.To<Splitter>("Root");
 	}
+	else
+	{
+		m_Window.lock()->SetTitle((std::string("Inspecting ") + Target->GetWindow()->GetTitle()).c_str());
+	}
 
 	if (m_Window.lock()->IsVisible())
 	{

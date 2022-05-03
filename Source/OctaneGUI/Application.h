@@ -55,6 +55,7 @@ public:
 	typedef std::function<Event(Window*)> OnWindowEventSignature;
 	typedef std::function<uint32_t(const std::vector<uint8_t>&, uint32_t, uint32_t)> OnLoadTextureSignature;
 	typedef std::function<std::u32string(void)> OnGetClipboardContentsSignature;
+	typedef std::function<void(Window*, const char*)> OnSetWindowTitleSignature;
 
 	Application();
 	virtual ~Application();
@@ -83,6 +84,7 @@ public:
 	Application& SetOnLoadTexture(OnLoadTextureSignature&& Fn);
 	Application& SetOnExit(OnEmptySignature&& Fn);
 	Application& SetOnGetClipboardContents(OnGetClipboardContentsSignature&& Fn);
+	Application& SetOnSetWindowTitle(OnSetWindowTitleSignature&& Fn);
 
 private:
 	void OnPaint(Window* InWindow, const VertexBuffer& Buffer);
@@ -105,6 +107,7 @@ private:
 	OnLoadTextureSignature m_OnLoadTexture { nullptr };
 	OnEmptySignature m_OnExit { nullptr };
 	OnGetClipboardContentsSignature m_OnGetClipboardContents { nullptr };
+	OnSetWindowTitleSignature m_OnSetWindowTitle { nullptr };
 };
 
 }

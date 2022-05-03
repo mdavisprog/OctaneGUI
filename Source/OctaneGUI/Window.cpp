@@ -78,6 +78,11 @@ Window::~Window()
 void Window::SetTitle(const char* Title)
 {
 	m_Title = Title;
+
+	if (m_OnSetTitle)
+	{
+		m_OnSetTitle(Title);
+	}
 }
 
 const char* Window::GetTitle() const
@@ -488,9 +493,15 @@ bool Window::ClearTimer(const std::shared_ptr<Timer>& Object)
 	return false;
 }
 
-Window* Window::SetOnPaint(OnPaintSignature Fn)
+Window* Window::SetOnPaint(OnPaintSignature&& Fn)
 {
-	m_OnPaint = Fn;
+	m_OnPaint = std::move(Fn);
+	return this;
+}
+
+Window* Window::SetOnSetTitle(OnSetTitleSignature&& Fn)
+{
+	m_OnSetTitle = std::move(Fn);
 	return this;
 }
 

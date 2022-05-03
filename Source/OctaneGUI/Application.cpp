@@ -315,6 +315,12 @@ Application& Application::SetOnGetClipboardContents(OnGetClipboardContentsSignat
 	return *this;
 }
 
+Application& Application::SetOnSetWindowTitle(OnSetWindowTitleSignature&& Fn)
+{
+	m_OnSetWindowTitle = std::move(Fn);
+	return *this;
+}
+
 void Application::OnPaint(Window* InWindow, const VertexBuffer& Buffers)
 {
 	if (m_OnPaint)

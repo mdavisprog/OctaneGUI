@@ -58,6 +58,7 @@ class Window
 {
 public:
 	typedef std::function<void(Window*, const VertexBuffer&)> OnPaintSignature;
+	typedef std::function<void(const char*)> OnSetTitleSignature;
 
 	Window(Application* InApplication);
 	virtual ~Window();
@@ -116,7 +117,8 @@ public:
 	void StartTimer(const std::shared_ptr<Timer>& Object);
 	bool ClearTimer(const std::shared_ptr<Timer>& Object);
 
-	Window* SetOnPaint(OnPaintSignature Fn);
+	Window* SetOnPaint(OnPaintSignature&& Fn);
+	Window* SetOnSetTitle(OnSetTitleSignature&& Fn);
 
 private:
 	struct TimerHandle
@@ -158,6 +160,7 @@ private:
 
 	OnPaintSignature m_OnPaint { nullptr };
 	OnContainerSignature m_OnPopupClose { nullptr };
+	OnSetTitleSignature m_OnSetTitle { nullptr };
 };
 
 }

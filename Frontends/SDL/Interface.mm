@@ -604,6 +604,17 @@ std::u32string OnClipboardContents()
 	return OctaneGUI::Json::ToUTF32(SDL_GetClipboardText());
 }
 
+void OnSetWindowTitle(OctaneGUI::Window* Window, const char* Title)
+{
+	if (Windows.find(Window) == Windows.end())
+	{
+		return;
+	}
+
+	Container& Item = Windows[Window];
+	SDL_SetWindowTitle(Item.Window, Title);
+}
+
 void Initialize(OctaneGUI::Application& Application)
 {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
@@ -626,7 +637,8 @@ void Initialize(OctaneGUI::Application& Application)
 		.SetOnPaint(OnPaint)
 		.SetOnLoadTexture(OnLoadTexture)
 		.SetOnExit(OnExit)
-		.SetOnGetClipboardContents(OnClipboardContents);
+		.SetOnGetClipboardContents(OnClipboardContents)
+		.SetOnSetWindowTitle(OnSetWindowTitle);
 }
 
 }
