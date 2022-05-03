@@ -44,6 +44,7 @@ public:
 	MenuBar(Window* InWindow);
 
 	std::shared_ptr<Menu> AddItem(const char* InText);
+	std::shared_ptr<Menu> Item(const char* Name) const;
 	void GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const;
 	void Close();
 

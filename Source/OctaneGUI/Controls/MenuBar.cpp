@@ -79,6 +79,19 @@ std::shared_ptr<Menu> MenuBar::AddItem(const char* InText)
 	return Item->CreateMenu();
 }
 
+std::shared_ptr<Menu> MenuBar::Item(const char* Name) const
+{
+	for (const std::shared_ptr<MenuItem>& Item_ : m_MenuItems)
+	{
+		if (Json::ToMultiByte(Item_->GetText()) == Name)
+		{
+			return Item_->GetMenu();
+		}
+	}
+
+	return nullptr;
+}
+
 void MenuBar::GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const
 {
 	Items.insert(Items.end(), m_MenuItems.begin(), m_MenuItems.end());
