@@ -62,6 +62,20 @@ void LoadTheme(OctaneGUI::Application& Application, const char* Name)
 	Application.GetTheme()->Load(OctaneGUI::Json::Parse(Buffer.c_str()));
 }
 
+void SelectMenuItem(OctaneGUI::Application& Application, const std::string& Name)
+{
+	std::shared_ptr<OctaneGUI::Menu> Menu = Application.GetMainWindow()->GetMenuBar()->Item("Themes");
+
+	std::vector<std::shared_ptr<OctaneGUI::MenuItem>> Options;
+	Menu->GetMenuItems(Options);
+
+	for (std::shared_ptr<OctaneGUI::MenuItem>& Option : Options)
+	{
+		const bool IsSelected = Name == OctaneGUI::Json::ToMultiByte(Option->GetText());
+		Option->SetChecked(IsSelected);
+	}
+}
+
 int main(int argc, char **argv)
 {
 	if (std::filesystem::exists("./Themes"))
@@ -104,8 +118,10 @@ int main(int argc, char **argv)
 		{
 			const std::string Name = OctaneGUI::Json::ToMultiByte(Item.GetText());
 			LoadTheme(Application, Name.c_str());
+			SelectMenuItem(Application, Name);
 		});
 	}
+	SelectMenuItem(Application, Theme);
 
 	List.To<OctaneGUI::MenuItem>("Help.About")->SetOnPressed([&](const OctaneGUI::TextSelectable&) -> void
 	{
