@@ -149,7 +149,7 @@ bool MenuItem::OnMousePressed(const Vector2& Position, Mouse::Button Button)
 
 	if (m_Menu)
 	{
-		return false;
+		return true;
 	}
 
 	GetWindow()->ClosePopup();
