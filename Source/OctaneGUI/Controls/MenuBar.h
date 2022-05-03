@@ -52,15 +52,18 @@ public:
 	virtual void OnThemeLoaded() override;
 
 private:
-	void OnHover(const MenuItem& Hovered);
-	void OnSelected(const MenuItem& Selected);
-	void Open(const MenuItem& Item);
+	void OnHover(MenuItem& Hovered);
+	void OnSelected(MenuItem& Selected);
+	void Open(MenuItem& Item);
+	void Close(MenuItem& Item) const;
+
+	std::weak_ptr<MenuItem> WeakPtr(const MenuItem& Item) const;
 
 	std::shared_ptr<Panel> m_Panel { nullptr };
 	std::shared_ptr<HorizontalContainer> m_Container { nullptr };
 	std::vector<std::shared_ptr<MenuItem>> m_MenuItems;
 	bool m_Open { false };
-	std::shared_ptr<Menu> m_Menu { nullptr };
+	std::weak_ptr<MenuItem> m_Opened {};
 };
 
 }
