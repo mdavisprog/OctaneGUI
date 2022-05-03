@@ -274,6 +274,13 @@ void ScrollableContainer::OnMouseReleased(const Vector2& Position, Mouse::Button
 	m_VerticalSB->OnMouseReleased(Position, Button);
 }
 
+void ScrollableContainer::OnResized()
+{
+	const Vector2 Position = GetPosition();
+	m_ContentSize = GetContentSize(Controls());
+	SetOffset(-Position, true);
+}
+
 void ScrollableContainer::OnThemeLoaded()
 {
 	Container::OnThemeLoaded();

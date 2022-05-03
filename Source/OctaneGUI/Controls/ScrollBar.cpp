@@ -50,25 +50,11 @@ Orientation ScrollBarHandle::GetOrientation() const
 ScrollBarHandle& ScrollBarHandle::SetHandleSize(float HandleSize)
 {
 	// TODO: Not really a fan of how this is done. Look into something better.
-	float Previous = m_HandleSize;
 	m_HandleSize = 0.0f;
 	if (HandleSize != 0.0f)
 	{
 		const float Min = GetProperty(ThemeProperties::ScrollBar_HandleMinSize).Float();
 		m_HandleSize = std::max<float>(Min, HandleSize);
-
-		// Check if the handle size gets bigger. This means that the scrollable has shrunk and
-		// the offset needs to be updated.
-		if (m_HandleSize > Previous)
-		{
-			float Diff = m_HandleSize - Previous;
-			SetOffset(m_Offset - Diff);
-
-			if (m_OnDrag)
-			{
-				m_OnDrag(*m_ScrollBar);
-			}
-		}
 		ClampOffset();
 	}
 
