@@ -53,9 +53,14 @@ int64_t Profiler::Event::Elapsed() const
 	return m_Elapsed;
 }
 
-unsigned int Profiler::Event::Count() const
+unsigned int Profiler::Event::ExclusiveCount() const
 {
-	return m_Count;
+	return m_ExclusiveCount;
+}
+
+unsigned int Profiler::Event::InclusiveCount() const
+{
+	return m_InclusiveCount;
 }
 
 const std::vector<Profiler::Event>& Profiler::Event::Events() const
@@ -105,9 +110,14 @@ int64_t Profiler::Frame::Elapsed() const
 	return m_Root.Elapsed();
 }
 
-unsigned int Profiler::Frame::Count() const
+unsigned int Profiler::Frame::InclusiveCount() const
 {
-	return m_Root.Count();
+	return m_Root.InclusiveCount();
+}
+
+unsigned int Profiler::Frame::ExclusiveCount() const
+{
+	return m_Root.ExclusiveCount();
 }
 
 const std::vector<Profiler::Event>& Profiler::Frame::Events() const
@@ -125,11 +135,11 @@ void Profiler::Frame::CoalesceEvents(Profiler::Event& Group)
 	std::vector<Event> Events;
 
 	bool Found = false;
-	unsigned int Count = Group.Count();
+	unsigned int InclusiveCount = Group.InclusiveCount();
 	for (Event& Event_ : Group.m_Events)
 	{
 		CoalesceEvents(Event_);
-		Count += Event_.Count();
+		InclusiveCount += Event_.InclusiveCount();
 
 		Found = false;
 		for (Event& Item : Events)
@@ -137,7 +147,8 @@ void Profiler::Frame::CoalesceEvents(Profiler::Event& Group)
 			if (Event_.m_Name == Item.m_Name)
 			{
 				Item.m_Elapsed += Event_.m_Elapsed;
-				Item.m_Count++;
+				Item.m_ExclusiveCount++;
+				Item.m_InclusiveCount++;
 				Found = true;
 				break;
 			}
@@ -150,7 +161,7 @@ void Profiler::Frame::CoalesceEvents(Profiler::Event& Group)
 	}
 
 	Group.m_Events = std::move(Events);
-	Group.m_Count = Count;
+	Group.m_InclusiveCount = InclusiveCount;
 }
 
 Profiler& Profiler::Get()

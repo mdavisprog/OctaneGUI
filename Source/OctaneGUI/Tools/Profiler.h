@@ -49,13 +49,15 @@ public:
 
 		const char* Name() const;
 		int64_t Elapsed() const;
-		unsigned int Count() const;
+		unsigned int ExclusiveCount() const;
+		unsigned int InclusiveCount() const;
 		const std::vector<Event>& Events() const;
 
 	private:
 		std::string m_Name {};
 		int64_t m_Elapsed { 0 };
-		unsigned int m_Count { 1 };
+		unsigned int m_ExclusiveCount { 1 };
+		unsigned int m_InclusiveCount { 1 };
 		std::vector<Event> m_Events {};
 	};
 
@@ -84,7 +86,8 @@ public:
 		~Frame();
 
 		int64_t Elapsed() const;
-		unsigned int Count() const;
+		unsigned int InclusiveCount() const;
+		unsigned int ExclusiveCount() const;
 		const std::vector<Event>& Events() const;
 
 	private:

@@ -116,7 +116,7 @@ public:
 
 			const Profiler::Frame& Frame = Frames[I];
 
-			int64_t Value = m_ViewMode == ProfileViewer::ViewMode::Elapsed ? Frame.Elapsed() : Frame.Count();
+			int64_t Value = m_ViewMode == ProfileViewer::ViewMode::Elapsed ? Frame.Elapsed() : Frame.InclusiveCount();
 			const float Pct = (float)Value / (float)m_MaxValue;
 			const float Height = GetSize().Y * Pct;
 			const Vector2 Bottom = GetAbsolutePosition() + Vector2(0.0f, GetSize().Y);
@@ -223,7 +223,7 @@ private:
 			}
 			else
 			{
-				m_MaxValue = std::max<int64_t>(m_MaxValue, Frame.Count());
+				m_MaxValue = std::max<int64_t>(m_MaxValue, Frame.InclusiveCount());
 			}
 		}
 	}
@@ -346,7 +346,7 @@ void ProfileViewer::View(Window* InWindow)
 					if (Index < Frames.size())
 					{
 						std::string Contents = std::string("Frame [") + std::to_string(Index) + "]: " + std::to_string(Frames[Index].Elapsed());
-						Contents += " " + std::to_string(Frames[Index].Count());
+						Contents += " " + std::to_string(Frames[Index].InclusiveCount());
 						m_HoveredFrame.lock()->SetText(Contents.c_str());
 					}
 				});
@@ -357,10 +357,11 @@ void ProfileViewer::View(Window* InWindow)
 
 		std::shared_ptr<Table> FrameDesc = FrameDescView->Scrollable()->AddControl<Table>();
 		FrameDesc
-			->SetColumns(3)
+			->SetColumns(4)
 			.SetHeader(0, "Frame")
 			.SetHeader(1, "Time")
-			.SetHeader(2, "Count")
+			.SetHeader(2, "Inclusive Count")
+			.SetHeader(3, "Exclusive Count")
 			.SetColumnSpacing(8.0f);
 
 		m_Tree = FrameDesc->Column(0)->AddControl<Tree>();
@@ -375,9 +376,13 @@ void ProfileViewer::View(Window* InWindow)
 		FrameTimes->SetSpacing({ 0.0f, 0.0f });
 		m_FrameTimes = FrameTimes;
 
-		const std::shared_ptr<BoxContainer>& EventCount = std::static_pointer_cast<BoxContainer>(FrameDesc->Column(2));
-		EventCount->SetSpacing({ 0.0f, 0.0f });
-		m_EventCount = EventCount;
+		const std::shared_ptr<BoxContainer>& InclusiveEventCount = std::static_pointer_cast<BoxContainer>(FrameDesc->Column(2));
+		InclusiveEventCount->SetSpacing({ 0.0f, 0.0f });
+		m_InclusiveEventCount = InclusiveEventCount;
+
+		const std::shared_ptr<BoxContainer>& ExclusiveEventCount = std::static_pointer_cast<BoxContainer>(FrameDesc->Column(3));
+		ExclusiveEventCount->SetSpacing({ 0.0f, 0.0f });
+		m_ExclusiveEventCount = ExclusiveEventCount;
 	}
 
 	if (m_Window.lock()->IsVisible())
@@ -461,10 +466,11 @@ void AddRow(const std::shared_ptr<Container>& Column, int64_t Value)
 	Outer->AddControl<Text>()->SetText(std::to_string(Value).c_str());
 }
 
-void UpdateRow(const Tree& Root, const Profiler::Event& Event, const std::shared_ptr<Container>& FrameTimes, const std::shared_ptr<Container>& EventCount)
+void UpdateRow(const Tree& Root, const Profiler::Event& Event, const std::shared_ptr<Container>& FrameTimes, const std::shared_ptr<Container>& Inclusive, const std::shared_ptr<Container>& Exclusive)
 {
 	AddRow(FrameTimes, Event.Elapsed());
-	AddRow(EventCount, Event.Count());
+	AddRow(Inclusive, Event.InclusiveCount());
+	AddRow(Exclusive, Event.ExclusiveCount());
 
 	if (!Root.IsExpanded())
 	{
@@ -474,7 +480,7 @@ void UpdateRow(const Tree& Root, const Profiler::Event& Event, const std::shared
 	int Index = 0;
 	Root.ForEachChild([&](const Tree& Child) -> void
 		{
-			UpdateRow(Child, Event.Events()[Index], FrameTimes, EventCount);
+			UpdateRow(Child, Event.Events()[Index], FrameTimes, Inclusive, Exclusive);
 			Index++;
 		});
 }
@@ -483,15 +489,18 @@ void ProfileViewer::UpdateFrameInfo()
 {
 	std::shared_ptr<Tree> FrameTree = m_Tree.lock();
 	std::shared_ptr<Container> FrameTimes = m_FrameTimes.lock();
-	std::shared_ptr<Container> EventCount = m_EventCount.lock();
+	std::shared_ptr<Container> Inclusive = m_InclusiveEventCount.lock();
+	std::shared_ptr<Container> Exclusive = m_ExclusiveEventCount.lock();
 
 	const Profiler::Frame& Frame = GetFrame(m_FrameIndex);
 
 	FrameTimes->ClearControls();
-	EventCount->ClearControls();
+	Inclusive->ClearControls();
+	Exclusive->ClearControls();
 
 	AddRow(FrameTimes, Frame.Elapsed());
-	AddRow(EventCount, Frame.Count());
+	AddRow(Inclusive, Frame.InclusiveCount());
+	AddRow(Exclusive, Frame.ExclusiveCount());
 
 	if (!FrameTree->IsExpanded())
 	{
@@ -501,7 +510,7 @@ void ProfileViewer::UpdateFrameInfo()
 	int Index = 0;
 	FrameTree->ForEachChild([this, &Frame, &Index](const Tree& Child) -> void
 		{
-			UpdateRow(Child, Frame.Events()[Index], m_FrameTimes.lock(), m_EventCount.lock());
+			UpdateRow(Child, Frame.Events()[Index], m_FrameTimes.lock(), m_InclusiveEventCount.lock(), m_ExclusiveEventCount.lock());
 			Index++;
 		});
 }

@@ -70,7 +70,8 @@ private:
 	std::weak_ptr<Timeline> m_Timeline {};
 	std::weak_ptr<Tree> m_Tree {};
 	std::weak_ptr<Container> m_FrameTimes {};
-	std::weak_ptr<Container> m_EventCount {};
+	std::weak_ptr<Container> m_InclusiveEventCount {};
+	std::weak_ptr<Container> m_ExclusiveEventCount {};
 	std::weak_ptr<Text> m_HoveredFrame {};
 };
 
