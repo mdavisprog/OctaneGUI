@@ -160,11 +160,12 @@ int Application::Run()
 
 			Update();
 
+			int EventsProcessed = 0;
 			for (auto& Item : m_Windows)
 			{
 				if (Item.second->IsVisible())
 				{
-					ProcessEvent(Item.second);
+					EventsProcessed += ProcessEvent(Item.second);
 
 					if (!m_IsRunning)
 					{
@@ -173,7 +174,10 @@ int Application::Run()
 				}
 			}
 
-			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			if (EventsProcessed <= 0)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			}
 		}
 	}
 
@@ -361,15 +365,17 @@ void Application::DestroyWindow(const std::shared_ptr<Window>& Item)
 	}
 }
 
-void Application::ProcessEvent(const std::shared_ptr<Window>& Item)
+int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
 {
 	if (!Item)
 	{
-		return;
+		return 0;
 	}
 
+	int Processed = 0;
 	Event E = m_OnEvent(Item.get());
 
+	Processed++;
 	switch (E.GetType())
 	{
 	case Event::Type::WindowClosed:
@@ -420,8 +426,10 @@ void Application::ProcessEvent(const std::shared_ptr<Window>& Item)
 		break;
 
 	case Event::Type::None:
-	default: break;
+	default: Processed--; break;
 	}
+
+	return Processed;
 }
 
 bool Application::Initialize()

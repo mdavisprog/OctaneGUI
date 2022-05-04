@@ -90,7 +90,7 @@ private:
 	void OnPaint(Window* InWindow, const VertexBuffer& Buffer);
 	std::shared_ptr<Window> CreateWindow(const char* ID, const Json& Root, ControlList& List);
 	void DestroyWindow(const std::shared_ptr<Window>& Item);
-	void ProcessEvent(const std::shared_ptr<Window>& Item);
+	int ProcessEvent(const std::shared_ptr<Window>& Item);
 	bool Initialize();
 
 	std::unordered_map<std::string, std::shared_ptr<Window>> m_Windows;
