@@ -221,19 +221,32 @@ bool Font::Load(const char* Path, float Size, const std::vector<Range>& Ranges)
 
 bool Font::Draw(uint32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoords) const
 {
+	const bool IsTab = Char == '\t';
+	if (IsTab)
+	{
+		Char = ' ';
+	}
+
 	const Glyph& Item = GetGlyph(Char);
 	const Vector2 InvertedSize = m_Texture->GetSize().Invert();
+	const Vector2 DiffOffset = Item.Offset2 - Item.Offset;
 
 	int X = (int)floor(Position.X + Item.Offset.X + 0.5f);
 	int Y = (int)floor(Position.Y + Item.Offset.Y + m_Ascent + 0.5f);
 
 	Vertices.Min = Vector2((float)X, (float)Y);
-	Vertices.Max = Vertices.Min + (Item.Offset2 - Item.Offset);
+	Vertices.Max = Vertices.Min + DiffOffset;
 
 	TexCoords.Min = Item.Min * InvertedSize;
 	TexCoords.Max = Item.Max * InvertedSize;
 
 	Position += Item.Advance;
+
+	if (IsTab)
+	{
+		Vertices.Max += DiffOffset * Vector2(3.0, 0.0);
+		Position.X += Item.Advance.X * 3.0f;
+	}
 
 	return true;
 }
