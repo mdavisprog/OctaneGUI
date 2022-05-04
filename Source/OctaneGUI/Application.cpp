@@ -176,6 +176,7 @@ int Application::Run()
 
 			if (EventsProcessed <= 0)
 			{
+				PROFILER_SAMPLE("Sleep");
 				std::this_thread::sleep_for(std::chrono::milliseconds(10));
 			}
 		}
