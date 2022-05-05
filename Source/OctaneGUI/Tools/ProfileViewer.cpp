@@ -249,14 +249,19 @@ public:
 	Timeline(Window* InWindow)
 		: Container(InWindow)
 	{
-		std::shared_ptr<Panel> Background = AddControl<Panel>();
-		Background
-			->SetProperty(ThemeProperties::Panel, Color::White)
-			.SetExpand(Expand::Both);
+		m_Background = AddControl<Panel>();
+		m_Background->SetExpand(Expand::Both);
 
 		m_Track = AddControl<TimelineTrack>();
 
 		SetExpand(Expand::Width);
+
+		OnThemeLoaded();
+	}
+
+	void Initialize(Profiler& Profile)
+	{
+		m_Track->Initialize(Profile);
 	}
 
 	const std::shared_ptr<TimelineTrack>& Track() const
@@ -269,12 +274,13 @@ public:
 		return { 0.0f, 100.0f };
 	}
 
-	void Initialize(Profiler& Profile)
+	virtual void OnThemeLoaded() override
 	{
-		m_Track->Initialize(Profile);
+		m_Background->SetProperty(ThemeProperties::Panel, GetProperty(ThemeProperties::TextInput_Background));
 	}
 
 private:
+	std::shared_ptr<Panel> m_Background { nullptr };
 	std::shared_ptr<TimelineTrack> m_Track { nullptr };
 };
 
