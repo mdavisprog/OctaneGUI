@@ -472,38 +472,14 @@ void TextInput::MouseReleased(const Vector2& Position, Mouse::Button Button)
 
 void TextInput::AddText(uint32_t Code)
 {
-	if (m_ReadOnly)
+	if (!std::isalnum(Code) && Code != '\n' && Code != ' ' && Code != '\t' && !std::ispunct(Code))
 	{
 		return;
 	}
 
-	if (!std::isalnum(Code) && Code != '\n' && Code != ' ' && !std::ispunct(Code))
-	{
-		return;
-	}
-
-	// Prevent newline in single-line inputs.
-	if (!m_Multiline && Code == '\n')
-	{
-		return;
-	}
-
-	if (!m_Position.IsValid())
-	{
-		m_Position = { 0, 0, 0 };
-	}
-
-	if (m_Anchor.IsValid())
-	{
-		Delete(GetRangeOr(0));
-	}
-
-	std::u32string Contents = m_Text->GetText();
-	Contents.insert(Contents.begin() + m_Position.Index(), Code);
-	InternalSetText(Contents.c_str());
-	Scrollable()->Update();
-	MovePosition(0, 1);
-	ResetCursorTimer();
+	std::u32string Value;
+	Value += Code;
+	AddText(Value);
 }
 
 void Remove(std::u32string& Contents, char32_t Character)
