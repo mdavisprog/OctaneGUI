@@ -31,6 +31,25 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+//
+// ScrollableViewInteraction
+//
+
+ScrollableViewInteraction::ScrollableViewInteraction(Window* InWindow)
+	: Control(InWindow)
+{
+}
+
+void ScrollableViewInteraction::OnMouseWheel(const Vector2& Delta)
+{
+	ScrollableViewControl* Parent = static_cast<ScrollableViewControl*>(GetParent());
+	Parent->Scrollable()->OnMouseWheel(Delta);
+}
+
+//
+// ScrollableViewControl
+//
+
 ScrollableViewControl::ScrollableViewControl(Window* InWindow)
 	: Container(InWindow)
 {
@@ -46,6 +65,15 @@ ScrollableViewControl::ScrollableViewControl(Window* InWindow)
 				Invalidate(this, Type);
 			}
 		});
+
+	m_Interaction = std::make_shared<ScrollableViewInteraction>(InWindow);
+	m_Interaction->SetParent(this);
+}
+
+ScrollableViewControl& ScrollableViewControl::SetInteraction(const std::shared_ptr<ScrollableViewInteraction>& Interaction)
+{
+	m_Interaction = Interaction;
+	return *this;
 }
 
 const std::shared_ptr<ScrollableContainer>& ScrollableViewControl::Scrollable() const
@@ -60,7 +88,18 @@ std::weak_ptr<Control> ScrollableViewControl::GetControl(const Vector2& Point) c
 		return m_Scrollable->GetControl(Point);
 	}
 
-	return Container::GetControl(Point);
+	std::weak_ptr<Control> Result = Container::GetControl(Point);
+	if (!Result.expired())
+	{
+		return Result;
+	}
+
+	if (Contains(Point) && m_Interaction)
+	{
+		return m_Interaction;
+	}
+
+	return std::weak_ptr<Control>();
 }
 
 void ScrollableViewControl::OnLoad(const Json& Root)
