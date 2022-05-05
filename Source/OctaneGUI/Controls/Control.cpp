@@ -339,6 +339,10 @@ void Control::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 {
 }
 
+void Control::OnMouseWheel(const Vector2& Delta)
+{
+}
+
 void Control::OnMouseEnter()
 {
 }

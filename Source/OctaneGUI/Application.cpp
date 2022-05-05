@@ -418,6 +418,10 @@ int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
 		Item->OnMouseReleased(E.GetData().m_MouseButton.m_Position, E.GetData().m_MouseButton.m_Button);
 		break;
 
+	case Event::Type::MouseWheel:
+		Item->OnMouseWheel(E.GetData().m_MouseWheel.Delta);
+		break;
+
 	case Event::Type::WindowResized:
 		Item->SetSize(E.GetData().m_Resized.m_Size);
 		break;

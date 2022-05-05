@@ -46,6 +46,7 @@ public:
 		MouseMoved,
 		MousePressed,
 		MouseReleased,
+		MouseWheel,
 		Text,
 		WindowClosed,
 		WindowResized,
@@ -97,6 +98,17 @@ public:
 		Vector2 m_Position;
 	};
 
+	struct MouseWheel
+	{
+	public:
+		MouseWheel(int X, int Y)
+			: Delta((float)X, (float)Y)
+		{
+		}
+
+		Vector2 Delta {};
+	};
+
 	struct Text
 	{
 	public:
@@ -126,6 +138,7 @@ public:
 		Key m_Key;
 		MouseMove m_MouseMove;
 		MouseButton m_MouseButton;
+		MouseWheel m_MouseWheel;
 		Text m_Text;
 		WindowResized m_Resized;
 	};
@@ -134,6 +147,7 @@ public:
 	Event(Type InType, const Key& InKey);
 	Event(const MouseMove& InMouseMove);
 	Event(Type InType, const MouseButton& InMouseButton);
+	Event(const MouseWheel& InMouseWheel);
 	Event(const WindowResized& InResized);
 	Event(const Text& InText);
 	~Event();

@@ -164,6 +164,7 @@ public:
 	virtual void OnMouseMove(const Vector2& Position);
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button);
 	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button);
+	virtual void OnMouseWheel(const Vector2& Delta);
 	virtual void OnMouseEnter();
 	virtual void OnMouseLeave();
 	virtual void OnResized();

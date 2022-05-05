@@ -58,6 +58,12 @@ Event::Event(Type InType, const MouseButton& InMouseButton)
 	m_Data.m_MouseButton = InMouseButton;
 }
 
+Event::Event(const MouseWheel& InMouseWheel)
+	: m_Type(Type::MouseWheel)
+{
+	m_Data.m_MouseWheel = InMouseWheel;
+}
+
 Event::Event(const Text& InText)
 	: m_Type(Type::Text)
 {

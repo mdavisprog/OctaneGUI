@@ -294,6 +294,14 @@ void Window::OnMouseReleased(const Vector2& Position, Mouse::Button MouseButton)
 	}
 }
 
+void Window::OnMouseWheel(const Vector2& Delta)
+{
+	if (!m_Hovered.expired())
+	{
+		m_Hovered.lock()->OnMouseWheel(Delta);
+	}
+}
+
 void Window::OnText(uint32_t Code)
 {
 	if (m_Focus.expired())

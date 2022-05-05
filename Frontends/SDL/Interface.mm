@@ -375,6 +375,19 @@ OctaneGUI::Event OnEvent(OctaneGUI::Window* Window)
 			);
 		}
 
+		case SDL_MOUSEWHEEL:
+		{
+			if (WindowID != Event.wheel.windowID)
+			{
+				EventsToPush.push_back(Event);
+				break;
+			}
+
+			return OctaneGUI::Event(
+				OctaneGUI::Event::MouseWheel(Event.wheel.x, Event.wheel.y)
+			);
+		}
+
 		case SDL_TEXTINPUT: 
 		{
 			if (WindowID != Event.text.windowID)
