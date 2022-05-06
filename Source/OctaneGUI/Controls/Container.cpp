@@ -196,6 +196,11 @@ Container* Container::RemoveControl(const std::shared_ptr<Control>& Item)
 
 bool Container::HasControl(const std::shared_ptr<Control>& Item) const
 {
+	return std::find(m_Controls.begin(), m_Controls.end(), Item) != m_Controls.end();
+}
+
+bool Container::HasControlRecurse(const std::shared_ptr<Control>& Item) const
+{
 	std::vector<std::shared_ptr<Control>> AllControls;
 	GetControls(AllControls);
 	auto Iter = std::find(AllControls.begin(), AllControls.end(), Item);

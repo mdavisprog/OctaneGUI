@@ -55,6 +55,7 @@ public:
 	Container* InsertControl(const std::shared_ptr<Control>& Item, int Position = -1);
 	Container* RemoveControl(const std::shared_ptr<Control>& Item);
 	bool HasControl(const std::shared_ptr<Control>& Item) const;
+	bool HasControlRecurse(const std::shared_ptr<Control>& Item) const;
 	void ClearControls();
 
 	Container& SetClip(bool Clip);

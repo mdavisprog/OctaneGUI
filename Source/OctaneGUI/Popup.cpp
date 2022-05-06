@@ -118,7 +118,7 @@ bool Popup::HasControl(const std::shared_ptr<Control>& Item) const
 		return false;
 	}
 
-	return m_Container->HasControl(Item);
+	return m_Container->HasControlRecurse(Item);
 }
 
 void Popup::OnMouseMove(const Vector2& Position)
