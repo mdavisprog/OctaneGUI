@@ -32,6 +32,7 @@ namespace OctaneGUI
 {
 
 class ScrollableContainer;
+class ScrollableViewControl;
 
 class ScrollableViewInteraction : public Control
 {
@@ -39,6 +40,8 @@ class ScrollableViewInteraction : public Control
 
 public:
 	ScrollableViewInteraction(Window* InWindow);
+
+	ScrollableViewControl& ScrollableView() const;
 
 	virtual void OnMouseWheel(const Vector2& Delta) override;
 };
@@ -51,7 +54,11 @@ public:
 	ScrollableViewControl(Window* InWindow);
 
 	ScrollableViewControl& SetInteraction(const std::shared_ptr<ScrollableViewInteraction>& Interaction);
+	const std::shared_ptr<ScrollableViewInteraction>& Interaction() const;
+
 	const std::shared_ptr<ScrollableContainer>& Scrollable() const;
+
+	ScrollableViewControl& SetIgnoreOwnedControls(bool IgnoreOwnedControls);
 
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 
@@ -60,6 +67,7 @@ public:
 private:
 	std::shared_ptr<ScrollableContainer> m_Scrollable { nullptr };
 	std::shared_ptr<ScrollableViewInteraction> m_Interaction { nullptr };
+	bool m_IgnoreOwnedControls { false };
 };
 
 }

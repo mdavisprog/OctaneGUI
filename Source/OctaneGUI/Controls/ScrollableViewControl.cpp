@@ -40,10 +40,14 @@ ScrollableViewInteraction::ScrollableViewInteraction(Window* InWindow)
 {
 }
 
+ScrollableViewControl& ScrollableViewInteraction::ScrollableView() const
+{
+	return *static_cast<ScrollableViewControl*>(GetParent());
+}
+
 void ScrollableViewInteraction::OnMouseWheel(const Vector2& Delta)
 {
-	ScrollableViewControl* Parent = static_cast<ScrollableViewControl*>(GetParent());
-	Parent->Scrollable()->OnMouseWheel(Delta);
+	ScrollableView().Scrollable()->OnMouseWheel(Delta);
 }
 
 //
@@ -66,19 +70,41 @@ ScrollableViewControl::ScrollableViewControl(Window* InWindow)
 			}
 		});
 
-	m_Interaction = std::make_shared<ScrollableViewInteraction>(InWindow);
-	m_Interaction->SetParent(this);
+	// The interaction should not have a size. This allows for the mouse to pass through to grab the control within the scrollable contents.
+	// The GetControl function will check to make sure the Point is within this container itself.
+	m_Interaction = AddControl<ScrollableViewInteraction>();
 }
 
 ScrollableViewControl& ScrollableViewControl::SetInteraction(const std::shared_ptr<ScrollableViewInteraction>& Interaction)
 {
+	if (m_Interaction)
+	{
+		RemoveControl(m_Interaction);
+	}
+
 	m_Interaction = Interaction;
+
+	if (m_Interaction)
+	{
+		InsertControl(m_Interaction);
+	}
 	return *this;
+}
+
+const std::shared_ptr<ScrollableViewInteraction>& ScrollableViewControl::Interaction() const
+{
+	return m_Interaction;
 }
 
 const std::shared_ptr<ScrollableContainer>& ScrollableViewControl::Scrollable() const
 {
 	return m_Scrollable;
+}
+
+ScrollableViewControl& ScrollableViewControl::SetIgnoreOwnedControls(bool IgnoreOwnedControls)
+{
+	m_IgnoreOwnedControls = IgnoreOwnedControls;
+	return *this;
 }
 
 std::weak_ptr<Control> ScrollableViewControl::GetControl(const Vector2& Point) const
@@ -91,7 +117,10 @@ std::weak_ptr<Control> ScrollableViewControl::GetControl(const Vector2& Point) c
 	std::weak_ptr<Control> Result = Container::GetControl(Point);
 	if (!Result.expired())
 	{
-		return Result;
+		if (!m_IgnoreOwnedControls || !HasControl(Result.lock()))
+		{
+			return Result;
+		}
 	}
 
 	if (Contains(Point) && m_Interaction)
