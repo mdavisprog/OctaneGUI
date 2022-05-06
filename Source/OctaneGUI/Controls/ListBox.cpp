@@ -27,6 +27,7 @@ SOFTWARE.
 #include "ListBox.h"
 #include "../Json.h"
 #include "../Paint.h"
+#include "../Profiler.h"
 #include "../ThemeProperties.h"
 #include "Panel.h"
 #include "ScrollableContainer.h"
@@ -246,6 +247,8 @@ void ListBox::OnLoad(const Json& Root)
 
 void ListBox::OnPaint(Paint& Brush) const
 {
+	PROFILER_SAMPLE_GROUP("ListBox::OnPaint");
+
 	m_Panel->OnPaint(Brush);
 
 	Brush.PushClip(GetAbsoluteBounds());

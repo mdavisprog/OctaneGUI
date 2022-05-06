@@ -27,6 +27,7 @@ SOFTWARE.
 #include "Separator.h"
 #include "../Json.h"
 #include "../Paint.h"
+#include "../Profiler.h"
 
 namespace OctaneGUI
 {
@@ -64,6 +65,8 @@ Orientation Separator::GetOrientation() const
 
 void Separator::OnPaint(Paint& Brush) const
 {
+	PROFILER_SAMPLE_GROUP("Separator::OnPaint");
+
 	const Color Fill = GetProperty(ThemeProperties::Separator).ToColor();
 	const float Thickness = GetProperty(ThemeProperties::Separator_Thickness).Float();
 	const float Margins = GetProperty(ThemeProperties::Separator_Margins).Float();

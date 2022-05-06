@@ -325,6 +325,8 @@ void Container::SetWindow(Window* InWindow)
 
 void Container::OnPaint(Paint& Brush) const
 {
+	PROFILER_SAMPLE_GROUP((std::string(GetType()) + "::OnPaint").c_str());
+
 	if (ShouldClip())
 	{
 		Brush.PushClip(GetAbsoluteBounds());

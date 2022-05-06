@@ -28,6 +28,7 @@ SOFTWARE.
 #include "../Icons.h"
 #include "../Json.h"
 #include "../Paint.h"
+#include "../Profiler.h"
 #include "../Window.h"
 #include "Text.h"
 
@@ -111,6 +112,8 @@ void CheckBox::SetWindow(Window* InWindow)
 
 void CheckBox::OnPaint(Paint& Brush) const
 {
+	PROFILER_SAMPLE_GROUP("CheckBox::OnPaint");
+
 	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
 	const Vector2 Size = BoxSize();
 	const Vector2 BoxPosition = GetAbsolutePosition() + Vector2(0.0f, GetSize().Y * 0.5f - Size.Y * 0.5f);

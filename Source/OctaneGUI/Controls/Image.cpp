@@ -27,6 +27,7 @@ SOFTWARE.
 #include "Image.h"
 #include "../Json.h"
 #include "../Paint.h"
+#include "../Profiler.h"
 #include "../Texture.h"
 #include "../TextureCache.h"
 #include "../Variant.h"
@@ -95,6 +96,8 @@ void Image::OnPaint(Paint& Brush) const
 	{
 		return;
 	}
+
+	PROFILER_SAMPLE_GROUP("Image::OnPaint");
 
 	const Vector2 Size = m_Texture->GetSize();
 	const Rect TexCoords(

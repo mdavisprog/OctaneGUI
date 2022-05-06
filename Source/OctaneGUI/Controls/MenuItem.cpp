@@ -28,6 +28,7 @@ SOFTWARE.
 #include "../Icons.h"
 #include "../Json.h"
 #include "../Paint.h"
+#include "../Profiler.h"
 #include "../Window.h"
 #include "Menu.h"
 #include "Text.h"
@@ -81,6 +82,8 @@ bool MenuItem::IsChecked() const
 void MenuItem::OnPaint(Paint& Brush) const
 {
 	TextSelectable::OnPaint(Brush);
+
+	PROFILER_SAMPLE_GROUP("MenuItem::OnPaint");
 
 	const Color IconColor = GetProperty(ThemeProperties::Check).ToColor();
 	if (m_IsChecked)

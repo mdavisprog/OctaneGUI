@@ -28,6 +28,7 @@ SOFTWARE.
 #include "../Font.h"
 #include "../Json.h"
 #include "../Paint.h"
+#include "../Profiler.h"
 #include "../Theme.h"
 
 #include <cassert>
@@ -95,6 +96,8 @@ void Text::ClearFormats()
 
 void Text::OnPaint(Paint& Brush) const
 {
+	PROFILER_SAMPLE_GROUP("Text::OnPaint");
+
 	const Vector2 Position = GetAbsolutePosition();
 
 	if (m_Formats.size() > 0)

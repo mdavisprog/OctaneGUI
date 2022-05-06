@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "Panel.h"
 #include "../Paint.h"
+#include "../Profiler.h"
 
 namespace OctaneGUI
 {
@@ -41,6 +42,8 @@ Panel::~Panel()
 
 void Panel::OnPaint(Paint& Brush) const
 {
+	PROFILER_SAMPLE_GROUP("Panel::OnPaint");
+
 	const Color Background = GetProperty(ThemeProperties::Panel).ToColor();
 	const Color Outline = GetProperty(ThemeProperties::PanelOutline).ToColor();
 	Brush.Rectangle(GetAbsoluteBounds(), Background);

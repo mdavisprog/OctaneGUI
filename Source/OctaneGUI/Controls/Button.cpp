@@ -27,6 +27,7 @@ SOFTWARE.
 #include "Button.h"
 #include "../Json.h"
 #include "../Paint.h"
+#include "../Profiler.h"
 
 namespace OctaneGUI
 {
@@ -77,6 +78,8 @@ bool Button::IsPressed() const
 
 void Button::OnPaint(Paint& Brush) const
 {
+	PROFILER_SAMPLE_GROUP("Button::OnPaint");
+
 	std::shared_ptr<Theme> TheTheme = GetTheme();
 
 	const bool Is3D = GetProperty(ThemeProperties::Button_3D).Bool();

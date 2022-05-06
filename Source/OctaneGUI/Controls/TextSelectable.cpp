@@ -27,6 +27,7 @@ SOFTWARE.
 #include "TextSelectable.h"
 #include "../Json.h"
 #include "../Paint.h"
+#include "../Profiler.h"
 #include "../ThemeProperties.h"
 #include "Text.h"
 
@@ -99,6 +100,8 @@ void TextSelectable::SetWindow(Window* InWindow)
 
 void TextSelectable::OnPaint(Paint& Brush) const
 {
+	PROFILER_SAMPLE_GROUP("TextSelectable::OnPaint");
+
 	if (m_Hovered || m_Selected)
 	{
 		Brush.Rectangle(GetAbsoluteBounds(), GetProperty(ThemeProperties::TextSelectable_Hovered).ToColor());
