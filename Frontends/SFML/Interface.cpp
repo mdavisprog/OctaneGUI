@@ -156,6 +156,18 @@ OctaneGUI::Event OnEvent(OctaneGUI::Window* Window)
 				OctaneGUI::Event::Type::MouseReleased,
 				OctaneGUI::Event::MouseButton(GetMouseButton(Event.mouseButton.button), (float)Event.mouseButton.x, (float)Event.mouseButton.y));
 
+		case sf::Event::MouseWheelScrolled:
+		{
+			if (Event.mouseWheelScroll.wheel == sf::Mouse::Wheel::HorizontalWheel)
+			{
+				return OctaneGUI::Event(
+					OctaneGUI::Event::MouseWheel((int)Event.mouseWheelScroll.delta, 0));
+			}
+
+			return OctaneGUI::Event(
+				OctaneGUI::Event::MouseWheel(0, (int)Event.mouseWheelScroll.delta));
+		}
+
 		case sf::Event::TextEntered:
 			return OctaneGUI::Event(OctaneGUI::Event::Text(Event.text.unicode));
 
