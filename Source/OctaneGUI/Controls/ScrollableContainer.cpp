@@ -178,6 +178,17 @@ Vector2 ScrollableContainer::GetScrollableSize() const
 	};
 }
 
+ScrollableContainer& ScrollableContainer::SetScrollSpeed(const Vector2& ScrollSpeed)
+{
+	m_ScrollSpeed = ScrollSpeed;
+	return *this;
+}
+
+Vector2 ScrollableContainer::ScrollSpeed() const
+{
+	return m_ScrollSpeed;
+}
+
 std::weak_ptr<Control> ScrollableContainer::GetControl(const Vector2& Point) const
 {
 	if (m_HorizontalSB->ShouldPaint() && m_HorizontalSB->Contains(Point))
@@ -276,7 +287,7 @@ void ScrollableContainer::OnMouseReleased(const Vector2& Position, Mouse::Button
 
 void ScrollableContainer::OnMouseWheel(const Vector2& Delta)
 {
-	AddOffset(-Delta);
+	AddOffset(-Delta * m_ScrollSpeed);
 }
 
 void ScrollableContainer::OnResized()

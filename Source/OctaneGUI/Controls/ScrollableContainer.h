@@ -52,6 +52,9 @@ public:
 
 	Vector2 GetScrollableSize() const;
 
+	ScrollableContainer& SetScrollSpeed(const Vector2& ScrollSpeed);
+	Vector2 ScrollSpeed() const;
+
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 
 	virtual void Update() override;
@@ -75,9 +78,10 @@ private:
 
 	std::shared_ptr<ScrollBar> m_HorizontalSB { nullptr };
 	std::shared_ptr<ScrollBar> m_VerticalSB { nullptr };
-	Vector2 m_ContentSize { Vector2() };
+	Vector2 m_ContentSize {};
 
-	Vector2 m_ScrollOffset { Vector2() };
+	Vector2 m_ScrollOffset {};
+	Vector2 m_ScrollSpeed { 10.0f, 10.0f };
 	std::shared_ptr<Timer> m_ScrollTimer { nullptr };
 	bool m_InitialScroll { true };
 };
