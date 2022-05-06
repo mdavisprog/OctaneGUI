@@ -81,8 +81,6 @@ public:
 	TextInput& SetReadOnly(bool Value);
 	bool ReadOnly() const;
 
-	std::shared_ptr<Control> Interaction() const;
-
 	void Focus();
 	void Unfocus();
 
@@ -125,8 +123,6 @@ private:
 
 	std::shared_ptr<Timer> m_BlinkTimer { nullptr };
 	bool m_DrawCursor { false };
-
-	std::shared_ptr<TextInputInteraction> m_Interaction { nullptr };
 };
 
 }

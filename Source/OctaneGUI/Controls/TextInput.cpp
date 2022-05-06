@@ -39,13 +39,13 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
-class TextInputInteraction : public Control
+class TextInputInteraction : public ScrollableViewInteraction
 {
 	CLASS(TextInputInteraction)
 
 public:
 	TextInputInteraction(Window* InWindow, TextInput* Input)
-		: Control(InWindow)
+		: ScrollableViewInteraction(InWindow)
 		, m_Input(Input)
 	{
 		SetExpand(Expand::Both);
@@ -212,7 +212,7 @@ TextInput::TextInput(Window* InWindow)
 	Margins->SetMargins({ 2.0, 0.0, 2.0f, 0.0f });
 	m_Text = Margins->AddControl<Text>();
 
-	m_Interaction = AddControl<TextInputInteraction>(this);
+	SetInteraction(std::make_shared<TextInputInteraction>(InWindow, this));
 
 	SetSize({ 100.0f, m_Text->LineHeight() });
 
@@ -263,11 +263,6 @@ TextInput& TextInput::SetReadOnly(bool Value)
 bool TextInput::ReadOnly() const
 {
 	return m_ReadOnly;
-}
-
-std::shared_ptr<Control> TextInput::Interaction() const
-{
-	return m_Interaction;
 }
 
 void TextInput::Focus()
