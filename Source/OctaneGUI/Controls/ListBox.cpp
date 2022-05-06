@@ -35,16 +35,15 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
-class ListBoxInteraction : public Control
+class ListBoxInteraction : public ScrollableViewInteraction
 {
 	CLASS(ListBoxInteraction)
 
 public:
 	typedef std::function<void(int, int)> OnChangeSignature;
 
-	ListBoxInteraction(Window* InWindow, const std::shared_ptr<ScrollableContainer>& Scrollable, const std::shared_ptr<Container>& List)
-		: Control(InWindow)
-		, m_Scrollable(Scrollable)
+	ListBoxInteraction(Window* InWindow, const std::shared_ptr<Container>& List)
+		: ScrollableViewInteraction(InWindow)
 		, m_List(List)
 	{
 		SetExpand(Expand::Both);
@@ -80,28 +79,20 @@ public:
 
 	virtual void OnMouseMove(const Vector2& Position) override
 	{
-		if (m_Scrollable.expired() || m_List.expired())
+		if (m_List.expired())
 		{
 			return;
 		}
 
-		std::shared_ptr<ScrollableContainer> Scrollable = m_Scrollable.lock();
 		std::shared_ptr<Container> List = m_List.lock();
-
-		Scrollable->OnMouseMove(Position);
-		if (Scrollable->IsInScrollBar(Position))
-		{
-			SetHoveredIndex(-1);
-			return;
-		}
 
 		int Index = 0;
 		for (const std::shared_ptr<Control>& ListItem : List->Controls())
 		{
 			const Vector2 ItemPos = ListItem->GetAbsolutePosition();
-			const Rect Bounds = { ItemPos, ItemPos + Vector2(Scrollable->GetSize().X, ListItem->GetSize().Y) };
+			const Rect Bounds = { ItemPos, ItemPos + Vector2(List->GetSize().X, ListItem->GetSize().Y) };
 
-			if (Bounds.Contains(Position + Vector2(Scrollable->GetPosition().X, 0.0f)))
+			if (Bounds.Contains(Position))
 			{
 				break;
 			}
@@ -124,15 +115,6 @@ public:
 
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override
 	{
-		if (!m_Scrollable.expired())
-		{
-			std::shared_ptr<ScrollableContainer> Scrollable = m_Scrollable.lock();
-			if (Scrollable->OnMousePressed(Position, Button))
-			{
-				return true;
-			}
-		}
-
 		if (m_Hovered_Index == -1)
 		{
 			return false;
@@ -156,14 +138,6 @@ public:
 		return false;
 	}
 
-	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override
-	{
-		if (!m_Scrollable.expired())
-		{
-			m_Scrollable.lock()->OnMouseReleased(Position, Button);
-		}
-	}
-
 	virtual void OnMouseLeave() override
 	{
 		SetHoveredIndex(-1);
@@ -183,7 +157,6 @@ private:
 		}
 	}
 
-	std::weak_ptr<ScrollableContainer> m_Scrollable {};
 	std::weak_ptr<Container> m_List {};
 	int m_Index { -1 };
 	int m_Hovered_Index { -1 };
@@ -201,8 +174,8 @@ ListBox::ListBox(Window* InWindow)
 	m_List = Scrollable()->AddControl<VerticalContainer>();
 	m_List->SetSpacing({ 0.0f, 0.0f });
 
-	m_Interaction = AddControl<ListBoxInteraction>(Scrollable(), m_List);
-	m_Interaction
+	std::shared_ptr<ListBoxInteraction> Interaction = std::make_shared<ListBoxInteraction>(InWindow, m_List);
+	Interaction
 		->SetOnSelect([this](int Index, std::weak_ptr<Control> Item) -> void
 			{
 				if (m_OnSelect)
@@ -217,7 +190,8 @@ ListBox::ListBox(Window* InWindow)
 					m_List->Controls()[New]->SetProperty(ThemeProperties::Text, GetProperty(ThemeProperties::TextSelectable_Text_Hovered).ToColor());
 				}
 
-				if (Old != -1 && Old != m_Interaction->Index())
+				const std::shared_ptr<ListBoxInteraction>& Interaction = std::static_pointer_cast<ListBoxInteraction>(this->Interaction());
+				if (Old != -1 && Old != Interaction->Index())
 				{
 					m_List->Controls()[Old]->ClearProperty(ThemeProperties::Text);
 				}
@@ -230,7 +204,9 @@ ListBox::ListBox(Window* InWindow)
 				}
 			});
 
+	SetInteraction(Interaction);
 	SetSize({ 200.0f, 200.0f });
+	SetIgnoreOwnedControls(true);
 }
 
 ListBox& ListBox::ClearItems()
@@ -241,7 +217,8 @@ ListBox& ListBox::ClearItems()
 
 int ListBox::Index() const
 {
-	return m_Interaction->Index();
+	const std::shared_ptr<ListBoxInteraction>& Interaction = std::static_pointer_cast<ListBoxInteraction>(this->Interaction());
+	return Interaction->Index();
 }
 
 ListBox* ListBox::SetOnSelect(OnSelectSignature Fn)
@@ -273,8 +250,9 @@ void ListBox::OnPaint(Paint& Brush) const
 
 	Brush.PushClip(GetAbsoluteBounds());
 
-	const int HoveredIndex = m_Interaction->HoveredIndex();
-	const int Index = m_Interaction->Index();
+	const std::shared_ptr<ListBoxInteraction>& Interaction = std::static_pointer_cast<ListBoxInteraction>(this->Interaction());
+	const int HoveredIndex = Interaction->HoveredIndex();
+	const int Index = Interaction->Index();
 
 	if (HoveredIndex != -1 && HoveredIndex != Index)
 	{

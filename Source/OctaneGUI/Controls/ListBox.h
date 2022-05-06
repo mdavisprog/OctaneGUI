@@ -71,7 +71,6 @@ private:
 
 	std::shared_ptr<Panel> m_Panel { nullptr };
 	std::shared_ptr<VerticalContainer> m_List { nullptr };
-	std::shared_ptr<ListBoxInteraction> m_Interaction { nullptr };
 	OnSelectSignature m_OnSelect { nullptr };
 };
 
