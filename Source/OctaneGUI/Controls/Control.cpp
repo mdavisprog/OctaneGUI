@@ -341,6 +341,10 @@ void Control::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 
 void Control::OnMouseWheel(const Vector2& Delta)
 {
+	if (m_Parent != nullptr)
+	{
+		m_Parent->OnMouseWheel(Delta);
+	}
 }
 
 void Control::OnMouseEnter()
