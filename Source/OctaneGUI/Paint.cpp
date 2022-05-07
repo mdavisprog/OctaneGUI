@@ -217,7 +217,7 @@ bool Paint::IsClipped(const Rect& Bounds) const
 	}
 
 	const Rect Clip = m_ClipStack.back();
-	
+
 	return !(Clip.Intersects(Bounds) || Clip.Encompasses(Bounds));
 }
 

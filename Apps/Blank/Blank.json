@@ -1,0 +1,16 @@
+{
+	"Theme": "./Themes/Dark.json",
+	"Windows": {
+		"Main": {
+			"Title": "Blank",
+			"Width": 1280,
+			"Height": 720,
+			"MenuBar": {
+			},
+			"Body": {
+				"Controls": [
+				]
+			}
+		}
+	}
+}
