@@ -189,6 +189,16 @@ TEST_CASE(Spaces,
 	return Root.IsArray() && Root[0u]["One"].Number() == 1.0f && Root[1u]["Two"].Number() == 2.0f;
 })
 
+TEST_CASE(EmptyObject,
+{
+	OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Empty\": {}, \"Filled\": {\"Property\": \"One\"}}");
+	const OctaneGUI::Json& Empty = Root["Empty"];
+	const OctaneGUI::Json& Filled = Root["Filled"];
+	VERIFYF(Empty.IsObject() && Empty.Count() == 0, "Empty object is not empty!");
+	VERIFYF(Filled.IsObject() && Filled.Count() == 1, "Filled object is incorrect!");
+	return std::string(Filled["Property"].String()) == "One";
+})
+
 )
 
 }
