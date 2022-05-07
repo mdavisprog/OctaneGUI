@@ -246,12 +246,17 @@ const char* Json::String(const char* Default) const
 
 unsigned int Json::Count() const
 {
-	if (!IsArray())
+	if (IsObject())
 	{
-		return 0;
+		return m_Data.Object->size();
 	}
 
-	return m_Data.Array->size();
+	if (IsArray())
+	{
+		return m_Data.Array->size();
+	}
+
+	return 0;
 }
 
 void Json::ForEach(std::function<void(const std::string&, const Json&)> Callback) const
