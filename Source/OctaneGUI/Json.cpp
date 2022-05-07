@@ -481,6 +481,10 @@ const char* Json::ParseKey(const char* Stream, std::string& Key)
 				break;
 			}
 		}
+		else if (Ch == '}')
+		{
+			break;
+		}
 		else if (Parsing)
 		{
 			Key += Ch;
