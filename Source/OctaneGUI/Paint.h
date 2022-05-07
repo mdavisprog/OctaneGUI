@@ -65,6 +65,7 @@ public:
 
 	void PushClip(const Rect& Bounds);
 	void PopClip();
+	bool IsClipped(const Rect& Bounds) const;
 
 	const VertexBuffer& GetBuffer() const;
 	std::shared_ptr<Theme> GetTheme() const;

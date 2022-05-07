@@ -209,6 +209,18 @@ void Paint::PopClip()
 	m_ClipStack.pop_back();
 }
 
+bool Paint::IsClipped(const Rect& Bounds) const
+{
+	if (m_ClipStack.empty())
+	{
+		return false;
+	}
+
+	const Rect Clip = m_ClipStack.back();
+	
+	return !(Clip.Intersects(Bounds) || Clip.Encompasses(Bounds));
+}
+
 const VertexBuffer& Paint::GetBuffer() const
 {
 	return m_Buffer;

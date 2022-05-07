@@ -63,6 +63,9 @@ public:
 
 	Rect& Shrink(float Width, float Height);
 	Rect& Shrink(const Vector2& Size);
+
+	bool Intersects(const Rect& Other) const;
+	bool Encompasses(const Rect& Other) const;
 };
 
 }

@@ -334,7 +334,10 @@ void Container::OnPaint(Paint& Brush) const
 
 	for (const std::shared_ptr<Control>& Item : m_Controls)
 	{
-		Item->OnPaint(Brush);
+		if (!Brush.IsClipped(Item->GetAbsoluteBounds()))
+		{
+			Item->OnPaint(Brush);
+		}
 	}
 
 	if (ShouldClip())

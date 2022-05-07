@@ -227,7 +227,10 @@ void ScrollableContainer::OnPaint(Paint& Brush) const
 	{
 		if (Item != m_HorizontalSB && Item != m_VerticalSB)
 		{
-			Item->OnPaint(Brush);
+			if (!Brush.IsClipped(Item->GetAbsoluteBounds()))
+			{
+				Item->OnPaint(Brush);
+			}
 		}
 	}
 

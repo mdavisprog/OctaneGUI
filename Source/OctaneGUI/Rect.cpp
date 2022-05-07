@@ -141,4 +141,24 @@ Rect& Rect::Shrink(const Vector2& Size)
 	return *this;
 }
 
+bool Rect::Intersects(const Rect& Other) const
+{
+	if (Min.X >= Other.Max.X || Other.Min.X >= Max.X)
+	{
+		return false;
+	}
+
+	if (Max.Y <= Other.Min.Y || Other.Max.Y <= Min.Y)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool Rect::Encompasses(const Rect& Other) const
+{
+	return Contains(Other.Min) && Contains(Other.Max);
+}
+
 }
