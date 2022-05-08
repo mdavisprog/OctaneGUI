@@ -95,27 +95,6 @@ void Paint::RectangleOutline(const Rect& Bounds, const Color& Col, float Thickne
 	AddLine(BottomLeft, Bounds.Min, Col, Thickness, 12);
 }
 
-size_t StripInvalidCharactersLength(const std::u32string_view& Contents)
-{
-	size_t Start = 0;
-	size_t InvalidChars = 0;
-	while (Start < Contents.size())
-	{
-		size_t End = Contents.find_first_of(U"\n", Start);
-		if (End != std::string::npos)
-		{
-			InvalidChars++;
-			Start = End + 1;
-		}
-		else
-		{
-			Start = Contents.size();
-		}
-	}
-
-	return InvalidChars;
-}
-
 void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string& Contents, const Color& Col)
 {
 	if (Contents.empty())
@@ -123,11 +102,15 @@ void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, c
 		return;
 	}
 
-	size_t InvalidChars = StripInvalidCharactersLength(Contents);
-	size_t Count = Contents.size() - InvalidChars;
-	PushCommand(6 * Count, InFont->ID());
+	Rect Clip;
+	if (!m_ClipStack.empty())
+	{
+		Clip = m_ClipStack.back();
+	}
+
+	std::vector<Rect> GlyphRects;
+	std::vector<Rect> GlyphUVs;
 	Vector2 Pos = Position;
-	uint32_t Offset = 0;
 	for (char32_t Char : Contents)
 	{
 		if (Char == '\n')
@@ -137,10 +120,40 @@ void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, c
 			continue;
 		}
 
+		if (!Clip.IsZero())
+		{
+			// Don't check for < Clip.Min.X since size of glyph is not known here.
+			if (Pos.X > Clip.Max.X || Pos.Y > Clip.Max.Y || Pos.Y + InFont->Size() < Clip.Min.Y )
+			{
+				continue;
+			}
+		}
+
 		Rect Vertices;
 		Rect TexCoords;
 
 		InFont->Draw((uint32_t)Char, Pos, Vertices, TexCoords);
+
+		if (!IsClipped(Vertices))
+		{
+			GlyphRects.push_back(Vertices);
+			GlyphUVs.push_back(TexCoords);
+		}
+	}
+
+	if (GlyphRects.empty())
+	{
+		return;
+	}
+
+	PushCommand(6 * GlyphRects.size(), InFont->ID());
+
+	uint32_t Offset = 0;
+	for (size_t I = 0; I < GlyphRects.size(); I++)
+	{
+		const Rect& Vertices = GlyphRects[I];
+		const Rect& TexCoords = GlyphUVs[I];
+
 		AddTriangles(Vertices, TexCoords, Col, Offset);
 		Offset += 4;
 	}
@@ -153,19 +166,23 @@ void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, 
 		return;
 	}
 
-	size_t InvalidChars = 0;
 	std::vector<std::u32string_view> Views;
 	for (const TextFormat& Item : Formats)
 	{
 		Views.emplace_back(&Contents[Item.Start], Item.End - Item.Start);
-		InvalidChars += StripInvalidCharactersLength(Views.back());
 	}
-	size_t Count = Contents.size() - InvalidChars;
-	PushCommand(6 * Count, InFont->ID());
 
+	Rect Clip;
+	if (!m_ClipStack.empty())
+	{
+		Clip = m_ClipStack.back();
+	}
+
+	std::vector<Rect> GlyphRects;
+	std::vector<Rect> GlyphUVs;
+	std::vector<Color> GlyphColors;
 	Vector2 Pos = Position;
-	uint32_t Offset = 0;
-	for (size_t I = 0; I < Formats.size(); I++)
+	for (size_t I = 0; I < Formats.size(); I++)	
 	{
 		const TextFormat& Format = Formats[I];
 		const std::u32string_view& View = Views[I];
@@ -178,13 +195,45 @@ void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, 
 				continue;
 			}
 
+			if (!Clip.IsZero())
+			{
+				// Don't check for < Clip.Min.X since size of glyph is not known here.
+				if (Pos.X > Clip.Max.X || Pos.Y > Clip.Max.Y || Pos.Y + InFont->Size() < Clip.Min.Y )
+				{
+					continue;
+				}
+			}
+
 			Rect Vertices;
 			Rect TexCoords;
 
 			InFont->Draw((uint32_t)Char, Pos, Vertices, TexCoords);
-			AddTriangles(Vertices, TexCoords, Format.TextColor, Offset);
-			Offset += 4;
+
+			if (!IsClipped(Vertices))
+			{
+				GlyphRects.push_back(Vertices);
+				GlyphUVs.push_back(TexCoords);
+				GlyphColors.push_back(Format.TextColor);
+			}
 		}
+	}
+
+	if (GlyphRects.empty())
+	{
+		return;
+	}
+
+	PushCommand(6 * GlyphRects.size(), InFont->ID());
+
+	uint32_t Offset = 0;
+	for (size_t I = 0; I < GlyphRects.size(); I++)
+	{
+		const Rect& Vertices = GlyphRects[I];
+		const Rect& TexCoords = GlyphUVs[I];
+		const Color& TextColor = GlyphColors[I];
+
+		AddTriangles(Vertices, TexCoords, TextColor, Offset);
+		Offset += 4;
 	}
 }
 
