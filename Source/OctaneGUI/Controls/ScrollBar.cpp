@@ -354,6 +354,77 @@ void ScrollBar::OnSave(Json& Root) const
 	Root["Enabled"] = m_Enabled;
 }
 
+void ScrollBar::OnMouseMove(const Vector2& Position)
+{
+	if (!m_Enabled)
+	{
+		return;
+	}
+
+	if (m_MinButton)
+	{
+		m_MinButton->OnMouseMove(Position);
+	}
+
+	if (m_MaxButton)
+	{
+		m_MaxButton->OnMouseMove(Position);
+	}
+
+	if (m_Handle)
+	{
+		m_Handle->OnMouseMove(Position);
+	}
+}
+
+bool ScrollBar::OnMousePressed(const Vector2& Position, Mouse::Button Button)
+{
+	if (!m_Enabled)
+	{
+		return false;
+	}
+
+	if (m_MinButton && m_MinButton->OnMousePressed(Position, Button))
+	{
+		return true;
+	}
+
+	if (m_MaxButton && m_MaxButton->OnMousePressed(Position, Button))
+	{
+		return true;
+	}
+
+	if (m_Handle && m_Handle->OnMousePressed(Position, Button))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+void ScrollBar::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
+{
+	if (!m_Enabled)
+	{
+		return;
+	}
+
+	if (m_MinButton)
+	{
+		m_MinButton->OnMouseReleased(Position, Button);
+	}
+
+	if (m_MaxButton)
+	{
+		m_MaxButton->OnMouseReleased(Position, Button);
+	}
+
+	if (m_Handle)
+	{
+		m_Handle->OnMouseReleased(Position, Button);
+	}
+}
+
 void ScrollBar::OnThemeLoaded()
 {
 	Container::OnThemeLoaded();

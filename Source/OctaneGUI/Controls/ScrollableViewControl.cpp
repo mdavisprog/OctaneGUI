@@ -45,6 +45,43 @@ ScrollableViewControl& ScrollableViewInteraction::ScrollableView() const
 	return *static_cast<ScrollableViewControl*>(GetParent());
 }
 
+ScrollableViewInteraction& ScrollableViewInteraction::SetAlwaysFocus(bool AlwaysFocus)
+{
+	m_AlwaysFocus = AlwaysFocus;
+	return *this;
+}
+
+bool ScrollableViewInteraction::AlwaysFocus() const
+{
+	return m_AlwaysFocus;
+}
+
+void ScrollableViewInteraction::OnMouseMove(const Vector2& Position)
+{
+	if (m_AlwaysFocus)
+	{
+		ScrollableView().OnMouseMove(Position);
+	}
+}
+
+bool ScrollableViewInteraction::OnMousePressed(const Vector2& Position, Mouse::Button Button)
+{
+	if (m_AlwaysFocus)
+	{
+		return ScrollableView().OnMousePressed(Position, Button);
+	}
+
+	return false;
+}
+
+void ScrollableViewInteraction::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
+{
+	if (m_AlwaysFocus)
+	{
+		ScrollableView().OnMouseReleased(Position, Button);
+	}
+}
+
 void ScrollableViewInteraction::OnMouseWheel(const Vector2& Delta)
 {
 	ScrollableView().Scrollable()->OnMouseWheel(Delta);
@@ -109,7 +146,7 @@ ScrollableViewControl& ScrollableViewControl::SetIgnoreOwnedControls(bool Ignore
 
 std::weak_ptr<Control> ScrollableViewControl::GetControl(const Vector2& Point) const
 {
-	if (m_Scrollable->IsInScrollBar(Point))
+	if (m_Scrollable->IsInScrollBar(Point) && !AlwaysFocusInteraction())
 	{
 		return m_Scrollable->GetControl(Point);
 	}
@@ -139,6 +176,31 @@ void ScrollableViewControl::OnLoad(const Json& Root)
 	Container::OnLoad(Copy);
 
 	m_Scrollable->OnLoad(Root);
+}
+
+void ScrollableViewControl::OnMouseMove(const Vector2& Position)
+{
+	m_Scrollable->OnMouseMove(Position);
+}
+
+bool ScrollableViewControl::OnMousePressed(const Vector2& Position, Mouse::Button Button)
+{
+	return m_Scrollable->OnMousePressed(Position, Button);
+}
+
+void ScrollableViewControl::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
+{
+	m_Scrollable->OnMouseReleased(Position, Button);
+}
+
+bool ScrollableViewControl::AlwaysFocusInteraction() const
+{
+	if (!m_Interaction)
+	{
+		return false;
+	}
+
+	return m_Interaction->AlwaysFocus();
 }
 
 }

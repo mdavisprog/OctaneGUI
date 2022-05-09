@@ -43,7 +43,16 @@ public:
 
 	ScrollableViewControl& ScrollableView() const;
 
+	ScrollableViewInteraction& SetAlwaysFocus(bool AlwaysFocus);
+	bool AlwaysFocus() const;
+
+	virtual void OnMouseMove(const Vector2& Position) override;
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
+	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseWheel(const Vector2& Delta) override;
+
+private:
+	bool m_AlwaysFocus { false };
 };
 
 class ScrollableViewControl : public Container
@@ -63,8 +72,13 @@ public:
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 
 	virtual void OnLoad(const Json& Root) override;
+	virtual void OnMouseMove(const Vector2& Position) override;
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
+	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
 
 private:
+	bool AlwaysFocusInteraction() const;
+
 	std::shared_ptr<ScrollableContainer> m_Scrollable { nullptr };
 	std::shared_ptr<ScrollableViewInteraction> m_Interaction { nullptr };
 	bool m_IgnoreOwnedControls { false };

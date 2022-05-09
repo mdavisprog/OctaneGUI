@@ -50,6 +50,7 @@ public:
 	{
 		SetExpand(Expand::Both);
 		SetForwardKeyEvents(true);
+		SetAlwaysFocus(true);
 	}
 
 	virtual void OnFocused() override
@@ -105,16 +106,24 @@ public:
 
 	virtual void OnMouseMove(const Vector2& Position) override
 	{
+		ScrollableViewInteraction::OnMouseMove(Position);
 		m_Input->MouseMove(Position);
 	}
 
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override
 	{
+		bool Handled = ScrollableViewInteraction::OnMousePressed(Position, Button);
+		if (Handled)
+		{
+			return Handled;
+		}
+
 		return m_Input->MousePressed(Position, Button);
 	}
 
 	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override
 	{
+		ScrollableViewInteraction::OnMouseReleased(Position, Button);
 		m_Input->MouseReleased(Position, Button);
 	}
 
