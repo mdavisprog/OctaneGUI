@@ -31,8 +31,6 @@ SOFTWARE.
 #include "Texture.h"
 #include "Theme.h"
 
-#include <string_view>
-
 namespace OctaneGUI
 {
 
@@ -95,7 +93,7 @@ void Paint::RectangleOutline(const Rect& Bounds, const Color& Col, float Thickne
 	AddLine(BottomLeft, Bounds.Min, Col, Thickness, 12);
 }
 
-void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string& Contents, const Color& Col)
+void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const Color& Col)
 {
 	if (Contents.empty())
 	{
@@ -159,7 +157,7 @@ void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, c
 	}
 }
 
-void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string& Contents, const std::vector<TextSpan>& Spans)
+void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const std::vector<TextSpan>& Spans)
 {
 	if (Contents.empty())
 	{

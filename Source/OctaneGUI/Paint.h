@@ -31,6 +31,7 @@ SOFTWARE.
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace OctaneGUI
@@ -59,8 +60,8 @@ public:
 	void Rectangle(const Rect& Bounds, const Color& Col);
 	void Rectangle3D(const Rect& Bounds, const Color& Base, const Color& Highlight, const Color& Shadow, bool Sunken = false);
 	void RectangleOutline(const Rect& Bounds, const Color& Col, float Thickness = 1.0f);
-	void Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string& Contents, const Color& Col);
-	void Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string& Contents, const std::vector<TextSpan>& Spans);
+	void Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const Color& Col);
+	void Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const std::vector<TextSpan>& Spans);
 	void Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_ptr<Texture>& InTexture, const Color& Col);
 
 	void PushClip(const Rect& Bounds);
