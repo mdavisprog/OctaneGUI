@@ -432,6 +432,13 @@ void TextInput::OnSave(Json& Root) const
 	Root["BlinkTimer"] = (float)m_BlinkTimer->Interval();
 }
 
+void TextInput::OnThemeLoaded()
+{
+	ScrollableViewControl::OnThemeLoaded();
+
+	UpdateSpans();
+}
+
 void TextInput::MouseMove(const Vector2& Position)
 {
 	if (m_Drag)
