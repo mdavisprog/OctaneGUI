@@ -35,7 +35,6 @@ namespace OctaneGUI
 {
 
 class Font;
-class Paint;
 
 class Text : public Control
 {
@@ -52,8 +51,8 @@ public:
 	const std::shared_ptr<Font>& GetFont() const;
 	float LineHeight() const;
 
-	void PushFormat(const Paint::TextFormat& Format);
-	void ClearFormats();
+	void PushSpan(const Paint::TextSpan& Span);
+	void ClearSpans();
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
@@ -69,7 +68,7 @@ private:
 
 	std::u32string m_Contents {};
 	Vector2 m_ContentSize {};
-	std::vector<Paint::TextFormat> m_Formats {};
+	std::vector<Paint::TextSpan> m_Spans {};
 	std::shared_ptr<Font> m_Font { nullptr };
 };
 

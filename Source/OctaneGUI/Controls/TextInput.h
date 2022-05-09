@@ -109,7 +109,7 @@ private:
 	uint32_t LineEndIndex(uint32_t Index) const;
 	uint32_t LineSize(uint32_t Index) const;
 	void ScrollIntoView();
-	void UpdateFormats();
+	void UpdateSpans();
 	void InternalSetText(const char32_t* InText);
 	void ResetCursorTimer();
 

@@ -247,7 +247,7 @@ TextInput& TextInput::SetText(const char32_t* InText)
 	InternalSetText(InText);
 	m_Anchor.Invalidate();
 	m_Position = { 0, 0, 0 };
-	UpdateFormats();
+	UpdateSpans();
 	Invalidate();
 	return *this;
 }
@@ -438,7 +438,7 @@ void TextInput::MouseMove(const Vector2& Position)
 	{
 		m_Position = GetPosition(Position);
 		Invalidate();
-		UpdateFormats();
+		UpdateSpans();
 	}
 	else
 	{
@@ -456,7 +456,7 @@ bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button)
 	m_Position = GetPosition(Position);
 	m_Anchor = m_Position;
 	m_Drag = true;
-	m_Text->ClearFormats();
+	m_Text->ClearSpans();
 	ResetCursorTimer();
 	Invalidate();
 
@@ -701,7 +701,7 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 
 	m_Position = { (uint32_t)NewLine, (uint32_t)NewColumn, (uint32_t)NewIndex };
 	ScrollIntoView();
-	UpdateFormats();
+	UpdateSpans();
 	Invalidate();
 }
 
@@ -867,9 +867,9 @@ void TextInput::ScrollIntoView()
 	Scrollable()->AddOffset(Offset);
 }
 
-void TextInput::UpdateFormats()
+void TextInput::UpdateSpans()
 {
-	m_Text->ClearFormats();
+	m_Text->ClearSpans();
 
 	if (!m_Anchor.IsValid())
 	{
@@ -883,17 +883,17 @@ void TextInput::UpdateFormats()
 
 		if (Min.Index() > 0)
 		{
-			m_Text->PushFormat({ 0, Min.Index(), GetProperty(ThemeProperties::Text).ToColor() });
+			m_Text->PushSpan({ 0, Min.Index(), GetProperty(ThemeProperties::Text).ToColor() });
 		}
 
 		if (Min.Index() < Max.Index())
 		{
-			m_Text->PushFormat({ Min.Index(), Max.Index(), GetProperty(ThemeProperties::TextSelectable_Text_Hovered).ToColor() });
+			m_Text->PushSpan({ Min.Index(), Max.Index(), GetProperty(ThemeProperties::TextSelectable_Text_Hovered).ToColor() });
 		}
 
 		if (Max.Index() < m_Text->Length())
 		{
-			m_Text->PushFormat({ Max.Index(), m_Text->Length(), GetProperty(ThemeProperties::Text).ToColor() });
+			m_Text->PushSpan({ Max.Index(), m_Text->Length(), GetProperty(ThemeProperties::Text).ToColor() });
 		}
 	}
 }

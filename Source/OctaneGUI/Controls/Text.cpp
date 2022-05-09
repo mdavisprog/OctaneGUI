@@ -84,14 +84,14 @@ float Text::LineHeight() const
 	return m_Font->Size();
 }
 
-void Text::PushFormat(const Paint::TextFormat& Format)
+void Text::PushSpan(const Paint::TextSpan& Span)
 {
-	m_Formats.push_back(Format);
+	m_Spans.push_back(Span);
 }
 
-void Text::ClearFormats()
+void Text::ClearSpans()
 {
-	m_Formats.clear();
+	m_Spans.clear();
 }
 
 void Text::OnPaint(Paint& Brush) const
@@ -100,9 +100,9 @@ void Text::OnPaint(Paint& Brush) const
 
 	const Vector2 Position = GetAbsolutePosition();
 
-	if (m_Formats.size() > 0)
+	if (m_Spans.size() > 0)
 	{
-		Brush.Textf(m_Font, Position.Floor(), m_Contents, m_Formats);
+		Brush.Textf(m_Font, Position.Floor(), m_Contents, m_Spans);
 	}
 	else
 	{

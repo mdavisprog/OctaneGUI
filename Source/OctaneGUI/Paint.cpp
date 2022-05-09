@@ -123,7 +123,7 @@ void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, c
 		if (!Clip.IsZero())
 		{
 			// Don't check for < Clip.Min.X since size of glyph is not known here.
-			if (Pos.X > Clip.Max.X || Pos.Y > Clip.Max.Y || Pos.Y + InFont->Size() < Clip.Min.Y )
+			if (Pos.X > Clip.Max.X || Pos.Y > Clip.Max.Y || Pos.Y + InFont->Size() < Clip.Min.Y)
 			{
 				continue;
 			}
@@ -159,7 +159,7 @@ void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, c
 	}
 }
 
-void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string& Contents, const std::vector<TextFormat>& Formats)
+void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string& Contents, const std::vector<TextSpan>& Spans)
 {
 	if (Contents.empty())
 	{
@@ -167,7 +167,7 @@ void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, 
 	}
 
 	std::vector<std::u32string_view> Views;
-	for (const TextFormat& Item : Formats)
+	for (const TextSpan& Item : Spans)
 	{
 		Views.emplace_back(&Contents[Item.Start], Item.End - Item.Start);
 	}
@@ -182,9 +182,9 @@ void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, 
 	std::vector<Rect> GlyphUVs;
 	std::vector<Color> GlyphColors;
 	Vector2 Pos = Position;
-	for (size_t I = 0; I < Formats.size(); I++)	
+	for (size_t I = 0; I < Spans.size(); I++)
 	{
-		const TextFormat& Format = Formats[I];
+		const TextSpan& Span = Spans[I];
 		const std::u32string_view& View = Views[I];
 		for (char32_t Char : View)
 		{
@@ -198,7 +198,7 @@ void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, 
 			if (!Clip.IsZero())
 			{
 				// Don't check for < Clip.Min.X since size of glyph is not known here.
-				if (Pos.X > Clip.Max.X || Pos.Y > Clip.Max.Y || Pos.Y + InFont->Size() < Clip.Min.Y )
+				if (Pos.X > Clip.Max.X || Pos.Y > Clip.Max.Y || Pos.Y + InFont->Size() < Clip.Min.Y)
 				{
 					continue;
 				}
@@ -213,7 +213,7 @@ void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, 
 			{
 				GlyphRects.push_back(Vertices);
 				GlyphUVs.push_back(TexCoords);
-				GlyphColors.push_back(Format.TextColor);
+				GlyphColors.push_back(Span.TextColor);
 			}
 		}
 	}
