@@ -106,7 +106,12 @@ void MarginContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>&
 		}
 
 		Item->SetSize(Size);
-		Item->SetPosition(m_Margins.Min);
+
+		// Re-apply any offset that may exist for the current control.
+		Vector2 Offset = Item->GetPosition();
+		Offset.X = Offset.X != 0.0f ? Offset.X - m_Margins.Min.X : 0.0f;
+		Offset.Y = Offset.Y != 0.0f ? Offset.Y - m_Margins.Min.Y : 0.0f;
+		Item->SetPosition(m_Margins.Min + Offset);
 	}
 }
 
