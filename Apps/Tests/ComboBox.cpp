@@ -81,6 +81,24 @@ TEST_CASE(Select,
 	VERIFYF(Selected == U"Red", "Selected item does not match the expected result: %s != Red\n", OctaneGUI::Json::ToMultiByte(Selected).c_str());
 	VERIFY(!ComboBox->IsOpen());
 
+	Selected = U"";
+	Position = ComboBox->GetAbsoluteBounds().Max - OctaneGUI::Vector2(2.0f, 2.0f);
+	Application.GetMainWindow()->OnMouseMove(Position);
+	Application.GetMainWindow()->OnMousePressed(Position, OctaneGUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMouseReleased(Position, OctaneGUI::Mouse::Button::Left);
+	Application.GetMainWindow()->Update();
+	VERIFY(ComboBox->IsOpen())
+
+	const float Height = Application.GetTheme()->GetFont()->Size();
+	Position = ComboBox->GetAbsoluteBounds().Max + OctaneGUI::Vector2(-2.0f, ComboBox->GetSize().Y + Height - 2.0f);
+	Application.GetMainWindow()->OnMouseMove(Position);
+	Application.GetMainWindow()->OnMousePressed(Position, OctaneGUI::Mouse::Button::Left);
+	Application.GetMainWindow()->OnMouseReleased(Position, OctaneGUI::Mouse::Button::Left);
+	Application.GetMainWindow()->Update();
+
+	VERIFYF(Selected == U"Green", "Selected item does not match the expected result: %s != Green\n", OctaneGUI::Json::ToMultiByte(Selected).c_str());
+	VERIFY(!ComboBox->IsOpen());
+
 	return true;
 })
 
