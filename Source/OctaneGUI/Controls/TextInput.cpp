@@ -447,19 +447,10 @@ void TextInput::MouseMove(const Vector2& Position)
 		Invalidate();
 		UpdateSpans();
 	}
-	else
-	{
-		Scrollable()->OnMouseMove(Position);
-	}
 }
 
 bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button)
 {
-	if (Scrollable()->OnMousePressed(Position, Button))
-	{
-		return true;
-	}
-
 	m_Position = GetPosition(Position);
 	m_Anchor = m_Position;
 	m_Drag = true;
@@ -478,7 +469,6 @@ void TextInput::MouseReleased(const Vector2& Position, Mouse::Button Button)
 	}
 
 	m_Drag = false;
-	Scrollable()->OnMouseReleased(Position, Button);
 }
 
 void TextInput::AddText(uint32_t Code)
