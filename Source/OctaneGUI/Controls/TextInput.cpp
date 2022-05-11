@@ -36,6 +36,8 @@ SOFTWARE.
 #include "ScrollableContainer.h"
 #include "Text.h"
 
+#define MARGIN 2.0f
+
 namespace OctaneGUI
 {
 
@@ -218,7 +220,7 @@ TextInput::TextInput(Window* InWindow)
 	: ScrollableViewControl(InWindow)
 {
 	std::shared_ptr<MarginContainer> Margins = Scrollable()->AddControl<MarginContainer>();
-	Margins->SetMargins({ 2.0, 0.0, 2.0f, 0.0f });
+	Margins->SetMargins({ MARGIN, 0.0, MARGIN, 0.0f });
 	m_Text = Margins->AddControl<Text>();
 
 	SetInteraction(std::make_shared<TextInputInteraction>(InWindow, this));
@@ -462,7 +464,9 @@ bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button)
 	m_Position = GetPosition(Position);
 	m_Anchor = m_Position;
 	m_Drag = true;
+	// Remove any multi-selected spans.
 	m_Text->ClearSpans();
+	SetVisibleLineSpan();
 	ResetCursorTimer();
 	Invalidate();
 
@@ -721,7 +725,7 @@ Vector2 TextInput::GetPositionLocation(const TextPosition& Position) const
 	uint32_t Start = LineStartIndex(Position.Index());
 
 	const std::u32string Sub = String.substr(Start, Position.Index() - Start);
-	return { m_Text->GetFont()->Measure(Sub).X, Position.Line() * m_Text->LineHeight() };
+	return { m_Text->GetFont()->Measure(Sub).X, (Position.Line() - m_FirstVisibleLine.Line()) * m_Text->LineHeight() };
 }
 
 TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
@@ -732,14 +736,14 @@ TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
 	// Transform into local space.
 	const Vector2 LocalPosition = Position - Scrollable()->GetAbsolutePosition();
 	// The text control is offset by a margin container so this needs to be taken into account.
-	const Vector2 TextOffset = m_Text->GetAbsolutePosition() - Scrollable()->GetAbsolutePosition();
+	const Vector2 TextOffset { MARGIN, MARGIN };
 
 	// Find the starting index based on what line the position is on.
-	size_t StartIndex = 0;
+	size_t StartIndex = m_FirstVisibleLine.IsValid() ? m_FirstVisibleLine.Index() : 0;
 	size_t Index = 0;
-	uint32_t Line = 0;
+	uint32_t Line = m_FirstVisibleLine.IsValid() ? m_FirstVisibleLine.Line() : 0;
 	uint32_t Column = 0;
-	Vector2 Offset = { 0.0f, LineHeight };
+	Vector2 Offset = { 0.0f, LineHeight * (Line > 0 ? Line + 1 : 1) };
 	while (StartIndex != std::string::npos)
 	{
 		if (Offset.Y > LocalPosition.Y + TextOffset.Y)
@@ -846,7 +850,7 @@ uint32_t TextInput::LineSize(uint32_t Index) const
 void TextInput::ScrollIntoView()
 {
 	const float LineHeight = m_Text->LineHeight();
-	const Vector2 TextOffset = m_Text->GetAbsolutePosition() - Scrollable()->GetAbsolutePosition();
+	const Vector2 TextOffset { MARGIN, MARGIN };
 	const Vector2 Position = GetPositionLocation(m_Position) + Scrollable()->GetPosition() + TextOffset;
 	const Vector2 Size = Scrollable()->GetScrollableSize();
 	Vector2 Offset;
@@ -983,9 +987,19 @@ void TextInput::UpdateVisibleLines(float ScrollDelta)
 	Index = std::min<uint32_t>(Index, String.length());
 	m_LastVisibleLine = { LastLine, 0, (uint32_t)Index };
 
+	m_Text->SetPosition({ 0.0f, m_FirstVisibleLine.Line() * LineHeight });
+	SetVisibleLineSpan();
+}
+
+void TextInput::SetVisibleLineSpan()
+{
+	if (!m_FirstVisibleLine.IsValid() || !m_LastVisibleLine.IsValid())
+	{
+		return;
+	}
+
 	m_Text->ClearSpans();
 	m_Text->PushSpan({ m_FirstVisibleLine.Index(), m_LastVisibleLine.Index(), GetProperty(ThemeProperties::Text).ToColor() });
-	m_Text->SetPosition({ 0.0f, m_FirstVisibleLine.Line() * LineHeight });
 }
 
 }

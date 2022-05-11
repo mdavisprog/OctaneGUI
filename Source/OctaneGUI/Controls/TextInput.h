@@ -114,6 +114,7 @@ private:
 	void InternalSetText(const char32_t* InText);
 	void ResetCursorTimer();
 	void UpdateVisibleLines(float ScrollDelta);
+	void SetVisibleLineSpan();
 
 	std::shared_ptr<Text> m_Text { nullptr };
 	TextPosition m_Position {};
