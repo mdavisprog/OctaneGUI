@@ -496,6 +496,10 @@ bool Window::ClearTimer(const std::shared_ptr<Timer>& Object)
 			m_Timers.erase(It);
 			return true;
 		}
+		else
+		{
+			++It;
+		}
 	}
 
 	return false;
