@@ -113,6 +113,7 @@ private:
 	void UpdateSpans();
 	void InternalSetText(const char32_t* InText);
 	void ResetCursorTimer();
+	void UpdateVisibleLines(float ScrollDelta);
 
 	std::shared_ptr<Text> m_Text { nullptr };
 	TextPosition m_Position {};
@@ -124,6 +125,9 @@ private:
 
 	std::shared_ptr<Timer> m_BlinkTimer { nullptr };
 	bool m_DrawCursor { false };
+
+	TextPosition m_FirstVisibleLine { 0, 0, 0 };
+	TextPosition m_LastVisibleLine {};
 };
 
 }

@@ -230,6 +230,14 @@ TextInput::TextInput(Window* InWindow)
 			m_DrawCursor = !m_DrawCursor;
 			Invalidate();
 		});
+
+	Scrollable()->SetOnScroll([this](const Vector2& Delta) -> void
+		{
+			if (Delta.Y != 0.0f)
+			{
+				UpdateVisibleLines(Delta.Y);
+			}
+		});
 }
 
 TextInput::~TextInput()
@@ -905,6 +913,79 @@ void TextInput::ResetCursorTimer()
 {
 	m_BlinkTimer->Start();
 	m_DrawCursor = true;
+}
+
+void TextInput::UpdateVisibleLines(float ScrollDelta)
+{
+	if (!m_Multiline)
+	{
+		return;
+	}
+
+	const Vector2 Position = Scrollable()->GetPosition();
+	const float LineHeight = GetTheme()->GetFont()->Size();
+	const float Y = -Position.Y;
+
+	const uint32_t Line = Y / LineHeight;
+	const uint32_t NumLines = GetSize().Y / LineHeight;
+	uint32_t LastLine = Line + NumLines + 1;
+
+	if (m_FirstVisibleLine.Line() == Line)
+	{
+		return;
+	}
+
+	const std::u32string& String = m_Text->GetString();
+
+	size_t Start = 0;
+	size_t Index = 0;
+	uint32_t Count = 0;
+
+	// Find index of the first line.
+	while (Count < Line)
+	{
+		Index = String.find('\n', Start);
+
+		if (Index == std::string::npos)
+		{
+			break;
+		}
+
+		Index++;
+		Start = Index;
+		Count++;
+	}
+
+	Index = std::min<uint32_t>(Index, String.length());
+	m_FirstVisibleLine = { Line, 0, (uint32_t)Index };
+
+	// Find index of the last line.
+	while (Count < LastLine)
+	{
+		Index = String.find('\n', Start);
+
+		if (Index == std::string::npos)
+		{
+			break;
+		}
+
+		Index++;
+		Start = Index;
+		Count++;
+	}
+
+	if (Index == std::string::npos)
+	{
+		Index = String.length();
+		LastLine = Count;
+	}
+
+	Index = std::min<uint32_t>(Index, String.length());
+	m_LastVisibleLine = { LastLine, 0, (uint32_t)Index };
+
+	m_Text->ClearSpans();
+	m_Text->PushSpan({ m_FirstVisibleLine.Index(), m_LastVisibleLine.Index(), GetProperty(ThemeProperties::Text).ToColor() });
+	m_Text->SetPosition({ 0.0f, m_FirstVisibleLine.Line() * LineHeight });
 }
 
 }
