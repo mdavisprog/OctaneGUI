@@ -173,7 +173,9 @@ ListBox::ListBox(Window* InWindow)
 	m_Panel->SetExpand(Expand::Both);
 
 	m_List = Scrollable()->AddControl<VerticalContainer>();
-	m_List->SetSpacing({ 0.0f, 0.0f });
+	m_List
+		->SetSpacing({ 0.0f, 0.0f })
+		->SetExpand(Expand::Width);
 
 	std::shared_ptr<ListBoxInteraction> Interaction = std::make_shared<ListBoxInteraction>(InWindow, m_List);
 	Interaction
