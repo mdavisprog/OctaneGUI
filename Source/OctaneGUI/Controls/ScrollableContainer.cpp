@@ -189,6 +189,12 @@ Vector2 ScrollableContainer::ScrollSpeed() const
 	return m_ScrollSpeed;
 }
 
+ScrollableContainer& ScrollableContainer::SetOnScroll(OnScrollSignature&& Fn)
+{
+	m_OnScroll = std::move(Fn);
+	return *this;
+}
+
 std::weak_ptr<Control> ScrollableContainer::GetControl(const Vector2& Point) const
 {
 	if (m_HorizontalSB->ShouldPaint() && m_HorizontalSB->Contains(Point))
@@ -352,7 +358,13 @@ void ScrollableContainer::SetOffset(const Vector2& Offset, bool UpdateSBHandles)
 		std::max<float>(-Overflow.X, std::min<float>(-Offset.X, 0.0f)),
 		std::max<float>(-Overflow.Y, std::min<float>(-Offset.Y, 0.0f))
 	};
+	const Vector2 Delta = GetPosition() - Position;
 	SetPosition(Position);
+
+	if (m_OnScroll)
+	{
+		m_OnScroll(Delta);
+	}
 
 	if (UpdateSBHandles)
 	{

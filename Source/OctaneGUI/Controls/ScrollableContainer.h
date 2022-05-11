@@ -39,6 +39,8 @@ class ScrollableContainer : public Container
 	CLASS(ScrollableContainer)
 
 public:
+	typedef std::function<void(const Vector2&)> OnScrollSignature;
+
 	ScrollableContainer(Window* InWindow);
 
 	bool IsInScrollBar(const Vector2& Point) const;
@@ -54,6 +56,8 @@ public:
 
 	ScrollableContainer& SetScrollSpeed(const Vector2& ScrollSpeed);
 	Vector2 ScrollSpeed() const;
+
+	ScrollableContainer& SetOnScroll(OnScrollSignature&& Fn);
 
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 
@@ -84,6 +88,8 @@ private:
 	Vector2 m_ScrollSpeed { 10.0f, 10.0f };
 	std::shared_ptr<Timer> m_ScrollTimer { nullptr };
 	bool m_InitialScroll { true };
+
+	OnScrollSignature m_OnScroll { nullptr };
 };
 
 }
