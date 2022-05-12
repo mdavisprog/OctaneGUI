@@ -101,9 +101,13 @@ Vector2 Control::GetAbsolutePosition() const
 
 Control* Control::SetSize(const Vector2& Size)
 {
+	const Vector2 LastSize = GetSize();
 	m_Bounds.Max = m_Bounds.Min + Size;
-	Invalidate(InvalidateType::Layout);
-	OnResized();
+	if (LastSize != Size)
+	{
+		Invalidate(InvalidateType::Layout);
+		OnResized();
+	}
 	return this;
 }
 
