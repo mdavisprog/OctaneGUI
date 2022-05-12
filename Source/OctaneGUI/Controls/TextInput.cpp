@@ -257,6 +257,8 @@ TextInput& TextInput::SetText(const char32_t* InText)
 	InternalSetText(InText);
 	m_Anchor.Invalidate();
 	m_Position = { 0, 0, 0 };
+	// TODO: Should the scroll offset be reset to zero?
+	UpdateVisibleLines(0.0f);
 	UpdateSpans();
 	Invalidate();
 	return *this;
@@ -714,7 +716,7 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 	Invalidate();
 }
 
-Vector2 TextInput::GetPositionLocation(const TextPosition& Position) const
+Vector2 TextInput::GetPositionLocation(const TextPosition& Position, bool OffsetFirstLine) const
 {
 	if (!m_Position.IsValid())
 	{
@@ -724,8 +726,9 @@ Vector2 TextInput::GetPositionLocation(const TextPosition& Position) const
 	const std::u32string& String = m_Text->GetString();
 	uint32_t Start = LineStartIndex(Position.Index());
 
+	const uint32_t Line = Position.Line() - (OffsetFirstLine ? m_FirstVisibleLine.Line() : 0);
 	const std::u32string Sub = String.substr(Start, Position.Index() - Start);
-	return { m_Text->GetFont()->Measure(Sub).X, (Position.Line() - m_FirstVisibleLine.Line()) * m_Text->LineHeight() };
+	return { m_Text->GetFont()->Measure(Sub).X, Line * m_Text->LineHeight() };
 }
 
 TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
@@ -851,7 +854,7 @@ void TextInput::ScrollIntoView()
 {
 	const float LineHeight = m_Text->LineHeight();
 	const Vector2 TextOffset { MARGIN, MARGIN };
-	const Vector2 Position = GetPositionLocation(m_Position) + Scrollable()->GetPosition() + TextOffset;
+	const Vector2 Position = GetPositionLocation(m_Position, false) + Scrollable()->GetPosition() + TextOffset;
 	const Vector2 Size = Scrollable()->GetScrollableSize();
 	Vector2 Offset;
 
@@ -882,6 +885,7 @@ void TextInput::UpdateSpans()
 
 	if (!m_Anchor.IsValid())
 	{
+		SetVisibleLineSpan();
 		return;
 	}
 

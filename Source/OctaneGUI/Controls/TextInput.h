@@ -101,7 +101,7 @@ private:
 	void MoveHome();
 	void MoveEnd();
 	void MovePosition(int32_t Line, int32_t Column, bool UseAnchor = false);
-	Vector2 GetPositionLocation(const TextPosition& Position) const;
+	Vector2 GetPositionLocation(const TextPosition& Position, bool OffsetFirstLine = true) const;
 	TextPosition GetPosition(const Vector2& Position) const;
 	bool IsShiftPressed() const;
 	bool IsCtrlPressed() const;
