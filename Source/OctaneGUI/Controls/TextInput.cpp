@@ -890,9 +890,12 @@ void TextInput::UpdateSpans()
 		TextPosition Min = m_Anchor < m_Position ? m_Anchor : m_Position;
 		TextPosition Max = m_Anchor < m_Position ? m_Position : m_Anchor;
 
-		if (Min.Index() > 0)
+		const uint32_t First = m_FirstVisibleLine.IsValid() ? m_FirstVisibleLine.Index() : 0;
+		const uint32_t Last = m_LastVisibleLine.IsValid() ? m_LastVisibleLine.Index() : m_Text->Length();
+
+		if (Min.Index() > First)
 		{
-			m_Text->PushSpan({ 0, Min.Index(), GetProperty(ThemeProperties::Text).ToColor() });
+			m_Text->PushSpan({ First, Min.Index(), GetProperty(ThemeProperties::Text).ToColor() });
 		}
 
 		if (Min.Index() < Max.Index())
@@ -900,10 +903,14 @@ void TextInput::UpdateSpans()
 			m_Text->PushSpan({ Min.Index(), Max.Index(), GetProperty(ThemeProperties::TextSelectable_Text_Hovered).ToColor() });
 		}
 
-		if (Max.Index() < m_Text->Length())
+		if (Max.Index() < Last)
 		{
-			m_Text->PushSpan({ Max.Index(), m_Text->Length(), GetProperty(ThemeProperties::Text).ToColor() });
+			m_Text->PushSpan({ Max.Index(), Last, GetProperty(ThemeProperties::Text).ToColor() });
 		}
+	}
+	else
+	{
+		SetVisibleLineSpan();
 	}
 }
 
