@@ -354,6 +354,25 @@ void ScrollBar::OnSave(Json& Root) const
 	Root["Enabled"] = m_Enabled;
 }
 
+void HandleMouseMove(const std::shared_ptr<Control>& Item, const Vector2& Position)
+{
+	if (!Item)
+	{
+		return;
+	}
+
+	Item->OnMouseMove(Position);
+
+	if (Item->Contains(Position))
+	{
+		Item->OnMouseEnter();
+	}
+	else
+	{
+		Item->OnMouseLeave();
+	}
+}
+
 void ScrollBar::OnMouseMove(const Vector2& Position)
 {
 	if (!m_Enabled)
@@ -361,20 +380,9 @@ void ScrollBar::OnMouseMove(const Vector2& Position)
 		return;
 	}
 
-	if (m_MinButton)
-	{
-		m_MinButton->OnMouseMove(Position);
-	}
-
-	if (m_MaxButton)
-	{
-		m_MaxButton->OnMouseMove(Position);
-	}
-
-	if (m_Handle)
-	{
-		m_Handle->OnMouseMove(Position);
-	}
+	HandleMouseMove(m_MinButton, Position);
+	HandleMouseMove(m_MaxButton, Position);
+	HandleMouseMove(m_Handle, Position);
 }
 
 bool ScrollBar::OnMousePressed(const Vector2& Position, Mouse::Button Button)
