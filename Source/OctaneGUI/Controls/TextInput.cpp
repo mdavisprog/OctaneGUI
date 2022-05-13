@@ -897,17 +897,20 @@ void TextInput::UpdateSpans()
 		const uint32_t First = m_FirstVisibleLine.IsValid() ? m_FirstVisibleLine.Index() : 0;
 		const uint32_t Last = m_LastVisibleLine.IsValid() ? m_LastVisibleLine.Index() : m_Text->Length();
 
-		if (Min.Index() > First)
+		uint32_t MinIndex = std::max<uint32_t>(First, Min.Index());
+		uint32_t MaxIndex = std::min<uint32_t>(Last, Max.Index());
+
+		if (MinIndex > First)
 		{
-			m_Text->PushSpan({ First, Min.Index(), GetProperty(ThemeProperties::Text).ToColor() });
+			m_Text->PushSpan({ First, MinIndex, GetProperty(ThemeProperties::Text).ToColor() });
 		}
 
-		if (Min.Index() < Max.Index())
+		if (MinIndex < MaxIndex)
 		{
-			m_Text->PushSpan({ Min.Index(), Max.Index(), GetProperty(ThemeProperties::TextSelectable_Text_Hovered).ToColor() });
+			m_Text->PushSpan({ MinIndex, MaxIndex, GetProperty(ThemeProperties::TextSelectable_Text_Hovered).ToColor() });
 		}
 
-		if (Max.Index() < Last)
+		if (MaxIndex < Last)
 		{
 			m_Text->PushSpan({ Max.Index(), Last, GetProperty(ThemeProperties::Text).ToColor() });
 		}
