@@ -581,6 +581,14 @@ void TextInput::MoveEnd()
 	MovePosition(0, LineEndIndex(m_Position.Index()) - m_Position.Index(), IsShiftPressed());
 }
 
+void TextInput::SetPosition(uint32_t Line, uint32_t Column, uint32_t Index)
+{
+	m_Position = { Line, Column, Index };
+	ScrollIntoView();
+	UpdateSpans();
+	Invalidate();
+}
+
 void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 {
 	// This function will calculate the new line and column along with the index
@@ -599,6 +607,13 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 	}
 
 	const std::u32string& String = m_Text->GetString();
+
+	// Special case to handle moving to the beginnging of the string if trying to go before the top line.
+	if (Line < 0 && m_Position.Line() == 0)
+	{
+		SetPosition(0, 0, 0);
+		return;
+	}
 
 	// Prevent any update if trying to go before the beginning or moveing past the end.
 	if ((Line < 0 && m_Position.Line() == 0) || (Column < 0 && m_Position.Index() == 0) || (Column > 0 && m_Position.Index() == String.size()))
@@ -711,10 +726,7 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 	NewLine = std::max<int32_t>(NewLine, 0);
 	NewColumn = std::max<int>(NewColumn, 0);
 
-	m_Position = { (uint32_t)NewLine, (uint32_t)NewColumn, (uint32_t)NewIndex };
-	ScrollIntoView();
-	UpdateSpans();
-	Invalidate();
+	SetPosition((uint32_t)NewLine, (uint32_t)NewColumn, (uint32_t)NewIndex);
 }
 
 Vector2 TextInput::GetPositionLocation(const TextPosition& Position, bool OffsetFirstLine) const
