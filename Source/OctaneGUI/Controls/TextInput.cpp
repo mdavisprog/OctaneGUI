@@ -238,6 +238,7 @@ TextInput::TextInput(Window* InWindow)
 			if (Delta.Y != 0.0f)
 			{
 				UpdateVisibleLines(Delta.Y);
+				UpdateSpans();
 			}
 		});
 }
@@ -1002,7 +1003,6 @@ void TextInput::UpdateVisibleLines(float ScrollDelta)
 	m_LastVisibleLine = { LastLine, 0, (uint32_t)Index };
 
 	m_Text->SetPosition({ 0.0f, m_FirstVisibleLine.Line() * LineHeight });
-	SetVisibleLineSpan();
 }
 
 void TextInput::SetVisibleLineSpan()
