@@ -536,11 +536,17 @@ void TextInput::AddText(const std::u32string& Contents)
 		Remove(Stripped, '\n');
 	}
 
+	const uint32_t Length = (uint32_t)Stripped.length();
 	std::u32string Current = m_Text->GetText();
 	Current.insert(Current.begin() + m_Position.Index(), Stripped.begin(), Stripped.end());
 	InternalSetText(Current.c_str());
 	Scrollable()->Update();
-	MovePosition(0, Stripped.length());
+
+	// Need to update the last visible line index as it has changed to the length of the string changing.
+	const uint32_t Index = std::min<uint32_t>(m_LastVisibleLine.Index() + Length, m_Text->Length());
+	m_LastVisibleLine = { m_LastVisibleLine.Line(), LineEndIndex(Index) - LineStartIndex(Index), Index };
+
+	MovePosition(0, Length);
 	ResetCursorTimer();
 }
 
@@ -1010,9 +1016,13 @@ void TextInput::UpdateVisibleLines(float ScrollDelta)
 		Index = String.length();
 		LastLine = Count;
 	}
+	else
+	{
+		Index = LineEndIndex(Index);
+	}
 
 	Index = std::min<uint32_t>(Index, String.length());
-	m_LastVisibleLine = { LastLine, 0, (uint32_t)Index };
+	m_LastVisibleLine = { LastLine, (uint32_t)Index - LineStartIndex(Index), (uint32_t)Index };
 
 	m_Text->SetPosition({ 0.0f, m_FirstVisibleLine.Line() * LineHeight });
 }
