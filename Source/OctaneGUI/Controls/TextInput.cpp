@@ -573,6 +573,11 @@ void TextInput::Delete(int32_t Range)
 	InternalSetText(Contents.c_str());
 	Scrollable()->Update();
 	ResetCursorTimer();
+
+	// Force update the visible lines
+	m_FirstVisibleLine.Invalidate();
+	UpdateVisibleLines(0.0f);
+	UpdateSpans();
 }
 
 void TextInput::MoveHome()
