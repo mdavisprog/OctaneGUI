@@ -95,66 +95,7 @@ void Paint::RectangleOutline(const Rect& Bounds, const Color& Col, float Thickne
 
 void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const Color& Col)
 {
-	if (Contents.empty())
-	{
-		return;
-	}
-
-	Rect Clip;
-	if (!m_ClipStack.empty())
-	{
-		Clip = m_ClipStack.back();
-	}
-
-	std::vector<Rect> GlyphRects;
-	std::vector<Rect> GlyphUVs;
-	Vector2 Pos = Position;
-	for (char32_t Char : Contents)
-	{
-		if (Char == '\n')
-		{
-			Pos.X = Position.X;
-			Pos.Y += InFont->Size();
-			continue;
-		}
-
-		if (!Clip.IsZero())
-		{
-			// Don't check for < Clip.Min.X since size of glyph is not known here.
-			if (Pos.X > Clip.Max.X || Pos.Y > Clip.Max.Y || Pos.Y + InFont->Size() < Clip.Min.Y)
-			{
-				continue;
-			}
-		}
-
-		Rect Vertices;
-		Rect TexCoords;
-
-		InFont->Draw((uint32_t)Char, Pos, Vertices, TexCoords);
-
-		if (!IsClipped(Vertices))
-		{
-			GlyphRects.push_back(Vertices);
-			GlyphUVs.push_back(TexCoords);
-		}
-	}
-
-	if (GlyphRects.empty())
-	{
-		return;
-	}
-
-	PushCommand(6 * GlyphRects.size(), InFont->ID());
-
-	uint32_t Offset = 0;
-	for (size_t I = 0; I < GlyphRects.size(); I++)
-	{
-		const Rect& Vertices = GlyphRects[I];
-		const Rect& TexCoords = GlyphUVs[I];
-
-		AddTriangles(Vertices, TexCoords, Col, Offset);
-		Offset += 4;
-	}
+	Textf(InFont, Position, Contents, {{ 0, Contents.length(), Col }});
 }
 
 void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const std::vector<TextSpan>& Spans)
