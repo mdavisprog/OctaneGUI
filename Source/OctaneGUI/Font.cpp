@@ -251,7 +251,7 @@ bool Font::Draw(uint32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoord
 	return true;
 }
 
-Vector2 Font::Measure(const std::u32string& Text) const
+Vector2 Font::Measure(const std::u32string_view& Text) const
 {
 	Vector2 Result;
 
@@ -271,7 +271,7 @@ Vector2 Font::Measure(const std::u32string& Text) const
 	return Result;
 }
 
-Vector2 Font::Measure(const std::u32string& Text, int& Lines) const
+Vector2 Font::Measure(const std::u32string_view& Text, int& Lines) const
 {
 	Vector2 Result;
 	Lines = 1;
