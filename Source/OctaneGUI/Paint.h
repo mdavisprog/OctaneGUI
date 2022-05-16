@@ -62,6 +62,7 @@ public:
 	void RectangleOutline(const Rect& Bounds, const Color& Col, float Thickness = 1.0f);
 	void Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const Color& Col);
 	void Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const std::vector<TextSpan>& Spans);
+	void TextWrapped(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const std::vector<TextSpan>& Spans, float Width);
 	void Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_ptr<Texture>& InTexture, const Color& Col);
 
 	void PushClip(const Rect& Bounds);
@@ -75,8 +76,11 @@ private:
 	void AddLine(const Vector2& Start, const Vector2& End, const Color& Col, float Thickness, uint32_t IndexOffset = 0);
 	void AddTriangles(const Rect& Vertices, const Color& Col, uint32_t IndexOffset = 0);
 	void AddTriangles(const Rect& Vertices, const Rect& TexCoords, const Color& Col, uint32_t IndexOffset = 0);
+	void AddTriangles(const std::vector<Rect>& Rects, const std::vector<Rect>& UVs, const std::vector<Color>& Colors, uint32_t TextureID);
 	void AddTriangleIndices(uint32_t Offset);
 	DrawCommand& PushCommand(uint32_t IndexCount, uint32_t TextureID);
+
+	void GatherGlyphs(const std::shared_ptr<Font>& InFont, Vector2& Position, const Vector2& Origin, const std::u32string_view& Contents, std::vector<Rect>& Rects, std::vector<Rect>& UVs, bool ShouldClip = true);
 
 	std::shared_ptr<Theme> m_Theme;
 	std::vector<Rect> m_ClipStack;

@@ -125,55 +125,61 @@ void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, 
 	{
 		const TextSpan& Span = Spans[I];
 		const std::u32string_view& View = Views[I];
-		for (char32_t Char : View)
-		{
-			if (Char == '\n')
-			{
-				Pos.X = Position.X;
-				Pos.Y += InFont->Size();
-				continue;
-			}
-
-			if (!Clip.IsZero())
-			{
-				// Don't check for < Clip.Min.X since size of glyph is not known here.
-				if (Pos.X > Clip.Max.X || Pos.Y > Clip.Max.Y || Pos.Y + InFont->Size() < Clip.Min.Y)
-				{
-					continue;
-				}
-			}
-
-			Rect Vertices;
-			Rect TexCoords;
-
-			InFont->Draw((uint32_t)Char, Pos, Vertices, TexCoords);
-
-			if (!IsClipped(Vertices))
-			{
-				GlyphRects.push_back(Vertices);
-				GlyphUVs.push_back(TexCoords);
-				GlyphColors.push_back(Span.TextColor);
-			}
-		}
+		GatherGlyphs(InFont, Pos, Position, View, GlyphRects, GlyphUVs);
+		GlyphColors.insert(GlyphColors.end(), View.size(), Span.TextColor);
 	}
 
-	if (GlyphRects.empty())
+	AddTriangles(GlyphRects, GlyphUVs, GlyphColors, InFont->ID());
+}
+
+void Paint::TextWrapped(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const std::vector<TextSpan>& Spans, float Width)
+{
+	if (Contents.empty())
 	{
 		return;
 	}
 
-	PushCommand(6 * GlyphRects.size(), InFont->ID());
+	std::vector<Rect> GlyphRects;
+	std::vector<Rect> GlyphUVs;
+	std::vector<Color> GlyphColors;
 
-	uint32_t Offset = 0;
-	for (size_t I = 0; I < GlyphRects.size(); I++)
+	size_t Start = 0;
+	Vector2 Pos = Position;
+	for (const TextSpan& Span : Spans)
 	{
-		const Rect& Vertices = GlyphRects[I];
-		const Rect& TexCoords = GlyphUVs[I];
-		const Color& TextColor = GlyphColors[I];
+		std::vector<std::u32string_view> Views;
+		Start = Span.Start;
+		for (size_t Index = Span.Start; Index <= Span.End; Index++)
+		{
+			const char32_t& Char = Contents[Index];
+			if (std::isspace(Char) || Index >= Span.End)
+			{
+				size_t Count = Index - Start;
+				const std::u32string_view View(&Contents[Start], Count);
 
-		AddTriangles(Vertices, TexCoords, TextColor, Offset);
-		Offset += 4;
+				std::vector<Rect> Rects;
+				std::vector<Rect> UVs;
+				GatherGlyphs(InFont, Pos, Position, View, Rects, UVs, false);
+				GlyphColors.insert(GlyphColors.end(), Count, Span.TextColor);
+
+				float CurrentWidth = Pos.X - Position.X;
+				if (CurrentWidth >= Width)
+				{
+					Rects.clear();
+					UVs.clear();
+					Pos.X = Position.X;
+					Pos.Y += InFont->Size();
+					GatherGlyphs(InFont, Pos, Position, View, Rects, UVs, false);
+				}
+
+				GlyphRects.insert(GlyphRects.end(), Rects.begin(), Rects.end());
+				GlyphUVs.insert(GlyphUVs.end(), UVs.begin(), UVs.end());
+				Start = Index;
+			}
+		}
 	}
+
+	AddTriangles(GlyphRects, GlyphUVs, GlyphColors, InFont->ID());
 }
 
 void Paint::Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_ptr<Texture>& InTexture, const Color& Col)
@@ -252,6 +258,27 @@ void Paint::AddTriangles(const Rect& Vertices, const Rect& TexCoords, const Colo
 	AddTriangleIndices(Offset);
 }
 
+void Paint::AddTriangles(const std::vector<Rect>& Rects, const std::vector<Rect>& UVs, const std::vector<Color>& Colors, uint32_t TextureID)
+{
+	if (Rects.empty() || UVs.empty() || Colors.empty())
+	{
+		return;
+	}
+
+	PushCommand(6 * Rects.size(), TextureID);
+
+	uint32_t Offset = 0;
+	for (size_t I = 0; I < Rects.size(); I++)
+	{
+		const Rect& Vertices = Rects[I];
+		const Rect& TexCoords = UVs[I];
+		const Color& Color_ = Colors[I];
+
+		AddTriangles(Vertices, TexCoords, Color_, Offset);
+		Offset += 4;
+	}
+}
+
 void Paint::AddTriangleIndices(uint32_t Offset)
 {
 	m_Buffer.AddIndex(Offset);
@@ -265,6 +292,40 @@ void Paint::AddTriangleIndices(uint32_t Offset)
 DrawCommand& Paint::PushCommand(uint32_t IndexCount, uint32_t TextureID)
 {
 	return m_Buffer.PushCommand(IndexCount, TextureID, !m_ClipStack.empty() ? m_ClipStack.back() : Rect());
+}
+
+void Paint::GatherGlyphs(const std::shared_ptr<Font>& InFont, Vector2& Position, const Vector2& Origin, const std::u32string_view& Contents, std::vector<Rect>& Rects, std::vector<Rect>& UVs, bool ShouldClip)
+{
+	const Rect Clip = !m_ClipStack.empty() ? m_ClipStack.back() : Rect();
+	for (char32_t Char : Contents)
+	{
+		if (Char == '\n')
+		{
+			Position.X = Origin.X;
+			Position.Y += InFont->Size();
+			continue;
+		}
+
+		if (!Clip.IsZero())
+		{
+			// Don't check for < Clip.Min.X since size of glyph is not known here.
+			if (ShouldClip && (Position.X > Clip.Max.X || Position.Y > Clip.Max.Y || Position.Y + InFont->Size() < Clip.Min.Y))
+			{
+				continue;
+			}
+		}
+
+		Rect Vertices;
+		Rect TexCoords;
+
+		InFont->Draw((uint32_t)Char, Position, Vertices, TexCoords);
+
+		if (!(ShouldClip && IsClipped(Vertices)))
+		{
+			Rects.push_back(Vertices);
+			UVs.push_back(TexCoords);
+		}
+	}
 }
 
 }
