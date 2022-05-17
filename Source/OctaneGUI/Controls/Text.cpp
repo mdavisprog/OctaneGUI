@@ -84,6 +84,17 @@ float Text::LineHeight() const
 	return m_Font->Size();
 }
 
+Text& Text::SetWrap(bool Wrap)
+{
+	m_Wrap = Wrap;
+	return *this;
+}
+
+bool Text::Wrap() const
+{
+	return m_Wrap;
+}
+
 void Text::PushSpan(const Paint::TextSpan& Span)
 {
 	m_Spans.push_back(Span);
@@ -94,6 +105,11 @@ void Text::ClearSpans()
 	m_Spans.clear();
 }
 
+void Text::Update()
+{
+	UpdateSize();
+}
+
 void Text::OnPaint(Paint& Brush) const
 {
 	PROFILER_SAMPLE_GROUP("Text::OnPaint");
@@ -102,11 +118,26 @@ void Text::OnPaint(Paint& Brush) const
 
 	if (m_Spans.size() > 0)
 	{
-		Brush.Textf(m_Font, Position.Floor(), m_Contents, m_Spans);
+		if (m_Wrap)
+		{
+			Brush.TextWrapped(m_Font, Position.Floor(), m_Contents, m_Spans, GetSize().X);
+		}
+		else
+		{
+			Brush.Textf(m_Font, Position.Floor(), m_Contents, m_Spans);
+		}
 	}
 	else
 	{
-		Brush.Text(m_Font, Position.Floor(), m_Contents, GetProperty(ThemeProperties::Text).ToColor());
+		Color TextColor = GetProperty(ThemeProperties::Text).ToColor();
+		if (m_Wrap)
+		{
+			Brush.TextWrapped(m_Font, Position.Floor(), m_Contents, {{ 0, m_Contents.size(), TextColor }}, GetSize().X);
+		}
+		else
+		{
+			Brush.Text(m_Font, Position.Floor(), m_Contents, TextColor);
+		}
 	}
 }
 
@@ -121,6 +152,7 @@ void Text::OnLoad(const Json& Root)
 	UpdateFont();
 
 	SetText(Root["Text"].String());
+	SetWrap(Root["Wrap"].Boolean());
 }
 
 void Text::OnSave(Json& Root) const
@@ -131,6 +163,7 @@ void Text::OnSave(Json& Root) const
 	Root["ContentSize"] = std::move(Vector2::ToJson(m_ContentSize));
 	Root["Font"] = m_Font->Path();
 	Root["FontSize"] = GetProperty(ThemeProperties::FontSize).Float();
+	Root["Wrap"] = m_Wrap;
 }
 
 void Text::OnThemeLoaded()
@@ -141,7 +174,7 @@ void Text::OnThemeLoaded()
 
 bool Text::IsFixedSize() const
 {
-	return true;
+	return !m_Wrap;
 }
 
 void Text::UpdateFont()
@@ -156,7 +189,16 @@ void Text::UpdateSize()
 	if (m_Font)
 	{
 		int Lines = 0;
-		m_ContentSize = m_Font->Measure(m_Contents, Lines);
+		if (m_Wrap && GetParent() != nullptr)
+		{
+			const float Width = GetParent()->GetSize().X;
+			m_ContentSize = m_Font->Measure(m_Contents, Lines, Width);
+		}
+		else
+		{
+			m_ContentSize = m_Font->Measure(m_Contents, Lines);
+		}
+
 		SetSize({ m_ContentSize.X, m_Font->Size() * Lines });
 	}
 }
