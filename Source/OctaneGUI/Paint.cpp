@@ -154,6 +154,7 @@ void Paint::TextWrapped(const std::shared_ptr<Font>& InFont, const Vector2& Posi
 			const char32_t& Char = Contents[Index];
 			if (std::isspace(Char) || Index >= Span.End)
 			{
+				Index = std::min<size_t>(Index + 1, Span.End);
 				size_t Count = Index - Start;
 				const std::u32string_view View(&Contents[Start], Count);
 
@@ -163,7 +164,7 @@ void Paint::TextWrapped(const std::shared_ptr<Font>& InFont, const Vector2& Posi
 				GlyphColors.insert(GlyphColors.end(), Count, Span.TextColor);
 
 				float CurrentWidth = Pos.X - Position.X;
-				if (CurrentWidth >= Width)
+				if (CurrentWidth > Width)
 				{
 					Rects.clear();
 					UVs.clear();
