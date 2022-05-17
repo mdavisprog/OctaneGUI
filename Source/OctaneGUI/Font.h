@@ -77,6 +77,7 @@ public:
 	bool Draw(uint32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoords) const;
 	Vector2 Measure(const std::u32string_view& Text) const;
 	Vector2 Measure(const std::u32string_view& Text, int& Lines) const;
+	Vector2 Measure(const std::u32string_view& Text, int& Lines, float Wrap) const;
 	Vector2 Measure(char Ch) const;
 	Vector2 Measure(uint32_t CodePoint) const;
 

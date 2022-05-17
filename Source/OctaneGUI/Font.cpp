@@ -298,6 +298,46 @@ Vector2 Font::Measure(const std::u32string_view& Text, int& Lines) const
 	return Result;
 }
 
+Vector2 Font::Measure(const std::u32string_view& Text, int& Lines, float Wrap) const
+{
+	Vector2 Result;
+	Lines = 1;
+
+	Vector2 LineSize;
+	size_t Start = 0;
+	for (size_t I = 0; I < Text.length(); I++)
+	{
+		const char32_t Ch = Text[I];
+
+		if (std::isspace(Ch) || I >= Text.length() - 1)
+		{
+			I = std::min<size_t>(I + 1, Text.length());
+			const std::u32string_view View { &Text[Start], I - Start };
+			const Vector2 Size = Measure(View);
+
+			if (LineSize.X + Size.X > Wrap)
+			{
+				Lines++;
+				Result.X = std::max<float>(Result.X, LineSize.X);
+				Result.Y += LineSize.Y;
+				LineSize = Size;
+			}
+			else
+			{
+				LineSize.X += Size.X;
+				LineSize.Y = std::max<float>(LineSize.Y, Size.Y);
+			}
+
+			Start = I;
+		}
+	}
+
+	Result.X = std::max<float>(Result.X, LineSize.X);
+	Result.Y += LineSize.Y;
+
+	return Result;
+}
+
 Vector2 Font::Measure(char Ch) const
 {
 	return Measure((uint32_t)Ch);
