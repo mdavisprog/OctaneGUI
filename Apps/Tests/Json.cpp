@@ -199,6 +199,12 @@ TEST_CASE(EmptyObject,
 	return std::string(Filled["Property"].String()) == "One";
 })
 
+TEST_CASE(CommaInString,
+{
+	OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Text\": \"Hello, World\"}");
+	return std::string(Root["Text"].String()) == "Hello, World";
+})
+
 )
 
 }
