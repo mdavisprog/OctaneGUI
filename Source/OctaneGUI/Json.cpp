@@ -533,7 +533,7 @@ const char* Json::ParseValue(const char* Stream, Json& Value)
 			ParseString = !ParseString;
 			Token += Ch;
 		}
-		else if (Ch == ',' || Ch == '}' || Ch == ']')
+		else if (!ParseString && (Ch == ',' || Ch == '}' || Ch == ']'))
 		{
 			Value = ParseToken(Token);
 			Token = "";
