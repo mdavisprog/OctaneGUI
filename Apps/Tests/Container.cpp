@@ -315,6 +315,20 @@ TEST_CASE(VGrowEndMultiControls,
 		Button2->GetAbsolutePosition().Y == std::floor(WindowSize.Y - HalfTotalHeight + HalfSpacingHeight);
 })
 
+TEST_CASE(MarginContainer,
+{
+	OctaneGUI::ControlList List;
+	Load(Application,
+		"{\"ID\": \"Margins\", \"Type\": \"MarginContainer\", \"Left\": 4.0, \"Top\": 4.0, \"Right\": 4.0, \"Bottom\": 4.0, \"Controls\": ["
+		"{\"ID\": \"Button\", \"Type\": \"TextButton\", \"Expand\": \"Both\", \"Text\": {\"Text\": \"Hello\"}}]}",
+		List);
+	const std::shared_ptr<OctaneGUI::Container> Margins = List.To<OctaneGUI::Container>("Margins");
+	const std::shared_ptr<OctaneGUI::Button> Button = List.To<OctaneGUI::Button>("Margins.Button");
+	const OctaneGUI::Vector2 Position = Button->GetPosition();
+	const OctaneGUI::Vector2 Size = Button->GetSize();
+	return Position.X == 4.0f && Position.Y == 4.0f && Size.X == Margins->GetSize().X - 8.0f && Size.Y == Margins->GetSize().Y - 8.0f;
+})
+
 )
 
 }
