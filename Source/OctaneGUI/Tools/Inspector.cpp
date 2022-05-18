@@ -122,7 +122,6 @@ void Inspector::Populate()
 	PropertiesView->SetExpand(Expand::Both);
 
 	std::shared_ptr<Properties> Props = PropertiesView->Scrollable()->AddControl<Properties>();
-	Props->SetExpand(Expand::Both);
 	m_Properties = Props;
 
 	std::shared_ptr<Tree> Root = TreeView->Scrollable()->AddControl<Tree>();
