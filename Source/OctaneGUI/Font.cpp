@@ -315,7 +315,7 @@ Vector2 Font::Measure(const std::u32string_view& Text, int& Lines, float Wrap) c
 			const std::u32string_view View { &Text[Start], I - Start };
 			const Vector2 Size = Measure(View);
 
-			if (LineSize.X + Size.X > Wrap)
+			if (LineSize.X + Size.X > Wrap || Ch == '\n')
 			{
 				Lines++;
 				Result.X = std::max<float>(Result.X, LineSize.X);
