@@ -320,13 +320,45 @@ TEST_CASE(MarginContainer,
 	OctaneGUI::ControlList List;
 	Load(Application,
 		"{\"ID\": \"Margins\", \"Type\": \"MarginContainer\", \"Left\": 4.0, \"Top\": 4.0, \"Right\": 4.0, \"Bottom\": 4.0, \"Controls\": ["
-		"{\"ID\": \"Button\", \"Type\": \"TextButton\", \"Expand\": \"Both\", \"Text\": {\"Text\": \"Hello\"}}]}",
+		"{\"ID\": \"Button\", \"Type\": \"TextButton\", \"Expand\": \"Both\", \"Text\": {\"Text\": \"Button\"}}]}",
 		List);
 	const std::shared_ptr<OctaneGUI::Container> Margins = List.To<OctaneGUI::Container>("Margins");
 	const std::shared_ptr<OctaneGUI::Button> Button = List.To<OctaneGUI::Button>("Margins.Button");
 	const OctaneGUI::Vector2 Position = Button->GetPosition();
 	const OctaneGUI::Vector2 Size = Button->GetSize();
 	return Position.X == 4.0f && Position.Y == 4.0f && Size.X == Margins->GetSize().X - 8.0f && Size.Y == Margins->GetSize().Y - 8.0f;
+})
+
+TEST_CASE(HorizontalSpacing,
+{
+	OctaneGUI::ControlList List;
+	Load(Application,
+		"{\"ID\": \"Container\", \"Type\": \"HorizontalContainer\", \"Spacing\": [4.0, 4.0], \"Controls\": ["
+		"{\"ID\": \"Button1\", \"Type\": \"TextButton\", \"Text\": {\"Text\": \"Button 1\"}},"
+		"{\"ID\": \"Button2\", \"Type\": \"TextButton\", \"Text\": {\"Text\": \"Button 2\"}}]}",
+		List);
+	const std::shared_ptr<OctaneGUI::Container> Container = List.To<OctaneGUI::Container>("Container");
+	const std::shared_ptr<OctaneGUI::Button> Button1 = List.To<OctaneGUI::Button>("Container.Button1");
+	const std::shared_ptr<OctaneGUI::Button> Button2 = List.To<OctaneGUI::Button>("Container.Button2");
+	// FIXME: Need to floor here since position is floored in the library. Should switch all cases of floor
+	// to roundf.
+	return Button2->GetPosition().X == std::floor(Button1->GetSize().X) + 4.0f &&
+		Button2->GetPosition().X + std::roundf(Button2->GetSize().X) == std::roundf(Container->GetSize().X);
+})
+
+TEST_CASE(VerticalSpacing,
+{
+	OctaneGUI::ControlList List;
+	Load(Application,
+		"{\"ID\": \"Container\", \"Type\": \"VerticalContainer\", \"Spacing\": [4.0, 4.0], \"Controls\": ["
+		"{\"ID\": \"Button1\", \"Type\": \"TextButton\", \"Text\": {\"Text\": \"Button 1\"}},"
+		"{\"ID\": \"Button2\", \"Type\": \"TextButton\", \"Text\": {\"Text\": \"Button 2\"}}]}",
+		List);
+	const std::shared_ptr<OctaneGUI::Container> Container = List.To<OctaneGUI::Container>("Container");
+	const std::shared_ptr<OctaneGUI::Button> Button1 = List.To<OctaneGUI::Button>("Container.Button1");
+	const std::shared_ptr<OctaneGUI::Button> Button2 = List.To<OctaneGUI::Button>("Container.Button2");
+	return Button2->GetPosition().Y == Button1->GetSize().Y + 4.0f &&
+		Button2->GetPosition().Y + Button2->GetSize().Y == Container->GetSize().Y;
 })
 
 )
