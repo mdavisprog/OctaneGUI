@@ -95,7 +95,7 @@ void Paint::RectangleOutline(const Rect& Bounds, const Color& Col, float Thickne
 
 void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const Color& Col)
 {
-	Textf(InFont, Position, Contents, {{ 0, Contents.length(), Col }});
+	Textf(InFont, Position, Contents, { { 0, Contents.length(), Col } });
 }
 
 void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const std::vector<TextSpan>& Spans)

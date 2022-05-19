@@ -132,7 +132,7 @@ void Text::OnPaint(Paint& Brush) const
 		Color TextColor = GetProperty(ThemeProperties::Text).ToColor();
 		if (m_Wrap)
 		{
-			Brush.TextWrapped(m_Font, Position.Floor(), m_Contents, {{ 0, m_Contents.size(), TextColor }}, GetSize().X);
+			Brush.TextWrapped(m_Font, Position.Floor(), m_Contents, { { 0, m_Contents.size(), TextColor } }, GetSize().X);
 		}
 		else
 		{
