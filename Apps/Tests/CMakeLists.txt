@@ -8,6 +8,7 @@ add_executable(
 	Container.cpp
 	Json.cpp
 	Main.cpp
+	Scrollable.cpp
 	TestSuite.cpp
 	Utility.cpp
 	Variant.cpp
