@@ -34,12 +34,24 @@ namespace Utility
 
 void Load(OctaneGUI::Application& Application, const char* Json, OctaneGUI::ControlList& List)
 {
-    static const char* Base = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [";
+	static const char* Base = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [";
 	std::string Stream = Base;
 	Stream += Json;
 	Stream += "]}}";
 	Application.GetMainWindow()->Load(Stream.c_str(), List);
 	Application.GetMainWindow()->Update();
+}
+
+void MouseMove(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Position)
+{
+	Application.GetMainWindow()->OnMouseMove(Position);
+}
+
+void MouseClick(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Position, OctaneGUI::Mouse::Button Button)
+{
+	MouseMove(Application, Position);
+	Application.GetMainWindow()->OnMousePressed(Position, Button);
+	Application.GetMainWindow()->OnMouseReleased(Position, Button);
 }
 
 }

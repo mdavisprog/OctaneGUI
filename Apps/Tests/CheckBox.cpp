@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "OctaneGUI/OctaneGUI.h"
 #include "TestSuite.h"
+#include "Utility.h"
 
 namespace Tests
 {
@@ -52,14 +53,11 @@ TEST_CASE(TwoState,
 	std::shared_ptr<OctaneGUI::CheckBox> CheckBox = List.To<OctaneGUI::CheckBox>("CheckBox");
 
 	const OctaneGUI::Vector2 Position = CheckBox->GetAbsoluteBounds().GetCenter();
-	Application.GetMainWindow()->OnMouseMove(Position);
-	Application.GetMainWindow()->OnMousePressed(Position, OctaneGUI::Mouse::Button::Left);
-	Application.GetMainWindow()->OnMouseReleased(Position, OctaneGUI::Mouse::Button::Left);
+	Utility::MouseClick(Application, Position);
 
 	VERIFYF(CheckBox->GetState() == OctaneGUI::CheckBox::State::Checked, "TwoState: CheckBox is not checked!");
 
-	Application.GetMainWindow()->OnMousePressed(Position, OctaneGUI::Mouse::Button::Left);
-	Application.GetMainWindow()->OnMouseReleased(Position, OctaneGUI::Mouse::Button::Left);
+	Utility::MouseClick(Application, Position);
 
 	return CheckBox->GetState() == OctaneGUI::CheckBox::State::None;
 })
