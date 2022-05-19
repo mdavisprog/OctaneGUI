@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "OctaneGUI/OctaneGUI.h"
 #include "TestSuite.h"
+#include "Utility.h"
 
 #include <cmath>
 
@@ -34,12 +35,7 @@ namespace Tests
 
 static void Load(OctaneGUI::Application& Application, const char* JsonControls, OctaneGUI::ControlList& List)
 {
-	static const char* Base = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [";
-	std::string Json = Base;
-	Json += JsonControls;
-	Json += "]}}";
-	Application.GetMainWindow()->Load(Json.c_str(), List);
-	Application.GetMainWindow()->Update();
+	Utility::Load(Application, JsonControls, List);
 }
 
 TEST_SUITE(Container,

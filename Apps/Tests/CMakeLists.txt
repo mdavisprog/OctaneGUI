@@ -9,6 +9,7 @@ add_executable(
 	Json.cpp
 	Main.cpp
 	TestSuite.cpp
+	Utility.cpp
 	Variant.cpp
 )
 
