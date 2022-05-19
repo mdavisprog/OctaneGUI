@@ -145,6 +145,16 @@ Vector2 ScrollableContainer::ContentSize() const
 	return m_ContentSize;
 }
 
+const std::shared_ptr<ScrollBar>& ScrollableContainer::HorizontalScrollBar() const
+{
+	return m_HorizontalSB;
+}
+
+const std::shared_ptr<ScrollBar>& ScrollableContainer::VerticalScrollBar() const
+{
+	return m_VerticalSB;
+}
+
 ScrollableContainer& ScrollableContainer::SetHorizontalSBEnabled(bool Enabled)
 {
 	m_HorizontalSB->SetEnabled(Enabled);

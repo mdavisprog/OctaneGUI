@@ -47,6 +47,9 @@ public:
 	bool IsScrollBarVisible(const std::shared_ptr<Control>& Item) const;
 	Vector2 ContentSize() const;
 
+	const std::shared_ptr<ScrollBar>& HorizontalScrollBar() const;
+	const std::shared_ptr<ScrollBar>& VerticalScrollBar() const;
+
 	ScrollableContainer& SetHorizontalSBEnabled(bool Enabled);
 	ScrollableContainer& SetVerticalSBEnabled(bool Enabled);
 	ScrollableContainer& SetOffset(const Vector2& Offset);
