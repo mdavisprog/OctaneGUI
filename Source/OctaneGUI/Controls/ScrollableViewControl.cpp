@@ -175,7 +175,10 @@ void ScrollableViewControl::OnLoad(const Json& Root)
 
 	Container::OnLoad(Copy);
 
-	m_Scrollable->OnLoad(Root);
+	// Prevent the ID to be set for the scrollable container. The ScrollableViewControl should be the only container with the desired ID.
+	Copy["ID"] = Json();
+	Copy["Controls"] = std::move(Root["Controls"]);
+	m_Scrollable->OnLoad(Copy);
 }
 
 void ScrollableViewControl::OnMouseMove(const Vector2& Position)
