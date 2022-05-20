@@ -27,19 +27,30 @@ SOFTWARE.
 #include "OctaneGUI/OctaneGUI.h"
 #include "TestSuite.h"
 
+#include <sstream>
+
 namespace Tests
 {
 namespace Utility
 {
 
+void Load(OctaneGUI::Application& Application, const char* Json, OctaneGUI::ControlList& List, int WindowWidth, int WindowHeight)
+{
+	std::stringstream Stream;
+	Stream << "{\"Width\": "
+		<< WindowWidth
+		<< ", \"Height\": "
+		<< WindowHeight
+		<< ", \"Body\": {\"Controls\": ["
+		<< Json
+		<< "]}}";
+	Application.GetMainWindow()->Load(Stream.str().c_str(), List);
+	Application.GetMainWindow()->Update();
+}
+
 void Load(OctaneGUI::Application& Application, const char* Json, OctaneGUI::ControlList& List)
 {
-	static const char* Base = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [";
-	std::string Stream = Base;
-	Stream += Json;
-	Stream += "]}}";
-	Application.GetMainWindow()->Load(Stream.c_str(), List);
-	Application.GetMainWindow()->Update();
+	Load(Application, Json, List, 1280, 720);
 }
 
 void MouseMove(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Position)
