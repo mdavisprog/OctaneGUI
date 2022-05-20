@@ -36,6 +36,7 @@ struct Vector2
 public:
 	static Vector2 Zero;
 	static Json ToJson(const Vector2& Value);
+	static Vector2 FromJson(const Json& Value, const Vector2& Default = {});
 
 	float X { 0.0f };
 	float Y { 0.0f };

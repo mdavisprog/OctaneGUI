@@ -42,6 +42,19 @@ Json Vector2::ToJson(const Vector2& Value)
 	return std::move(Result);
 }
 
+Vector2 Vector2::FromJson(const Json& Value, const Vector2& Default)
+{
+	if (!Value.IsArray())
+	{
+		return Default;
+	}
+
+	Vector2 Result;
+	Result.X = Value.Count() > 0 ? Value[0u].Number() : 0.0f;
+	Result.Y = Value.Count() > 1 ? Value[1u].Number() : 0.0f;
+	return Result;
+}
+
 Vector2::Vector2()
 {
 }
