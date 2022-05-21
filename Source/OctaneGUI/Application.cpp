@@ -359,6 +359,7 @@ void Application::DestroyWindow(const std::shared_ptr<Window>& Item)
 
 	Item->SetVisible(false);
 	Item->RequestClose(false);
+	Item->Close();
 
 	if (std::string(Item->ID()) == "Main")
 	{

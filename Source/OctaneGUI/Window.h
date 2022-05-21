@@ -59,6 +59,7 @@ class Window
 public:
 	typedef std::function<void(Window*, const VertexBuffer&)> OnPaintSignature;
 	typedef std::function<void(const char*)> OnSetTitleSignature;
+	typedef std::function<void(Window&)> OnCloseSignature;
 
 	Window(Application* InApplication);
 	virtual ~Window();
@@ -78,6 +79,7 @@ public:
 
 	void RequestClose(bool Request = true);
 	bool ShouldClose() const;
+	void Close();
 
 	Application& App() const;
 
@@ -120,6 +122,7 @@ public:
 
 	Window* SetOnPaint(OnPaintSignature&& Fn);
 	Window* SetOnSetTitle(OnSetTitleSignature&& Fn);
+	Window* SetOnClose(OnCloseSignature&& Fn);
 
 private:
 	struct TimerHandle
@@ -162,6 +165,7 @@ private:
 	OnPaintSignature m_OnPaint { nullptr };
 	OnContainerSignature m_OnPopupClose { nullptr };
 	OnSetTitleSignature m_OnSetTitle { nullptr };
+	OnCloseSignature m_OnClose { nullptr };
 };
 
 }

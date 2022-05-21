@@ -138,6 +138,14 @@ bool Window::ShouldClose() const
 	return m_RequestClose;
 }
 
+void Window::Close()
+{
+	if (m_OnClose)
+	{
+		m_OnClose(*this);
+	}
+}
+
 Application& Window::App() const
 {
 	return *m_Application;
@@ -514,6 +522,12 @@ Window* Window::SetOnPaint(OnPaintSignature&& Fn)
 Window* Window::SetOnSetTitle(OnSetTitleSignature&& Fn)
 {
 	m_OnSetTitle = std::move(Fn);
+	return this;
+}
+
+Window* Window::SetOnClose(OnCloseSignature&& Fn)
+{
+	m_OnClose = std::move(Fn);
 	return this;
 }
 
