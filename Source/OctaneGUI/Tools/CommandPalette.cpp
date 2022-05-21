@@ -141,7 +141,7 @@ bool CommandPalette::Process(const std::u32string& Command, const std::vector<st
 	std::u32string Lower = Json::ToLower(Command);
 	if (Lower == U"inspector")
 	{
-		Inspector::Get().Inspect(GetWindow()->GetRootContainer());
+		Inspector::Get().Inspect(GetWindow());
 		return true;
 	}
 	else if (Lower == U"profile")

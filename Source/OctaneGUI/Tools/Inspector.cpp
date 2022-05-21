@@ -33,6 +33,7 @@ SOFTWARE.
 #include "../Controls/Splitter.h"
 #include "../Controls/Tree.h"
 #include "../Json.h"
+#include "../Paint.h"
 #include "../Window.h"
 #include "Properties.h"
 
@@ -43,18 +44,103 @@ namespace OctaneGUI
 namespace Tools
 {
 
+class InspectorProxy : public Control
+{
+	CLASS(InspectorProxy)
+
+public:
+	InspectorProxy(Window* InWindow)
+		: Control(InWindow)
+	{
+		SetExpand(Expand::Both);
+	}
+
+	InspectorProxy& SetRoot(const std::weak_ptr<Container>& Root)
+	{
+		m_Root = Root;
+		return *this;
+	}
+
+	virtual void OnMouseMove(const Vector2& Position) override
+	{
+		if (m_Root.expired())
+		{
+			return;
+		}
+
+		std::weak_ptr<Control> Hovered = GetControl(Position, m_Root.lock());
+		if (m_Hovered.lock() != Hovered.lock())
+		{
+			m_Hovered = Hovered;
+			Invalidate();
+		}
+	}
+
+	virtual void OnPaint(Paint& Brush) const override
+	{
+		if (m_Hovered.expired())
+		{
+			return;
+		}
+
+		std::shared_ptr<Control> Hovered = m_Hovered.lock();
+		Brush.RectangleOutline(Hovered->GetAbsoluteBounds(), Color(0, 255, 0, 255));
+	}
+
+private:
+	std::weak_ptr<Control> GetControl(const Vector2& Point, const std::shared_ptr<Container>& Root) const
+	{
+		std::weak_ptr<Control> Result;
+
+		if (!Root)
+		{
+			return Result;
+		}
+
+		const std::vector<std::shared_ptr<Control>>& Controls = Root->Controls();
+		for (int I = Controls.size() - 1; I >= 0; I--)
+		{
+			const std::shared_ptr<Control>& Item = Controls[I];
+			const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
+			if (ItemContainer)
+			{
+				Result = GetControl(Point, ItemContainer);
+
+				if (Result.expired() && ItemContainer->Contains(Point))
+				{
+					Result = ItemContainer;
+				}
+			}
+			else if (Item->Contains(Point) && Item.get() != this)
+			{
+				Result = Item;
+			}
+
+			if (!Result.expired())
+			{
+				break;
+			}
+		}
+
+		return Result;
+	}
+
+	std::weak_ptr<Container> m_Root {};
+	std::weak_ptr<Control> m_Hovered {};
+};
+
 Inspector& Inspector::Get()
 {
 	return s_Inspector;
 }
 
-void Inspector::Inspect(const std::shared_ptr<Container>& Target)
+void Inspector::Inspect(Window* Target)
 {
 	if (m_Window.expired())
 	{
 		std::stringstream Stream;
 		Stream << "{\"Title\": \"Inspecting "
-			   << Target->GetWindow()->GetTitle()
+			   << Target->GetTitle()
 			   << "\","
 			   << "\"Width\": 600,"
 			   << "\"Height\": 300,"
@@ -64,12 +150,20 @@ void Inspector::Inspect(const std::shared_ptr<Container>& Target)
 			   << "]}}";
 
 		ControlList List;
-		m_Window = Target->GetWindow()->App().NewWindow("Inspector", Stream.str().c_str(), List);
+		std::shared_ptr<Window> NewWindow = Target->App().NewWindow("Inspector", Stream.str().c_str(), List);
+		NewWindow->SetOnClose([this](Window& InWindow) -> void
+			{
+				m_Target->GetContainer()->RemoveControl(m_Proxy);
+				m_Target = nullptr;
+			});
+		m_Window = NewWindow;
 		m_Root = List.To<Splitter>("Root");
+
+		m_Proxy = std::make_shared<InspectorProxy>(NewWindow.get());
 	}
 	else
 	{
-		m_Window.lock()->SetTitle((std::string("Inspecting ") + Target->GetWindow()->GetTitle()).c_str());
+		m_Window.lock()->SetTitle((std::string("Inspecting ") + Target->GetTitle()).c_str());
 	}
 
 	if (m_Window.lock()->IsVisible())
@@ -78,7 +172,17 @@ void Inspector::Inspect(const std::shared_ptr<Container>& Target)
 	}
 
 	m_Target = Target;
-	Target->GetWindow()->App().DisplayWindow("Inspector");
+	Target->SetOnClose([this](Window&) -> void
+		{
+			m_Target->GetContainer()->RemoveControl(m_Proxy);
+		});
+	Target->App().DisplayWindow("Inspector");
+
+	m_Proxy
+		->SetRoot(Target->GetContainer())
+		.SetSize(Target->GetSize())
+		->SetWindow(Target);
+	Target->GetContainer()->InsertControl(m_Proxy);
 
 	std::shared_ptr<Splitter> Split = m_Root.lock();
 	Split->First()->ClearControls();
@@ -134,7 +238,7 @@ void Inspector::Populate()
 				m_Properties.lock()->Parse(Root);
 			})
 		.SetExpand(Expand::Width);
-	PopulateTree(Root, m_Target.lock());
+	PopulateTree(Root, m_Target->GetRootContainer());
 }
 
 }

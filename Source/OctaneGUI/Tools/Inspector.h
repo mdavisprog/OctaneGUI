@@ -39,6 +39,7 @@ class Window;
 namespace Tools
 {
 
+class InspectorProxy;
 class Properties;
 
 class Inspector
@@ -46,7 +47,7 @@ class Inspector
 public:
 	static Inspector& Get();
 
-	void Inspect(const std::shared_ptr<Container>& Target);
+	void Inspect(Window* Target);
 
 private:
 	static Inspector s_Inspector;
@@ -54,10 +55,12 @@ private:
 	Inspector();
 	void Populate();
 
-	std::weak_ptr<Container> m_Target {};
+	Window* m_Target {};
 	std::weak_ptr<Splitter> m_Root {};
 	std::weak_ptr<Properties> m_Properties {};
 	std::weak_ptr<Window> m_Window {};
+	
+	std::shared_ptr<InspectorProxy> m_Proxy { nullptr };
 };
 
 }
