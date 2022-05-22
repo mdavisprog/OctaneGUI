@@ -230,7 +230,7 @@ void Inspector::Populate()
 
 	std::shared_ptr<Tree> Root = TreeView->Scrollable()->AddControl<Tree>();
 	Root
-		->SetOnSelected([this](const Tree& Item) -> void
+		->SetOnSelected([this](Tree& Item) -> void
 			{
 				Control const* MetaData = static_cast<Control const*>(Item.MetaData());
 				Json Root(Json::Type::Object);

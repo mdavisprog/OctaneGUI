@@ -372,7 +372,7 @@ void ProfileViewer::View(Window* InWindow)
 
 		m_Tree = FrameDesc->Column(0)->AddControl<Tree>();
 		m_Tree.lock()
-			->SetOnToggled([this](const Tree& Root) -> void
+			->SetOnToggled([this](Tree& Root) -> void
 				{
 					UpdateFrameInfo();
 				})

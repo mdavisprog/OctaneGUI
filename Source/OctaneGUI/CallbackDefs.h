@@ -53,6 +53,6 @@ typedef std::function<void(const Control&)> OnControlSignature;
 typedef std::function<void(Control*, InvalidateType)> OnInvalidateSignature;
 typedef std::function<void(const ScrollBar&)> OnScrollBarSignature;
 typedef std::function<void(TextSelectable&)> OnTextSelectableSignature;
-typedef std::function<void(const Tree&)> OnTreeSignature;
+typedef std::function<void(Tree&)> OnTreeSignature;
 
 }

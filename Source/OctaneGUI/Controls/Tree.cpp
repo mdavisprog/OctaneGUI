@@ -298,7 +298,7 @@ std::shared_ptr<Tree> Tree::AddChild(const char* Text)
 					SetSelected(Item);
 				}
 			})
-		.SetOnToggled([this](const Tree& Item) -> void
+		.SetOnToggled([this](Tree& Item) -> void
 			{
 				if (m_OnToggled)
 				{
@@ -616,7 +616,7 @@ void Tree::SetSelected(const std::shared_ptr<TreeItem>& Item)
 
 		if (m_OnSelected)
 		{
-			Tree const* Parent = static_cast<Tree const*>(Item->GetParent());
+			Tree* Parent = static_cast<Tree*>(Item->GetParent());
 			m_OnSelected(*Parent);
 		}
 	}
