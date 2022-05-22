@@ -422,6 +422,23 @@ bool Tree::HasChildren() const
 	return m_List && m_List->Controls().size() > 0;
 }
 
+std::vector<std::shared_ptr<Tree>> Tree::Children() const
+{
+	std::vector<std::shared_ptr<Tree>> Result;
+
+	if (!m_List)
+	{
+		return Result;
+	}
+
+	for (const std::shared_ptr<Control>& Item : m_List->Controls())
+	{
+		Result.push_back(std::static_pointer_cast<Tree>(Item));
+	}
+
+	return std::move(Result);
+}
+
 const Tree& Tree::ForEachChild(OnTreeSignature Callback) const
 {
 	if (!Callback || !m_List || !m_Expand)
