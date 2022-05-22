@@ -107,6 +107,16 @@ public:
 		return *this;
 	}
 
+	TreeItem& Select()
+	{
+		if (m_OnSelected)
+		{
+			m_OnSelected();
+		}
+
+		return *this;
+	}
+
 	TreeItem& SetOnToggle(OnEmptySignature&& Fn)
 	{
 		m_OnToggle = std::move(Fn);
@@ -162,10 +172,7 @@ public:
 		}
 		else
 		{
-			if (m_OnSelected)
-			{
-				m_OnSelected();
-			}
+			Select();
 		}
 
 		return true;
@@ -370,9 +377,27 @@ Tree& Tree::SetExpanded(bool Expand)
 	return *this;
 }
 
+Tree& Tree::SetExpandedAll(bool Expand)
+{
+	SetExpanded(Expand);
+
+	for (const std::shared_ptr<Tree>& Child : Children())
+	{
+		Child->SetExpandedAll(Expand);
+	}
+
+	return *this;
+}
+
 bool Tree::IsExpanded() const
 {
 	return m_Expand;
+}
+
+Tree& Tree::SetSelected(bool Selected)
+{
+	m_Item->Select();
+	return *this;
 }
 
 Tree& Tree::SetRowSelect(bool RowSelect)

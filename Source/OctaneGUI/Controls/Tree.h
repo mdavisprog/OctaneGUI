@@ -47,7 +47,10 @@ public:
 	const char32_t* GetText() const;
 
 	Tree& SetExpanded(bool Expand);
+	Tree& SetExpandedAll(bool Expand);
 	bool IsExpanded() const;
+
+	Tree& SetSelected(bool Selected);
 
 	Tree& SetRowSelect(bool RowSelect);
 	bool ShouldRowSelect() const;
