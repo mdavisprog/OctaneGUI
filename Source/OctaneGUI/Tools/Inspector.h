@@ -32,6 +32,7 @@ namespace OctaneGUI
 {
 
 class Container;
+class Control;
 class Splitter;
 class Tree;
 class Window;
@@ -54,12 +55,15 @@ private:
 
 	Inspector();
 	void Populate();
+	bool ExpandTree(const std::shared_ptr<Tree>& Root, Control const* Target);
+	void ParseProperty(Control const* Target);
 
 	Window* m_Target {};
 	std::weak_ptr<Splitter> m_Root {};
+	std::weak_ptr<Tree> m_Tree {};
 	std::weak_ptr<Properties> m_Properties {};
 	std::weak_ptr<Window> m_Window {};
-	
+
 	std::shared_ptr<InspectorProxy> m_Proxy { nullptr };
 };
 
