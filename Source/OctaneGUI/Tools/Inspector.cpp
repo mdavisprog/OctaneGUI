@@ -182,7 +182,9 @@ void Inspector::Inspect(Window* Target)
 		std::shared_ptr<Window> NewWindow = Target->App().NewWindow("Inspector", Stream.str().c_str(), List);
 		NewWindow->SetOnClose([this](Window& InWindow) -> void
 			{
-				m_Target->GetContainer()->RemoveControl(m_Proxy);
+				m_Target
+					->SetOnClose(nullptr)
+					->GetContainer()->RemoveControl(m_Proxy);
 				m_Target = nullptr;
 			});
 		m_Window = NewWindow;
@@ -214,9 +216,12 @@ void Inspector::Inspect(Window* Target)
 	}
 
 	m_Target = Target;
-	Target->SetOnClose([this](Window&) -> void
+	m_Target->SetOnClose([this](Window&) -> void
 		{
-			m_Target->GetContainer()->RemoveControl(m_Proxy);
+			m_Target
+				->SetOnClose(nullptr)
+				->GetContainer()->RemoveControl(m_Proxy);
+			m_Target = nullptr;
 		});
 	Target->App().DisplayWindow("Inspector");
 
