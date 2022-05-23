@@ -57,6 +57,7 @@ private:
 	void Populate();
 	bool ExpandTree(const std::shared_ptr<Tree>& Root, Control const* Target);
 	void ParseProperty(Control const* Target);
+	void Close();
 
 	Window* m_Target {};
 	std::weak_ptr<Splitter> m_Root {};

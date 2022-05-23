@@ -69,6 +69,12 @@ public:
 		return *this;
 	}
 
+	void Clear()
+	{
+		m_Hovered.reset();
+		m_Selected.reset();
+	}
+
 	virtual void OnMouseMove(const Vector2& Position) override
 	{
 		if (m_Root.expired())
@@ -96,9 +102,11 @@ public:
 			return false;
 		}
 
+		m_Selected = m_Hovered;
+
 		if (m_OnSelected)
 		{
-			m_OnSelected(m_Hovered);
+			m_OnSelected(m_Selected);
 		}
 
 		return true;
@@ -106,13 +114,17 @@ public:
 
 	virtual void OnPaint(Paint& Brush) const override
 	{
-		if (m_Hovered.expired())
+		if (!m_Hovered.expired())
 		{
-			return;
+			std::shared_ptr<Control> Hovered = m_Hovered.lock();
+			Brush.RectangleOutline(Hovered->GetAbsoluteBounds(), Color(255, 255, 0, 255));
 		}
 
-		std::shared_ptr<Control> Hovered = m_Hovered.lock();
-		Brush.RectangleOutline(Hovered->GetAbsoluteBounds(), Color(0, 255, 0, 255));
+		if (!m_Selected.expired())
+		{
+			std::shared_ptr<Control> Selected = m_Selected.lock();
+			Brush.RectangleOutline(Selected->GetAbsoluteBounds(), Color(0, 255, 0, 255));
+		}
 	}
 
 private:
@@ -155,6 +167,7 @@ private:
 
 	std::weak_ptr<Container> m_Root {};
 	std::weak_ptr<Control> m_Hovered {};
+	std::weak_ptr<Control> m_Selected {};
 	OnSelectedSignature m_OnSelected { nullptr };
 };
 
@@ -182,10 +195,7 @@ void Inspector::Inspect(Window* Target)
 		std::shared_ptr<Window> NewWindow = Target->App().NewWindow("Inspector", Stream.str().c_str(), List);
 		NewWindow->SetOnClose([this](Window& InWindow) -> void
 			{
-				m_Target
-					->SetOnClose(nullptr)
-					->GetContainer()->RemoveControl(m_Proxy);
-				m_Target = nullptr;
+				Close();
 			});
 		m_Window = NewWindow;
 		m_Root = List.To<Splitter>("Root");
@@ -218,10 +228,7 @@ void Inspector::Inspect(Window* Target)
 	m_Target = Target;
 	m_Target->SetOnClose([this](Window&) -> void
 		{
-			m_Target
-				->SetOnClose(nullptr)
-				->GetContainer()->RemoveControl(m_Proxy);
-			m_Target = nullptr;
+			Close();
 		});
 	Target->App().DisplayWindow("Inspector");
 
@@ -325,6 +332,15 @@ void Inspector::ParseProperty(Control const* Target)
 	Json Root(Json::Type::Object);
 	Target->OnSave(Root);
 	m_Properties.lock()->Parse(Root);
+}
+
+void Inspector::Close()
+{
+	m_Proxy->Clear();
+	m_Target
+		->SetOnClose(nullptr)
+		->GetContainer()->RemoveControl(m_Proxy);
+	m_Target = nullptr;
 }
 
 }
