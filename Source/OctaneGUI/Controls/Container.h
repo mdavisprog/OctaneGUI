@@ -64,6 +64,20 @@ public:
 	Container* Layout();
 	void InvalidateLayout();
 
+	template<class T>
+	std::shared_ptr<T> Ref(T* Ptr) const
+	{
+		for (const std::shared_ptr<Control>& Item : m_Controls)
+		{
+			if (Item.get() == Ptr)
+			{
+				return std::static_pointer_cast<T>(Item);
+			}
+		}
+
+		return nullptr;
+	}
+
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const;
 	// TODO: Rename to GetAllControls.
 	void GetControls(std::vector<std::shared_ptr<Control>>& Controls) const;

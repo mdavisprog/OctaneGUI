@@ -153,6 +153,14 @@ public:
 	const Variant& GetProperty(ThemeProperties::Property Property) const;
 	void ClearProperty(ThemeProperties::Property Property);
 
+	std::shared_ptr<Control> Ref() const;
+
+	template<class T>
+	std::shared_ptr<T> TRef() const
+	{
+		return std::dynamic_pointer_cast<T>(Ref());
+	}
+
 	virtual void OnPaint(Paint& Brush) const;
 	virtual void Update();
 	virtual void OnFocused();

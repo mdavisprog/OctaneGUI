@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "Control.h"
+#include "Container.h"
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Theme.h"
@@ -276,6 +277,17 @@ const Variant& Control::GetProperty(ThemeProperties::Property Property) const
 void Control::ClearProperty(ThemeProperties::Property Property)
 {
 	m_ThemeProperties.Clear(Property);
+}
+
+std::shared_ptr<Control> Control::Ref() const
+{
+	Container* Parent = dynamic_cast<Container*>(m_Parent);
+	if (Parent == nullptr)
+	{
+		return nullptr;
+	}
+
+	return Parent->Ref<Control>(const_cast<Control*>(this));
 }
 
 void Control::OnPaint(Paint& Brush) const
