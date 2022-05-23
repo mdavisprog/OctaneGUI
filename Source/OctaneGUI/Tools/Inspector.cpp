@@ -63,6 +63,30 @@ public:
 		return *this;
 	}
 
+	InspectorProxy& SetHovered(const std::weak_ptr<Control>& Hovered)
+	{
+		if (m_Hovered.lock() == Hovered.lock())
+		{
+			return *this;
+		}
+
+		m_Hovered = Hovered;
+		Invalidate();
+		return *this;
+	}
+
+	InspectorProxy& SetSelected(const std::weak_ptr<Control>& Selected)
+	{
+		if (m_Selected.lock() == Selected.lock())
+		{
+			return *this;
+		}
+
+		m_Selected = Selected;
+		Invalidate();
+		return *this;
+	}
+
 	InspectorProxy& SetOnSelected(OnSelectedSignature&& Fn)
 	{
 		m_OnSelected = std::move(Fn);
@@ -287,7 +311,19 @@ void Inspector::Populate()
 		->SetOnSelected([this](Tree& Item) -> void
 			{
 				Control const* MetaData = static_cast<Control const*>(Item.MetaData());
-				ParseProperty(MetaData);
+				if (MetaData != nullptr)
+				{
+					m_Proxy->SetSelected(MetaData->Ref());
+					ParseProperty(MetaData);
+				}
+			})
+		.SetOnHovered([this](Tree& Item) -> void
+			{
+				Control const* MetaData = static_cast<Control const*>(Item.MetaData());
+				if (MetaData != nullptr)
+				{
+					m_Proxy->SetHovered(MetaData->Ref());
+				}
 			})
 		.SetExpand(Expand::Width);
 	PopulateTree(Root, m_Target->GetRootContainer());
