@@ -63,6 +63,11 @@ public:
 		ClearHoveredColors();
 	}
 
+	Tree* Owner() const
+	{
+		return static_cast<Tree*>(GetParent());
+	}
+
 	TreeItem& SetText(const char* Text)
 	{
 		m_Text->SetText(Text);
@@ -150,8 +155,7 @@ public:
 
 	virtual void OnPaint(Paint& Brush) const override
 	{
-		Tree const* Parent = static_cast<Tree const*>(GetParent());
-		if (Parent->HasChildren() && GetProperty(ThemeProperties::Tree_Classic_Icons).Bool())
+		if (Owner()->HasChildren() && GetProperty(ThemeProperties::Tree_Classic_Icons).Bool())
 		{
 			const Vector2 Position = GetAbsolutePosition() + Vector2(1.0f, 1.0f);
 			Brush.RectangleOutline({ Position, Position + Vector2(TOGGLE_SIZE - 1.0f, TOGGLE_SIZE - 1.0f) }, m_Toggle->Tint());
@@ -245,9 +249,9 @@ Tree::Tree(Window* InWindow)
 			})
 		.SetOnHovered([this](bool Hovered) -> void
 			{
-				if (m_OnHovered)
+				if (m_OnHoveredItem)
 				{
-					m_OnHovered(Hovered, m_Item);
+					m_OnHoveredItem(Hovered, m_Item);
 				}
 				else
 				{
@@ -285,9 +289,9 @@ std::shared_ptr<Tree> Tree::AddChild(const char* Text)
 		->SetText(Text)
 		.SetOnHovered([this](bool Hovered, const std::shared_ptr<TreeItem>& Item) -> void
 			{
-				if (m_OnHovered)
+				if (m_OnHoveredItem)
 				{
-					m_OnHovered(Hovered, Item);
+					m_OnHoveredItem(Hovered, Item);
 				}
 				else
 				{
@@ -428,6 +432,12 @@ Tree& Tree::SetOnSelected(OnTreeSignature&& Fn)
 	return *this;
 }
 
+Tree& Tree::SetOnHovered(OnTreeSignature&& Fn)
+{
+	m_OnHovered = std::move(Fn);
+	return *this;
+}
+
 Tree& Tree::SetOnToggled(OnTreeSignature&& Fn)
 {
 	m_OnToggled = std::move(Fn);
@@ -563,7 +573,7 @@ void Tree::OnThemeLoaded()
 
 Tree& Tree::SetOnHovered(OnHoveredTreeItemSignature&& Fn)
 {
-	m_OnHovered = std::move(Fn);
+	m_OnHoveredItem = std::move(Fn);
 	return *this;
 }
 
@@ -628,6 +638,12 @@ void Tree::SetHovered(bool Hovered, const std::shared_ptr<TreeItem>& Item)
 	{
 		Item->SetHoveredColors();
 		m_Hovered = Item;
+
+		if (m_OnHovered)
+		{
+			m_OnHovered(*Item->Owner());
+		}
+
 		Invalidate();
 	}
 }

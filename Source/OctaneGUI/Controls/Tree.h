@@ -59,6 +59,7 @@ public:
 	void* MetaData() const;
 
 	Tree& SetOnSelected(OnTreeSignature&& Fn);
+	Tree& SetOnHovered(OnTreeSignature&& Fn);
 	Tree& SetOnToggled(OnTreeSignature&& Fn);
 
 	void Clear();
@@ -92,12 +93,13 @@ private:
 	std::shared_ptr<VerticalContainer> m_List { nullptr };
 
 	std::weak_ptr<TreeItem> m_Hovered {};
-	OnHoveredTreeItemSignature m_OnHovered { nullptr };
+	OnHoveredTreeItemSignature m_OnHoveredItem { nullptr };
 
 	std::weak_ptr<TreeItem> m_Selected {};
 	OnTreeItemSignature m_OnItemSelected { nullptr };
 
 	OnTreeSignature m_OnSelected { nullptr };
+	OnTreeSignature m_OnHovered { nullptr };
 	OnTreeSignature m_OnToggled { nullptr };
 
 	bool m_Expand { false };
