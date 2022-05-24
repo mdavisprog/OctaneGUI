@@ -29,6 +29,7 @@ SOFTWARE.
 #include "../Controls/CheckBox.h"
 #include "../Controls/Container.h"
 #include "../Controls/ControlList.h"
+#include "../Controls/MenuBar.h"
 #include "../Controls/ScrollableContainer.h"
 #include "../Controls/ScrollableViewControl.h"
 #include "../Controls/Splitter.h"
@@ -149,6 +150,11 @@ public:
 		return true;
 	}
 
+	virtual void OnMouseLeave() override
+	{
+		m_Hovered.reset();
+	}
+
 	virtual void OnPaint(Paint& Brush) const override
 	{
 		if (!m_Hovered.expired())
@@ -244,41 +250,23 @@ void Inspector::Inspect(Window* Target)
 			.SetOnClicked([this](const Button& Btn) -> void
 			{
 				const CheckBox& CB = static_cast<const CheckBox&>(Btn);
-				if (CB.GetState() == CheckBox::State::Checked)
-				{
-					m_Proxy
-						->SetEnabled(true)
-						.SetExpand(Expand::Both)
-						->SetSize(m_Target->GetSize());
-				}
-				else
-				{
-					m_Proxy
-						->Clear()
-						.SetEnabled(false)
-						.SetExpand(Expand::None)
-						->SetSize({ });
-				}
-
-				m_Proxy->Invalidate(InvalidateType::Both);
-				m_Target->Update();
+				const bool Enabled = CB.GetState() == CheckBox::State::Checked;
+				SetEnabled(m_MenuBarProxy, Enabled, m_Target->GetMenuBar()->GetSize());
+				SetEnabled(m_BodyProxy, Enabled, m_Target->GetContainer()->GetSize());
 			});
 
 		m_Root = List.To<Splitter>("Root");
 
-		m_Proxy = std::make_shared<InspectorProxy>(NewWindow.get());
-		m_Proxy->SetOnSelected([this](const std::weak_ptr<Control>& Selected) -> void
+		m_MenuBarProxy = std::make_shared<InspectorProxy>(NewWindow.get());
+		m_MenuBarProxy->SetOnSelected([this](const std::weak_ptr<Control>& Selected) ->void
 			{
-				if (Selected.expired() || m_Tree.expired())
-				{
-					return;
-				}
+				OnSelected(Selected);
+			});
 
-				std::shared_ptr<Control> Selected_ = Selected.lock();
-				ParseProperty(Selected_.get());
-				std::shared_ptr<Tree> Tree_ = m_Tree.lock();
-				Tree_->SetExpandedAll(false);
-				ExpandTree(m_Tree.lock(), Selected_.get());
+		m_BodyProxy = std::make_shared<InspectorProxy>(NewWindow.get());
+		m_BodyProxy->SetOnSelected([this](const std::weak_ptr<Control>& Selected) -> void
+			{
+				OnSelected(Selected);
 			});
 	}
 	else
@@ -298,11 +286,17 @@ void Inspector::Inspect(Window* Target)
 		});
 	Target->App().DisplayWindow("Inspector");
 
-	m_Proxy
+	m_MenuBarProxy
+		->SetRoot(Target->GetMenuBar())
+		.SetSize(Target->GetMenuBar()->GetSize())
+		->SetWindow(Target);
+	Target->GetMenuBar()->InsertControl(m_MenuBarProxy);
+
+	m_BodyProxy
 		->SetRoot(Target->GetContainer())
 		.SetSize(Target->GetSize())
 		->SetWindow(Target);
-	Target->GetContainer()->InsertControl(m_Proxy);
+	Target->GetContainer()->InsertControl(m_BodyProxy);
 
 	std::shared_ptr<Splitter> Split = m_Root.lock();
 	Split->First()->ClearControls();
@@ -352,7 +346,7 @@ void Inspector::Populate()
 	Root
 		->SetOnSelected([this](Tree& Item) -> void
 			{
-				if (!m_Proxy->Enabled())
+				if (!m_BodyProxy->Enabled())
 				{
 					return;
 				}
@@ -360,13 +354,24 @@ void Inspector::Populate()
 				Control const* MetaData = static_cast<Control const*>(Item.MetaData());
 				if (MetaData != nullptr)
 				{
-					m_Proxy->SetSelected(MetaData->Ref());
+					std::shared_ptr<Control> Ref = MetaData->Ref();
+					if (m_Target->GetMenuBar()->HasControlRecurse(Ref))
+					{
+						m_MenuBarProxy->SetSelected(Ref);
+						m_BodyProxy->Clear();
+					}
+					else
+					{
+						m_BodyProxy->SetSelected(Ref);
+						m_MenuBarProxy->Clear();
+					}
+
 					ParseProperty(MetaData);
 				}
 			})
 		.SetOnHovered([this](Tree& Item) -> void
 			{
-				if (!m_Proxy->Enabled())
+				if (!m_BodyProxy->Enabled())
 				{
 					return;
 				}
@@ -374,7 +379,17 @@ void Inspector::Populate()
 				Control const* MetaData = static_cast<Control const*>(Item.MetaData());
 				if (MetaData != nullptr)
 				{
-					m_Proxy->SetHovered(MetaData->Ref());
+					std::shared_ptr<Control> Ref = MetaData->Ref();
+					if (m_Target->GetMenuBar()->HasControlRecurse(Ref))
+					{
+						m_MenuBarProxy->SetHovered(Ref);
+						m_BodyProxy->Clear();
+					}
+					else
+					{
+						m_BodyProxy->SetHovered(Ref);
+						m_MenuBarProxy->Clear();
+					}
 				}
 			})
 		.SetExpand(Expand::Width);
@@ -424,11 +439,48 @@ void Inspector::ParseProperty(Control const* Target)
 
 void Inspector::Close()
 {
-	m_Proxy->Clear();
-	m_Target
-		->SetOnClose(nullptr)
-		->GetContainer()->RemoveControl(m_Proxy);
+	m_MenuBarProxy->Clear();
+	m_BodyProxy->Clear();
+	m_Target->SetOnClose(nullptr);
+	m_Target->GetMenuBar()->RemoveControl(m_MenuBarProxy);
+	m_Target->GetContainer()->RemoveControl(m_BodyProxy);
 	m_Target = nullptr;
+}
+
+void Inspector::SetEnabled(const std::shared_ptr<InspectorProxy>& Proxy, bool Enabled, const Vector2& Size)
+{
+	if (Enabled)
+	{
+		Proxy
+			->SetEnabled(true)
+			.SetExpand(Expand::Both)
+			->SetSize(Size);
+	}
+	else
+	{
+		Proxy
+			->Clear()
+			.SetEnabled(false)
+			.SetExpand(Expand::None)
+			->SetSize({ });
+	}
+
+	Proxy->Invalidate(InvalidateType::Both);
+	m_Target->Update();
+}
+
+void Inspector::OnSelected(const std::weak_ptr<Control>& Selected)
+{
+	if (Selected.expired() || m_Tree.expired())
+	{
+		return;
+	}
+
+	std::shared_ptr<Control> Selected_ = Selected.lock();
+	ParseProperty(Selected_.get());
+	std::shared_ptr<Tree> Tree_ = m_Tree.lock();
+	Tree_->SetExpandedAll(false);
+	ExpandTree(m_Tree.lock(), Selected_.get());
 }
 
 }

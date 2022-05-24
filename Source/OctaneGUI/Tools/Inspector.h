@@ -35,6 +35,7 @@ class Container;
 class Control;
 class Splitter;
 class Tree;
+struct Vector2;
 class Window;
 
 namespace Tools
@@ -59,13 +60,17 @@ private:
 	void ParseProperty(Control const* Target);
 	void Close();
 
+	void SetEnabled(const std::shared_ptr<InspectorProxy>& Proxy, bool Enabled, const Vector2& Size);
+	void OnSelected(const std::weak_ptr<Control>& Selected);
+
 	Window* m_Target {};
 	std::weak_ptr<Splitter> m_Root {};
 	std::weak_ptr<Tree> m_Tree {};
 	std::weak_ptr<Properties> m_Properties {};
 	std::weak_ptr<Window> m_Window {};
 
-	std::shared_ptr<InspectorProxy> m_Proxy { nullptr };
+	std::shared_ptr<InspectorProxy> m_MenuBarProxy { nullptr };
+	std::shared_ptr<InspectorProxy> m_BodyProxy { nullptr };
 };
 
 }
