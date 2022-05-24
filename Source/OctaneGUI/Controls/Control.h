@@ -155,7 +155,7 @@ public:
 
 	std::shared_ptr<Control> Ref() const;
 
-	template<class T>
+	template <class T>
 	std::shared_ptr<T> TRef() const
 	{
 		return std::dynamic_pointer_cast<T>(Ref());

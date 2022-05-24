@@ -248,17 +248,17 @@ void Inspector::Inspect(Window* Target)
 		List.To<CheckBox>("Picker")
 			->SetState(CheckBox::State::Checked)
 			.SetOnClicked([this](const Button& Btn) -> void
-			{
-				const CheckBox& CB = static_cast<const CheckBox&>(Btn);
-				const bool Enabled = CB.GetState() == CheckBox::State::Checked;
-				SetEnabled(m_MenuBarProxy, Enabled, m_Target->GetMenuBar()->GetSize());
-				SetEnabled(m_BodyProxy, Enabled, m_Target->GetContainer()->GetSize());
-			});
+				{
+					const CheckBox& CB = static_cast<const CheckBox&>(Btn);
+					const bool Enabled = CB.GetState() == CheckBox::State::Checked;
+					SetEnabled(m_MenuBarProxy, Enabled, m_Target->GetMenuBar()->GetSize());
+					SetEnabled(m_BodyProxy, Enabled, m_Target->GetContainer()->GetSize());
+				});
 
 		m_Root = List.To<Splitter>("Root");
 
 		m_MenuBarProxy = std::make_shared<InspectorProxy>(NewWindow.get());
-		m_MenuBarProxy->SetOnSelected([this](const std::weak_ptr<Control>& Selected) ->void
+		m_MenuBarProxy->SetOnSelected([this](const std::weak_ptr<Control>& Selected) -> void
 			{
 				OnSelected(Selected);
 			});
@@ -282,13 +282,13 @@ void Inspector::Inspect(Window* Target)
 	m_Target = Target;
 	m_Target
 		->SetOnClose([this](Window&) -> void
-		{
-			Close();
-		})
+			{
+				Close();
+			})
 		->SetOnLayout([this](Window&) -> void
-		{
-			Populate();
-		});
+			{
+				Populate();
+			});
 	Target->App().DisplayWindow("Inspector");
 
 	m_MenuBarProxy
@@ -337,7 +337,7 @@ void Inspector::Populate()
 	std::shared_ptr<Splitter> Split = m_Root.lock();
 	Split->First()->ClearControls();
 	Split->Second()->ClearControls();
-	
+
 	std::shared_ptr<ScrollableViewControl> TreeView = Split->First()->AddControl<ScrollableViewControl>();
 	std::shared_ptr<ScrollableViewControl> PropertiesView = Split->Second()->AddControl<ScrollableViewControl>();
 
@@ -468,7 +468,7 @@ void Inspector::SetEnabled(const std::shared_ptr<InspectorProxy>& Proxy, bool En
 			->Clear()
 			.SetEnabled(false)
 			.SetExpand(Expand::None)
-			->SetSize({ });
+			->SetSize({});
 	}
 
 	Proxy->Invalidate(InvalidateType::Both);

@@ -64,7 +64,7 @@ public:
 	Container* Layout();
 	void InvalidateLayout();
 
-	template<class T>
+	template <class T>
 	std::shared_ptr<T> Ref(T* Ptr) const
 	{
 		for (const std::shared_ptr<Control>& Item : m_Controls)
