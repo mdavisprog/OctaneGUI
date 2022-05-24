@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "Inspector.h"
 #include "../Application.h"
+#include "../Controls/CheckBox.h"
 #include "../Controls/Container.h"
 #include "../Controls/ControlList.h"
 #include "../Controls/ScrollableContainer.h"
@@ -93,15 +94,27 @@ public:
 		return *this;
 	}
 
-	void Clear()
+	InspectorProxy& Clear()
 	{
 		m_Hovered.reset();
 		m_Selected.reset();
+		return *this;
+	}
+
+	InspectorProxy& SetEnabled(bool Enabled)
+	{
+		m_Enabled = Enabled;
+		return *this;
+	}
+
+	bool Enabled() const
+	{
+		return m_Enabled;
 	}
 
 	virtual void OnMouseMove(const Vector2& Position) override
 	{
-		if (m_Root.expired())
+		if (!m_Enabled || m_Root.expired())
 		{
 			return;
 		}
@@ -189,6 +202,7 @@ private:
 		return Result;
 	}
 
+	bool m_Enabled { true };
 	std::weak_ptr<Container> m_Root {};
 	std::weak_ptr<Control> m_Hovered {};
 	std::weak_ptr<Control> m_Selected {};
@@ -212,8 +226,10 @@ void Inspector::Inspect(Window* Target)
 			   << "\"Height\": 300,"
 			   << "\"Body\": {\"Controls\": ["
 			   << "{\"Type\": \"Panel\", \"Expand\": \"Both\"},"
+			   << "{\"Type\": \"VerticalContainer\", \"Expand\": \"Both\", \"Controls\": ["
+			   << "{\"ID\": \"Picker\", \"Type\": \"CheckBox\", \"Text\": {\"Text\": \"Picker\"}},"
 			   << "{\"ID\": \"Root\", \"Type\": \"Splitter\", \"Orientation\": \"Vertical\", \"Expand\": \"Both\"}"
-			   << "]}}";
+			   << "]}]}}";
 
 		ControlList List;
 		std::shared_ptr<Window> NewWindow = Target->App().NewWindow("Inspector", Stream.str().c_str(), List);
@@ -222,6 +238,32 @@ void Inspector::Inspect(Window* Target)
 				Close();
 			});
 		m_Window = NewWindow;
+
+		List.To<CheckBox>("Picker")
+			->SetState(CheckBox::State::Checked)
+			.SetOnClicked([this](const Button& Btn) -> void
+			{
+				const CheckBox& CB = static_cast<const CheckBox&>(Btn);
+				if (CB.GetState() == CheckBox::State::Checked)
+				{
+					m_Proxy
+						->SetEnabled(true)
+						.SetExpand(Expand::Both)
+						->SetSize(m_Target->GetSize());
+				}
+				else
+				{
+					m_Proxy
+						->Clear()
+						.SetEnabled(false)
+						.SetExpand(Expand::None)
+						->SetSize({ });
+				}
+
+				m_Proxy->Invalidate(InvalidateType::Both);
+				m_Target->Update();
+			});
+
 		m_Root = List.To<Splitter>("Root");
 
 		m_Proxy = std::make_shared<InspectorProxy>(NewWindow.get());
@@ -310,6 +352,11 @@ void Inspector::Populate()
 	Root
 		->SetOnSelected([this](Tree& Item) -> void
 			{
+				if (!m_Proxy->Enabled())
+				{
+					return;
+				}
+
 				Control const* MetaData = static_cast<Control const*>(Item.MetaData());
 				if (MetaData != nullptr)
 				{
@@ -319,6 +366,11 @@ void Inspector::Populate()
 			})
 		.SetOnHovered([this](Tree& Item) -> void
 			{
+				if (!m_Proxy->Enabled())
+				{
+					return;
+				}
+
 				Control const* MetaData = static_cast<Control const*>(Item.MetaData());
 				if (MetaData != nullptr)
 				{
