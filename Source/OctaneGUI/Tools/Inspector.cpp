@@ -280,9 +280,14 @@ void Inspector::Inspect(Window* Target)
 	}
 
 	m_Target = Target;
-	m_Target->SetOnClose([this](Window&) -> void
+	m_Target
+		->SetOnClose([this](Window&) -> void
 		{
 			Close();
+		})
+		->SetOnLayout([this](Window&) -> void
+		{
+			Populate();
 		});
 	Target->App().DisplayWindow("Inspector");
 
@@ -298,9 +303,6 @@ void Inspector::Inspect(Window* Target)
 		->SetWindow(Target);
 	Target->GetContainer()->InsertControl(m_BodyProxy);
 
-	std::shared_ptr<Splitter> Split = m_Root.lock();
-	Split->First()->ClearControls();
-	Split->Second()->ClearControls();
 	Populate();
 }
 
@@ -333,6 +335,9 @@ static void PopulateTree(const std::shared_ptr<Tree>& Root, const std::shared_pt
 void Inspector::Populate()
 {
 	std::shared_ptr<Splitter> Split = m_Root.lock();
+	Split->First()->ClearControls();
+	Split->Second()->ClearControls();
+	
 	std::shared_ptr<ScrollableViewControl> TreeView = Split->First()->AddControl<ScrollableViewControl>();
 	std::shared_ptr<ScrollableViewControl> PropertiesView = Split->Second()->AddControl<ScrollableViewControl>();
 
@@ -442,6 +447,7 @@ void Inspector::Close()
 	m_MenuBarProxy->Clear();
 	m_BodyProxy->Clear();
 	m_Target->SetOnClose(nullptr);
+	m_Target->SetOnLayout(nullptr);
 	m_Target->GetMenuBar()->RemoveControl(m_MenuBarProxy);
 	m_Target->GetContainer()->RemoveControl(m_BodyProxy);
 	m_Target = nullptr;
