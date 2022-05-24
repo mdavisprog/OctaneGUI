@@ -397,11 +397,19 @@ void Window::Update()
 
 	UpdateTimers();
 
-	for (Container* Item : m_LayoutRequests)
+	if (!m_LayoutRequests.empty())
 	{
-		Item->Layout();
+		for (Container* Item : m_LayoutRequests)
+		{
+			Item->Layout();
+		}
+		m_LayoutRequests.clear();
+
+		if (m_OnLayout)
+		{
+			m_OnLayout(*this);
+		}
 	}
-	m_LayoutRequests.clear();
 
 	m_Popup.Update();
 }
@@ -525,9 +533,15 @@ Window* Window::SetOnSetTitle(OnSetTitleSignature&& Fn)
 	return this;
 }
 
-Window* Window::SetOnClose(OnCloseSignature&& Fn)
+Window* Window::SetOnClose(OnWindowSignature&& Fn)
 {
 	m_OnClose = std::move(Fn);
+	return this;
+}
+
+Window* Window::SetOnLayout(OnWindowSignature&& Fn)
+{
+	m_OnLayout = std::move(Fn);
 	return this;
 }
 
