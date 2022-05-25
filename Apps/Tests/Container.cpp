@@ -315,7 +315,7 @@ TEST_CASE(MarginContainer,
 {
 	OctaneGUI::ControlList List;
 	Load(Application,
-		"{\"ID\": \"Margins\", \"Type\": \"MarginContainer\", \"Left\": 4.0, \"Top\": 4.0, \"Right\": 4.0, \"Bottom\": 4.0, \"Controls\": ["
+		"{\"ID\": \"Margins\", \"Type\": \"MarginContainer\", \"Margins\": [4, 4, 4, 4], \"Controls\": ["
 		"{\"ID\": \"Button\", \"Type\": \"TextButton\", \"Expand\": \"Both\", \"Text\": {\"Text\": \"Button\"}}]}",
 		List);
 	const std::shared_ptr<OctaneGUI::Container> Margins = List.To<OctaneGUI::Container>("Margins");

@@ -25,11 +25,39 @@ SOFTWARE.
 */
 
 #include "Rect.h"
+#include "Json.h"
 
 #include <cmath>
 
 namespace OctaneGUI
 {
+
+Rect Rect::FromJson(const Json& Root, const Rect& Default)
+{
+	if (!Root.IsArray())
+	{
+		return Default;
+	}
+
+	return {
+		Root.Count() > 0 ? Root[0u].Number() : Default.Min.X,
+		Root.Count() > 1 ? Root[1u].Number() : Default.Min.Y,
+		Root.Count() > 2 ? Root[2u].Number() : Default.Max.X,
+		Root.Count() > 3 ? Root[3u].Number() : Default.Max.Y
+	};
+}
+
+Json Rect::ToJson(const Rect& Value)
+{
+	Json Result(Json::Type::Array);
+
+	Result.Push(Value.Min.X);
+	Result.Push(Value.Min.Y);
+	Result.Push(Value.Max.X);
+	Result.Push(Value.Max.Y);
+
+	return std::move(Result);
+}
 
 Rect::Rect()
 	: Min()

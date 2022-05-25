@@ -42,6 +42,11 @@ MarginContainer& MarginContainer::SetMargins(const Rect& Margins)
 	return *this;
 }
 
+Rect MarginContainer::Margins() const
+{
+	return m_Margins;
+}
+
 Vector2 MarginContainer::DesiredSize() const
 {
 	Vector2 Result;
@@ -68,20 +73,14 @@ void MarginContainer::OnLoad(const Json& Root)
 
 	SetExpand(Expand::Both);
 
-	m_Margins.Min.X = Root["Left"].Number();
-	m_Margins.Min.Y = Root["Top"].Number();
-	m_Margins.Max.X = Root["Right"].Number();
-	m_Margins.Max.Y = Root["Bottom"].Number();
+	m_Margins = Rect::FromJson(Root["Margins"]);
 }
 
 void MarginContainer::OnSave(Json& Root) const
 {
 	Container::OnSave(Root);
 
-	Root["Left"] = m_Margins.Min.X;
-	Root["Top"] = m_Margins.Min.Y;
-	Root["Right"] = m_Margins.Max.X;
-	Root["Bottom"] = m_Margins.Max.Y;
+	Root["Margins"] = std::move(Rect::ToJson(m_Margins));
 }
 
 void MarginContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const

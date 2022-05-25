@@ -39,6 +39,7 @@ public:
 	MarginContainer(Window* InWindow);
 
 	MarginContainer& SetMargins(const Rect& Margins);
+	Rect Margins() const;
 
 	virtual Vector2 DesiredSize() const override;
 

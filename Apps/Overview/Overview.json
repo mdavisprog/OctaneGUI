@@ -3,8 +3,8 @@
 	"Windows": {
 		"Main": {
 			"Title": "Overview",
-			"Width": 1280,
-			"Height": 720,
+			"Width": 960,
+			"Height": 540,
 			"MenuBar": {
 				"Items": [
 					{
@@ -59,10 +59,7 @@
 						"Controls": [
 							{
 								"Type": "MarginContainer",
-								"Left": 8,
-								"Top": 8,
-								"Right": 8,
-								"Bottom": 8,
+								"Margins": [8, 8, 8, 8],
 								"Controls": [
 									{
 										"Type": "VerticalContainer",
@@ -228,10 +225,7 @@
 					},
 					{
 						"Type": "MarginContainer",
-						"Left": 8,
-						"Top": 8,
-						"Right": 8,
-						"Bottom": 8,
+						"Margins": [8, 8, 8, 8],
 						"Controls": [
 							{
 								"Type": "VerticalContainer",

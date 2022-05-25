@@ -34,6 +34,9 @@ namespace OctaneGUI
 struct Rect
 {
 public:
+	static Rect FromJson(const Json& Root, const Rect& Default = {});
+	static Json ToJson(const Rect& Value);
+
 	Vector2 Min, Max;
 
 	Rect();
