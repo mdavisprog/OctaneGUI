@@ -321,6 +321,7 @@ void Control::OnSave(Json& Root) const
 {
 	Root["ID"] = m_ID;
 	Root["Expand"] = ToString(m_Expand);
+	Root["Position"] = std::move(Vector2::ToJson(GetPosition()));
 	Root["Size"] = std::move(Vector2::ToJson(GetSize()));
 	Root["Window"] = m_Window->GetTitle();
 }
