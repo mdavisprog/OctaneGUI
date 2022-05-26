@@ -27,6 +27,8 @@ SOFTWARE.
 #include "ControlList.h"
 #include "Control.h"
 
+#include <cassert>
+
 namespace OctaneGUI
 {
 
@@ -51,6 +53,12 @@ void ControlList::AddControl(const std::shared_ptr<Control>& InControl)
 bool ControlList::Contains(const char* ID) const
 {
 	return m_Controls.find(ID) != m_Controls.end();
+}
+
+std::weak_ptr<Control> ControlList::Get(const char* ID) const
+{
+	assert(Contains(ID));
+	return m_Controls.at(ID);
 }
 
 std::vector<std::string> ControlList::IDs() const
