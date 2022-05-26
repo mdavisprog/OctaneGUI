@@ -287,7 +287,14 @@ void Inspector::Inspect(Window* Target)
 			})
 		->SetOnLayout([this](Window&) -> void
 			{
-				Populate();
+				// TODO: This causes an issue where when the inspector window is opened and this
+				// callback is registered, an update is kicked off for all windows. The inspected window will
+				// update first and invoke this callback. This window's layout requests have not been 
+				// processed at this point, and the populate function will remove controls and add
+				// new ones to be processed, but the layout requests array has not been cleared.
+				// A proper fix for this race condition is to convert the layout requests array to
+				// be weak references to controls, as currently they are raw pointers.
+				//Populate();
 			});
 	Target->App().DisplayWindow("Inspector");
 
