@@ -30,6 +30,7 @@ SOFTWARE.
 #include "../Profiler.h"
 #include "CheckBox.h"
 #include "ComboBox.h"
+#include "GroupBox.h"
 #include "HorizontalContainer.h"
 #include "Image.h"
 #include "ImageButton.h"
@@ -79,6 +80,10 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 	else if (Type == Container::TypeName())
 	{
 		Result = AddControl<Container>();
+	}
+	else if (Type == GroupBox::TypeName())
+	{
+		Result = AddControl<GroupBox>();
 	}
 	else if (Type == HorizontalContainer::TypeName())
 	{
