@@ -44,19 +44,27 @@ GroupBox::GroupBox(Window* InWindow)
 	m_Text->SetPosition({ 8.0f, 0.0f });
 
 	m_Margins = AddControl<MarginContainer>();
-	m_Margins->SetPosition({ 0.0f, m_Text->GetFont()->Size() });
-	m_Margins->SetMargins({ MARGIN, MARGIN, MARGIN, MARGIN });
+	m_Margins->SetMargins({ MARGIN, TopMargin(), MARGIN, MARGIN });
 }
 
 Vector2 GroupBox::DesiredSize() const
 {
-	return m_Margins->DesiredSize() + m_Margins->GetPosition();
+	Vector2 Result = m_Margins->DesiredSize();
+	const float LeftOffset = m_Text->GetPosition().X;
+	const float TextWidth = m_Text->GetSize().X + LeftOffset;
+	if (Result.X < TextWidth)
+	{
+		Result.X = TextWidth + (LeftOffset * 2.0f);
+	}
+	return Result;
 }
 
 void GroupBox::OnPaint(Paint& Brush) const
 {
+	const float Offset = m_Text->GetSize().Y * 0.5f;
+	Rect OutlineBounds = GetAbsoluteBounds();
+	OutlineBounds.Min.Y += Offset;
 	const Color Outline = GetProperty(ThemeProperties::PanelOutline).ToColor();
-	Rect OutlineBounds = GetAbsoluteBounds().Move({ 0.0f, m_Text->GetSize().Y * 0.5f });
 	Brush.RectangleOutline(OutlineBounds, Outline);
 	Brush.Rectangle(m_Text->GetAbsoluteBounds(), GetProperty(ThemeProperties::Panel).ToColor());
 	Container::OnPaint(Brush);
@@ -74,10 +82,16 @@ void GroupBox::OnLoad(const Json& Root)
 	Copy["ID"] = Json();
 	Copy["Controls"] = std::move(Root["Controls"]);
 
-	const Rect Margins = Rect::FromJson(Root["Margins"], m_Margins->Margins());
+	Rect Margins = Rect::FromJson(Root["Margins"], m_Margins->Margins());
+	Margins.Min.Y = TopMargin();
 	Copy["Margins"] = std::move(Rect::ToJson(Margins));
 
 	m_Margins->OnLoad(Copy);
+}
+
+float GroupBox::TopMargin() const
+{
+	return m_Text->GetFont()->Size() * 1.4f;
 }
 
 }
