@@ -128,23 +128,6 @@ int main(int argc, char **argv)
 		Application.DisplayWindow("About");
 	});
 
-	List.To<OctaneGUI::Button>("OKBtn")->SetOnClicked([&](const OctaneGUI::Button& Button) -> void
-	{
-		printf("OK\n");
-	});
-
-	std::shared_ptr<OctaneGUI::ListBox> ListBox = List.To<OctaneGUI::ListBox>("List");
-	ListBox->SetOnSelect([](int Index, std::weak_ptr<OctaneGUI::Control>) -> void
-	{
-		printf("OnSelect: %d\n", Index);
-	});
-
-	for (int I = 0; I < 10; I++)
-	{
-		std::string Text = std::string("Item added through code: ") + std::to_string(I);
-		ListBox->AddItem<OctaneGUI::Text>()->SetText(Text.c_str());
-	}
-
 	const OctaneGUI::ControlList& AboutList = WindowControls["About"];
 	AboutList.To<OctaneGUI::Button>("OK")->SetOnClicked([](const OctaneGUI::Button& Button) -> void
 	{
