@@ -31,6 +31,10 @@ SOFTWARE.
 #include "Texture.h"
 #include "Theme.h"
 
+#include <cmath>
+
+#define PI 3.14159265358979323846f
+
 namespace OctaneGUI
 {
 
@@ -192,6 +196,36 @@ void Paint::Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_p
 
 	PushCommand(6, InTexture->GetID());
 	AddTriangles(Bounds, TexCoords, Col);
+}
+
+void Paint::Circle(const Vector2& Center, float Radius, const Color& Tint, int Steps)
+{
+	const float Delta = (2.0f * PI) / Steps;
+
+	std::vector<Vector2> Vertices;
+	Vertices.resize(Steps);
+
+	for (int I = 0; I < Steps; I++)
+	{
+		const float Angle = I * Delta;
+		Vertices[I] = { Center.X + (std::cos(Angle) * Radius), Center.Y + (std::sin(Angle) * Radius) };
+	}
+
+	PushCommand(3 * Steps, 0);
+
+	uint32_t Offset = 0;
+	for (size_t I = 0; I < Vertices.size(); I++)
+	{
+		size_t J = I + 1 >= Vertices.size() ? 0 : I + 1;
+		m_Buffer.AddVertex(Center, Tint);
+		m_Buffer.AddVertex(Vertices[I], Tint);
+		m_Buffer.AddVertex(Vertices[J], Tint);
+		
+		m_Buffer.AddIndex(Offset);
+		m_Buffer.AddIndex(Offset + 1);
+		m_Buffer.AddIndex(Offset + 2);
+		Offset += 3;
+	}
 }
 
 void Paint::PushClip(const Rect& Bounds)
