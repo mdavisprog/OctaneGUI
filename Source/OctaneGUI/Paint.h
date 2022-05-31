@@ -65,6 +65,7 @@ public:
 	void TextWrapped(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const std::vector<TextSpan>& Spans, float Width);
 	void Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_ptr<Texture>& InTexture, const Color& Col);
 	void Circle(const Vector2& Center, float Radius, const Color& Tint, int Steps = 64);
+	void CircleOutline(const Vector2& Center, float Radius, const Color& Tint, float Thickness = 1.0f, int Steps = 64);
 
 	void PushClip(const Rect& Bounds);
 	void PopClip();

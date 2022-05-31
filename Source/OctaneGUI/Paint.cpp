@@ -198,18 +198,25 @@ void Paint::Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_p
 	AddTriangles(Bounds, TexCoords, Col);
 }
 
-void Paint::Circle(const Vector2& Center, float Radius, const Color& Tint, int Steps)
+std::vector<Vector2> GetPoints(const Vector2& Center, float Radius, int Steps)
 {
 	const float Delta = (2.0f * PI) / Steps;
 
-	std::vector<Vector2> Vertices;
-	Vertices.resize(Steps);
+	std::vector<Vector2> Result;
+	Result.resize(Steps);
 
 	for (int I = 0; I < Steps; I++)
 	{
 		const float Angle = I * Delta;
-		Vertices[I] = { Center.X + (std::cos(Angle) * Radius), Center.Y + (std::sin(Angle) * Radius) };
+		Result[I] = { Center.X + (std::cos(Angle) * Radius), Center.Y + (std::sin(Angle) * Radius) };
 	}
+
+	return std::move(Result);
+}
+
+void Paint::Circle(const Vector2& Center, float Radius, const Color& Tint, int Steps)
+{
+	std::vector<Vector2> Vertices = GetPoints(Center, Radius, Steps);
 
 	PushCommand(3 * Steps, 0);
 
@@ -226,6 +233,21 @@ void Paint::Circle(const Vector2& Center, float Radius, const Color& Tint, int S
 		m_Buffer.AddIndex(Offset + 2);
 		Offset += 3;
 	}
+}
+
+void Paint::CircleOutline(const Vector2& Center, float Radius, const Color& Tint, float Thickness, int Steps)
+{
+	std::vector<Vector2> Vertices = GetPoints(Center, Radius, Steps);
+
+	Vector2 Start = Vertices[0];
+	for (size_t I = 1; I < Vertices.size(); I++)
+	{
+		const Vector2& End = Vertices[I];
+		Line(Start, End, Tint, Thickness);
+		Start = End;
+	}
+
+	Line(Start, Vertices.front(), Tint, Thickness);
 }
 
 void Paint::PushClip(const Rect& Bounds)
