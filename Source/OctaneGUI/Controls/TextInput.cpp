@@ -961,6 +961,7 @@ void TextInput::UpdateVisibleLines(float ScrollDelta)
 {
 	if (!m_Multiline)
 	{
+		m_FirstVisibleLine = { 0, 0, 0 };
 		return;
 	}
 
