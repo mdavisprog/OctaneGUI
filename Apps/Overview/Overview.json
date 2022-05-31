@@ -55,6 +55,11 @@
 									{"Type": "RadioButton", "Text": {"Text": "Two"}},
 									{"Type": "RadioButton", "Text": {"Text": "Three"}}
 								]}
+							]},
+							{"Type": "GroupBox", "Text": "Wrapped Text", "Controls": [
+								{"Type": "Container", "Size": [90, 50], "Controls": [
+									{"Type": "Text", "Text": "This is a very long string!", "Wrap": true}
+								]}
 							]}
 						]}
 					]}
