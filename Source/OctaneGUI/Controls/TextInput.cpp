@@ -220,7 +220,9 @@ TextInput::TextInput(Window* InWindow)
 	: ScrollableViewControl(InWindow)
 {
 	std::shared_ptr<MarginContainer> Margins = Scrollable()->AddControl<MarginContainer>();
-	Margins->SetMargins({ MARGIN, 0.0, MARGIN, 0.0f });
+	Margins
+		->SetMargins({ MARGIN, 0.0, MARGIN, 0.0f })
+		.SetExpand(Expand::None);
 	m_Text = Margins->AddControl<Text>();
 
 	SetInteraction(std::make_shared<TextInputInteraction>(InWindow, this));
