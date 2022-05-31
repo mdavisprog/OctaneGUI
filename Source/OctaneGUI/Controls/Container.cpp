@@ -37,6 +37,7 @@ SOFTWARE.
 #include "ListBox.h"
 #include "MarginContainer.h"
 #include "Panel.h"
+#include "RadioButton.h"
 #include "ScrollableContainer.h"
 #include "ScrollableViewControl.h"
 #include "Separator.h"
@@ -108,6 +109,10 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 	else if (Type == Panel::TypeName())
 	{
 		Result = AddControl<Panel>();
+	}
+	else if (Type == RadioButton::TypeName())
+	{
+		Result = AddControl<RadioButton>();
 	}
 	else if (Type == ScrollableContainer::TypeName())
 	{

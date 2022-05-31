@@ -18,6 +18,7 @@ set(SOURCE
 	Controls/MenuBar.cpp
 	Controls/MenuItem.cpp
 	Controls/Panel.cpp
+	Controls/RadioButton.cpp
 	Controls/ScrollableContainer.cpp
 	Controls/ScrollableViewControl.cpp
 	Controls/ScrollBar.cpp

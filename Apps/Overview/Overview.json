@@ -42,6 +42,19 @@
 								{"Type": "GroupBox", "Text": "Multi line text input", "Controls": [
 									{"Type": "TextInput", "Multiline": true}
 								]}
+							]},
+							{"Type": "GroupBox", "Text": "Check Box", "Controls": [
+								{"Type": "HorizontalContainer", "Spacing": [12, 0], "Controls": [
+									{"Type": "CheckBox", "Text": {"Text": "Two-State"}},
+									{"Type": "CheckBox", "Text": {"Text": "Tri-State"}, "TriState": true}
+								]}
+							]},
+							{"Type": "GroupBox", "Text": "Radio Buttons", "Controls": [
+								{"Type": "HorizontalContainer", "Controls": [
+									{"Type": "RadioButton", "Text": {"Text": "One"}},
+									{"Type": "RadioButton", "Text": {"Text": "Two"}},
+									{"Type": "RadioButton", "Text": {"Text": "Three"}}
+								]}
 							]}
 						]}
 					]}

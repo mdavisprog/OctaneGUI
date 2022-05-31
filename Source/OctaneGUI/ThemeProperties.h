@@ -61,6 +61,11 @@ public:
 		ScrollBar_Handle,
 		ScrollBar_HandleHovered,
 		Tree_Toggle_Icon,
+		RadioButton,
+		RadioButton_Outline,
+		RadioButton_Hovered,
+		RadioButton_Pressed,
+		RadioButton_Selected,
 
 		// Floats
 		Separator_Thickness,
@@ -69,6 +74,7 @@ public:
 		ScrollBar_Size,
 		ScrollBar_HandleMinSize,
 		FontSize,
+		RadioButton_Outline_Thickness,
 
 		// Vector2
 		Button_Padding,

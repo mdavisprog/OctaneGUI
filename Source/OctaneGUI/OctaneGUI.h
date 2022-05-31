@@ -46,6 +46,7 @@ SOFTWARE.
 #include "Controls/MenuBar.h"
 #include "Controls/MenuItem.h"
 #include "Controls/Panel.h"
+#include "Controls/RadioButton.h"
 #include "Controls/ScrollBar.h"
 #include "Controls/ScrollableContainer.h"
 #include "Controls/Splitter.h"

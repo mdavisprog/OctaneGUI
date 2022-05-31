@@ -21,6 +21,11 @@
 	"ScrollBar_Handle": [194, 194, 194, 255],
 	"ScrollBar_HandleHovered": [96, 96, 96, 255],
 	"Tree_Toggle_Icon": [148, 155, 155, 255],
+	"RadioButton": [255, 255, 255, 255],
+	"RadioButton_Outline": [0, 0, 0, 255],
+	"RadioButton_Hovered": [255, 255, 255, 255],
+	"RadioButton_Pressed": [214, 218, 217, 255],
+	"RadioButton_Selected": [0, 0, 0, 255],
 
 	"Separator_Thickness": 1.5,
 	"Separator_Margins": 8.0,
@@ -28,6 +33,7 @@
 	"ScrollBar_Size": 18.0,
 	"ScrollBar_HandleMinSize": 10.0,
 	"FontSize": 18.0,
+	"RadioButton_Outline_Thickness": 1.0,
 
 	"Button_Padding": [12.0, 6.0],
 	"TextSelectable_Padding": [8.0, 6.0],

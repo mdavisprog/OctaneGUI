@@ -138,6 +138,11 @@ void Theme::Load(const Json& Root)
 	Set(ThemeProperties::ScrollBar_Handle, Root["ScrollBar_Handle"]);
 	Set(ThemeProperties::ScrollBar_HandleHovered, Root["ScrollBar_HandleHovered"]);
 	Set(ThemeProperties::Tree_Toggle_Icon, Root["Tree_Toggle_Icon"]);
+	Set(ThemeProperties::RadioButton, Root["RadioButton"]);
+	Set(ThemeProperties::RadioButton_Outline, Root["RadioButton_Outline"]);
+	Set(ThemeProperties::RadioButton_Hovered, Root["RadioButton_Hovered"]);
+	Set(ThemeProperties::RadioButton_Pressed, Root["RadioButton_Pressed"]);
+	Set(ThemeProperties::RadioButton_Selected, Root["RadioButton_Selected"]);
 
 	Set(ThemeProperties::Separator_Thickness, Root["Separator_Thickness"]);
 	Set(ThemeProperties::Separator_Margins, Root["Separator_Margins"]);
@@ -145,6 +150,7 @@ void Theme::Load(const Json& Root)
 	Set(ThemeProperties::ScrollBar_Size, Root["ScrollBar_Size"]);
 	Set(ThemeProperties::ScrollBar_HandleMinSize, Root["ScrollBar_HandleMinSize"]);
 	Set(ThemeProperties::FontSize, Root["FontSize"]);
+	Set(ThemeProperties::RadioButton_Outline_Thickness, Root["RadioButton_Outline_Thickness"]);
 
 	Set(ThemeProperties::Button_Padding, Root["Button_Padding"]);
 	Set(ThemeProperties::TextSelectable_Padding, Root["TextSelectable_Padding"]);
@@ -200,6 +206,11 @@ void Theme::InitializeDefault()
 	m_Properties[ThemeProperties::ScrollBar_Handle] = Color(64, 64, 64, 255);
 	m_Properties[ThemeProperties::ScrollBar_HandleHovered] = Color(96, 96, 96, 255);
 	m_Properties[ThemeProperties::Tree_Toggle_Icon] = Color(255, 255, 255, 255);
+	m_Properties[ThemeProperties::RadioButton] = Color(48, 48, 48, 255);
+	m_Properties[ThemeProperties::RadioButton_Outline] = Color(0, 0, 0, 0);
+	m_Properties[ThemeProperties::RadioButton_Hovered] = Color(48, 63, 169, 255);
+	m_Properties[ThemeProperties::RadioButton_Pressed] = Color(98, 125, 152, 255);
+	m_Properties[ThemeProperties::RadioButton_Selected] = Color(255, 255, 255, 255);
 
 	m_Properties[ThemeProperties::Separator_Thickness] = 1.5f;
 	m_Properties[ThemeProperties::Separator_Margins] = 8.0f;
@@ -207,6 +218,7 @@ void Theme::InitializeDefault()
 	m_Properties[ThemeProperties::ScrollBar_Size] = 15.0f;
 	m_Properties[ThemeProperties::ScrollBar_HandleMinSize] = 10.0f;
 	m_Properties[ThemeProperties::FontSize] = 0.0f;
+	m_Properties[ThemeProperties::RadioButton_Outline_Thickness] = 1.0f;
 
 	m_Properties[ThemeProperties::Button_Padding] = Vector2(12.0f, 6.0f);
 	m_Properties[ThemeProperties::TextSelectable_Padding] = Vector2(8.0f, 6.0f);
