@@ -106,7 +106,9 @@ static const char* ToString(HorizontalAlignment Type)
 	return "Left";
 }
 
-class Control : public Class
+class Control
+	: public Class
+	, public std::enable_shared_from_this<Control>
 {
 	CLASS(Control)
 
@@ -153,12 +155,12 @@ public:
 	const Variant& GetProperty(ThemeProperties::Property Property) const;
 	void ClearProperty(ThemeProperties::Property Property);
 
-	std::shared_ptr<Control> Ref() const;
+	std::shared_ptr<Control> Share();
 
 	template <class T>
-	std::shared_ptr<T> TRef() const
+	std::shared_ptr<T> TShare()
 	{
-		return std::dynamic_pointer_cast<T>(Ref());
+		return std::dynamic_pointer_cast<T>(Share());
 	}
 
 	virtual void OnPaint(Paint& Brush) const;

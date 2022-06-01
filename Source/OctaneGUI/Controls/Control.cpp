@@ -70,6 +70,7 @@ const char* ToString(Expand Value)
 
 Control::Control(Window* InWindow)
 	: Class()
+	, std::enable_shared_from_this<Control>()
 	, m_Window(InWindow)
 {
 }
@@ -279,15 +280,9 @@ void Control::ClearProperty(ThemeProperties::Property Property)
 	m_ThemeProperties.Clear(Property);
 }
 
-std::shared_ptr<Control> Control::Ref() const
+std::shared_ptr<Control> Control::Share()
 {
-	Container* Parent = dynamic_cast<Container*>(m_Parent);
-	if (Parent == nullptr)
-	{
-		return nullptr;
-	}
-
-	return Parent->Ref<Control>(const_cast<Control*>(this));
+	return shared_from_this();
 }
 
 void Control::OnPaint(Paint& Brush) const

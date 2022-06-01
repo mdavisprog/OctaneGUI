@@ -363,10 +363,10 @@ void Inspector::Populate()
 					return;
 				}
 
-				Control const* MetaData = static_cast<Control const*>(Item.MetaData());
+				Control* MetaData = static_cast<Control*>(Item.MetaData());
 				if (MetaData != nullptr)
 				{
-					std::shared_ptr<Control> Ref = MetaData->Ref();
+					std::shared_ptr<Control> Ref = MetaData->Share();
 					if (m_Target->GetMenuBar()->HasControlRecurse(Ref))
 					{
 						m_MenuBarProxy->SetSelected(Ref);
@@ -388,10 +388,10 @@ void Inspector::Populate()
 					return;
 				}
 
-				Control const* MetaData = static_cast<Control const*>(Item.MetaData());
+				Control* MetaData = static_cast<Control*>(Item.MetaData());
 				if (MetaData != nullptr)
 				{
-					std::shared_ptr<Control> Ref = MetaData->Ref();
+					std::shared_ptr<Control> Ref = MetaData->Share();
 					if (m_Target->GetMenuBar()->HasControlRecurse(Ref))
 					{
 						m_MenuBarProxy->SetHovered(Ref);
