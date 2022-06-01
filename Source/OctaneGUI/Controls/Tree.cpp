@@ -316,7 +316,7 @@ std::shared_ptr<Tree> Tree::AddChild(const char* Text)
 					m_OnToggled(Item);
 				}
 			})
-		.SetOnInvalidate([this](Control* Focus, InvalidateType Type) -> void
+		.SetOnInvalidate([this](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
 			{
 				HandleInvalidate(Focus, Type);
 

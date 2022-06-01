@@ -56,11 +56,11 @@ Table& Table::SetColumns(int Columns)
 	m_Row->ClearControls();
 	for (int I = 0; I < Columns; I++)
 	{
-		m_Row->AddControl<TableColumn>()->SetOnInvalidate([this](Control* Focus, InvalidateType Type) -> void
+		m_Row->AddControl<TableColumn>()->SetOnInvalidate([this](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
 			{
 				if (Type != InvalidateType::Paint)
 				{
-					Invalidate(this, Type);
+					Invalidate(Type);
 				}
 				else
 				{

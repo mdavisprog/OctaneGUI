@@ -55,7 +55,7 @@ void Popup::Open(const std::shared_ptr<Container>& InContainer, bool Modal)
 
 		if (m_Container)
 		{
-			m_Container->SetOnInvalidate([this](Control* Focus, InvalidateType Type) -> void
+			m_Container->SetOnInvalidate([this](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
 				{
 					if (m_OnInvalidate)
 					{

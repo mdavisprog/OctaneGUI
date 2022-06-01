@@ -27,6 +27,7 @@ SOFTWARE.
 #pragma once
 
 #include <functional>
+#include <memory>
 
 namespace OctaneGUI
 {
@@ -50,7 +51,7 @@ typedef std::function<void()> OnEmptySignature;
 typedef std::function<void(const Button&)> OnButtonSignature;
 typedef std::function<void(const Container&)> OnContainerSignature;
 typedef std::function<void(const Control&)> OnControlSignature;
-typedef std::function<void(Control*, InvalidateType)> OnInvalidateSignature;
+typedef std::function<void(std::shared_ptr<Control>, InvalidateType)> OnInvalidateSignature;
 typedef std::function<void(const ScrollBar&)> OnScrollBarSignature;
 typedef std::function<void(TextSelectable&)> OnTextSelectableSignature;
 typedef std::function<void(Tree&)> OnTreeSignature;

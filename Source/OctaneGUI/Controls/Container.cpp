@@ -170,7 +170,7 @@ Container* Container::InsertControl(const std::shared_ptr<Control>& Item, int Po
 	}
 
 	Item->SetParent(this);
-	Item->SetOnInvalidate([this](Control* Focus, InvalidateType Type)
+	Item->SetOnInvalidate([this](std::shared_ptr<Control> Focus, InvalidateType Type)
 		{
 			HandleInvalidate(Focus, Type);
 		});
@@ -184,7 +184,7 @@ Container* Container::InsertControl(const std::shared_ptr<Control>& Item, int Po
 		m_Controls.push_back(Item);
 	}
 
-	Invalidate(Item.get(), InvalidateType::Paint);
+	Invalidate(Item, InvalidateType::Paint);
 	Invalidate(InvalidateType::Layout);
 	OnInsertControl(Item);
 
@@ -388,7 +388,7 @@ bool Container::IsInLayout() const
 	return m_InLayout;
 }
 
-void Container::HandleInvalidate(Control* Focus, InvalidateType Type)
+void Container::HandleInvalidate(std::shared_ptr<Control> Focus, InvalidateType Type)
 {
 	if (m_InLayout && Type != InvalidateType::Paint)
 	{

@@ -182,7 +182,7 @@ public:
 	virtual void OnThemeLoaded();
 
 protected:
-	void Invalidate(Control* Focus, InvalidateType Type) const;
+	void Invalidate(std::shared_ptr<Control> Focus, InvalidateType Type) const;
 
 	virtual bool IsFixedSize() const;
 

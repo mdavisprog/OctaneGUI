@@ -91,7 +91,7 @@ public:
 
 protected:
 	bool IsInLayout() const;
-	void HandleInvalidate(Control* Focus, InvalidateType Type);
+	void HandleInvalidate(std::shared_ptr<Control> Focus, InvalidateType Type);
 
 	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const;
 	virtual void OnInsertControl(const std::shared_ptr<Control>& Item);

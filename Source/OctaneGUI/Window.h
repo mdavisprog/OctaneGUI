@@ -141,7 +141,7 @@ private:
 	Window();
 
 	void Populate(ControlList& List) const;
-	void RequestLayout(Container* Request);
+	void RequestLayout(std::shared_ptr<Container> Request);
 	void UpdateTimers();
 	void UpdateFocus(const std::shared_ptr<Control>& Focus);
 
@@ -159,7 +159,7 @@ private:
 	Popup m_Popup {};
 	bool m_Visible { false };
 	bool m_RequestClose { false };
-	std::vector<Container*> m_LayoutRequests;
+	std::vector<std::weak_ptr<Container>> m_LayoutRequests;
 
 	std::vector<TimerHandle> m_Timers {};
 

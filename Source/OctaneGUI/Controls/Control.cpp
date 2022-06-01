@@ -248,7 +248,7 @@ void Control::Invalidate(InvalidateType Type)
 {
 	if (m_OnInvalidate)
 	{
-		m_OnInvalidate(this, Type);
+		m_OnInvalidate(Share(), Type);
 	}
 }
 
@@ -380,9 +380,9 @@ void Control::OnThemeLoaded()
 {
 }
 
-void Control::Invalidate(Control* Focus, InvalidateType Type) const
+void Control::Invalidate(std::shared_ptr<Control> Focus, InvalidateType Type) const
 {
-	if (Focus == nullptr)
+	if (!Focus)
 	{
 		return;
 	}

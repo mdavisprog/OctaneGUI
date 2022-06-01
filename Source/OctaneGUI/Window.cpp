@@ -47,11 +47,11 @@ namespace OctaneGUI
 Window::Window(Application* InApplication)
 	: m_Application(InApplication)
 {
-	m_Popup.SetOnInvalidate([=](Control* Focus, InvalidateType Type) -> void
+	m_Popup.SetOnInvalidate([=](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
 		{
 			if ((Type == InvalidateType::Layout || Type == InvalidateType::Both))
 			{
-				RequestLayout(dynamic_cast<Container*>(Focus));
+				RequestLayout(std::dynamic_pointer_cast<Container>(Focus));
 			}
 
 			m_Repaint = true;
@@ -155,7 +155,7 @@ void Window::SetPopup(const std::shared_ptr<Container>& Popup, OnContainerSignat
 {
 	m_Popup.Open(Popup, Modal);
 	m_OnPopupClose = Callback;
-	RequestLayout(Popup.get());
+	RequestLayout(Popup);
 }
 
 void Window::ClosePopup()
@@ -332,11 +332,11 @@ void Window::CreateContainer()
 	m_Container
 		->SetSpacing({ 0.0f, 0.0f })
 		->SetExpand(Expand::Both)
-		->SetOnInvalidate([=](Control* Focus, InvalidateType Type) -> void
+		->SetOnInvalidate([=](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
 			{
 				if ((Type == InvalidateType::Layout || Type == InvalidateType::Both))
 				{
-					RequestLayout(dynamic_cast<Container*>(Focus));
+					RequestLayout(std::dynamic_pointer_cast<Container>(Focus));
 				}
 
 				m_Repaint = true;
@@ -399,9 +399,12 @@ void Window::Update()
 
 	if (!m_LayoutRequests.empty())
 	{
-		for (Container* Item : m_LayoutRequests)
+		for (const std::weak_ptr<Container>& Item : m_LayoutRequests)
 		{
-			Item->Layout();
+			if (!Item.expired())
+			{
+				Item.lock()->Layout();
+			}
 		}
 		m_LayoutRequests.clear();
 
@@ -568,14 +571,24 @@ void Window::Populate(ControlList& List) const
 	}
 }
 
-void Window::RequestLayout(Container* Request)
+void Window::RequestLayout(std::shared_ptr<Container> Request)
 {
-	if (Request == nullptr)
+	if (!Request)
 	{
 		return;
 	}
 
-	if (std::find(m_LayoutRequests.begin(), m_LayoutRequests.end(), Request) == m_LayoutRequests.end())
+	bool Found = false;
+	for (const std::weak_ptr<Container>& Item : m_LayoutRequests)
+	{
+		if (!Item.expired() && Item.lock() == Request)
+		{
+			Found = true;
+			break;
+		}
+	}
+	
+	if (!Found)
 	{
 		m_LayoutRequests.push_back(Request);
 	}
