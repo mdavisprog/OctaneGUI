@@ -403,8 +403,7 @@ void Inspector::Populate()
 						m_MenuBarProxy->Clear();
 					}
 				}
-			})
-		.SetExpand(Expand::Width);
+			});
 	PopulateTree(Root, m_Target->GetRootContainer());
 	m_Tree = Root;
 }
