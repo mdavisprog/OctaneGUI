@@ -24,26 +24,37 @@ else()
 		message(FATAL_ERROR, "32-bit SFML libraries not supported.")
 	else()
 		if(WIN32)
-			set(SFML_BIN_PATH "${PROJECT_SOURCE_DIR}/lib/SFML/bin/x64")
-			set(SFML_LIBS_PATH "${PROJECT_SOURCE_DIR}/lib/SFML/lib/x64")
+			set(SFML_BIN_PATH "${PROJECT_SOURCE_DIR}/lib/SFML/bin/x64/${CMAKE_BUILD_TYPE}")
+			set(SFML_LIBS_PATH "${PROJECT_SOURCE_DIR}/lib/SFML/lib/x64/${CMAKE_BUILD_TYPE}")
 		else()
 			set(SFML_BIN_PATH "${PROJECT_SOURCE_DIR}/lib/SFML/lib")
 			set(SFML_LIBS_PATH "${PROJECT_SOURCE_DIR}/lib/SFML/lib")
 		endif()
 	endif()
 	set(
-		SFML_LIBS 
+		SFML_LIBS
 		sfml-graphics
 		sfml-network
 		sfml-system
 		sfml-window
 	)
 	if(WIN32)
-		set(
-			SFML_LIBS
-			${SFML_LIBS}
-			sfml-main
-		)
+		if(${CMAKE_BUILD_TYPE} MATCHES Debug)
+			set(
+				SFML_LIBS
+				sfml-graphics-d
+				sfml-network-d
+				sfml-system-d
+				sfml-window-d
+				sfml-main-d
+			)
+		else()
+			set(
+				SFML_LIBS
+				${SFML_LIBS}
+				sfml-main
+			)
+		endif()
 	endif()
 
 	set(FRONTEND_INCLUDE ${SFML_INCLUDE})

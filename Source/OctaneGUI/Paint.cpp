@@ -227,7 +227,7 @@ void Paint::Circle(const Vector2& Center, float Radius, const Color& Tint, int S
 		m_Buffer.AddVertex(Center, Tint);
 		m_Buffer.AddVertex(Vertices[I], Tint);
 		m_Buffer.AddVertex(Vertices[J], Tint);
-		
+
 		m_Buffer.AddIndex(Offset);
 		m_Buffer.AddIndex(Offset + 1);
 		m_Buffer.AddIndex(Offset + 2);

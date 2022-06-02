@@ -587,7 +587,7 @@ void Window::RequestLayout(std::shared_ptr<Container> Request)
 			break;
 		}
 	}
-	
+
 	if (!Found)
 	{
 		m_LayoutRequests.push_back(Request);
