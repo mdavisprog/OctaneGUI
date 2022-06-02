@@ -30,7 +30,7 @@ BraceWrapping:
   IndentBraces: false
 BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Custom
-BreakInheritanceList: AfterColon
+BreakInheritanceList: BeforeComma
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
 BreakStringLiterals: false
@@ -44,6 +44,7 @@ IndentCaseLabels: false
 IndentPPDirectives: BeforeHash
 IndentWidth: 4
 LambdaBodyIndentation: Signature
+Language: Cpp
 NamespaceIndentation: None
 PointerAlignment: Left
 SortIncludes: true
