@@ -1,4 +1,4 @@
-set(TARGET SFML_Frontend)
+set(TARGET Frontend)
 
 set(
 	SOURCE
@@ -13,7 +13,10 @@ add_library(
 
 target_include_directories(
 	${TARGET}
-	PUBLIC ${SFML_INCLUDE}
-	PUBLIC ${STB_INCLUDE}
 	PUBLIC ${OctaneGUI_INCLUDE}
+)
+
+target_link_libraries(
+	${TARGET}
+	sfml-graphics
 )

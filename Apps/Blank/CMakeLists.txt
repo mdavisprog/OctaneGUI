@@ -11,14 +11,9 @@ target_include_directories(
 	PUBLIC ${FRONTEND_INCLUDE}
 )
 
-target_link_directories(
-	${TARGET}
-	PUBLIC ${FRONTEND_LIBS_PATH}
-)
-
 target_link_libraries(
 	${TARGET}
-	${FRONTEND_LIBS}
+	Frontend
 	OctaneGUI
 )
 

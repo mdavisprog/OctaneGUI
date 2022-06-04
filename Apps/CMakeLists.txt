@@ -14,11 +14,3 @@ file(
     LIST_DIRECTORIES TRUE
     ${FRONTEND_BIN_PATH}/*
 )
-
-foreach(ITEM ${FRONTEND_ITEMS})
-    get_filename_component(ITEM_NAME ${ITEM} NAME)
-    if(NOT EXISTS ${BIN_DIR}/${ITEM_NAME} AND NOT ${ITEM_NAME} MATCHES "^\\..*")
-        message("Copying external dependency ${ITEM_NAME} to ${BIN_DIR}.")
-        file(COPY ${ITEM} DESTINATION ${BIN_DIR})
-    endif()
-endforeach()
