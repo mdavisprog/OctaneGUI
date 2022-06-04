@@ -22,7 +22,11 @@ message("Desired rendering library: ${RENDERING}")
 # Find the appropriate packages for each windowing/rendering libraries.
 if(${WINDOWING} MATCHES SFML OR ${RENDERING} MATCHES SFML)
 	message("Loading SFML package")
-	find_package(SFML COMPONENTS system window graphics main REQUIRED)
+	set(SFML_LIBS system window graphics)
+	if(WIN32)
+		set(SFML_LIBS ${SFML_LIBS} main)
+	endif()
+	find_package(SFML COMPONENTS ${SFML_LIBS} REQUIRED)
 endif()
 
 if(APPLE)
