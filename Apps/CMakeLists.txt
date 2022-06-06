@@ -8,9 +8,3 @@ add_subdirectory(Blank)
 add_subdirectory(Hello)
 add_subdirectory(Overview)
 add_subdirectory(Tests)
-
-file(
-    GLOB FRONTEND_ITEMS
-    LIST_DIRECTORIES TRUE
-    ${FRONTEND_BIN_PATH}/*
-)

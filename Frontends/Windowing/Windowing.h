@@ -26,16 +26,24 @@ SOFTWARE.
 
 #pragma once
 
+#include <string>
+
 namespace OctaneGUI
 {
 
-class Application;
+class Event;
+class Window;
 
 }
 
-namespace Interface
+namespace Windowing
 {
 
-void Initialize(OctaneGUI::Application&);
+void CreateWindow(OctaneGUI::Window* Window);
+void DestroyWindow(OctaneGUI::Window* Window);
+OctaneGUI::Event Event(OctaneGUI::Window* Window);
+void Exit();
+std::u32string GetClipboardContents();
+void SetWindowTitle(OctaneGUI::Window* Window, const char* Title);
 
 }

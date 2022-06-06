@@ -7,28 +7,6 @@ project(OctaneGUI)
 set(CMAKE_CXX_STANDARD 17)
 set(BIN_DIR ${PROJECT_SOURCE_DIR}/bin)
 
-# Default settings for each platform.
-if(APPLE)
-	set(WINDOWING SDL)
-	set(RENDERING METAL)
-else()
-	set(WINDOWING SFML)
-	set(RENDERING SFML)
-endif()
-
-message("Desired windowing library: ${WINDOWING}")
-message("Desired rendering library: ${RENDERING}")
-
-# Find the appropriate packages for each windowing/rendering libraries.
-if(${WINDOWING} MATCHES SFML OR ${RENDERING} MATCHES SFML)
-	message("Loading SFML package")
-	set(SFML_LIBS system window graphics)
-	if(WIN32)
-		set(SFML_LIBS ${SFML_LIBS} main)
-	endif()
-	find_package(SFML COMPONENTS ${SFML_LIBS} REQUIRED)
-endif()
-
 if(APPLE)
 	set(SDL_INCLUDE "${PROJECT_SOURCE_DIR}/lib/SDL2.framework/Headers")
 	find_library(

@@ -24,31 +24,17 @@ SOFTWARE.
 
 */
 
-#include "../Interface.h"
+#include "../Windowing.h"
 #include "OctaneGUI/OctaneGUI.h"
 #include "SFML/Graphics.hpp"
 
+#include <memory>
 #include <unordered_map>
 
-namespace Interface
+namespace Windowing
 {
 
-class Container
-{
-public:
-	Container()
-	{
-	}
-
-	~Container()
-	{
-	}
-
-	sf::RenderWindow* Renderer;
-};
-
-std::unordered_map<OctaneGUI::Window*, Container> Windows;
-std::vector<sf::Texture*> Textures;
+std::unordered_map<OctaneGUI::Window*, std::shared_ptr<sf::RenderWindow>> s_Windows {};
 
 OctaneGUI::Keyboard::Key GetKeyCode(sf::Keyboard::Key Key)
 {
@@ -89,44 +75,40 @@ OctaneGUI::Mouse::Button GetMouseButton(sf::Mouse::Button Button)
 	return OctaneGUI::Mouse::Button::Left;
 }
 
-void OnCreateWindow(OctaneGUI::Window* Window)
+void CreateWindow(OctaneGUI::Window* Window)
 {
-	if (Windows.find(Window) == Windows.end())
+	if (s_Windows.find(Window) == s_Windows.end())
 	{
-		OctaneGUI::Vector2 Size = Window->GetSize();
-
-		Container& Item = Windows[Window];
-		Item.Renderer = new sf::RenderWindow(sf::VideoMode((int)Size.X, (int)Size.Y), Window->GetTitle());
-		Item.Renderer->setFramerateLimit(0);
-		Item.Renderer->setVerticalSyncEnabled(false);
+		const OctaneGUI::Vector2 Size = Window->GetSize();
+		sf::RenderWindow* RenderWindow = new sf::RenderWindow(sf::VideoMode((int)Size.X, (int)Size.Y), Window->GetTitle());
+		RenderWindow->setFramerateLimit(0);
+		RenderWindow->setVerticalSyncEnabled(false);
+		s_Windows[Window] = std::shared_ptr<sf::RenderWindow>(RenderWindow);
 	}
 }
 
-void OnDestroyWindow(OctaneGUI::Window* Window)
+void DestroyWindow(OctaneGUI::Window* Window)
 {
-	auto Iter = Windows.find(Window);
-	if (Iter == Windows.end())
+	if (s_Windows.find(Window) == s_Windows.end())
 	{
 		return;
 	}
 
-	Container& Item = Windows[Window];
-	Item.Renderer->close();
-
-	delete Item.Renderer;
-	Windows.erase(Iter);
+	s_Windows[Window]->close();
+	s_Windows.erase(Window);
 }
 
-OctaneGUI::Event OnEvent(OctaneGUI::Window* Window)
+OctaneGUI::Event Event(OctaneGUI::Window* Window)
 {
-	if (Windows.find(Window) == Windows.end())
+	if (s_Windows.find(Window) == s_Windows.end())
 	{
 		return OctaneGUI::Event(OctaneGUI::Event::Type::None);
 	}
 
-	Container& Item = Windows[Window];
+	const std::shared_ptr<sf::RenderWindow>& RenderWindow = s_Windows[Window];
+
 	sf::Event Event;
-	if (Item.Renderer->pollEvent(Event))
+	if (RenderWindow->pollEvent(Event))
 	{
 		switch (Event.type)
 		{
@@ -172,7 +154,7 @@ OctaneGUI::Event OnEvent(OctaneGUI::Window* Window)
 			return OctaneGUI::Event(OctaneGUI::Event::Text(Event.text.unicode));
 
 		case sf::Event::Resized:
-			Item.Renderer->setView(sf::View(sf::FloatRect(0.0f, 0.0f, (float)Event.size.width, (float)Event.size.height)));
+			RenderWindow->setView(sf::View(sf::FloatRect(0.0f, 0.0f, (float)Event.size.width, (float)Event.size.height)));
 			return OctaneGUI::Event(OctaneGUI::Event::WindowResized((float)Event.size.width, (float)Event.size.height));
 
 		default: break;
@@ -182,107 +164,17 @@ OctaneGUI::Event OnEvent(OctaneGUI::Window* Window)
 	return OctaneGUI::Event(OctaneGUI::Event::Type::None);
 }
 
-void OnPaint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& Buffer)
+void Exit()
 {
-	if (Windows.find(Window) == Windows.end())
+	for (const std::pair<OctaneGUI::Window*, std::shared_ptr<sf::RenderWindow>>& Item : s_Windows)
 	{
-		return;
+		Item.second->close();
 	}
 
-	Container& Item = Windows[Window];
-
-	Item.Renderer->clear();
-
-	const std::vector<OctaneGUI::Vertex>& Vertices = Buffer.GetVertices();
-	const std::vector<uint32_t>& Indices = Buffer.GetIndices();
-
-	for (const OctaneGUI::DrawCommand& Command : Buffer.Commands())
-	{
-		sf::VertexArray Array(sf::Triangles, Command.IndexCount());
-		sf::Texture* Texture = nullptr;
-
-		if (Command.TextureID() > 0)
-		{
-			for (sf::Texture* Value : Textures)
-			{
-				if (Value->getNativeHandle() == Command.TextureID())
-				{
-					Texture = Value;
-					break;
-				}
-			}
-		}
-
-		for (size_t I = 0; I < Command.IndexCount(); I++)
-		{
-			uint32_t Index = Indices[I + Command.IndexOffset()];
-			const OctaneGUI::Vertex& Vertex = Vertices[Index + Command.VertexOffset()];
-			OctaneGUI::Vector2 Position = Vertex.Position;
-			OctaneGUI::Vector2 TexCoords = Vertex.TexCoords;
-			OctaneGUI::Color Color = Vertex.Col;
-
-			if (Texture != nullptr)
-			{
-				// Convert from normalized coordintaes to pixel space.
-				TexCoords.X *= Texture->getSize().x;
-				TexCoords.Y *= Texture->getSize().y;
-			}
-
-			Array[I].position = sf::Vector2f(Position.X, Position.Y);
-			Array[I].texCoords = sf::Vector2f(TexCoords.X, TexCoords.Y);
-			Array[I].color = sf::Color(Color.R, Color.G, Color.B, Color.A);
-		}
-
-		sf::RenderStates RenderStates;
-		RenderStates.texture = Texture;
-
-		const OctaneGUI::Rect Clip = Command.Clip();
-		if (!Clip.IsZero())
-		{
-			const sf::Vector2f Size((float)Item.Renderer->getSize().x, (float)Item.Renderer->getSize().y);
-			const OctaneGUI::Vector2 ClipSize = Clip.GetSize();
-			sf::View View(sf::FloatRect(Clip.Min.X, Clip.Min.Y, ClipSize.X, ClipSize.Y));
-			View.setViewport(sf::FloatRect(Clip.Min.X / Size.x, Clip.Min.Y / Size.y, ClipSize.X / Size.x, ClipSize.Y / Size.y));
-			Item.Renderer->setView(View);
-		}
-
-		Item.Renderer->draw(Array, RenderStates);
-		Item.Renderer->setView(sf::View(sf::FloatRect(0.0f, 0.0f, Item.Renderer->getSize().x, Item.Renderer->getSize().y)));
-	}
-
-	Item.Renderer->display();
+	s_Windows.clear();
 }
 
-uint32_t OnLoadTexture(const std::vector<uint8_t>& Data, uint32_t Width, uint32_t Height)
-{
-	sf::Texture* Texture = new sf::Texture();
-	Texture->setSmooth(true);
-	Texture->create(Width, Height);
-	Texture->update(Data.data(), Width, Height, 0, 0);
-	Textures.push_back(Texture);
-	return Texture->getNativeHandle();
-}
-
-void OnExit()
-{
-	for (sf::Texture* Texture : Textures)
-	{
-		delete Texture;
-	}
-
-	Textures.clear();
-
-	for (auto Iter : Windows)
-	{
-		Container& Item = Iter.second;
-		Item.Renderer->close();
-		delete Item.Renderer;
-	}
-
-	Windows.clear();
-}
-
-std::u32string OnGetClipboardContents()
+std::u32string GetClipboardContents()
 {
 	std::u32string Result;
 
@@ -294,28 +186,19 @@ std::u32string OnGetClipboardContents()
 	return Result;
 }
 
-void OnSetWindowTitle(OctaneGUI::Window* Window, const char* Title)
+void SetWindowTitle(OctaneGUI::Window* Window, const char* Title)
 {
-	if (Windows.find(Window) == Windows.end())
+	if (s_Windows.find(Window) == s_Windows.end())
 	{
 		return;
 	}
 
-	Container& Item = Windows[Window];
-	Item.Renderer->setTitle(Title);
+	s_Windows[Window]->setTitle(Title);
 }
 
-void Initialize(OctaneGUI::Application& Application)
+const std::shared_ptr<sf::RenderWindow>& Get(OctaneGUI::Window* Window)
 {
-	Application
-		.SetOnCreateWindow(OnCreateWindow)
-		.SetOnDestroyWindow(OnDestroyWindow)
-		.SetOnPaint(OnPaint)
-		.SetOnEvent(OnEvent)
-		.SetOnLoadTexture(OnLoadTexture)
-		.SetOnExit(OnExit)
-		.SetOnGetClipboardContents(OnGetClipboardContents)
-		.SetOnSetWindowTitle(OnSetWindowTitle);
+	return s_Windows[Window];
 }
 
 }

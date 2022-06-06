@@ -1,4 +1,4 @@
-#include "Interface.h"
+#include "Frontend.h"
 #include "OctaneGUI/OctaneGUI.h"
 
 #include <fstream>
@@ -24,7 +24,7 @@ std::string GetContents(const char* Filename)
 int main(int argc, char **argv)
 {
 	OctaneGUI::Application Application;
-	Interface::Initialize(Application);
+	Frontend::Initialize(Application);
 
 	std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
 	Application.Initialize(GetContents("Blank.json").c_str(), WindowControls);
