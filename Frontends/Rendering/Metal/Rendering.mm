@@ -24,39 +24,21 @@ SOFTWARE.
 
 */
 
-#include "../Interface.h"
+#include "../Rendering.h"
 #include "OctaneGUI/OctaneGUI.h"
-#include "SDL.h"
 
-#include <cassert>
+#if SDL2
+	#include "SDL.h"
+	#include "../../Windowing/SDL2/Interface.h"
+#endif
+
 #include <unordered_map>
-#include <vector>
 
 #import <Metal/Metal.h>
 #import <QuartzCore/QuartzCore.h>
 
-namespace Interface
+namespace Rendering
 {
-
-struct Container
-{
-public:
-	Container()
-		: Window(nullptr)
-		, Renderer(nullptr)
-	{}
-
-	~Container()
-	{
-		VertexBuffer = nullptr;
-		IndexBuffer = nullptr;
-	}
-
-	SDL_Window* Window;
-	SDL_Renderer* Renderer;
-	id<MTLBuffer> VertexBuffer;
-	id<MTLBuffer> IndexBuffer;
-};
 
 struct TextureID
 {
@@ -83,14 +65,12 @@ private:
 
 uint32_t TextureID::GlobalID = 0;
 
-std::unordered_map<OctaneGUI::Window*, Container> Windows;
-std::vector<TextureID> Textures;
-id<MTLDevice> g_Device;
-id<MTLCommandQueue> g_Queue;
-id<MTLDepthStencilState> g_DepthStencil;
-id<MTLRenderPipelineState> g_RenderPipelineTextured;
-id<MTLRenderPipelineState> g_RenderPipeline;
-MTLRenderPassDescriptor* g_RenderPass;
+struct Buffers
+{
+public:
+	id<MTLBuffer> Vertex;
+	id<MTLBuffer> Index;
+};
 
 // The rendering code path used in this implementation is copied from the DearImGui metal implementation
 // with some slight adjustments made to fit this project's needs.
@@ -139,9 +119,37 @@ fragment half4 Fragment(VertexOut In [[stage_in]])
 }
 )";
 
+std::unordered_map<OctaneGUI::Window*, Buffers> g_Buffers;
+std::vector<TextureID> g_Textures;
+id<MTLDevice> g_Device;
+id<MTLCommandQueue> g_Queue;
+id<MTLDepthStencilState> g_DepthStencil;
+id<MTLRenderPipelineState> g_RenderPipelineTextured;
+id<MTLRenderPipelineState> g_RenderPipeline;
+MTLRenderPassDescriptor* g_RenderPass;
+
+CAMetalLayer* GetLayer(OctaneGUI::Window* Window, OctaneGUI::Vector2& Size)
+{
+	Size = {};
+
+#if SDL2
+	SDL_Window* Instance = Windowing::Get(Window);
+	SDL_Renderer* Renderer = SDL_GetRenderer(Instance);
+
+	int Width, Height;
+	SDL_GetRendererOutputSize(Renderer, &Width, &Height);
+	Size.X = (float)Width;
+	Size.Y = (float)Height;
+
+	return (__bridge CAMetalLayer*)SDL_RenderGetMetalLayer(Renderer);
+#endif
+
+	return nullptr;
+}
+
 id<MTLTexture> GetTexture(uint32_t ID)
 {
-	for (const TextureID& Texture : Textures)
+	for (const TextureID& Texture : g_Textures)
 	{
 		if (Texture.ID == ID)
 		{
@@ -152,54 +160,13 @@ id<MTLTexture> GetTexture(uint32_t ID)
 	return nullptr;
 }
 
-OctaneGUI::Keyboard::Key GetKey(SDL_Keycode Code)
+void Initialize()
 {
-	switch (Code)
-	{
-	case SDLK_p: return OctaneGUI::Keyboard::Key::P;
-	case SDLK_v: return OctaneGUI::Keyboard::Key::V;
-	case SDLK_ESCAPE: return OctaneGUI::Keyboard::Key::Escape;
-	case SDLK_BACKSPACE: return OctaneGUI::Keyboard::Key::Backspace;
-	case SDLK_DELETE: return OctaneGUI::Keyboard::Key::Delete;
-	case SDLK_LEFT: return OctaneGUI::Keyboard::Key::Left;
-	case SDLK_RIGHT: return OctaneGUI::Keyboard::Key::Right;
-	case SDLK_UP: return OctaneGUI::Keyboard::Key::Up;
-	case SDLK_DOWN: return OctaneGUI::Keyboard::Key::Down;
-	case SDLK_HOME: return OctaneGUI::Keyboard::Key::Home;
-	case SDLK_END: return OctaneGUI::Keyboard::Key::End;
-	case SDLK_LSHIFT: return OctaneGUI::Keyboard::Key::LeftShift;
-	case SDLK_RSHIFT: return OctaneGUI::Keyboard::Key::RightShift;
-	case SDLK_LCTRL: return OctaneGUI::Keyboard::Key::LeftControl;
-	case SDLK_RCTRL: return OctaneGUI::Keyboard::Key::RightControl;
-	case SDLK_RETURN: return OctaneGUI::Keyboard::Key::Enter;
-	default: break;
-	}
+#if SDL2
+	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "metal");
+#endif
 
-	return OctaneGUI::Keyboard::Key::None;
-}
-
-OctaneGUI::Mouse::Button GetMouseButton(uint8_t Button)
-{
-	switch (Button)
-	{
-	case SDL_BUTTON_RIGHT: return OctaneGUI::Mouse::Button::Right;
-	case SDL_BUTTON_MIDDLE: return OctaneGUI::Mouse::Button::Middle;
-	case SDL_BUTTON_LEFT:
-	default: break;
-	}
-
-	return OctaneGUI::Mouse::Button::Left;
-}
-
-void DestroyWindow(const Container& InContainer)
-{
-	SDL_DestroyWindow(InContainer.Window);
-	SDL_DestroyRenderer(InContainer.Renderer);
-}
-
-// TODO: Maybe check for any failures and return a result?
-void InitializeDevice(id<MTLDevice> Device)
-{
+	g_Device = MTLCreateSystemDefaultDevice();
 	g_Queue = [g_Device newCommandQueue];
 	g_RenderPass = [MTLRenderPassDescriptor new];
 
@@ -266,182 +233,22 @@ void InitializeDevice(id<MTLDevice> Device)
 	}
 }
 
-void OnCreateWindow(OctaneGUI::Window* Window)
+void Paint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& VertexBuffer)
 {
-	SDL_Window* Instance = SDL_CreateWindow(
-		Window->GetTitle(),
-		SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED,
-		(int)Window->GetSize().X,
-		(int)Window->GetSize().Y,
-		SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI
-	);
-
-	if (Instance == nullptr)
+	OctaneGUI::Vector2 OutputSize;
+	CAMetalLayer* Layer = GetLayer(Window, OutputSize);
+	if (Layer == nullptr)
 	{
 		return;
 	}
 
-	SDL_Renderer* Renderer = SDL_CreateRenderer(
-		Instance,
-		-1,
-		SDL_RENDERER_ACCELERATED
-	);
-
-	if (Renderer == nullptr)
+	if (g_Buffers.find(Window) == g_Buffers.end())
 	{
-		SDL_DestroyWindow(Instance);
-		return;
+		g_Buffers[Window].Vertex = [g_Device newBufferWithLength:1024 * 1024 options:MTLResourceStorageModeShared];
+		g_Buffers[Window].Index = [g_Device newBufferWithLength:1024 * 1024 options:MTLResourceStorageModeShared];
 	}
 
-	CAMetalLayer* Layer = (__bridge CAMetalLayer*)SDL_RenderGetMetalLayer(Renderer);
-	Layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
-
-	Container& Item = Windows[Window];
-	Item.Window = Instance;
-	Item.Renderer = Renderer;
-	Item.VertexBuffer = [g_Device newBufferWithLength:1024 * 1024 options:MTLResourceStorageModeShared];
-	Item.IndexBuffer = [g_Device newBufferWithLength:1024 * 1024 options:MTLResourceStorageModeShared];
-}
-
-void OnDestroyWindow(OctaneGUI::Window* Window)
-{
-	if (Windows.find(Window) == Windows.end())
-	{
-		return;
-	}
-
-	DestroyWindow(Windows[Window]);
-	Windows.erase(Window);
-}
-
-OctaneGUI::Event OnEvent(OctaneGUI::Window* Window)
-{
-	if (Windows.find(Window) == Windows.end())
-	{
-		return OctaneGUI::Event(OctaneGUI::Event::Type::WindowClosed);
-	}
-
-	std::vector<SDL_Event> EventsToPush;
-	const Container& Item = Windows[Window];
-	const uint32_t WindowID = SDL_GetWindowID(Item.Window);
-	SDL_Event Event;
-	while (SDL_PollEvent(&Event))
-	{
-		switch (Event.type)
-		{
-		case SDL_QUIT: return OctaneGUI::Event(OctaneGUI::Event::Type::WindowClosed);
-
-		case SDL_KEYDOWN:
-		case SDL_KEYUP:
-		{
-			if (WindowID != Event.key.windowID)
-			{
-				EventsToPush.push_back(Event);
-				break;
-			}
-
-			return OctaneGUI::Event(
-				Event.key.type == SDL_KEYDOWN ? OctaneGUI::Event::Type::KeyPressed : OctaneGUI::Event::Type::KeyReleased,
-				OctaneGUI::Event::Key(GetKey(Event.key.keysym.sym))
-			);
-		}
-		
-		case SDL_MOUSEMOTION:
-		{
-			if (WindowID != Event.motion.windowID)
-			{
-				EventsToPush.push_back(Event);
-				break;
-			}
-
-			return OctaneGUI::Event(
-				OctaneGUI::Event::MouseMove(Event.motion.x, Event.motion.y)
-			);
-		}
-
-		case SDL_MOUSEBUTTONDOWN:
-		case SDL_MOUSEBUTTONUP:
-		{
-			if (WindowID != Event.button.windowID)
-			{
-				EventsToPush.push_back(Event);
-				break;
-			}
-
-			return OctaneGUI::Event(
-				Event.button.type == SDL_MOUSEBUTTONDOWN ? OctaneGUI::Event::Type::MousePressed : OctaneGUI::Event::Type::MouseReleased,
-				OctaneGUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y)
-			);
-		}
-
-		case SDL_MOUSEWHEEL:
-		{
-			if (WindowID != Event.wheel.windowID)
-			{
-				EventsToPush.push_back(Event);
-				break;
-			}
-
-			return OctaneGUI::Event(
-				OctaneGUI::Event::MouseWheel(Event.wheel.x, Event.wheel.y)
-			);
-		}
-
-		case SDL_TEXTINPUT: 
-		{
-			if (WindowID != Event.text.windowID)
-			{
-				EventsToPush.push_back(Event);
-				break;
-			}
-
-			return OctaneGUI::Event(
-				OctaneGUI::Event::Text(*(uint32_t*)Event.text.text)
-			);
-		}
-
-		case SDL_WINDOWEVENT:
-		{
-			if (WindowID != Event.window.windowID)
-			{
-				EventsToPush.push_back(Event);
-				break;
-			}
-
-			switch (Event.window.event)
-			{
-			case SDL_WINDOWEVENT_RESIZED: return OctaneGUI::Event(
-				OctaneGUI::Event::WindowResized((float)Event.window.data1, (float)Event.window.data2)
-			);
-
-			case SDL_WINDOWEVENT_CLOSE: return OctaneGUI::Event(
-				OctaneGUI::Event::Event::Type::WindowClosed
-			);
-			}
-		}
-
-		default: break;
-		}
-	}
-
-	for (SDL_Event& Value : EventsToPush)
-	{
-		SDL_PushEvent(&Value);
-	}
-
-	return OctaneGUI::Event(OctaneGUI::Event::Type::None);
-}
-
-void OnPaint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& VertexBuffer)
-{
-	if (Windows.find(Window) == Windows.end())
-	{
-		return;
-	}
-
-	const Container& Item = Windows[Window];
-	CAMetalLayer* Layer = (__bridge CAMetalLayer*)SDL_RenderGetMetalLayer(Item.Renderer);
+	Buffers& Item = g_Buffers[Window];
 
 	@autoreleasepool
 	{
@@ -456,12 +263,10 @@ void OnPaint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& VertexBuf
 		id<MTLCommandBuffer> Buffer = [g_Queue commandBuffer];
 		id<MTLRenderCommandEncoder> Encoder = [Buffer renderCommandEncoderWithDescriptor:Descriptor];
 
-		int Width, Height;
-		SDL_GetRendererOutputSize(Item.Renderer, &Width, &Height);
-		Layer.drawableSize = CGSizeMake(Width, Height);
+		Layer.drawableSize = CGSizeMake((int)OutputSize.X, (int)OutputSize.Y);
 
 		OctaneGUI::Vector2 WindowSize = Window->GetSize();
-		OctaneGUI::Vector2 Scale((float)Width / WindowSize.X, (float)Height / WindowSize.Y);
+		OctaneGUI::Vector2 Scale(OutputSize.X / WindowSize.X, OutputSize.Y / WindowSize.Y);
 
 		[Encoder setCullMode:MTLCullModeNone];
 		[Encoder setDepthStencilState:g_DepthStencil];
@@ -495,7 +300,7 @@ void OnPaint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& VertexBuf
 		};
 		[Encoder setVertexBytes:&Ortho length:sizeof(Ortho) atIndex:1];
 
-		[Encoder setVertexBuffer:Item.VertexBuffer offset:0 atIndex:0];
+		[Encoder setVertexBuffer:Item.Vertex offset:0 atIndex:0];
 		[Encoder setVertexBufferOffset:0 atIndex:0];
 
 		// TODO: Callback should give a buffer object that contains the full list of vertices and indices,
@@ -506,11 +311,11 @@ void OnPaint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& VertexBuf
 		const size_t VertexBufferSize = Vertices.size() * sizeof(OctaneGUI::Vertex);
 		const size_t IndexBufferSize = Indices.size() * sizeof(uint32_t);
 
-		assert(VertexBufferSize < Item.VertexBuffer.length);
-		assert(IndexBufferSize < Item.IndexBuffer.length);
+		assert(VertexBufferSize < Item.Vertex.length);
+		assert(IndexBufferSize < Item.Index.length);
 
-		memcpy(Item.VertexBuffer.contents, Vertices.data(), VertexBufferSize);
-		memcpy(Item.IndexBuffer.contents, Indices.data(), IndexBufferSize);
+		memcpy(Item.Vertex.contents, Vertices.data(), VertexBufferSize);
+		memcpy(Item.Index.contents, Indices.data(), IndexBufferSize);
 
 		for (const OctaneGUI::DrawCommand& Command : VertexBuffer.Commands())
 		{
@@ -564,7 +369,7 @@ void OnPaint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& VertexBuf
 				drawIndexedPrimitives:MTLPrimitiveTypeTriangle
 				indexCount:Command.IndexCount()
 				indexType:MTLIndexTypeUInt32
-				indexBuffer:Item.IndexBuffer
+				indexBuffer:Item.Index
 				indexBufferOffset:Command.IndexOffset() * sizeof(uint32_t)
 			];
 		}
@@ -575,7 +380,7 @@ void OnPaint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& VertexBuf
 	}
 }
 
-uint32_t OnLoadTexture(const std::vector<uint8_t>& Data, uint32_t Width, uint32_t Height)
+uint32_t LoadTexture(const std::vector<uint8_t>& Data, uint32_t Width, uint32_t Height)
 {
 	if (g_Device == nullptr)
 	{
@@ -601,57 +406,14 @@ uint32_t OnLoadTexture(const std::vector<uint8_t>& Data, uint32_t Width, uint32_
 		bytesPerRow:(NSUInteger)Width * 4
 	];
 
-	Textures.emplace_back(Texture);
+	g_Textures.emplace_back(Texture);
 
-	return Textures.back().ID;
+	return g_Textures.back().ID;
 }
 
-void OnExit()
+void Exit()
 {
-	Textures.clear();
-	SDL_Quit();
-}
-
-std::u32string OnClipboardContents()
-{
-	return OctaneGUI::Json::ToUTF32(SDL_GetClipboardText());
-}
-
-void OnSetWindowTitle(OctaneGUI::Window* Window, const char* Title)
-{
-	if (Windows.find(Window) == Windows.end())
-	{
-		return;
-	}
-
-	Container& Item = Windows[Window];
-	SDL_SetWindowTitle(Item.Window, Title);
-}
-
-void Initialize(OctaneGUI::Application& Application)
-{
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
-	{
-		printf("Failed to initialize SDL: %s\n", SDL_GetError());
-		return;
-	}
-
-	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "metal");
-
-	// This will retrieve the default GPU. There is an API to retrieve other
-	// GPUs but will look into this API if needed.
-	g_Device = MTLCreateSystemDefaultDevice();
-	InitializeDevice(g_Device);
-
-	Application
-		.SetOnCreateWindow(OnCreateWindow)
-		.SetOnDestroyWindow(OnDestroyWindow)
-		.SetOnEvent(OnEvent)
-		.SetOnPaint(OnPaint)
-		.SetOnLoadTexture(OnLoadTexture)
-		.SetOnExit(OnExit)
-		.SetOnGetClipboardContents(OnClipboardContents)
-		.SetOnSetWindowTitle(OnSetWindowTitle);
+	g_Textures.clear();
 }
 
 }

@@ -2,8 +2,8 @@ set(TARGET Frontend)
 
 # Default settings for each platform.
 if(APPLE)
-	set(WINDOWING SDL)
-	set(RENDERING METAL)
+	set(WINDOWING SDL2)
+	set(RENDERING Metal)
 else()
 	set(WINDOWING SFML)
 	set(RENDERING SFML)
@@ -11,6 +11,8 @@ endif()
 
 message("Desired windowing library: ${WINDOWING}")
 message("Desired rendering library: ${RENDERING}")
+
+set(DEFINES "")
 
 # Find the appropriate packages for each windowing/rendering libraries.
 if(${WINDOWING} MATCHES SFML OR ${RENDERING} MATCHES SFML)
@@ -23,6 +25,19 @@ if(${WINDOWING} MATCHES SFML OR ${RENDERING} MATCHES SFML)
 	foreach(LIB ${LIBS})
 		list(APPEND FRONTEND_LIBS sfml-${LIB})
 	endforeach()
+	list(APPEND DEFINES SFML)
+endif()
+
+if(${WINDOWING} MATCHES SDL2 OR ${RENDERING} MATCHES SDL2)
+	find_package(SDL2 REQUIRED)
+	set(FRONTEND_LIBS ${SDL2_LIBRARY})
+	set(INCLUDES ${SDL2_INCLUDE_DIR})
+	list(APPEND DEFINES SDL2)
+endif()
+
+if(${RENDERING} MATCHES Metal)
+	list(APPEND DEFINES METAL)
+	set(FRONTEND_LIBS ${FRONTEND_LIBS} "-framework Metal")
 endif()
 
 add_subdirectory(Rendering)
@@ -38,9 +53,15 @@ add_library(
 	Frontend.cpp
 )
 
+target_compile_definitions(
+	${TARGET}
+	PRIVATE ${DEFINES}
+)
+
 target_include_directories(
 	${TARGET}
 	PRIVATE ${OctaneGUI_INCLUDE}
+	PRIVATE ${INCLUDES}
 )
 
 target_link_libraries(
