@@ -34,7 +34,7 @@ SOFTWARE.
 namespace Rendering
 {
 
-std::vector<std::unique_ptr<sf::Texture>> s_Textures;
+std::vector<std::unique_ptr<sf::Texture>> g_Textures;
 
 void Initialize()
 {
@@ -56,7 +56,7 @@ void Paint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& Buffer)
 
 		if (Command.TextureID() > 0)
 		{
-			for (const std::unique_ptr<sf::Texture>& Value : s_Textures)
+			for (const std::unique_ptr<sf::Texture>& Value : g_Textures)
 			{
 				if (Value->getNativeHandle() == Command.TextureID())
 				{
@@ -114,13 +114,13 @@ uint32_t LoadTexture(const std::vector<uint8_t>& Data, uint32_t Width, uint32_t 
 	Texture->create(Width, Height);
 	Texture->update(Data.data(), Width, Height, 0, 0);
 	const uint32_t Result = Texture->getNativeHandle();
-	s_Textures.push_back(std::move(Texture));
+	g_Textures.push_back(std::move(Texture));
 	return Result;
 }
 
 void Exit()
 {
-	s_Textures.clear();
+	g_Textures.clear();
 }
 
 }

@@ -34,7 +34,7 @@ SOFTWARE.
 namespace Windowing
 {
 
-std::unordered_map<OctaneGUI::Window*, std::shared_ptr<sf::RenderWindow>> s_Windows {};
+std::unordered_map<OctaneGUI::Window*, std::shared_ptr<sf::RenderWindow>> g_Windows {};
 
 OctaneGUI::Keyboard::Key GetKeyCode(sf::Keyboard::Key Key)
 {
@@ -82,35 +82,35 @@ bool Initialize()
 
 void CreateWindow(OctaneGUI::Window* Window)
 {
-	if (s_Windows.find(Window) == s_Windows.end())
+	if (g_Windows.find(Window) == g_Windows.end())
 	{
 		const OctaneGUI::Vector2 Size = Window->GetSize();
 		sf::RenderWindow* RenderWindow = new sf::RenderWindow(sf::VideoMode((int)Size.X, (int)Size.Y), Window->GetTitle());
 		RenderWindow->setFramerateLimit(0);
 		RenderWindow->setVerticalSyncEnabled(false);
-		s_Windows[Window] = std::shared_ptr<sf::RenderWindow>(RenderWindow);
+		g_Windows[Window] = std::shared_ptr<sf::RenderWindow>(RenderWindow);
 	}
 }
 
 void DestroyWindow(OctaneGUI::Window* Window)
 {
-	if (s_Windows.find(Window) == s_Windows.end())
+	if (g_Windows.find(Window) == g_Windows.end())
 	{
 		return;
 	}
 
-	s_Windows[Window]->close();
-	s_Windows.erase(Window);
+	g_Windows[Window]->close();
+	g_Windows.erase(Window);
 }
 
 OctaneGUI::Event Event(OctaneGUI::Window* Window)
 {
-	if (s_Windows.find(Window) == s_Windows.end())
+	if (g_Windows.find(Window) == g_Windows.end())
 	{
 		return OctaneGUI::Event(OctaneGUI::Event::Type::None);
 	}
 
-	const std::shared_ptr<sf::RenderWindow>& RenderWindow = s_Windows[Window];
+	const std::shared_ptr<sf::RenderWindow>& RenderWindow = g_Windows[Window];
 
 	sf::Event Event;
 	if (RenderWindow->pollEvent(Event))
@@ -171,12 +171,12 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 
 void Exit()
 {
-	for (const std::pair<OctaneGUI::Window*, std::shared_ptr<sf::RenderWindow>>& Item : s_Windows)
+	for (const std::pair<OctaneGUI::Window*, std::shared_ptr<sf::RenderWindow>>& Item : g_Windows)
 	{
 		Item.second->close();
 	}
 
-	s_Windows.clear();
+	g_Windows.clear();
 }
 
 std::u32string GetClipboardContents()
@@ -193,17 +193,17 @@ std::u32string GetClipboardContents()
 
 void SetWindowTitle(OctaneGUI::Window* Window, const char* Title)
 {
-	if (s_Windows.find(Window) == s_Windows.end())
+	if (g_Windows.find(Window) == g_Windows.end())
 	{
 		return;
 	}
 
-	s_Windows[Window]->setTitle(Title);
+	g_Windows[Window]->setTitle(Title);
 }
 
 const std::shared_ptr<sf::RenderWindow>& Get(OctaneGUI::Window* Window)
 {
-	return s_Windows[Window];
+	return g_Windows[Window];
 }
 
 }
