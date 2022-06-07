@@ -75,6 +75,11 @@ OctaneGUI::Mouse::Button GetMouseButton(sf::Mouse::Button Button)
 	return OctaneGUI::Mouse::Button::Left;
 }
 
+bool Initialize()
+{
+	return true;
+}
+
 void CreateWindow(OctaneGUI::Window* Window)
 {
 	if (s_Windows.find(Window) == s_Windows.end())

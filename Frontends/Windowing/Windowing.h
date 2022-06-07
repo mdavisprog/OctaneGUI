@@ -39,6 +39,7 @@ class Window;
 namespace Windowing
 {
 
+bool Initialize();
 void CreateWindow(OctaneGUI::Window* Window);
 void DestroyWindow(OctaneGUI::Window* Window);
 OctaneGUI::Event Event(OctaneGUI::Window* Window);

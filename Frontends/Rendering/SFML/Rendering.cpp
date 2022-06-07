@@ -36,6 +36,10 @@ namespace Rendering
 
 std::vector<std::unique_ptr<sf::Texture>> s_Textures;
 
+void Initialize()
+{
+}
+
 void Paint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& Buffer)
 {
 	const std::shared_ptr<sf::RenderWindow>& RenderWindow = Windowing::Get(Window);

@@ -75,6 +75,9 @@ void OnSetWindowTitle(OctaneGUI::Window* Window, const char* Title)
 
 void Initialize(OctaneGUI::Application& Application)
 {
+	Windowing::Initialize();
+	Rendering::Initialize();
+
 	Application
 		.SetOnCreateWindow(OnCreateWindow)
 		.SetOnDestroyWindow(OnDestroyWindow)
