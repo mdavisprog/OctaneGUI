@@ -233,6 +233,23 @@ void Initialize()
 	}
 }
 
+void CreateRenderer(OctaneGUI::Window* Window)
+{
+#if SDL2
+	SDL_Window* Instance = Windowing::Get(Window);
+	SDL_CreateRenderer(Instance, -1, SDL_RENDERER_ACCELERATED);
+#endif
+}
+
+void DestroyRenderer(OctaneGUI::Window* Window)
+{
+#if SDL2
+	SDL_Window* Instance = Windowing::Get(Window);
+	SDL_Renderer* Renderer = SDL_GetRenderer(Instance);
+	SDL_DestroyRenderer(Renderer);
+#endif
+}
+
 void Paint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& VertexBuffer)
 {
 	OctaneGUI::Vector2 OutputSize;

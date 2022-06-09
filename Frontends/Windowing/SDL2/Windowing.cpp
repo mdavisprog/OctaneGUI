@@ -74,14 +74,6 @@ OctaneGUI::Mouse::Button GetMouseButton(uint8_t Button)
 	return OctaneGUI::Mouse::Button::Left;
 }
 
-void DestroyWindow(SDL_Window* Window)
-{
-	SDL_Renderer* Renderer = SDL_GetRenderer(Window);
-
-	SDL_DestroyRenderer(Renderer);
-	SDL_DestroyWindow(Window);
-}
-
 bool Initialize()
 {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
@@ -107,8 +99,6 @@ void CreateWindow(OctaneGUI::Window* Window)
 		);
 
 		g_Windows[Window] = Instance;
-
-		SDL_CreateRenderer(Instance, -1, SDL_RENDERER_ACCELERATED);
 	}
 }
 
@@ -119,7 +109,8 @@ void DestroyWindow(OctaneGUI::Window* Window)
 		return;
 	}
 
-	DestroyWindow(g_Windows[Window]);
+	SDL_DestroyWindow(g_Windows[Window]);
+	g_Windows.erase(Window);
 }
 
 OctaneGUI::Event Event(OctaneGUI::Window* Window)
@@ -244,7 +235,7 @@ void Exit()
 {
 	for (const std::pair<OctaneGUI::Window*, SDL_Window*>& Item : g_Windows)
 	{
-		DestroyWindow(Item.second);
+		SDL_DestroyWindow(Item.second);
 	}
 
 	g_Windows.clear();

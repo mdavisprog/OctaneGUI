@@ -40,6 +40,14 @@ void Initialize()
 {
 }
 
+void CreateRenderer(OctaneGUI::Window* Window)
+{
+}
+
+void DestroyRenderer(OctaneGUI::Window* Window)
+{
+}
+
 void Paint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& Buffer)
 {
 	const std::shared_ptr<sf::RenderWindow>& RenderWindow = Windowing::Get(Window);

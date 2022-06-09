@@ -41,6 +41,8 @@ namespace Rendering
 {
 
 void Initialize();
+void CreateRenderer(OctaneGUI::Window* Window);
+void DestroyRenderer(OctaneGUI::Window* Window);
 void Paint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& Buffer);
 uint32_t LoadTexture(const std::vector<uint8_t>& Data, uint32_t Width, uint32_t Height);
 void Exit();

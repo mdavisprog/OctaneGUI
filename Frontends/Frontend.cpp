@@ -35,10 +35,12 @@ namespace Frontend
 void OnCreateWindow(OctaneGUI::Window* Window)
 {
 	Windowing::CreateWindow(Window);
+	Rendering::CreateRenderer(Window);
 }
 
 void OnDestroyWindow(OctaneGUI::Window* Window)
 {
+	Rendering::DestroyRenderer(Window);
 	Windowing::DestroyWindow(Window);
 }
 
