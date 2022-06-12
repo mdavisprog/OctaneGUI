@@ -88,7 +88,7 @@ public:
 
 private:
 	void OnPaint(Window* InWindow, const VertexBuffer& Buffer);
-	std::shared_ptr<Window> CreateWindow(const char* ID, const Json& Root, ControlList& List);
+	std::shared_ptr<Window> CreateWindow(const char* ID);
 	void DestroyWindow(const std::shared_ptr<Window>& Item);
 	int ProcessEvent(const std::shared_ptr<Window>& Item);
 	bool Initialize();

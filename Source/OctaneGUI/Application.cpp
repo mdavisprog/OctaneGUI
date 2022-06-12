@@ -79,8 +79,6 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
 		return false;
 	}
 
-	m_Theme->Load(Root["Theme"]);
-
 	const Json& Windows = Root["Windows"];
 	if (!Windows.IsObject())
 	{
@@ -88,15 +86,32 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
 		return false;
 	}
 
+	// First, create and load base settings for each defined window.
 	Windows.ForEach([&](const std::string& Key, const Json& Value) -> void
 		{
 			ControlList List;
-			CreateWindow(Key.c_str(), Value, List);
-			WindowControls[Key] = List;
+			std::shared_ptr<Window> Item = CreateWindow(Key.c_str());
+			Item->LoadRoot(Value);
 		});
 
+	// Create the main window. Some rendering platforms require a window to be created before
+	// being able to load textures.
 	assert(m_Windows.find("Main") != m_Windows.end());
 	DisplayWindow("Main");
+
+	m_Icons = std::make_shared<Icons>();
+	m_Icons->Initialize();
+
+	m_Theme->Load(Root["Theme"]);
+
+	// Now load the contents for each window. Some of the controls may require
+	// a valid font. The font is loaded with the theme.
+	Windows.ForEach([&](const std::string& Key, const Json& Value) -> void
+		{
+			ControlList List;
+			m_Windows[Key]->LoadContents(Value, List);
+			WindowControls[Key] = List;
+		});
 
 	return true;
 }
@@ -216,13 +231,16 @@ bool Application::IsMainWindow(Window* InWindow) const
 
 std::shared_ptr<Window> Application::NewWindow(const char* ID, const char* JsonStream)
 {
-	ControlList List;
-	return CreateWindow(ID, Json::Parse(JsonStream), List);
+	std::shared_ptr<Window> Result = CreateWindow(ID);
+	Result->Load(JsonStream);
+	return Result;
 }
 
 std::shared_ptr<Window> Application::NewWindow(const char* ID, const char* JsonStream, ControlList& List)
 {
-	return CreateWindow(ID, Json::Parse(JsonStream), List);
+	std::shared_ptr<Window> Result = CreateWindow(ID);
+	Result->Load(JsonStream, List);
+	return Result;
 }
 
 bool Application::DisplayWindow(const char* ID) const
@@ -334,12 +352,11 @@ void Application::OnPaint(Window* InWindow, const VertexBuffer& Buffers)
 	}
 }
 
-std::shared_ptr<Window> Application::CreateWindow(const char* ID, const Json& Root, ControlList& List)
+std::shared_ptr<Window> Application::CreateWindow(const char* ID)
 {
 	std::shared_ptr<Window> Result = std::make_shared<Window>(this);
 	m_Windows[ID] = Result;
 	Result->CreateContainer();
-	Result->Load(Root, List);
 	Result->SetOnPaint(std::bind(&Application::OnPaint, this, std::placeholders::_1, std::placeholders::_2));
 	Result->SetID(ID);
 	return Result;
@@ -457,9 +474,6 @@ bool Application::Initialize()
 				}
 			}
 		});
-
-	m_Icons = std::make_shared<Icons>();
-	m_Icons->Initialize();
 
 	m_IsRunning = true;
 
