@@ -89,14 +89,18 @@ void CreateWindow(OctaneGUI::Window* Window)
 {
 	if (g_Windows.find(Window) == g_Windows.end())
 	{
+		int Flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
+#if OPENGL
+		Flags |= SDL_WINDOW_OPENGL;
+#endif
+
 		SDL_Window* Instance = SDL_CreateWindow(
 			Window->GetTitle(),
 			SDL_WINDOWPOS_UNDEFINED,
 			SDL_WINDOWPOS_UNDEFINED,
 			(int)Window->GetSize().X,
 			(int)Window->GetSize().Y,
-			SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI
-		);
+			Flags);
 
 		g_Windows[Window] = Instance;
 	}
@@ -141,10 +145,9 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 
 			return OctaneGUI::Event(
 				Event.key.type == SDL_KEYDOWN ? OctaneGUI::Event::Type::KeyPressed : OctaneGUI::Event::Type::KeyReleased,
-				OctaneGUI::Event::Key(GetKey(Event.key.keysym.sym))
-			);
+				OctaneGUI::Event::Key(GetKey(Event.key.keysym.sym)));
 		}
-		
+
 		case SDL_MOUSEMOTION:
 		{
 			if (WindowID != Event.motion.windowID)
@@ -154,8 +157,7 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 			}
 
 			return OctaneGUI::Event(
-				OctaneGUI::Event::MouseMove(Event.motion.x, Event.motion.y)
-			);
+				OctaneGUI::Event::MouseMove(Event.motion.x, Event.motion.y));
 		}
 
 		case SDL_MOUSEBUTTONDOWN:
@@ -169,8 +171,7 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 
 			return OctaneGUI::Event(
 				Event.button.type == SDL_MOUSEBUTTONDOWN ? OctaneGUI::Event::Type::MousePressed : OctaneGUI::Event::Type::MouseReleased,
-				OctaneGUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y)
-			);
+				OctaneGUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y));
 		}
 
 		case SDL_MOUSEWHEEL:
@@ -182,11 +183,10 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 			}
 
 			return OctaneGUI::Event(
-				OctaneGUI::Event::MouseWheel(Event.wheel.x, Event.wheel.y)
-			);
+				OctaneGUI::Event::MouseWheel(Event.wheel.x, Event.wheel.y));
 		}
 
-		case SDL_TEXTINPUT: 
+		case SDL_TEXTINPUT:
 		{
 			if (WindowID != Event.text.windowID)
 			{
@@ -195,8 +195,7 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 			}
 
 			return OctaneGUI::Event(
-				OctaneGUI::Event::Text(*(uint32_t*)Event.text.text)
-			);
+				OctaneGUI::Event::Text(*(uint32_t*)Event.text.text));
 		}
 
 		case SDL_WINDOWEVENT:
@@ -210,12 +209,10 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 			switch (Event.window.event)
 			{
 			case SDL_WINDOWEVENT_RESIZED: return OctaneGUI::Event(
-				OctaneGUI::Event::WindowResized((float)Event.window.data1, (float)Event.window.data2)
-			);
+				OctaneGUI::Event::WindowResized((float)Event.window.data1, (float)Event.window.data2));
 
 			case SDL_WINDOWEVENT_CLOSE: return OctaneGUI::Event(
-				OctaneGUI::Event::Event::Type::WindowClosed
-			);
+				OctaneGUI::Event::Event::Type::WindowClosed);
 			}
 		}
 
