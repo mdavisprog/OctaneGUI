@@ -114,6 +114,9 @@ public:
 	void Load(const char* JsonStream, ControlList& List);
 	void Load(const Json& Root);
 	void Load(const Json& Root, ControlList& List);
+	void LoadRoot(const Json& Root);
+	void LoadContents(const Json& Root);
+	void LoadContents(const Json& Root, ControlList& List);
 	void Clear();
 
 	std::shared_ptr<Timer> CreateTimer(int Interval, bool Repeat, OnEmptySignature&& Callback);

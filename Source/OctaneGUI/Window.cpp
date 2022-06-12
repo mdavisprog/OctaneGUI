@@ -443,15 +443,30 @@ void Window::Load(const char* JsonStream, ControlList& List)
 
 void Window::Load(const Json& Root)
 {
+	LoadRoot(Root);
+	LoadContents(Root);
+}
+
+void Window::Load(const Json& Root, ControlList& List)
+{
+	Load(Root);
+	Populate(List);
+}
+
+void Window::LoadRoot(const Json& Root)
+{
 	const std::string Title = Root["Title"].String();
 	float Width = Root["Width"].Number(640.0f);
 	float Height = Root["Height"].Number(480.0f);
 
-	const Json& MB = Root["MenuBar"];
-	const Json& Body = Root["Body"];
-
 	SetTitle(Title.c_str());
 	SetSize({ Width, Height });
+}
+
+void Window::LoadContents(const Json& Root)
+{
+	const Json& MB = Root["MenuBar"];
+	const Json& Body = Root["Body"];
 
 	m_MenuBar->OnLoad(MB);
 	m_Body->OnLoad(Body);
@@ -460,9 +475,9 @@ void Window::Load(const Json& Root)
 	m_Body->SetExpand(Expand::Both);
 }
 
-void Window::Load(const Json& Root, ControlList& List)
+void Window::LoadContents(const Json& Root, ControlList& List)
 {
-	Load(Root);
+	LoadContents(Root);
 	Populate(List);
 }
 
