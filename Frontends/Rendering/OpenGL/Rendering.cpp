@@ -31,6 +31,7 @@ SOFTWARE.
 	#include <Windows.h>
 #endif
 
+#define GL_GLEXT_LEGACY
 #include "GL/gl.h"
 
 #if SDL2
