@@ -1,9 +1,9 @@
 # OctaneGUI
 Latest update: [May 2022](https://github.com/mdavisprog/OctaneGUI/wiki/May22)
 
-![Overview](https://github.com/mdavisprog/OctaneGUI/wiki/Images/April22/Overview_Dark.png)
+<img src=https://github.com/mdavisprog/OctaneGUI/wiki/Images/May22/Overview_Classic.png width=50%>
 
-![Inspector](https://github.com/mdavisprog/OctaneGUI/wiki/Images/April22/Inspector.png)
+![Inspector](https://github.com/mdavisprog/OctaneGUI/wiki/Images/May22/Inspector.gif)
 
 OctaneGUI is a renderer agnostic multi-window multi-platform UI library for C++. The main goal of this library is to easily create applications that is performant on all devices. It is architected in a way to allow for easy integration to other frameworks that may have its own rendering pipeline. This project will provide multiple integrations to widely used windowing and rendering libraries such as SDL, SFML, OpenGL, and Metal among others.
 
