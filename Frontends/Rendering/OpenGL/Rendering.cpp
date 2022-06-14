@@ -27,9 +27,18 @@ SOFTWARE.
 #include "../Rendering.h"
 #include "OctaneGUI/OctaneGUI.h"
 
+#if defined(_WIN32) || defined(_WIN64)
+	#include <Windows.h>
+#endif
+
 #include "GL/gl.h"
-#include "GL/glext.h"
-#include "GL/glx.h"
+
+#if SDL2
+	#include "SDL_opengl_glext.h"
+	typedef void (*PFNGLBLENDEQUATIONPROC)(GLenum);
+#else
+	#include "GL/glext.h"
+#endif
 
 #include <cassert>
 #include <unordered_map>
@@ -79,14 +88,20 @@ PFNGLUNIFORM1IPROC glUniform1i;
 PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv;
 PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray;
 PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
-PFNGLBINDSAMPLERPROC glBindSampler;
 PFNGLGENVERTEXARRAYSPROC glGenVertexArrays;
 PFNGLBINDVERTEXARRAYPROC glBindVertexArray;
 PFNGLDELETEVERTEXARRAYSPROC glDeleteVertexArrays;
 PFNGLDRAWELEMENTSBASEVERTEXPROC glDrawElementsBaseVertex;
+PFNGLBLENDEQUATIONPROC glBlendEquation;
+
+#if SDL2
+	#define LOAD_PROC_ADDRESS(FnName) SDL_GL_GetProcAddress(#FnName)
+#else
+	#define LOAD_PROC_ADDRESS(FnName) glXGetProcAddress((const GLubyte*)#FnName)
+#endif
 
 #define LOAD_PROCEDURE(FnName, Type)                           \
-	FnName = (Type)glXGetProcAddress((const GLubyte*)#FnName); \
+	FnName = (Type)LOAD_PROC_ADDRESS(FnName); \
 	assert(FnName != nullptr);
 
 #if SDL2
@@ -208,20 +223,8 @@ void LoadShaders()
 	assert(g_IndexBuffer != 0);
 }
 
-void Initialize()
+void LoadProcedures()
 {
-#if SDL2
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-#endif
-
 	LOAD_PROCEDURE(glCreateShader, PFNGLCREATESHADERPROC);
 	LOAD_PROCEDURE(glDeleteShader, PFNGLDELETESHADERPROC);
 	LOAD_PROCEDURE(glShaderSource, PFNGLSHADERSOURCEPROC);
@@ -247,11 +250,26 @@ void Initialize()
 	LOAD_PROCEDURE(glUniformMatrix4fv, PFNGLUNIFORMMATRIX4FVPROC);
 	LOAD_PROCEDURE(glEnableVertexAttribArray, PFNGLENABLEVERTEXATTRIBARRAYPROC);
 	LOAD_PROCEDURE(glVertexAttribPointer, PFNGLVERTEXATTRIBPOINTERPROC);
-	LOAD_PROCEDURE(glBindSampler, PFNGLBINDSAMPLERPROC);
 	LOAD_PROCEDURE(glGenVertexArrays, PFNGLGENVERTEXARRAYSPROC);
 	LOAD_PROCEDURE(glBindVertexArray, PFNGLBINDVERTEXARRAYPROC);
 	LOAD_PROCEDURE(glDeleteVertexArrays, PFNGLDELETEVERTEXARRAYSPROC);
 	LOAD_PROCEDURE(glDrawElementsBaseVertex, PFNGLDRAWELEMENTSBASEVERTEXPROC);
+	LOAD_PROCEDURE(glBlendEquation, PFNGLBLENDEQUATIONPROC);
+}
+
+void Initialize()
+{
+#if SDL2
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+#endif
 }
 
 void CreateRenderer(OctaneGUI::Window* Window)
@@ -269,6 +287,7 @@ void CreateRenderer(OctaneGUI::Window* Window)
 
 	if (g_Program == 0)
 	{
+		LoadProcedures();
 		LoadShaders();
 
 		std::vector<uint8_t> Texture { 255, 255, 255, 255 };
