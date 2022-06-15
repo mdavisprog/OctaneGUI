@@ -90,8 +90,8 @@ The following tables displays what platforms are supported and which windowing a
 
 ## Rendering
 
-|Platform|Metal|OpenGL|SFML
-|:---:|:---:|:---:|
+|Platform|Metal|OpenGL|SFML|
+|:---:|:---:|:---:|:---:|
 |Windows||X|X|
 |MacOS|X|||
 |Linux||X|X|
