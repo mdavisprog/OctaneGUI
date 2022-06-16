@@ -57,6 +57,7 @@ public:
 	bool HasControl(const std::shared_ptr<Control>& Item) const;
 	bool HasControlRecurse(const std::shared_ptr<Control>& Item) const;
 	void ClearControls();
+	size_t NumControls() const;
 
 	Container& SetClip(bool Clip);
 	bool ShouldClip() const;

@@ -223,6 +223,11 @@ void Container::ClearControls()
 	Invalidate(InvalidateType::Both);
 }
 
+size_t Container::NumControls() const
+{
+	return m_Controls.size();
+}
+
 Container& Container::SetClip(bool Clip)
 {
 	m_Clip = Clip;
