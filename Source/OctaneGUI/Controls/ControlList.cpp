@@ -47,6 +47,7 @@ void ControlList::AddControl(const std::shared_ptr<Control>& InControl)
 		return;
 	}
 
+	assert(!Contains(InControl->GetFullID().c_str()));
 	m_Controls[InControl->GetFullID()] = InControl;
 }
 
