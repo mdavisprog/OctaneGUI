@@ -9,7 +9,6 @@
 				{"ID": "File", "Text": "File", "Items": [
 					{"ID": "Quit", "Text": "Quit"}
 				]},
-				{"ID": "Themes", "Text": "Themes"},
 				{"ID": "Help", "Text": "Help", "Items": [
 					{"ID": "About", "Text": "About"}
 				]}
@@ -32,6 +31,12 @@
 										{"Type": "ImageButton", "Image": {"Texture": "thumbs_up.png"}},
 										{"Type": "ImageButton", "Disabled": true, "Image": {"Texture": "thumbs_up.png"}}
 									]}
+								]}
+							]},
+							{"Type": "GroupBox", "Text": "Combo Box", "Controls": [
+								{"Type": "HorizontalContainer", "Controls": [
+									{"Type": "Text", "Text": "Themes"},
+									{"Type": "ComboBox", "ID": "ThemesComboBox"}
 								]}
 							]},
 							{"Type": "HorizontalContainer", "Expand": "Width", "Controls": [

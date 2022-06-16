@@ -62,20 +62,6 @@ void LoadTheme(OctaneGUI::Application& Application, const char* Name)
 	Application.GetTheme()->Load(OctaneGUI::Json::Parse(Buffer.c_str()));
 }
 
-void SelectMenuItem(OctaneGUI::Application& Application, const std::string& Name)
-{
-	std::shared_ptr<OctaneGUI::Menu> Menu = Application.GetMainWindow()->GetMenuBar()->Item("Themes");
-
-	std::vector<std::shared_ptr<OctaneGUI::MenuItem>> Options;
-	Menu->GetMenuItems(Options);
-
-	for (std::shared_ptr<OctaneGUI::MenuItem>& Option : Options)
-	{
-		const bool IsSelected = Name == OctaneGUI::Json::ToMultiByte(Option->GetText());
-		Option->SetChecked(IsSelected);
-	}
-}
-
 int main(int argc, char **argv)
 {
 	if (std::filesystem::exists("./Themes"))
@@ -109,24 +95,22 @@ int main(int argc, char **argv)
 		Application.Quit();
 	});
 
-	std::shared_ptr<OctaneGUI::Menu> ThemesMenu = List.To<OctaneGUI::MenuItem>("Themes")->CreateMenu();
-	for (const std::pair<std::string, std::string>& Theme : Themes)
-	{
-		const char* Name = Theme.first.c_str();
-		ThemesMenu->AddItem(Name);
-		ThemesMenu->GetItem(Name)->SetOnPressed([&](const OctaneGUI::TextSelectable& Item) -> void
-		{
-			const std::string Name = OctaneGUI::Json::ToMultiByte(Item.GetText());
-			LoadTheme(Application, Name.c_str());
-			SelectMenuItem(Application, Name);
-		});
-	}
-	SelectMenuItem(Application, Theme);
-
 	List.To<OctaneGUI::MenuItem>("Help.About")->SetOnPressed([&](const OctaneGUI::TextSelectable&) -> void
 	{
 		Application.DisplayWindow("About");
 	});
+
+	std::shared_ptr<OctaneGUI::ComboBox> ThemesComboBox = List.To<OctaneGUI::ComboBox>("ThemesComboBox");
+	ThemesComboBox->SetOnSelected([&](const std::u32string& Selected) -> void
+		{
+			const std::string Name = OctaneGUI::Json::ToMultiByte(Selected);
+			LoadTheme(Application, Name.c_str());
+		});
+	for (const std::pair<std::string, std::string>& Item : Themes)
+	{
+		ThemesComboBox->AddItem(Item.first.c_str());
+	}
+	ThemesComboBox->SetSelected(OctaneGUI::Json::ToUTF32(Theme).c_str());
 
 	const OctaneGUI::ControlList& AboutList = WindowControls["About"];
 	AboutList.To<OctaneGUI::Button>("OK")->SetOnClicked([](const OctaneGUI::Button& Button) -> void
