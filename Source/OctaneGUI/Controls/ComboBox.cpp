@@ -92,7 +92,7 @@ ComboBox::ComboBox(Window* InWindow)
 					ItemText = Json::ToUTF32(std::string("Item ") + std::to_string(Index));
 				}
 
-				m_Input->SetText(ItemText.c_str());
+				SetSelected(ItemText.c_str());
 
 				if (m_OnSelected)
 				{
@@ -116,6 +116,12 @@ ComboBox& ComboBox::SetExpand(Expand InExpand)
 		m_Input->SetExpand(Expand::None);
 	}
 
+	return *this;
+}
+
+ComboBox& ComboBox::SetSelected(const char32_t* InText)
+{
+	m_Input->SetText(InText);
 	return *this;
 }
 

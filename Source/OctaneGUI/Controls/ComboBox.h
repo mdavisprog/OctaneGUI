@@ -46,6 +46,7 @@ public:
 	ComboBox(Window* InWindow);
 
 	ComboBox& SetExpand(Expand InExpand);
+	ComboBox& SetSelected(const char32_t* InText);
 
 	std::shared_ptr<Text> AddItem(const char* Item);
 
