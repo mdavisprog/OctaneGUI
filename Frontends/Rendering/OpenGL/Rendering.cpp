@@ -36,7 +36,9 @@ SOFTWARE.
 
 #if SDL2
 	#include "SDL_opengl_glext.h"
+// clang-format off
 	typedef void (*PFNGLBLENDEQUATIONPROC)(GLenum);
+// clang-format on
 #else
 	#include "GL/glext.h"
 #endif
@@ -101,7 +103,7 @@ PFNGLBLENDEQUATIONPROC glBlendEquation;
 	#define LOAD_PROC_ADDRESS(FnName) glXGetProcAddress((const GLubyte*)#FnName)
 #endif
 
-#define LOAD_PROCEDURE(FnName, Type)                           \
+#define LOAD_PROCEDURE(FnName, Type)          \
 	FnName = (Type)LOAD_PROC_ADDRESS(FnName); \
 	assert(FnName != nullptr);
 
