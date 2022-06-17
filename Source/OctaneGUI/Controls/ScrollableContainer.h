@@ -54,6 +54,7 @@ public:
 	ScrollableContainer& SetVerticalSBEnabled(bool Enabled);
 	ScrollableContainer& SetOffset(const Vector2& Offset);
 	ScrollableContainer& AddOffset(const Vector2& Delta);
+	ScrollableContainer& ScrollIntoView(const std::shared_ptr<Control>& Item);
 
 	Vector2 GetScrollableSize() const;
 

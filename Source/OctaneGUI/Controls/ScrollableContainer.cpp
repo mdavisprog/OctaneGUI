@@ -179,6 +179,13 @@ ScrollableContainer& ScrollableContainer::AddOffset(const Vector2& Delta)
 	return *this;
 }
 
+ScrollableContainer& ScrollableContainer::ScrollIntoView(const std::shared_ptr<Control>& Item)
+{
+	const Vector2 Offset = Item->GetAbsolutePosition() - GetAbsolutePosition();
+	SetOffset(Offset);
+	return *this;
+}
+
 Vector2 ScrollableContainer::GetScrollableSize() const
 {
 	const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
