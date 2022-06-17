@@ -51,6 +51,7 @@ SOFTWARE.
 #include "VerticalContainer.h"
 
 #include <algorithm>
+#include <cassert>
 
 namespace OctaneGUI
 {
@@ -226,6 +227,12 @@ void Container::ClearControls()
 size_t Container::NumControls() const
 {
 	return m_Controls.size();
+}
+
+const std::shared_ptr<Control>& Container::Get(size_t Index) const
+{
+	assert(Index >= 0 && Index < m_Controls.size());
+	return m_Controls[Index];
 }
 
 Container& Container::SetClip(bool Clip)

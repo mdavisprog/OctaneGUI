@@ -58,6 +58,7 @@ public:
 	bool HasControlRecurse(const std::shared_ptr<Control>& Item) const;
 	void ClearControls();
 	size_t NumControls() const;
+	const std::shared_ptr<Control>& Get(size_t Index) const;
 
 	Container& SetClip(bool Clip);
 	bool ShouldClip() const;
