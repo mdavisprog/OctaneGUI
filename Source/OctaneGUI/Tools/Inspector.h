@@ -68,6 +68,7 @@ private:
 	std::weak_ptr<Tree> m_Tree {};
 	std::weak_ptr<Properties> m_Properties {};
 	std::weak_ptr<Window> m_Window {};
+	std::weak_ptr<Control> m_PendingFocus {};
 
 	std::shared_ptr<InspectorProxy> m_MenuBarProxy { nullptr };
 	std::shared_ptr<InspectorProxy> m_BodyProxy { nullptr };

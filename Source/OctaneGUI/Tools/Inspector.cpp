@@ -242,6 +242,17 @@ void Inspector::Inspect(Window* Target)
 		NewWindow->SetOnClose([this](Window& InWindow) -> void
 			{
 				Close();
+			})
+			->SetOnLayout([this](Window&) -> void
+			{
+				// TODO: This could possibly be a generic function within the ScrollableContainer. Should have an option for immediate offset or wait until the
+				// next layout update.
+				if (!m_PendingFocus.expired())
+				{
+					const std::shared_ptr<ScrollableViewControl>& TreeView = std::dynamic_pointer_cast<ScrollableViewControl>(m_Root.lock()->First()->Get(0));
+					TreeView->Scrollable()->ScrollIntoView(m_PendingFocus.lock());
+					m_PendingFocus.reset();
+				}
 			});
 		m_Window = NewWindow;
 
@@ -419,6 +430,8 @@ bool Inspector::ExpandTree(const std::shared_ptr<Tree>& Root, Control const* Tar
 	{
 		Root->SetSelected(true);
 		Root->SetExpanded(true);
+		m_Root.lock()->InvalidateLayout();
+		m_PendingFocus = Root;
 		return true;
 	}
 	else
