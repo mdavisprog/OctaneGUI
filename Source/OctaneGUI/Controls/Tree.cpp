@@ -506,12 +506,6 @@ Vector2 Tree::DesiredSize() const
 		Result.Y += Size.Y;
 	}
 
-	Control* Parent = GetParent();
-	if (Parent != nullptr)
-	{
-		Result.X = std::max<float>(Result.X, Parent->GetSize().X);
-	}
-
 	return Result;
 }
 
