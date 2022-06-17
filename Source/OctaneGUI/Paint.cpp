@@ -153,10 +153,10 @@ void Paint::TextWrapped(const std::shared_ptr<Font>& InFont, const Vector2& Posi
 	{
 		std::vector<std::u32string_view> Views;
 		Start = Span.Start;
-		for (size_t Index = Span.Start; Index <= Span.End; Index++)
+		for (size_t Index = Span.Start; Index < Span.End; Index++)
 		{
 			const char32_t& Char = Contents[Index];
-			if (std::isspace(Char) || Index >= Span.End)
+			if (std::isspace(Char) || Index == Span.End - 1)
 			{
 				Index = std::min<size_t>(Index + 1, Span.End);
 				size_t Count = Index - Start;
