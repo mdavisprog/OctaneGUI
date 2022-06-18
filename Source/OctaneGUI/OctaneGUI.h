@@ -27,6 +27,7 @@ SOFTWARE.
 #pragma once
 
 #include "Application.h"
+#include "Assert.h"
 #include "Clock.h"
 #include "Color.h"
 #include "Controls/BoxContainer.h"

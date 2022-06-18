@@ -32,6 +32,7 @@ set(SOURCE
 	Controls/Tree.cpp
 	Controls/VerticalContainer.cpp
 	Application.cpp
+	Assert.cpp
 	Class.cpp
 	Clock.cpp
 	Color.cpp
