@@ -25,9 +25,8 @@ SOFTWARE.
 */
 
 #include "ControlList.h"
+#include "../Assert.h"
 #include "Control.h"
-
-#include <cassert>
 
 namespace OctaneGUI
 {
@@ -47,7 +46,7 @@ void ControlList::AddControl(const std::shared_ptr<Control>& InControl)
 		return;
 	}
 
-	assert(!Contains(InControl->GetFullID().c_str()));
+	Assert(!Contains(InControl->GetFullID().c_str()), "Control with ID '%s' already exists!", InControl->GetFullID().c_str());
 	m_Controls[InControl->GetFullID()] = InControl;
 }
 
@@ -58,7 +57,7 @@ bool ControlList::Contains(const char* ID) const
 
 std::weak_ptr<Control> ControlList::Get(const char* ID) const
 {
-	assert(Contains(ID));
+	Assert(Contains(ID), "Control with ID '%s' does not exist!", ID);
 	return m_Controls.at(ID);
 }
 
