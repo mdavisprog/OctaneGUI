@@ -239,6 +239,7 @@ void ScrollableContainer::Update()
 {
 	m_ContentSize = GetContentSize(Controls());
 	UpdateScrollBars();
+	SetOffset(-GetPosition(), true);
 }
 
 void ScrollableContainer::OnPaint(Paint& Brush) const
