@@ -33,7 +33,6 @@ namespace OctaneGUI
 MarginContainer::MarginContainer(Window* InWindow)
 	: Container(InWindow)
 {
-	SetExpand(Expand::Both);
 }
 
 MarginContainer& MarginContainer::SetMargins(const Rect& Margins)
@@ -70,8 +69,6 @@ Vector2 MarginContainer::DesiredSize() const
 void MarginContainer::OnLoad(const Json& Root)
 {
 	Container::OnLoad(Root);
-
-	SetExpand(Expand::Both);
 
 	m_Margins = Rect::FromJson(Root["Margins"]);
 }
