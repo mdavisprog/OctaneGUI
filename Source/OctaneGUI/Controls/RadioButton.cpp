@@ -129,6 +129,8 @@ void RadioButton::OnPaint(Paint& Brush) const
 
 void RadioButton::OnLoad(const Json& Root)
 {
+	Button::OnLoad(Root);
+
 	m_Text->OnLoad(Root["Text"]);
 	m_Radius = Root["Radius"].Number(m_Radius);
 
