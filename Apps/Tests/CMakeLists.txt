@@ -8,6 +8,7 @@ add_executable(
 	Container.cpp
 	Json.cpp
 	Main.cpp
+	RadioButton.cpp
 	Scrollable.cpp
 	TestSuite.cpp
 	Utility.cpp
