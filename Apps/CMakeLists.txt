@@ -5,6 +5,7 @@ set(APP_THUMBS_UP_IMAGE ${CMAKE_CURRENT_LIST_DIR}/Resources/thumbs_up.png)
 set(APP_THEMES ${CMAKE_CURRENT_LIST_DIR}/Resources/Themes)
 
 add_subdirectory(Blank)
+add_subdirectory(Designer)
 add_subdirectory(Hello)
 add_subdirectory(Overview)
 add_subdirectory(Tests)

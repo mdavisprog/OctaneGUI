@@ -1,0 +1,19 @@
+{
+	"Theme": "./Themes/Dark.json",
+	"Windows": {
+		"Main": {
+			"Title": "Designer",
+			"Width": 1280,
+			"Height": 720,
+			"MenuBar": {"Items": [
+				{"Text": "File", "ID": "File", "Items": [
+					{"Text": "Quit", "ID": "Quit"}
+				]}
+			]},
+			"Body": {
+				"Controls": [
+				]
+			}
+		}
+	}
+}
