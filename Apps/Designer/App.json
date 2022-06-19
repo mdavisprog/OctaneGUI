@@ -10,10 +10,20 @@
 					{"Text": "Quit", "ID": "Quit"}
 				]}
 			]},
-			"Body": {
-				"Controls": [
-				]
-			}
+			"Body": {"Controls": [
+				{"Type": "Panel", "Expand": "Both"},
+				{"Type": "MarginContainer", "Margins": [4, 4, 4, 4], "Expand": "Both", "Controls": [
+					{"Type": "VerticalContainer", "Expand": "Both", "Controls": [
+						{"Type": "TextInput", "Expand": "Both", "MultiLine": true},
+						{"Type": "HorizontalContainer", "Expand": "Width", "Controls": [
+							{"Type": "MarginContainer", "Expand": "Width", "Controls": [
+								{"Type": "Panel", "Expand": "Both"},
+								{"Type": "Text", "ID": "Status", "Text": "Status Bar"}
+							]}
+						]}
+					]}
+				]}
+			]}
 		}
 	}
 }

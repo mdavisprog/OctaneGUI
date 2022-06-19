@@ -35,6 +35,9 @@ int main(int argc, char **argv)
 		{
 			Application.Quit();
 		});
+	
+	std::shared_ptr<OctaneGUI::Text> StatusText = MainList.To<OctaneGUI::Text>("Status");
+	StatusText->SetText(U"New Document");
 
 	return Application.Run();
 }
