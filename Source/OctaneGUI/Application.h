@@ -67,6 +67,7 @@ public:
 	void Quit();
 
 	std::shared_ptr<Window> GetMainWindow() const;
+	std::shared_ptr<Window> GetWindow(const char* ID) const;
 	bool IsMainWindow(Window* InWindow) const;
 	std::shared_ptr<Window> NewWindow(const char* ID, const char* JsonStream);
 	std::shared_ptr<Window> NewWindow(const char* ID, const char* JsonStream, ControlList& List);

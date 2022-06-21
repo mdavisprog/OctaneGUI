@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "Application.h"
+#include "Assert.h"
 #include "Controls/Container.h"
 #include "Controls/ControlList.h"
 #include "Event.h"
@@ -37,8 +38,6 @@ SOFTWARE.
 #include "Window.h"
 
 #include <algorithm>
-#undef NDEBUG
-#include <cassert>
 #include <chrono>
 #include <sstream>
 #include <thread>
@@ -96,7 +95,7 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
 
 	// Create the main window. Some rendering platforms require a window to be created before
 	// being able to load textures.
-	assert(m_Windows.find("Main") != m_Windows.end());
+	Assert(m_Windows.find("Main") != m_Windows.end(), "No 'Main' window defined!");
 	DisplayWindow("Main");
 
 	m_Icons = std::make_shared<Icons>();
@@ -214,6 +213,12 @@ std::shared_ptr<Window> Application::GetMainWindow() const
 	}
 
 	return m_Windows.at("Main");
+}
+
+std::shared_ptr<Window> Application::GetWindow(const char* ID) const
+{
+	Assert(m_Windows.find(ID) != m_Windows.end(), "Window with ID '%s' doesn't exist.", ID);
+	return m_Windows.at(ID);
 }
 
 bool Application::IsMainWindow(Window* InWindow) const
