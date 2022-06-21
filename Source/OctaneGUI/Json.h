@@ -34,6 +34,8 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+class Lexer;
+
 class Json
 {
 public:
@@ -119,11 +121,10 @@ private:
 		Map* Object;
 	};
 
-	static const char* ParseKey(const char* Stream, std::string& Key);
-	static const char* ParseValue(const char* Stream, Json& Value);
-	static const char* ParseArray(const char* Stream, Json& Root);
-	static const char* ParseObject(const char* Stream, Json& Root);
-	static const char* ParseSpace(const char* Stream);
+	static void ParseKey(Lexer& InLexer, std::string& Key);
+	static void ParseValue(Lexer& InLexer, Json& Value);
+	static void ParseArray(Lexer& InLexer, Json& Root);
+	static void ParseObject(Lexer& InLexer, Json& Root);
 	static Json ParseToken(const std::string& Token);
 
 	static const Json Invalid;

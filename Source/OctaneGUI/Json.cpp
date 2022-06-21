@@ -35,6 +35,71 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+// TODO: Maybe move this into its own file to be used by other systems.
+class Lexer
+{
+public:
+	Lexer(const char* Stream)
+		: m_Stream(Stream)
+	{
+	}
+
+	unsigned char Current() const
+	{
+		return *m_Stream;
+	}
+
+	unsigned char Next()
+	{
+		if (IsEnd())
+		{
+			return Current();
+		}
+
+		m_Stream++;
+		m_Column++;
+		if (Current() == '\n')
+		{
+			m_Line++;
+			m_Column = 1;
+		}
+		return Current();
+	}
+
+	bool IsEnd() const
+	{
+		return Current() == '\0';
+	}
+
+	bool IsSpace() const
+	{
+		return std::isspace(Current());
+	}
+
+	void ConsumeSpaces()
+	{
+		while (!IsEnd() && IsSpace())
+		{
+			Next();
+		}
+	}
+
+	int Line() const
+	{
+		return m_Line;
+	}
+
+	int Column() const
+	{
+		return m_Column;
+	}
+
+private:
+	const char* m_Stream { nullptr };
+	int m_Line { 1 };
+	int m_Column { 1 };
+};
+
 std::string Json::ToLower(const std::string& Value)
 {
 	std::string Result;
@@ -110,8 +175,8 @@ std::u32string Json::ToUTF32(const std::string& Value)
 Json Json::Parse(const char* Stream)
 {
 	Json Result;
-	ParseValue(Stream, Result);
-	return Result;
+	ParseValue(Lexer(Stream), Result);
+	return std::move(Result);
 }
 
 const Json Json::Invalid;
@@ -460,20 +525,14 @@ std::string Json::ToString() const
 	return Result;
 }
 
-const char* Json::ParseKey(const char* Stream, std::string& Key)
+void Json::ParseKey(Lexer& InLexer, std::string& Key)
 {
 	Key = "";
 
-	if (Stream == nullptr)
-	{
-		return Stream;
-	}
-
 	bool Parsing = false;
-	const char* Ptr = Stream;
-	while (*Ptr != '\0')
+	while (!InLexer.IsEnd())
 	{
-		unsigned char Ch = *Ptr;
+		unsigned char Ch = InLexer.Current();
 
 		if (Ch == '"')
 		{
@@ -495,37 +554,31 @@ const char* Json::ParseKey(const char* Stream, std::string& Key)
 			Key += Ch;
 		}
 
-		Ptr++;
+		InLexer.Next();
 	}
-
-	return Ptr;
 }
 
-const char* Json::ParseValue(const char* Stream, Json& Value)
+void Json::ParseValue(Lexer& InLexer, Json& Value)
 {
 	Value = Json();
 
-	if (Stream == nullptr)
-	{
-		return Stream;
-	}
-
-	const char* Ptr = Stream;
 	std::string Token;
 	bool ParseString = false;
 	unsigned char LastCh = 0;
-	while (*Ptr != '\0')
+	while (!InLexer.IsEnd())
 	{
-		unsigned char Ch = *Ptr;
+		unsigned char Ch = InLexer.Current();
 
 		if (Ch == '{')
 		{
-			Ptr = ParseObject(++Ptr, Value);
+			InLexer.Next();
+			ParseObject(InLexer, Value);
 			break;
 		}
 		else if (Ch == '[')
 		{
-			Ptr = ParseArray(++Ptr, Value);
+			InLexer.Next();
+			ParseArray(InLexer, Value);
 			break;
 		}
 		else if (Ch == '"')
@@ -566,100 +619,67 @@ const char* Json::ParseValue(const char* Stream, Json& Value)
 		}
 
 		LastCh = Ch;
-		Ptr++;
+		InLexer.Next();
 	}
 
 	if (!Token.empty())
 	{
 		Value = ParseToken(Token);
 	}
-
-	return Ptr;
 }
 
-const char* Json::ParseArray(const char* Stream, Json& Root)
+void Json::ParseArray(Lexer& InLexer, Json& Root)
 {
 	Root = Json(Type::Array);
 
-	if (Stream == nullptr)
-	{
-		return Stream;
-	}
-
-	const char* Ptr = Stream;
-	while (*Ptr != '\0')
+	while (!InLexer.IsEnd())
 	{
 		Json Value;
-		Ptr = ParseValue(Ptr, Value);
+		ParseValue(InLexer, Value);
 
 		if (!Value.IsNull())
 		{
 			Root.m_Data.Array->push_back(std::move(Value));
 		}
 
-		Ptr = ParseSpace(Ptr);
+		InLexer.ConsumeSpaces();
 
-		if (*Ptr == ']')
+		if (InLexer.Current() == ']')
 		{
-			Ptr++;
+			InLexer.Next();
 			break;
 		}
 
-		Ptr++;
+		InLexer.Next();
 	}
-
-	return Ptr;
 }
 
-const char* Json::ParseObject(const char* Stream, Json& Root)
+void Json::ParseObject(Lexer& InLexer, Json& Root)
 {
 	Root = Json(Type::Object);
 
-	if (Stream == nullptr)
-	{
-		return Stream;
-	}
-
-	const char* Ptr = Stream;
 	std::string Key;
-	while (*Ptr != '\0')
+	while (!InLexer.IsEnd())
 	{
-		Ptr = ParseKey(Ptr, Key);
+		ParseKey(InLexer, Key);
 		if (!Key.empty())
 		{
 			Json Value;
-			Ptr = ParseValue(++Ptr, Value);
+			InLexer.Next();
+			ParseValue(InLexer, Value);
 			Root[Key] = std::move(Value);
 		}
 
-		Ptr = ParseSpace(Ptr);
+		InLexer.ConsumeSpaces();
 
-		if (*Ptr == '}')
+		if (InLexer.Current() == '}')
 		{
-			Ptr++;
+			InLexer.Next();
 			break;
 		}
 
-		Ptr++;
+		InLexer.Next();
 	}
-
-	return Ptr;
-}
-
-const char* Json::ParseSpace(const char* Stream)
-{
-	if (Stream == nullptr)
-	{
-		return Stream;
-	}
-
-	const char* Ptr = Stream;
-	while (std::isspace(*Ptr))
-	{
-		Ptr++;
-	}
-
-	return Ptr;
 }
 
 Json Json::ParseToken(const std::string& Token)
