@@ -66,6 +66,7 @@ SOFTWARE.
 #include "Paint.h"
 #include "Rect.h"
 #include "Theme.h"
+#include "Timer.h"
 #include "Variant.h"
 #include "Vector2.h"
 #include "Vertex.h"

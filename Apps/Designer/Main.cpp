@@ -29,6 +29,17 @@ int main(int argc, char **argv)
 	std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
 	Application.Initialize(GetContents("App.json").c_str(), WindowControls);
 
+	std::shared_ptr<OctaneGUI::TextInput> Document { nullptr };
+	std::shared_ptr<OctaneGUI::Text> StatusText { nullptr };
+
+	std::shared_ptr<OctaneGUI::Window> MainWindow = Application.GetWindow("Main");
+	std::shared_ptr<OctaneGUI::Timer> CompileTimer = MainWindow->CreateTimer(500, false, [&]() -> void
+		{
+			const std::string Contents = OctaneGUI::Json::ToMultiByte(Document->GetText());
+			OctaneGUI::Json::Parse(Contents.c_str());
+			StatusText->SetText(U"OK!");
+		});
+
 	const OctaneGUI::ControlList& MainList = WindowControls["Main"];
 	std::shared_ptr<OctaneGUI::MenuItem> QuitMenu = MainList.To<OctaneGUI::MenuItem>("File.Quit");
 	QuitMenu->SetOnPressed([&](OctaneGUI::TextSelectable& Item) -> void
@@ -36,7 +47,22 @@ int main(int argc, char **argv)
 			Application.Quit();
 		});
 	
-	std::shared_ptr<OctaneGUI::Text> StatusText = MainList.To<OctaneGUI::Text>("Status");
+	Document = MainList.To<OctaneGUI::TextInput>("Document");
+	Document->SetOnTextChanged([&](std::shared_ptr<OctaneGUI::TextInput>) -> void
+		{
+			CompileTimer->Start();
+		})
+		.SetText(UR"({
+	"Windows": {
+		"Main": {
+			"Title": "Untitled",
+			"Width": 960,
+			"Height": 540
+		}
+	}
+})");
+	
+	StatusText = MainList.To<OctaneGUI::Text>("Status");
 	StatusText->SetText(U"New Document");
 
 	return Application.Run();
