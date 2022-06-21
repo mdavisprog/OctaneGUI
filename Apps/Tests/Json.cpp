@@ -194,8 +194,8 @@ TEST_CASE(EmptyObject,
 	OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Empty\": {}, \"Filled\": {\"Property\": \"One\"}}");
 	const OctaneGUI::Json& Empty = Root["Empty"];
 	const OctaneGUI::Json& Filled = Root["Filled"];
-	VERIFYF(Empty.IsObject() && Empty.Count() == 0, "Empty object is not empty!");
-	VERIFYF(Filled.IsObject() && Filled.Count() == 1, "Filled object is incorrect!");
+	VERIFYF(Empty.IsObject() && Empty.Count() == 0, "Empty object is not empty!\n");
+	VERIFYF(Filled.IsObject() && Filled.Count() == 1, "Filled object is incorrect!\n");
 	return std::string(Filled["Property"].String()) == "One";
 })
 
@@ -203,6 +203,38 @@ TEST_CASE(CommaInString,
 {
 	OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Text\": \"Hello, World\"}");
 	return std::string(Root["Text"].String()) == "Hello, World";
+})
+
+TEST_CASE(InvalidKey_NoStartingQuote,
+{
+	bool IsError = false;
+	OctaneGUI::Json Root = OctaneGUI::Json::Parse("{Hello\": \"World\"}", IsError);
+	return IsError && Root["Column"].Number() == 2.0f;
+})
+
+TEST_CASE(InvalidKey_NoEndingQuote,
+{
+	bool IsError = false;
+	OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Hello: \"World\"}", IsError);
+	// The first quote for "World" is parsed as the ending quote for "Hello". The parser
+	// expects a valid ':' character but it was not found due to it being parsed as part of
+	// the key. So the error will be that it did not find the ':' character at the expected
+	// location before the 'W' character.
+	return IsError && Root["Column"].Number() == 11.0f;
+})
+
+TEST_CASE(InvalidObjectError,
+{
+	bool IsError = false;
+	OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Text\": \"Hello\"", IsError);
+	return IsError;
+})
+
+TEST_CASE(InvalidSubObjectError,
+{
+	bool IsError = false;
+	OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Object\": \"Hello\": \"World\"}}", IsError);
+	return IsError && Root["Column"].Number() == 19.0f;
 })
 
 )
