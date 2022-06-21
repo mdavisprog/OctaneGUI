@@ -56,6 +56,7 @@ public:
 	static std::u32string ToUTF32(const std::string& Value);
 
 	static Json Parse(const char* Stream);
+	static Json Parse(const char* Stream, bool& IsError);
 
 	// TODO: Maybe not allow declaring a Null type due to no memory allocation
 	// 		 for retrieving values from array/string/object? Or memory allocation could
@@ -121,11 +122,12 @@ private:
 		Map* Object;
 	};
 
-	static void ParseKey(Lexer& InLexer, std::string& Key);
-	static void ParseValue(Lexer& InLexer, Json& Value);
-	static void ParseArray(Lexer& InLexer, Json& Root);
-	static void ParseObject(Lexer& InLexer, Json& Root);
+	static void ParseKey(Lexer& InLexer, std::string& Key, bool& IsError);
+	static void ParseValue(Lexer& InLexer, Json& Value, bool& IsError);
+	static void ParseArray(Lexer& InLexer, Json& Root, bool& IsError);
+	static void ParseObject(Lexer& InLexer, Json& Root, bool& IsError);
 	static Json ParseToken(const std::string& Token);
+	static Json Error(const Lexer& InLexer, const char* Message, ...);
 
 	static const Json Invalid;
 

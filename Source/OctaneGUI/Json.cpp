@@ -28,7 +28,9 @@ SOFTWARE.
 
 #include <cassert>
 #include <cctype>
+#include <climits>
 #include <codecvt>
+#include <cstdarg>
 #include <cstring>
 #include <utility>
 
@@ -174,9 +176,16 @@ std::u32string Json::ToUTF32(const std::string& Value)
 
 Json Json::Parse(const char* Stream)
 {
+	bool IsError = false;
+	return Parse(Stream, IsError);
+}
+
+Json Json::Parse(const char* Stream, bool& IsError)
+{
+	IsError = false;
 	Json Result;
-	ParseValue(Lexer(Stream), Result);
-	return std::move(Result);
+	ParseValue(Lexer(Stream), Result, IsError);
+	return Result;
 }
 
 const Json Json::Invalid;
@@ -525,7 +534,7 @@ std::string Json::ToString() const
 	return Result;
 }
 
-void Json::ParseKey(Lexer& InLexer, std::string& Key)
+void Json::ParseKey(Lexer& InLexer, std::string& Key, bool& IsError)
 {
 	Key = "";
 
@@ -542,23 +551,27 @@ void Json::ParseKey(Lexer& InLexer, std::string& Key)
 			}
 			else
 			{
+				// Advance after the current '"' character.
+				InLexer.Next();
 				break;
 			}
-		}
-		else if (Ch == '}')
-		{
-			break;
 		}
 		else if (Parsing)
 		{
 			Key += Ch;
+		}
+		else
+		{
+			Key = "Key does not start with '\"' character.";
+			IsError = true;
+			break;
 		}
 
 		InLexer.Next();
 	}
 }
 
-void Json::ParseValue(Lexer& InLexer, Json& Value)
+void Json::ParseValue(Lexer& InLexer, Json& Value, bool& IsError)
 {
 	Value = Json();
 
@@ -572,19 +585,29 @@ void Json::ParseValue(Lexer& InLexer, Json& Value)
 		if (Ch == '{')
 		{
 			InLexer.Next();
-			ParseObject(InLexer, Value);
+			ParseObject(InLexer, Value, IsError);
 			break;
 		}
 		else if (Ch == '[')
 		{
 			InLexer.Next();
-			ParseArray(InLexer, Value);
+			ParseArray(InLexer, Value, IsError);
 			break;
 		}
 		else if (Ch == '"')
 		{
-			ParseString = !ParseString;
 			Token += Ch;
+			if (ParseString)
+			{
+				InLexer.Next();
+				Value = ParseToken(Token);
+				Token = "";
+				break;
+			}
+			else
+			{
+				ParseString = true;
+			}
 		}
 		else if (!ParseString && (Ch == ',' || Ch == '}' || Ch == ']'))
 		{
@@ -622,20 +645,21 @@ void Json::ParseValue(Lexer& InLexer, Json& Value)
 		InLexer.Next();
 	}
 
+	// This may come up if the stream just contains a number or boolean.
 	if (!Token.empty())
 	{
 		Value = ParseToken(Token);
 	}
 }
 
-void Json::ParseArray(Lexer& InLexer, Json& Root)
+void Json::ParseArray(Lexer& InLexer, Json& Root, bool& IsError)
 {
 	Root = Json(Type::Array);
 
 	while (!InLexer.IsEnd())
 	{
 		Json Value;
-		ParseValue(InLexer, Value);
+		ParseValue(InLexer, Value, IsError);
 
 		if (!Value.IsNull())
 		{
@@ -654,31 +678,67 @@ void Json::ParseArray(Lexer& InLexer, Json& Root)
 	}
 }
 
-void Json::ParseObject(Lexer& InLexer, Json& Root)
+void Json::ParseObject(Lexer& InLexer, Json& Root, bool& IsError)
 {
 	Root = Json(Type::Object);
 
 	std::string Key;
 	while (!InLexer.IsEnd())
 	{
-		ParseKey(InLexer, Key);
-		if (!Key.empty())
-		{
-			Json Value;
-			InLexer.Next();
-			ParseValue(InLexer, Value);
-			Root[Key] = std::move(Value);
-		}
-
 		InLexer.ConsumeSpaces();
 
+		// Empty object.
 		if (InLexer.Current() == '}')
 		{
 			InLexer.Next();
 			break;
 		}
 
-		InLexer.Next();
+		ParseKey(InLexer, Key, IsError);
+
+		if (IsError)
+		{
+			Root = Error(InLexer, "%s", Key.c_str());
+			break;
+		}
+		else if (!Key.empty())
+		{
+			InLexer.ConsumeSpaces();
+			if (InLexer.Current() == ':')
+			{
+				Json Value;
+				InLexer.Next();
+				ParseValue(InLexer, Value, IsError);
+				Root[Key] = std::move(Value);
+			}
+			else
+			{
+				Root = Error(InLexer, "Expected ':' character. Found '%c' instead.", InLexer.Current());
+				IsError = true;
+				break;
+			}
+		}
+
+		unsigned char Ch = InLexer.Current();
+
+		InLexer.ConsumeSpaces();
+
+		if (InLexer.Current() == '}')
+		{
+			// Object is complete.
+			InLexer.Next();
+			break;
+		}
+		else if (InLexer.Current() == ',')
+		{
+			InLexer.Next();
+		}
+		else
+		{
+			Root = Error(InLexer, "Invalid object separator '%c'. Expected ',' or '}'.", InLexer.Current());
+			IsError = true;
+			break;
+		}
 	}
 }
 
@@ -709,6 +769,27 @@ Json Json::ParseToken(const std::string& Token)
 		Result = std::stof(Token);
 	}
 
+	return Result;
+}
+
+Json Json::Error(const Lexer& InLexer, const char* Message, ...)
+{
+	va_list List;
+	va_start(List, Message);
+
+	std::string Buffer;
+	Buffer.resize(SHRT_MAX);
+	vsnprintf(Buffer.data(), Buffer.size(), Message, List);
+
+	va_end(List);
+
+	const std::string Position = std::to_string(InLexer.Line()) + ":" + std::to_string(InLexer.Column());
+	Json Result { Type::Object };
+	Result["Error"] = Position + " " + Buffer;
+	Result["Line"] = (float)InLexer.Line();
+	Result["Column"] = (float)InLexer.Column();
+
+	// Should be move constructed.
 	return Result;
 }
 
