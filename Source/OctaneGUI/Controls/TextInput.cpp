@@ -308,6 +308,12 @@ void TextInput::Unfocus()
 	Invalidate();
 }
 
+TextInput& TextInput::SetOnTextChanged(OnTextChangedSignature&& Fn)
+{
+	m_OnTextChanged = std::move(Fn);
+	return *this;
+}
+
 void TextInput::OnPaint(Paint& Brush) const
 {
 	std::shared_ptr<Theme> TheTheme = GetTheme();
@@ -951,6 +957,11 @@ void TextInput::InternalSetText(const char32_t* InText)
 {
 	m_Text->SetText(InText);
 	Invalidate();
+
+	if (m_OnTextChanged)
+	{
+		m_OnTextChanged(TShare<TextInput>());
+	}
 }
 
 void TextInput::ResetCursorTimer()

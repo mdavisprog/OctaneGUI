@@ -42,6 +42,8 @@ class TextInput : public ScrollableViewControl
 	CLASS(TextInput)
 
 public:
+	typedef std::function<void(std::shared_ptr<TextInput>)> OnTextChangedSignature;
+
 	class TextPosition
 	{
 	public:
@@ -83,6 +85,8 @@ public:
 
 	void Focus();
 	void Unfocus();
+
+	TextInput& SetOnTextChanged(OnTextChangedSignature&& Fn);
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
@@ -130,6 +134,8 @@ private:
 
 	TextPosition m_FirstVisibleLine { 0, 0, 0 };
 	TextPosition m_LastVisibleLine {};
+
+	OnTextChangedSignature m_OnTextChanged { nullptr };
 };
 
 }
