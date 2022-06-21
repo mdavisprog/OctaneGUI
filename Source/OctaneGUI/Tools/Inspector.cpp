@@ -239,21 +239,22 @@ void Inspector::Inspect(Window* Target)
 
 		ControlList List;
 		std::shared_ptr<Window> NewWindow = Target->App().NewWindow("Inspector", Stream.str().c_str(), List);
-		NewWindow->SetOnClose([this](Window& InWindow) -> void
-			{
-				Close();
-			})
-			->SetOnLayout([this](Window&) -> void
-			{
-				// TODO: This could possibly be a generic function within the ScrollableContainer. Should have an option for immediate offset or wait until the
-				// next layout update.
-				if (!m_PendingFocus.expired())
+		NewWindow
+			->SetOnClose([this](Window& InWindow) -> void
 				{
-					const std::shared_ptr<ScrollableViewControl>& TreeView = std::dynamic_pointer_cast<ScrollableViewControl>(m_Root.lock()->First()->Get(0));
-					TreeView->Scrollable()->ScrollIntoView(m_PendingFocus.lock());
-					m_PendingFocus.reset();
-				}
-			});
+					Close();
+				})
+			->SetOnLayout([this](Window&) -> void
+				{
+					// TODO: This could possibly be a generic function within the ScrollableContainer. Should have an option for immediate offset or wait until the
+					// next layout update.
+					if (!m_PendingFocus.expired())
+					{
+						const std::shared_ptr<ScrollableViewControl>& TreeView = std::dynamic_pointer_cast<ScrollableViewControl>(m_Root.lock()->First()->Get(0));
+						TreeView->Scrollable()->ScrollIntoView(m_PendingFocus.lock());
+						m_PendingFocus.reset();
+					}
+				});
 		m_Window = NewWindow;
 
 		List.To<CheckBox>("Picker")
