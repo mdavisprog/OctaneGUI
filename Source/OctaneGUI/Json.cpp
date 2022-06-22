@@ -671,7 +671,12 @@ void Json::ParseArray(Lexer& InLexer, Json& Root, bool& IsError)
 		Json Value;
 		ParseValue(InLexer, Value, IsError);
 
-		if (!Value.IsNull())
+		if (IsError)
+		{
+			Root = std::move(Value);
+			break;
+		}
+		else if (!Value.IsNull())
 		{
 			Root.m_Data.Array->push_back(std::move(Value));
 		}
@@ -727,7 +732,14 @@ void Json::ParseObject(Lexer& InLexer, Json& Root, bool& IsError)
 				Json Value;
 				InLexer.Next();
 				ParseValue(InLexer, Value, IsError);
-				Root[Key] = std::move(Value);
+				if (IsError)
+				{
+					Root = std::move(Value);
+				}
+				else
+				{
+					Root[Key] = std::move(Value);
+				}
 			}
 			else
 			{
