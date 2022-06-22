@@ -38,6 +38,13 @@ TEST_CASE(IsNull,
 	return Root.IsNull();
 })
 
+TEST_CASE(IsNullValue,
+{
+	bool IsError = false;
+	OctaneGUI::Json Root = OctaneGUI::Json::Parse("null", IsError);
+	return !IsError && Root.IsNull();
+})
+
 TEST_CASE(IsObject,
 {
 	OctaneGUI::Json Root = OctaneGUI::Json::Parse("{}");
@@ -256,6 +263,20 @@ TEST_CASE(InvalidArrayDelimiter,
 	bool IsError = false;
 	OctaneGUI::Json Root = OctaneGUI::Json::Parse("[1, 2 3]", IsError);
 	return IsError && Root["Column"].Number() == 7.0f;
+})
+
+TEST_CASE(InvalidValue,
+{
+	bool IsError = false;
+	OctaneGUI::Json Root = OctaneGUI::Json::Parse("nil", IsError);
+	return IsError;
+})
+
+TEST_CASE(InvalidNumber,
+{
+	bool IsError = false;
+	OctaneGUI::Json Root = OctaneGUI::Json::Parse("34fe", IsError);
+	return IsError;
 })
 
 )
