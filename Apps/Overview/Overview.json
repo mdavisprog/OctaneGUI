@@ -90,7 +90,7 @@
 			"Height": 200,
 			"Body": {"Controls": [
 				{"Type": "Panel", "Expand": "Both"},
-				{"Type": "MarginContainer", "Margins": [8, 8, 8, 8], "Controls": [
+				{"Type": "MarginContainer", "Expand": "Both", "Margins": [8, 8, 8, 8], "Controls": [
 					{"Type": "VerticalContainer", "Expand": "Both", "Grow": "Center", "Controls": [
 						{"Type": "HorizontalContainer", "Expand": "Width", "Grow": "Center", "Controls": [
 							{"Type": "Text", "Text": "OctaneGUI"}

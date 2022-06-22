@@ -66,7 +66,9 @@ CommandPalette::CommandPalette(Window* InWindow)
 	m_Container->SetExpand(Expand::Both);
 
 	std::shared_ptr<MarginContainer> Margins = m_Container->AddControl<MarginContainer>();
-	Margins->SetMargins({ 4.0f, 4.0f, 4.0f, 4.0f });
+	Margins
+		->SetMargins({ 4.0f, 4.0f, 4.0f, 4.0f })
+		.SetExpand(Expand::Both);
 
 	m_Input = Margins->AddControl<TextInput>();
 	m_Input->SetExpand(Expand::Width);
