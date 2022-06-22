@@ -183,8 +183,9 @@ Json Json::Parse(const char* Stream)
 Json Json::Parse(const char* Stream, bool& IsError)
 {
 	IsError = false;
+	Lexer Lex { Stream };
 	Json Result;
-	ParseValue(Lexer(Stream), Result, IsError);
+	ParseValue(Lex, Result, IsError);
 	return Result;
 }
 
