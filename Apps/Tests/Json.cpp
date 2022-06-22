@@ -279,6 +279,19 @@ TEST_CASE(InvalidNumber,
 	return IsError;
 })
 
+TEST_CASE(InvalidMultiline,
+{
+	bool IsError = false;
+	const char* Json = R"({
+	"Object 1": {
+		"Boolean": true,
+		"Invalid": invalid
+	}
+})";
+	OctaneGUI::Json Root = OctaneGUI::Json::Parse(Json, IsError);
+	return IsError && Root["Line"].Number() == 5.0f;
+})
+
 )
 
 }
