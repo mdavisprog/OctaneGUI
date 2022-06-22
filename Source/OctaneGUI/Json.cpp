@@ -575,6 +575,8 @@ void Json::ParseValue(Lexer& InLexer, Json& Value, bool& IsError)
 {
 	Value = Json();
 
+	InLexer.ConsumeSpaces();
+
 	std::string Token;
 	bool ParseString = false;
 	unsigned char LastCh = 0;
@@ -609,7 +611,7 @@ void Json::ParseValue(Lexer& InLexer, Json& Value, bool& IsError)
 				ParseString = true;
 			}
 		}
-		else if (!ParseString && (Ch == ',' || Ch == '}' || Ch == ']'))
+		else if (!ParseString && (Ch == ',' || Ch == '}' || Ch == ']' || std::isspace(Ch)))
 		{
 			Value = ParseToken(Token);
 			Token = "";
@@ -658,6 +660,12 @@ void Json::ParseArray(Lexer& InLexer, Json& Root, bool& IsError)
 
 	while (!InLexer.IsEnd())
 	{
+		if (InLexer.Current() == ']')
+		{
+			InLexer.Next();
+			break;
+		}
+
 		Json Value;
 		ParseValue(InLexer, Value, IsError);
 
@@ -673,8 +681,16 @@ void Json::ParseArray(Lexer& InLexer, Json& Root, bool& IsError)
 			InLexer.Next();
 			break;
 		}
-
-		InLexer.Next();
+		else if (InLexer.Current() == ',')
+		{
+			InLexer.Next();
+		}
+		else
+		{
+			Root = Error(InLexer, "Invalid array separator '%c'. Expected ',' or '].", InLexer.Current());
+			IsError = true;
+			break;
+		}
 	}
 }
 
