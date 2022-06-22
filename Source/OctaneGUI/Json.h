@@ -126,7 +126,7 @@ private:
 	static void ParseValue(Lexer& InLexer, Json& Value, bool& IsError);
 	static void ParseArray(Lexer& InLexer, Json& Root, bool& IsError);
 	static void ParseObject(Lexer& InLexer, Json& Root, bool& IsError);
-	static Json ParseToken(const std::string& Token);
+	static Json ParseToken(const std::string& Token, bool& IsError);
 	static Json Error(const Lexer& InLexer, const char* Message, ...);
 
 	static const Json Invalid;

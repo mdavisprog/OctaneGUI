@@ -603,8 +603,6 @@ void Json::ParseValue(Lexer& InLexer, Json& Value, bool& IsError)
 			if (ParseString)
 			{
 				InLexer.Next();
-				Value = ParseToken(Token);
-				Token = "";
 				break;
 			}
 			else
@@ -614,8 +612,6 @@ void Json::ParseValue(Lexer& InLexer, Json& Value, bool& IsError)
 		}
 		else if (!ParseString && (Ch == ',' || Ch == '}' || Ch == ']' || std::isspace(Ch)))
 		{
-			Value = ParseToken(Token);
-			Token = "";
 			break;
 		}
 		else if (isalnum(Ch) || ParseString || Ch == '.' || Ch == '-')
@@ -651,7 +647,12 @@ void Json::ParseValue(Lexer& InLexer, Json& Value, bool& IsError)
 	// This may come up if the stream just contains a number or boolean.
 	if (!Token.empty())
 	{
-		Value = ParseToken(Token);
+		Value = ParseToken(Token, IsError);
+
+		if (IsError)
+		{
+			Value = Error(InLexer, "Invalid Json value '%s'.", Token.c_str());
+		}
 	}
 }
 
@@ -759,7 +760,7 @@ void Json::ParseObject(Lexer& InLexer, Json& Root, bool& IsError)
 	}
 }
 
-Json Json::ParseToken(const std::string& Token)
+Json Json::ParseToken(const std::string& Token, bool& IsError)
 {
 	Json Result;
 
@@ -781,9 +782,17 @@ Json Json::ParseToken(const std::string& Token)
 	{
 		Result = false;
 	}
+	else if (Lower == "null")
+	{
+		// Do nothing.
+	}
 	else if (Token.find_first_not_of("-.0123456789") == std::string::npos)
 	{
 		Result = std::stof(Token);
+	}
+	else
+	{
+		IsError = true;
 	}
 
 	return Result;
