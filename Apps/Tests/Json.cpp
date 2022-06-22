@@ -230,11 +230,18 @@ TEST_CASE(InvalidObjectError,
 	return IsError;
 })
 
-TEST_CASE(InvalidSubObjectError,
+TEST_CASE(InvalidObjectSyntaxError,
 {
 	bool IsError = false;
 	OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Object\": \"Hello\": \"World\"}}", IsError);
 	return IsError && Root["Column"].Number() == 19.0f;
+})
+
+TEST_CASE(InvalidSubObjectError,
+{
+	bool IsError = false;
+	OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Object1\": {\"Hello\": \"World\"}, \"Object2\": {\"Foo: \"Bar\"}}", IsError);
+	return IsError && Root["Column"].Number() == 52.0f;
 })
 
 TEST_CASE(InvalidArrayError,
