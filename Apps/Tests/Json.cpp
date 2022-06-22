@@ -237,6 +237,20 @@ TEST_CASE(InvalidSubObjectError,
 	return IsError && Root["Column"].Number() == 19.0f;
 })
 
+TEST_CASE(InvalidArrayError,
+{
+	bool IsError = false;
+	OctaneGUI::Json Root = OctaneGUI::Json::Parse("[1, 2, 3", IsError);
+	return IsError && Root["Column"].Number() == 9.0f;
+})
+
+TEST_CASE(InvalidArrayDelimiter,
+{
+	bool IsError = false;
+	OctaneGUI::Json Root = OctaneGUI::Json::Parse("[1, 2 3]", IsError);
+	return IsError && Root["Column"].Number() == 7.0f;
+})
+
 )
 
 }
