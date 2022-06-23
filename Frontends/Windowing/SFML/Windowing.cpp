@@ -57,6 +57,7 @@ OctaneGUI::Keyboard::Key GetKeyCode(sf::Keyboard::Key Key)
 	case sf::Keyboard::RControl: return OctaneGUI::Keyboard::Key::RightControl;
 	case sf::Keyboard::Enter: return OctaneGUI::Keyboard::Key::Enter;
 	case sf::Keyboard::Tilde: return OctaneGUI::Keyboard::Key::Tilde;
+	case sf::Keyboard::Tab: return OctaneGUI::Keyboard::Key::Tab;
 	default: break;
 	}
 
@@ -156,7 +157,15 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 		}
 
 		case sf::Event::TextEntered:
+		{
+			// Ignore tab characters when using SFML. The 'sf::Keyboard::Key::Tab' will capture these characters.
+			if (Event.text.unicode == '\t')
+			{
+				break;
+			}
+
 			return OctaneGUI::Event(OctaneGUI::Event::Text(Event.text.unicode));
+		}
 
 		case sf::Event::Resized:
 			RenderWindow->setView(sf::View(sf::FloatRect(0.0f, 0.0f, (float)Event.size.width, (float)Event.size.height)));

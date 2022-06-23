@@ -55,6 +55,7 @@ OctaneGUI::Keyboard::Key GetKey(SDL_Keycode Code)
 	case SDLK_LCTRL: return OctaneGUI::Keyboard::Key::LeftControl;
 	case SDLK_RCTRL: return OctaneGUI::Keyboard::Key::RightControl;
 	case SDLK_RETURN: return OctaneGUI::Keyboard::Key::Enter;
+	case SDLK_TAB: return OctaneGUI::Keyboard::Key::Tab;
 	default: break;
 	}
 

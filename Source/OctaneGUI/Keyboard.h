@@ -52,6 +52,7 @@ public:
 		RightControl,
 		Enter,
 		Tilde,
+		Tab,
 	};
 };
 
