@@ -94,6 +94,7 @@ public:
 		case Keyboard::Key::Home: m_Input->MoveHome(); return true;
 		case Keyboard::Key::End: m_Input->MoveEnd(); return true;
 		case Keyboard::Key::Enter: m_Input->AddText('\n'); return true;
+		case Keyboard::Key::Tab: m_Input->AddText('\t'); return true;
 		default: break;
 		}
 
