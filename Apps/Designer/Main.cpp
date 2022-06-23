@@ -36,8 +36,17 @@ int main(int argc, char **argv)
 	std::shared_ptr<OctaneGUI::Timer> CompileTimer = MainWindow->CreateTimer(500, false, [&]() -> void
 		{
 			const std::string Contents = OctaneGUI::Json::ToMultiByte(Document->GetText());
-			OctaneGUI::Json::Parse(Contents.c_str());
-			StatusText->SetText(U"OK!");
+			bool IsError = false;
+			OctaneGUI::Json Root = OctaneGUI::Json::Parse(Contents.c_str(), IsError);
+
+			if (IsError)
+			{
+				StatusText->SetText(OctaneGUI::Json::ToUTF32(Root["Error"].String()).c_str());
+			}
+			else
+			{
+				StatusText->SetText(U"OK!");
+			}
 		});
 
 	const OctaneGUI::ControlList& MainList = WindowControls["Main"];
