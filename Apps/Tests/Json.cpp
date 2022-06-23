@@ -292,6 +292,14 @@ TEST_CASE(InvalidMultiline,
 	return IsError && Root["Line"].Number() == 5.0f;
 })
 
+TEST_CASE(ValidEmptyString,
+{
+	bool IsError = false;
+	OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"\": true}", IsError);
+	printf("Root: %s\n", Root.ToString().c_str());
+	return !IsError;
+})
+
 )
 
 }
