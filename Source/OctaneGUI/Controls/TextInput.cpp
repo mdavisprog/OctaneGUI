@@ -273,6 +273,19 @@ const char32_t* TextInput::GetText() const
 	return m_Text->GetText();
 }
 
+const std::u32string_view TextInput::Line() const
+{
+	if (!m_Position.IsValid())
+	{
+		return U"";
+	}
+
+	uint32_t Start = LineStartIndex(m_Position.Index());
+	uint32_t End = LineEndIndex(m_Position.Index());
+
+	return std::u32string_view(&m_Text->GetString()[Start], End - Start);
+}
+
 TextInput& TextInput::SetReadOnly(bool Value)
 {
 	if (m_ReadOnly == Value)

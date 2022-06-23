@@ -79,6 +79,7 @@ public:
 	TextInput& SetText(const char* InText);
 	TextInput& SetText(const char32_t* InText);
 	const char32_t* GetText() const;
+	const std::u32string_view Line() const;
 
 	TextInput& SetReadOnly(bool Value);
 	bool ReadOnly() const;
