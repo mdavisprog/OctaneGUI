@@ -724,7 +724,7 @@ void Json::ParseObject(Lexer& InLexer, Json& Root, bool& IsError)
 			Root = Error(InLexer, "%s", Key.c_str());
 			break;
 		}
-		else if (!Key.empty())
+		else
 		{
 			InLexer.ConsumeSpaces();
 			if (InLexer.Current() == ':')
