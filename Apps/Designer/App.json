@@ -14,7 +14,7 @@
 				{"Type": "Panel", "Expand": "Both"},
 				{"Type": "MarginContainer", "Margins": [4, 4, 4, 4], "Expand": "Both", "Controls": [
 					{"Type": "VerticalContainer", "Expand": "Both", "Controls": [
-						{"Type": "TextInput", "ID": "Document", "Expand": "Both", "Multiline": true},
+						{"Type": "TextEditor", "ID": "Document", "Expand": "Both"},
 						{"Type": "HorizontalContainer", "Expand": "Width", "Controls": [
 							{"Type": "MarginContainer", "Expand": "Width", "Controls": [
 								{"Type": "Panel", "Expand": "Both"},
