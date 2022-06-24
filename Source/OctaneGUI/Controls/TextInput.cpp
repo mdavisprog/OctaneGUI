@@ -303,6 +303,17 @@ bool TextInput::ReadOnly() const
 	return m_ReadOnly;
 }
 
+TextInput& TextInput::SetMulitline(bool Multiline)
+{
+	m_Multiline = Multiline;
+	return *this;
+}
+
+bool TextInput::Multiline() const
+{
+	return m_Multiline;
+}
+
 void TextInput::Focus()
 {
 	if (!m_Position.IsValid())
@@ -325,6 +336,12 @@ void TextInput::Unfocus()
 TextInput& TextInput::SetOnTextChanged(OnTextChangedSignature&& Fn)
 {
 	m_OnTextChanged = std::move(Fn);
+	return *this;
+}
+
+TextInput& TextInput::SetOnModifyText(OnModifyTextSignature&& Fn)
+{
+	m_OnModifyText = std::move(Fn);
 	return *this;
 }
 
@@ -549,8 +566,13 @@ void TextInput::AddText(const std::u32string& Contents)
 		Delete(GetRangeOr(0));
 	}
 
-	// TODO: Look into if we can avoid a copy.
-	std::u32string Stripped = std::move(Contents);
+	std::u32string Pending = std::move(Contents);
+	if (m_OnModifyText)
+	{
+		Pending = m_OnModifyText(TShare<TextInput>(), Pending);
+	}
+
+	std::u32string Stripped = std::move(Pending);
 	Remove(Stripped, '\r');
 
 	if (!m_Multiline)
