@@ -27,6 +27,7 @@ set(SOURCE
 	Controls/Table.cpp
 	Controls/Text.cpp
 	Controls/TextButton.cpp
+	Controls/TextEditor.cpp
 	Controls/TextInput.cpp
 	Controls/TextSelectable.cpp
 	Controls/Tree.cpp

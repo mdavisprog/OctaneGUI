@@ -45,6 +45,7 @@ SOFTWARE.
 #include "Table.h"
 #include "Text.h"
 #include "TextButton.h"
+#include "TextEditor.h"
 #include "TextInput.h"
 #include "TextSelectable.h"
 #include "Tree.h"
@@ -142,6 +143,10 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 	else if (Type == TextButton::TypeName())
 	{
 		Result = AddControl<TextButton>();
+	}
+	else if (Type == TextEditor::TypeName())
+	{
+		Result = AddControl<TextEditor>();
 	}
 	else if (Type == TextInput::TypeName())
 	{

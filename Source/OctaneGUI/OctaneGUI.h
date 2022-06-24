@@ -54,6 +54,7 @@ SOFTWARE.
 #include "Controls/Table.h"
 #include "Controls/Text.h"
 #include "Controls/TextButton.h"
+#include "Controls/TextEditor.h"
 #include "Controls/TextInput.h"
 #include "Controls/TextSelectable.h"
 #include "Controls/VerticalContainer.h"
