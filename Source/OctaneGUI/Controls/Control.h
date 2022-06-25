@@ -156,11 +156,18 @@ public:
 	void ClearProperty(ThemeProperties::Property Property);
 
 	std::shared_ptr<Control> Share();
+	std::shared_ptr<Control const> Share() const;
 
 	template <class T>
 	std::shared_ptr<T> TShare()
 	{
 		return std::dynamic_pointer_cast<T>(Share());
+	}
+
+	template <class T>
+	std::shared_ptr<T const> TShare() const
+	{
+		return std::dynamic_pointer_cast<T const>(Share());
 	}
 
 	virtual void OnPaint(Paint& Brush) const;

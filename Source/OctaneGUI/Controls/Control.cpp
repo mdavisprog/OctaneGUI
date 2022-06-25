@@ -285,6 +285,11 @@ std::shared_ptr<Control> Control::Share()
 	return shared_from_this();
 }
 
+std::shared_ptr<Control const> Control::Share() const
+{
+	return shared_from_this();
+}
+
 void Control::OnPaint(Paint& Brush) const
 {
 }
