@@ -28,6 +28,8 @@ SOFTWARE.
 
 #include "TextInput.h"
 
+#include <unordered_map>
+
 namespace OctaneGUI
 {
 
@@ -41,12 +43,18 @@ public:
 	TextEditor& SetMatchIndent(bool MatchIndent);
 	bool MatchIndent() const;
 
+	TextEditor& SetLineColor(const size_t Line, const Color& _Color);
+	TextEditor& ClearLineColor(const size_t Line);
+	TextEditor& ClearLineColors();
+
 	virtual void OnLoad(const Json& Root) override;
 
 private:
 	std::u32string ModifyText(const std::u32string& Pending) const;
+	void PaintLineColors(std::shared_ptr<TextInput const>& Input, Paint& Brush) const;
 
 	bool m_MatchIndent { true };
+	std::unordered_map<size_t, Color> m_LineColors {};
 };
 
 }

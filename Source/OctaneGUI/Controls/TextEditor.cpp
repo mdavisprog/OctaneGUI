@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "TextEditor.h"
 #include "../Json.h"
+#include "../Paint.h"
 
 namespace OctaneGUI
 {
@@ -39,6 +40,11 @@ TextEditor::TextEditor(Window* InWindow)
 		{
 			return ModifyText(Pending);
 		});
+	
+	SetOnPrePaintText([this](std::shared_ptr<TextInput const> Input, Paint& Brush) -> void
+		{
+			PaintLineColors(Input, Brush);
+		});
 }
 
 TextEditor& TextEditor::SetMatchIndent(bool MatchIndent)
@@ -50,6 +56,24 @@ TextEditor& TextEditor::SetMatchIndent(bool MatchIndent)
 bool TextEditor::MatchIndent() const
 {
 	return m_MatchIndent;
+}
+
+TextEditor& TextEditor::SetLineColor(const size_t Line, const Color& _Color)
+{
+	m_LineColors[Line] = _Color;
+	return *this;
+}
+
+TextEditor& TextEditor::ClearLineColor(const size_t Line)
+{
+	m_LineColors.erase(Line);
+	return *this;
+}
+
+TextEditor& TextEditor::ClearLineColors()
+{
+	m_LineColors.clear();
+	return *this;
 }
 
 void TextEditor::OnLoad(const Json& Root)
@@ -85,6 +109,17 @@ std::u32string TextEditor::ModifyText(const std::u32string& Pending) const
 	}
 
 	return Result;
+}
+
+void TextEditor::PaintLineColors(std::shared_ptr<TextInput const>& Input, Paint& Brush) const
+{
+	for (const std::pair<size_t, Color>& Line : m_LineColors)
+	{
+		Rect Bounds { GetAbsoluteBounds() };
+		Bounds.Min.Y += (Line.first - 1) * LineHeight();
+		Bounds.Max.Y = Bounds.Min.Y + LineHeight();
+		Brush.Rectangle(Bounds, Line.second);
+	}
 }
 
 }
