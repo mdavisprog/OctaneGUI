@@ -31,6 +31,7 @@ int main(int argc, char **argv)
 
 	std::shared_ptr<OctaneGUI::TextInput> Document { nullptr };
 	std::shared_ptr<OctaneGUI::Text> StatusText { nullptr };
+	std::shared_ptr<OctaneGUI::Panel> StatusBar { nullptr };
 
 	std::shared_ptr<OctaneGUI::Window> MainWindow = Application.GetWindow("Main");
 	std::shared_ptr<OctaneGUI::Timer> CompileTimer = MainWindow->CreateTimer(500, false, [&]() -> void
@@ -41,10 +42,12 @@ int main(int argc, char **argv)
 
 			if (IsError)
 			{
+				StatusBar->SetProperty(OctaneGUI::ThemeProperties::Panel, OctaneGUI::Color(148, 0, 0, 255));
 				StatusText->SetText(OctaneGUI::Json::ToUTF32(Root["Error"].String()).c_str());
 			}
 			else
 			{
+				StatusBar->ClearProperty(OctaneGUI::ThemeProperties::Panel);
 				StatusText->SetText(U"OK!");
 			}
 		});
@@ -71,6 +74,7 @@ int main(int argc, char **argv)
 	}
 })");
 	
+	StatusBar = MainList.To<OctaneGUI::Panel>("StatusBar");
 	StatusText = MainList.To<OctaneGUI::Text>("Status");
 	StatusText->SetText(U"New Document");
 

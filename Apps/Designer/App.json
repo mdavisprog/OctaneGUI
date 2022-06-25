@@ -17,7 +17,7 @@
 						{"Type": "TextEditor", "ID": "Document", "Expand": "Both"},
 						{"Type": "HorizontalContainer", "Expand": "Width", "Controls": [
 							{"Type": "MarginContainer", "Expand": "Width", "Controls": [
-								{"Type": "Panel", "Expand": "Both"},
+								{"Type": "Panel", "ID": "StatusBar", "Expand": "Both"},
 								{"Type": "Text", "ID": "Status", "Text": "Status Bar"}
 							]}
 						]}
