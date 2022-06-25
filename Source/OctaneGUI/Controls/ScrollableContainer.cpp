@@ -145,6 +145,16 @@ Vector2 ScrollableContainer::ContentSize() const
 	return m_ContentSize;
 }
 
+Vector2 ScrollableContainer::Overflow() const
+{
+	return GetOverflow();
+}
+
+Vector2 ScrollableContainer::Offset() const
+{
+	return -GetPosition();
+}
+
 const std::shared_ptr<ScrollBar>& ScrollableContainer::HorizontalScrollBar() const
 {
 	return m_HorizontalSB;

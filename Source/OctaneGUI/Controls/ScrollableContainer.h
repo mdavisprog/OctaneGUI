@@ -46,6 +46,8 @@ public:
 	bool IsInScrollBar(const Vector2& Point) const;
 	bool IsScrollBarVisible(const std::shared_ptr<Control>& Item) const;
 	Vector2 ContentSize() const;
+	Vector2 Overflow() const;
+	Vector2 Offset() const;
 
 	const std::shared_ptr<ScrollBar>& HorizontalScrollBar() const;
 	const std::shared_ptr<ScrollBar>& VerticalScrollBar() const;
