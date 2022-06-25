@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 	std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
 	Application.Initialize(GetContents("App.json").c_str(), WindowControls);
 
-	std::shared_ptr<OctaneGUI::TextInput> Document { nullptr };
+	std::shared_ptr<OctaneGUI::TextEditor> Document { nullptr };
 	std::shared_ptr<OctaneGUI::Text> StatusText { nullptr };
 	std::shared_ptr<OctaneGUI::Panel> StatusBar { nullptr };
 
@@ -40,8 +40,12 @@ int main(int argc, char **argv)
 			bool IsError = false;
 			OctaneGUI::Json Root = OctaneGUI::Json::Parse(Contents.c_str(), IsError);
 
+			Document->ClearLineColors();
+
 			if (IsError)
 			{
+				size_t Line = (size_t)Root["Line"].Number();
+				Document->SetLineColor(Line, OctaneGUI::Color(148, 0, 0, 255));
 				StatusBar->SetProperty(OctaneGUI::ThemeProperties::Panel, OctaneGUI::Color(148, 0, 0, 255));
 				StatusText->SetText(OctaneGUI::Json::ToUTF32(Root["Error"].String()).c_str());
 			}
@@ -59,7 +63,7 @@ int main(int argc, char **argv)
 			Application.Quit();
 		});
 	
-	Document = MainList.To<OctaneGUI::TextInput>("Document");
+	Document = MainList.To<OctaneGUI::TextEditor>("Document");
 	Document->SetOnTextChanged([&](std::shared_ptr<OctaneGUI::TextInput>) -> void
 		{
 			CompileTimer->Start();
