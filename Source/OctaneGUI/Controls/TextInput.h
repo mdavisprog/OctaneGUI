@@ -44,6 +44,7 @@ class TextInput : public ScrollableViewControl
 public:
 	typedef std::function<void(std::shared_ptr<TextInput>)> OnTextChangedSignature;
 	typedef std::function<std::u32string(std::shared_ptr<TextInput>, const std::u32string&)> OnModifyTextSignature;
+	typedef std::function<void(std::shared_ptr<TextInput const>, Paint&)> OnPaintSignature;
 
 	class TextPosition
 	{
@@ -93,6 +94,9 @@ public:
 
 	TextInput& SetOnTextChanged(OnTextChangedSignature&& Fn);
 	TextInput& SetOnModifyText(OnModifyTextSignature&& Fn);
+	TextInput& SetOnPrePaintText(OnPaintSignature&& Fn);
+
+	float LineHeight() const;
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
@@ -143,6 +147,7 @@ private:
 
 	OnTextChangedSignature m_OnTextChanged { nullptr };
 	OnModifyTextSignature m_OnModifyText { nullptr };
+	OnPaintSignature m_OnPrePaintText { nullptr };
 };
 
 }

@@ -345,6 +345,17 @@ TextInput& TextInput::SetOnModifyText(OnModifyTextSignature&& Fn)
 	return *this;
 }
 
+TextInput& TextInput::SetOnPrePaintText(OnPaintSignature&& Fn)
+{
+	m_OnPrePaintText = std::move(Fn);
+	return *this;
+}
+
+float TextInput::LineHeight() const
+{
+	return m_Text->LineHeight();
+}
+
 void TextInput::OnPaint(Paint& Brush) const
 {
 	std::shared_ptr<Theme> TheTheme = GetTheme();
@@ -372,6 +383,11 @@ void TextInput::OnPaint(Paint& Brush) const
 	}
 
 	Brush.PushClip(GetAbsoluteBounds());
+
+	if (m_OnPrePaintText)
+	{
+		m_OnPrePaintText(TShare<TextInput>(), Brush);
+	}
 
 	if (m_Anchor.IsValid() && m_Anchor != m_Position)
 	{
