@@ -27,6 +27,7 @@ SOFTWARE.
 #include "TextEditor.h"
 #include "../Json.h"
 #include "../Paint.h"
+#include "ScrollableContainer.h"
 
 namespace OctaneGUI
 {
@@ -40,7 +41,7 @@ TextEditor::TextEditor(Window* InWindow)
 		{
 			return ModifyText(Pending);
 		});
-	
+
 	SetOnPrePaintText([this](std::shared_ptr<TextInput const> Input, Paint& Brush) -> void
 		{
 			PaintLineColors(Input, Brush);
@@ -115,7 +116,7 @@ void TextEditor::PaintLineColors(std::shared_ptr<TextInput const>& Input, Paint&
 {
 	for (const std::pair<size_t, Color>& Line : m_LineColors)
 	{
-		Rect Bounds { GetAbsoluteBounds() };
+		Rect Bounds { Scrollable()->GetAbsoluteBounds() };
 		Bounds.Min.Y += (Line.first - 1) * LineHeight();
 		Bounds.Max.Y = Bounds.Min.Y + LineHeight();
 		Brush.Rectangle(Bounds, Line.second);
