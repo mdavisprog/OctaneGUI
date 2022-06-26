@@ -306,6 +306,7 @@ bool TextInput::ReadOnly() const
 TextInput& TextInput::SetMulitline(bool Multiline)
 {
 	m_Multiline = Multiline;
+	Scrollable()->SetHorizontalSBEnabled(m_Multiline).SetVerticalSBEnabled(m_Multiline);
 	return *this;
 }
 
@@ -469,12 +470,11 @@ void TextInput::OnLoad(const Json& Root)
 {
 	Container::OnLoad(Root);
 
-	m_Multiline = Root["Multiline"].Boolean();
+	SetMulitline(Root["Multiline"].Boolean());
 	if (m_Multiline)
 	{
 		SetSize({ 200.0f, 200.0f });
 	}
-	Scrollable()->SetHorizontalSBEnabled(m_Multiline).SetVerticalSBEnabled(m_Multiline);
 
 	m_Text->OnLoad(Root["Text"]);
 }
