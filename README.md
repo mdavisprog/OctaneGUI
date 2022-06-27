@@ -24,34 +24,16 @@ OctaneGUI uses an event-driven paradigm for the UI system. The application and a
 
 int main(int argc, char** argv)
 {
-	const char* Stream = 
-	"{"
-		"\"Theme\": \"./Themes/Dark.json\","
-		"\"Windows\": {"
-			"\"Main\": {"
-				"\"Title\": \"Hello\","
-				"\"Width\": 300,"
-				"\"Height\": 200,"
-				"\"Body\": {"
-					"\"Controls\": ["
-						"{"
-							"\"ID\": \"Container\","
-							"\"Type\": \"VerticalContainer\","
-							"\"Controls\": ["
-								"{"
-									"\"ID\": \"Button\","
-									"\"Type\": \"TextButton\","
-									"\"Text\": {"
-										"\"Text\": \"Hello Friends\""
-									"}"
-								"}"
-							"]"
-						"}"
-					"]"
-				"}"
-			"}"
-		"}"
-	"}";
+	const char* Stream = R"({
+	"Theme": "./Themes/Dark.json",
+	"Windows": {
+		"Main": {"Title": "Hello", "Width": 300, "Height": 200, "Body": {"Controls": [
+			{"ID": "Container", "Type": "VerticalContainer", "Controls": [
+				{"ID": "Button", "Type": "TextButton", "Text": {"Text": "Hello Friends"}}
+			]}
+		]}}
+	}
+})";
 
 	OctaneGUI::Application Application;
 	Interface::Initialize(Application);
@@ -60,7 +42,7 @@ int main(int argc, char** argv)
 	Application.Initialize(Stream, WindowControls);
 
 	const OctaneGUI::ControlList& List = WindowControls["Main"];
-	List.To<OctaneGUI::Button>("Container.Button")->SetOnPressed([&]()
+	List.To<OctaneGUI::Button>("Container.Button")->SetOnClicked([&](const OctaneGUI::Button&) -> void
 	{
 		static bool DidClick = false;
 		if (!DidClick)
