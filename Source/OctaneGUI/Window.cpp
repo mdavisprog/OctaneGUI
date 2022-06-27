@@ -81,7 +81,7 @@ void Window::SetTitle(const char* Title)
 
 	if (m_OnSetTitle)
 	{
-		m_OnSetTitle(Title);
+		m_OnSetTitle(*this, Title);
 	}
 }
 
@@ -117,10 +117,11 @@ bool Window::HasID() const
 	return !m_ID.empty();
 }
 
-void Window::SetVisible(bool Visible)
+Window& Window::SetVisible(bool Visible)
 {
 	m_Visible = Visible;
 	m_Repaint = Visible;
+	return *this;
 }
 
 bool Window::IsVisible() const

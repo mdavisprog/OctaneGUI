@@ -58,7 +58,7 @@ class Window
 {
 public:
 	typedef std::function<void(Window*, const VertexBuffer&)> OnPaintSignature;
-	typedef std::function<void(const char*)> OnSetTitleSignature;
+	typedef std::function<void(Window&, const char*)> OnSetTitleSignature;
 	typedef std::function<void(Window&)> OnWindowSignature;
 
 	Window(Application* InApplication);
@@ -74,7 +74,7 @@ public:
 	const char* ID() const;
 	bool HasID() const;
 
-	void SetVisible(bool Visible);
+	Window& SetVisible(bool Visible);
 	bool IsVisible() const;
 
 	void RequestClose(bool Request = true);
