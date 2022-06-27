@@ -266,7 +266,15 @@ bool Application::DisplayWindow(const char* ID) const
 		m_OnCreateWindow(It->second.get());
 	}
 
-	It->second->SetVisible(true);
+	It->second
+		->SetVisible(true)
+		.SetOnSetTitle([this](Window& Target, const char* Title) -> void
+			{
+				if (m_OnSetWindowTitle)
+				{
+					m_OnSetWindowTitle(&Target, Title);
+				}
+			});
 
 	return true;
 }
@@ -380,6 +388,7 @@ void Application::DestroyWindow(const std::shared_ptr<Window>& Item)
 	}
 
 	Item->SetVisible(false);
+	Item->SetOnSetTitle(nullptr);
 	Item->RequestClose(false);
 	Item->Close();
 
