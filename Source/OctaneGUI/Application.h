@@ -72,6 +72,7 @@ public:
 	std::shared_ptr<Window> NewWindow(const char* ID, const char* JsonStream);
 	std::shared_ptr<Window> NewWindow(const char* ID, const char* JsonStream, ControlList& List);
 	bool DisplayWindow(const char* ID) const;
+	void CloseWindow(const char* ID);
 	std::shared_ptr<Theme> GetTheme() const;
 	std::shared_ptr<Icons> GetIcons() const;
 	TextureCache& GetTextureCache();

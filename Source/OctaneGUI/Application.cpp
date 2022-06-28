@@ -279,6 +279,16 @@ bool Application::DisplayWindow(const char* ID) const
 	return true;
 }
 
+void Application::CloseWindow(const char* ID)
+{
+	if (m_Windows.find(ID) == m_Windows.end())
+	{
+		return;
+	}
+
+	DestroyWindow(m_Windows[ID]);
+}
+
 std::shared_ptr<Theme> Application::GetTheme() const
 {
 	return m_Theme;
@@ -387,10 +397,11 @@ void Application::DestroyWindow(const std::shared_ptr<Window>& Item)
 		m_OnDestroyWindow(Item.get());
 	}
 
-	Item->SetVisible(false);
-	Item->SetOnSetTitle(nullptr);
-	Item->RequestClose(false);
-	Item->Close();
+	Item
+		->SetVisible(false)
+		.SetOnSetTitle(nullptr)
+		.RequestClose(false)
+		.Close();
 
 	if (std::string(Item->ID()) == "Main")
 	{
