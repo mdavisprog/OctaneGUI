@@ -77,7 +77,7 @@ public:
 	Window& SetVisible(bool Visible);
 	bool IsVisible() const;
 
-	void RequestClose(bool Request = true);
+	Window& RequestClose(bool Request = true);
 	bool ShouldClose() const;
 	void Close();
 
@@ -123,10 +123,10 @@ public:
 	void StartTimer(const std::shared_ptr<Timer>& Object);
 	bool ClearTimer(const std::shared_ptr<Timer>& Object);
 
-	Window* SetOnPaint(OnPaintSignature&& Fn);
-	Window* SetOnSetTitle(OnSetTitleSignature&& Fn);
-	Window* SetOnClose(OnWindowSignature&& Fn);
-	Window* SetOnLayout(OnWindowSignature&& Fn);
+	Window& SetOnPaint(OnPaintSignature&& Fn);
+	Window& SetOnSetTitle(OnSetTitleSignature&& Fn);
+	Window& SetOnClose(OnWindowSignature&& Fn);
+	Window& SetOnLayout(OnWindowSignature&& Fn);
 
 private:
 	struct TimerHandle

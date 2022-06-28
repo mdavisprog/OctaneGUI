@@ -129,9 +129,10 @@ bool Window::IsVisible() const
 	return m_Visible;
 }
 
-void Window::RequestClose(bool Request)
+Window& Window::RequestClose(bool Request)
 {
 	m_RequestClose = Request;
+	return *this;
 }
 
 bool Window::ShouldClose() const
@@ -540,28 +541,28 @@ bool Window::ClearTimer(const std::shared_ptr<Timer>& Object)
 	return false;
 }
 
-Window* Window::SetOnPaint(OnPaintSignature&& Fn)
+Window& Window::SetOnPaint(OnPaintSignature&& Fn)
 {
 	m_OnPaint = std::move(Fn);
-	return this;
+	return *this;
 }
 
-Window* Window::SetOnSetTitle(OnSetTitleSignature&& Fn)
+Window& Window::SetOnSetTitle(OnSetTitleSignature&& Fn)
 {
 	m_OnSetTitle = std::move(Fn);
-	return this;
+	return *this;
 }
 
-Window* Window::SetOnClose(OnWindowSignature&& Fn)
+Window& Window::SetOnClose(OnWindowSignature&& Fn)
 {
 	m_OnClose = std::move(Fn);
-	return this;
+	return *this;
 }
 
-Window* Window::SetOnLayout(OnWindowSignature&& Fn)
+Window& Window::SetOnLayout(OnWindowSignature&& Fn)
 {
 	m_OnLayout = std::move(Fn);
-	return this;
+	return *this;
 }
 
 Window::Window()

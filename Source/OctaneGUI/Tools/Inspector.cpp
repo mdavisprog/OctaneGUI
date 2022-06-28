@@ -244,7 +244,7 @@ void Inspector::Inspect(Window* Target)
 				{
 					Close();
 				})
-			->SetOnLayout([this](Window&) -> void
+			.SetOnLayout([this](Window&) -> void
 				{
 					// TODO: This could possibly be a generic function within the ScrollableContainer. Should have an option for immediate offset or wait until the
 					// next layout update.
@@ -297,7 +297,7 @@ void Inspector::Inspect(Window* Target)
 			{
 				Close();
 			})
-		->SetOnLayout([this](Window&) -> void
+		.SetOnLayout([this](Window&) -> void
 			{
 				// TODO: This causes an issue where when the inspector window is opened and this
 				// callback is registered, an update is kicked off for all windows. The inspected window will
