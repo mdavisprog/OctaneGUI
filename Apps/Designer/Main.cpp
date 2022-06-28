@@ -32,6 +32,7 @@ int main(int argc, char **argv)
 	std::shared_ptr<OctaneGUI::TextEditor> Document { nullptr };
 	std::shared_ptr<OctaneGUI::Text> StatusText { nullptr };
 	std::shared_ptr<OctaneGUI::Panel> StatusBar { nullptr };
+	std::shared_ptr<OctaneGUI::Window> PreviewWindow { nullptr };
 
 	std::shared_ptr<OctaneGUI::Window> MainWindow = Application.GetWindow("Main");
 	std::shared_ptr<OctaneGUI::Timer> CompileTimer = MainWindow->CreateTimer(500, false, [&]() -> void
@@ -53,10 +54,40 @@ int main(int argc, char **argv)
 			{
 				StatusBar->ClearProperty(OctaneGUI::ThemeProperties::Panel);
 				StatusText->SetText(U"OK!");
+
+				if (PreviewWindow->IsVisible())
+				{
+					const OctaneGUI::Json& Main = Root["Windows"]["Main"];
+
+					if (!Main.IsNull())
+					{
+						PreviewWindow->SetTitle(Main["Title"].String());
+						PreviewWindow->Clear();
+						PreviewWindow->LoadContents(Main);
+					}
+				}
 			}
 		});
 
 	const OctaneGUI::ControlList& MainList = WindowControls["Main"];
+
+	std::shared_ptr<OctaneGUI::MenuItem> PreviewMenu = MainList.To<OctaneGUI::MenuItem>("File.Preview");
+	PreviewMenu->SetOnPressed([&](OctaneGUI::TextSelectable& Item) -> void
+		{
+			OctaneGUI::MenuItem& MenuItem = static_cast<OctaneGUI::MenuItem&>(Item);
+			MenuItem.SetChecked(!MenuItem.IsChecked());
+
+			if (MenuItem.IsChecked() && !PreviewWindow->IsVisible())
+			{
+				Application.DisplayWindow("PreviewWindow");
+				CompileTimer->Start();
+			}
+			else if (!MenuItem.IsChecked() && PreviewWindow->IsVisible())
+			{
+				PreviewWindow->Close();
+			}
+		});
+
 	std::shared_ptr<OctaneGUI::MenuItem> QuitMenu = MainList.To<OctaneGUI::MenuItem>("File.Quit");
 	QuitMenu->SetOnPressed([&](OctaneGUI::TextSelectable& Item) -> void
 		{
@@ -72,8 +103,8 @@ int main(int argc, char **argv)
 	"Windows": {
 		"Main": {
 			"Title": "Untitled",
-			"Width": 960,
-			"Height": 540
+			"Width": 400,
+			"Height": 200
 		}
 	}
 })");
@@ -81,6 +112,13 @@ int main(int argc, char **argv)
 	StatusBar = MainList.To<OctaneGUI::Panel>("StatusBar");
 	StatusText = MainList.To<OctaneGUI::Text>("Status");
 	StatusText->SetText(U"New Document");
+
+	PreviewWindow = Application.NewWindow("PreviewWindow", OctaneGUI::Json::ToMultiByte(Document->GetText()).c_str());
+	PreviewWindow->SetOnClose([&](OctaneGUI::Window& Target) -> void
+		{
+			PreviewMenu->SetChecked(false);
+			Application.CloseWindow("PreviewWindow");
+		});
 
 	return Application.Run();
 }

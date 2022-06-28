@@ -7,6 +7,8 @@
 			"Height": 720,
 			"MenuBar": {"Items": [
 				{"Text": "File", "ID": "File", "Items": [
+					{"Text": "Preview", "ID": "Preview"},
+					{"Type": "Separator"},
 					{"Text": "Quit", "ID": "Quit"}
 				]}
 			]},
