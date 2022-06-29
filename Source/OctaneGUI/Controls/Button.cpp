@@ -76,6 +76,27 @@ bool Button::IsPressed() const
 	return m_State == State::Pressed;
 }
 
+Button& Button::SetRadius(float Radius)
+{
+	return SetRadius({ Radius, Radius, Radius, Radius });
+}
+
+Button& Button::SetRadius(const Rect& Radius)
+{
+	m_Radius = Radius;
+	return *this;
+}
+
+Rect Button::Radius() const
+{
+	return m_Radius;
+}
+
+bool Button::HasRadius() const
+{
+	return !m_Radius.Min.IsZero() || !m_Radius.Max.IsZero();
+}
+
 void Button::OnPaint(Paint& Brush) const
 {
 	PROFILER_SAMPLE_GROUP("Button::OnPaint");
@@ -106,7 +127,14 @@ void Button::OnPaint(Paint& Brush) const
 	}
 	else
 	{
-		Brush.Rectangle(GetAbsoluteBounds(), BackgroundColor);
+		if (HasRadius())
+		{
+			Brush.RectangleRounded(GetAbsoluteBounds(), BackgroundColor, m_Radius);
+		}
+		else
+		{
+			Brush.Rectangle(GetAbsoluteBounds(), BackgroundColor);
+		}
 	}
 }
 
@@ -116,6 +144,19 @@ void Button::OnLoad(const Json& Root)
 
 	m_Disabled = Root["Disabled"].Boolean();
 	SetProperty(ThemeProperties::Button_3D, Root["3D"]);
+
+	const Json& Radius = Root["Radius"];
+	if (!Radius.IsNull())
+	{
+		if (Radius.IsNumber())
+		{
+			SetRadius(Radius.Number());
+		}
+		else
+		{
+			SetRadius(Rect::FromJson(Radius, m_Radius));
+		}
+	}
 }
 
 void Button::OnSave(Json& Root) const

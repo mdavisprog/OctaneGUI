@@ -48,6 +48,11 @@ public:
 	bool IsHovered() const;
 	bool IsPressed() const;
 
+	Button& SetRadius(float Radius);
+	Button& SetRadius(const Rect& Radius);
+	Rect Radius() const;
+	bool HasRadius() const;
+
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
 	virtual void OnSave(Json& Root) const override;
@@ -76,6 +81,7 @@ private:
 	OnButtonSignature m_OnClicked { nullptr };
 	OnButtonSignature m_OnReleased { nullptr };
 	bool m_Disabled { false };
+	Rect m_Radius {};
 };
 
 }
