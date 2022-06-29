@@ -47,6 +47,18 @@ void VertexBuffer::AddVertex(const Vector2& Point, const Vector2& TexCoords, con
 	m_Vertices.emplace_back(Point, TexCoords, Col);
 }
 
+void VertexBuffer::AddVertices(const std::vector<Vector2>& Points, const Color& Col)
+{
+	const size_t Index = m_Vertices.size();
+	m_Vertices.resize(m_Vertices.size() + Points.size());
+
+	for (size_t I = 0; I < Points.size(); I++)
+	{
+		m_Vertices[Index + I].Position = Points[I];
+		m_Vertices[Index + I].Col = Col;
+	}
+}
+
 void VertexBuffer::AddIndex(uint32_t Index)
 {
 	m_Indices.push_back(Index);

@@ -42,6 +42,7 @@ public:
 
 	void AddVertex(const Vector2& Point, const Color& Col);
 	void AddVertex(const Vector2& Point, const Vector2& TexCoords, const Color& Col);
+	void AddVertices(const std::vector<Vector2>& Points, const Color& Tint);
 	void AddIndex(uint32_t Index);
 
 	const std::vector<Vertex>& GetVertices() const;
