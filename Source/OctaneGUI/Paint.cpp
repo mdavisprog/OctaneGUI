@@ -35,8 +35,45 @@ SOFTWARE.
 
 #define PI 3.14159265358979323846f
 
+#define RECT_INDEX_COUNT(Count) Count * 6
+#define CIRCLE_INDEX_COUNT(Steps) Steps * 3
+
 namespace OctaneGUI
 {
+
+std::vector<Vector2> GetArcPoints(const Vector2& Center, float Radius, int Steps, float AngleOffset = 0.0f)
+{
+	const float Delta = (PI * 0.5f) / Steps;
+	const float RadOffset = (PI / 180.0f) * AngleOffset;
+
+	std::vector<Vector2> Result;
+	Result.resize(Steps + 1);
+
+	for (int I = 0; I <= Steps; I++)
+	{
+		const float Angle = I * Delta;
+		const Vector2 Point {std::roundf(std::cos(Angle + RadOffset) * Radius), std::roundf(std::sin(Angle + RadOffset) * Radius)};
+		Result[I] = Center + Point;
+	}
+
+	return Result;
+}
+
+std::vector<Vector2> GetCirclePoints(const Vector2& Center, float Radius, int Steps)
+{
+	const float Delta = (2.0f * PI) / Steps;
+
+	std::vector<Vector2> Result;
+	Result.resize(Steps + 1);
+
+	for (int I = 0; I <= Steps; I++)
+	{
+		const float Angle = I * Delta;
+		Result[I] = { Center.X + std::roundf(std::cos(Angle) * Radius), Center.Y + std::roundf(std::sin(Angle) * Radius) };
+	}
+
+	return Result;
+}
 
 Paint::Paint()
 	: m_Buffer()
@@ -95,6 +132,79 @@ void Paint::RectangleOutline(const Rect& Bounds, const Color& Col, float Thickne
 	AddLine(TopRight, Bounds.Max, Col, Thickness, 4);
 	AddLine(Bounds.Max, BottomLeft, Col, Thickness, 8);
 	AddLine(BottomLeft, Bounds.Min, Col, Thickness, 12);
+}
+
+void Paint::RectangleRounded(const Rect& Bounds, const Color& Col, const Rect& Radius)
+{
+	const float Left = Bounds.Min.X;
+	const float Top = Bounds.Min.Y;
+	const float Right = Bounds.Max.X;
+	const float Bottom = Bounds.Max.Y;
+
+	const float RadiusTL = Radius.Min.X;
+	const float RadiusTR = Radius.Min.Y;
+	const float RadiusBL = Radius.Max.X;
+	const float RadiusBR = Radius.Max.Y;
+
+	size_t Offset = 0;
+
+	Vector2 Min {};
+	Vector2 Max {};
+
+	// 5 Rectangles and 4 arcs.
+	const int Steps = 32;
+	uint32_t IndexCount = RECT_INDEX_COUNT(5) + CIRCLE_INDEX_COUNT(Steps) * 4;
+	PushCommand(IndexCount, 0);
+
+	// Left Rectangle
+	Min = { Left, Top + RadiusTL };
+	Max = { Left + RadiusBL, Bottom - RadiusBL };
+	AddTriangles({ Min, Max }, Col, Offset);
+	Offset += 4;
+
+	// Top Rectangle
+	Min = { Left + RadiusTL, Top };
+	Max = { Right - RadiusTR, Top + RadiusTR };
+	AddTriangles({ Min, Max }, Col, Offset);
+	Offset += 4;
+
+	// Right Rectangle
+	Min = { Right - RadiusTR, Top + RadiusTR };
+	Max = { Right, Bottom - RadiusBR };
+	AddTriangles({ Min, Max }, Col, Offset);
+	Offset += 4;
+
+	// Bottom Rectangle
+	Min = { Left + RadiusBL, Bottom - RadiusBL };
+	Max = { Right - RadiusBR, Bottom };
+	AddTriangles({ Min, Max }, Col, Offset);
+	Offset += 4;
+
+	// Middle Rectangle
+	Min = { Left + RadiusTL, Top + RadiusTL };
+	Max = { Right - RadiusBR, Bottom - RadiusBR };
+	AddTriangles({ Min, Max }, Col, Offset);
+	Offset += 4;
+
+	Vector2 Center { Left + RadiusTL, Top + RadiusTL };
+	std::vector<Vector2> Vertices = GetArcPoints(Center, RadiusTL, Steps, 180.0f);
+	AddTrianglesCircle(Center, Vertices, Col, Offset);
+	Offset += Steps;
+
+	Center = { Right - RadiusTR, Top + RadiusTR };
+	Vertices = GetArcPoints(Center, RadiusTR, Steps, 270.0f);
+	AddTrianglesCircle(Center, Vertices, Col, Offset);
+	Offset += Steps;
+
+	Center = { Right - RadiusBR, Bottom - RadiusBR };
+	Vertices = GetArcPoints(Center, RadiusBR, Steps);
+	AddTrianglesCircle(Center, Vertices, Col, Offset);
+	Offset += Steps;
+
+	Center = { Left + RadiusBL, Bottom - RadiusBL };
+	Vertices = GetArcPoints(Center, RadiusBL, Steps, 90.0f);
+	AddTrianglesCircle(Center, Vertices, Col, Offset);
+	Offset += Steps;
 }
 
 void Paint::Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const Color& Col)
@@ -198,46 +308,17 @@ void Paint::Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_p
 	AddTriangles(Bounds, TexCoords, Col);
 }
 
-std::vector<Vector2> GetPoints(const Vector2& Center, float Radius, int Steps)
-{
-	const float Delta = (2.0f * PI) / Steps;
-
-	std::vector<Vector2> Result;
-	Result.resize(Steps);
-
-	for (int I = 0; I < Steps; I++)
-	{
-		const float Angle = I * Delta;
-		Result[I] = { Center.X + (std::cos(Angle) * Radius), Center.Y + (std::sin(Angle) * Radius) };
-	}
-
-	return std::move(Result);
-}
-
 void Paint::Circle(const Vector2& Center, float Radius, const Color& Tint, int Steps)
 {
-	std::vector<Vector2> Vertices = GetPoints(Center, Radius, Steps);
+	std::vector<Vector2> Vertices = GetCirclePoints(Center, Radius, Steps);
 
 	PushCommand(3 * Steps, 0);
-
-	uint32_t Offset = 0;
-	for (size_t I = 0; I < Vertices.size(); I++)
-	{
-		size_t J = I + 1 >= Vertices.size() ? 0 : I + 1;
-		m_Buffer.AddVertex(Center, Tint);
-		m_Buffer.AddVertex(Vertices[I], Tint);
-		m_Buffer.AddVertex(Vertices[J], Tint);
-
-		m_Buffer.AddIndex(Offset);
-		m_Buffer.AddIndex(Offset + 1);
-		m_Buffer.AddIndex(Offset + 2);
-		Offset += 3;
-	}
+	AddTrianglesCircle(Center, Vertices, Tint, 0);
 }
 
 void Paint::CircleOutline(const Vector2& Center, float Radius, const Color& Tint, float Thickness, int Steps)
 {
-	std::vector<Vector2> Vertices = GetPoints(Center, Radius, Steps);
+	std::vector<Vector2> Vertices = GetCirclePoints(Center, Radius, Steps);
 
 	Vector2 Start = Vertices[0];
 	for (size_t I = 1; I < Vertices.size(); I++)
@@ -248,6 +329,14 @@ void Paint::CircleOutline(const Vector2& Center, float Radius, const Color& Tint
 	}
 
 	Line(Start, Vertices.front(), Tint, Thickness);
+}
+
+void Paint::Arc(const Vector2& Center, float Radius, const Color& Tint, float AngleOffset, int Steps)
+{
+	std::vector<Vector2> Vertices = GetArcPoints(Center, Radius, Steps, AngleOffset);
+
+	PushCommand(3 * Steps, 0);
+	AddTrianglesCircle(Center, Vertices, Tint);
 }
 
 void Paint::PushClip(const Rect& Bounds)
@@ -333,6 +422,20 @@ void Paint::AddTriangles(const std::vector<Rect>& Rects, const std::vector<Rect>
 
 		AddTriangles(Vertices, TexCoords, Color_, Offset);
 		Offset += 4;
+	}
+}
+
+void Paint::AddTrianglesCircle(const Vector2& Center, const std::vector<Vector2>& Vertices, const Color& Tint, uint32_t Offset)
+{
+	m_Buffer.AddVertex(Center, Tint);
+	m_Buffer.AddVertices(Vertices, Tint);
+
+	// We subtract 1 due to the zero-th index being the center.
+	for (size_t I = 0; I < Vertices.size() - 1; I++)
+	{
+		m_Buffer.AddIndex(0);
+		m_Buffer.AddIndex(Offset + I + 1);
+		m_Buffer.AddIndex(Offset + I + 2);
 	}
 }
 

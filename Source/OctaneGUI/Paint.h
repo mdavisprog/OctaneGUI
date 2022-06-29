@@ -60,12 +60,14 @@ public:
 	void Rectangle(const Rect& Bounds, const Color& Col);
 	void Rectangle3D(const Rect& Bounds, const Color& Base, const Color& Highlight, const Color& Shadow, bool Sunken = false);
 	void RectangleOutline(const Rect& Bounds, const Color& Col, float Thickness = 1.0f);
+	void RectangleRounded(const Rect& Bounds, const Color& Col, const Rect& Radius);
 	void Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const Color& Col);
 	void Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const std::vector<TextSpan>& Spans);
 	void TextWrapped(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const std::vector<TextSpan>& Spans, float Width);
 	void Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_ptr<Texture>& InTexture, const Color& Col);
 	void Circle(const Vector2& Center, float Radius, const Color& Tint, int Steps = 64);
 	void CircleOutline(const Vector2& Center, float Radius, const Color& Tint, float Thickness = 1.0f, int Steps = 64);
+	void Arc(const Vector2& Center, float Radius, const Color& Tint, float AngleOffset = 0.0f, int Steps = 32);
 
 	void PushClip(const Rect& Bounds);
 	void PopClip();
@@ -79,6 +81,7 @@ private:
 	void AddTriangles(const Rect& Vertices, const Color& Col, uint32_t IndexOffset = 0);
 	void AddTriangles(const Rect& Vertices, const Rect& TexCoords, const Color& Col, uint32_t IndexOffset = 0);
 	void AddTriangles(const std::vector<Rect>& Rects, const std::vector<Rect>& UVs, const std::vector<Color>& Colors, uint32_t TextureID);
+	void AddTrianglesCircle(const Vector2& Center, const std::vector<Vector2>& Vertices, const Color& Tint, uint32_t Offset = 0);
 	void AddTriangleIndices(uint32_t Offset);
 	DrawCommand& PushCommand(uint32_t IndexCount, uint32_t TextureID);
 
