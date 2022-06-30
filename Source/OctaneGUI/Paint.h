@@ -59,6 +59,7 @@ public:
 	void Line(const Vector2& Start, const Vector2& End, const Color& Col, float Thickness = 1.0f);
 	void Rectangle(const Rect& Bounds, const Color& Col);
 	void Rectangle3D(const Rect& Bounds, const Color& Base, const Color& Highlight, const Color& Shadow, bool Sunken = false);
+	void Rectangle3DRounded(const Rect& Bounds, const Rect& Radius, const Color& Base, const Color& Highlight, const Color& Shadow, bool Sunken = false);
 	void RectangleOutline(const Rect& Bounds, const Color& Col, float Thickness = 1.0f);
 	void RectangleRounded(const Rect& Bounds, const Color& Col, const Rect& Radius);
 	void Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const Color& Col);
@@ -67,7 +68,8 @@ public:
 	void Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_ptr<Texture>& InTexture, const Color& Col);
 	void Circle(const Vector2& Center, float Radius, const Color& Tint, int Steps = 64);
 	void CircleOutline(const Vector2& Center, float Radius, const Color& Tint, float Thickness = 1.0f, int Steps = 64);
-	void Arc(const Vector2& Center, float Radius, const Color& Tint, float AngleOffset = 0.0f, int Steps = 32);
+	void Arc(const Vector2& Center, float Radius, float StartAngle, float EndAngle, const Color& Tint, int Steps = 32);
+	void ArcOutline(const Vector2& Center, float Radius, float StartAngle, float EndAngle, const Color& Tint, float Thickness = 1.0f, int Steps = 32);
 
 	void PushClip(const Rect& Bounds);
 	void PopClip();

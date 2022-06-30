@@ -41,18 +41,20 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
-std::vector<Vector2> GetArcPoints(const Vector2& Center, float Radius, int Steps, float AngleOffset = 0.0f)
+std::vector<Vector2> GetArcPoints(const Vector2& Center, float Radius, float StartAngle, float EndAngle, int Steps)
 {
-	const float Delta = (PI * 0.5f) / Steps;
-	const float RadOffset = (PI / 180.0f) * AngleOffset;
+	const float Rad = PI / 180;
+	const float Delta = Rad * (EndAngle - StartAngle);
+	const float Start = Rad * StartAngle;
 
 	std::vector<Vector2> Result;
 	Result.resize(Steps + 1);
 
 	for (int I = 0; I <= Steps; I++)
 	{
-		const float Angle = I * Delta;
-		const Vector2 Point {std::roundf(std::cos(Angle + RadOffset) * Radius), std::roundf(std::sin(Angle + RadOffset) * Radius)};
+		const float Pct = ((float)I / (float)(Steps - 1));
+		const float Angle = Pct * Delta + Start;
+		const Vector2 Point { std::roundf(std::cos(Angle) * Radius), std::roundf(std::sin(Angle) * Radius) };
 		Result[I] = Center + Point;
 	}
 
@@ -122,6 +124,28 @@ void Paint::Rectangle3D(const Rect& Bounds, const Color& Base, const Color& High
 	Line(Max, BL, Sunken ? Highlight : Shadow, Thickness);
 }
 
+void Paint::Rectangle3DRounded(const Rect& Bounds, const Rect& Radius, const Color& Base, const Color& Highlight, const Color& Shadow, bool Sunken)
+{
+	RectangleRounded(Bounds, Base, Radius);
+
+	const float RadiusTL = Radius.Min.X;
+	const float RadiusTR = Radius.Min.Y;
+	const float RadiusBL = Radius.Min.X;
+	const float RadiusBR = Radius.Min.Y;
+	
+	ArcOutline({ Bounds.Min.X + RadiusTL, Bounds.Min.Y + RadiusTL }, RadiusTL, 180.0f, 270.0f, Sunken ? Shadow : Highlight);
+	ArcOutline({ Bounds.Max.X - RadiusTR, Bounds.Min.Y + RadiusTR }, RadiusTR, 270.0f, 315.0f, Sunken ? Shadow : Highlight);
+	ArcOutline({ Bounds.Max.X - RadiusTR, Bounds.Min.Y + RadiusTR }, RadiusTR, 315.0f, 360.0f, Sunken ? Highlight : Shadow);
+	Line({Bounds.Min.X + RadiusTL, Bounds.Min.Y}, {Bounds.Max.X - RadiusTR, Bounds.Min.Y}, Sunken ? Shadow : Highlight);
+	Line({Bounds.Min.X, Bounds.Min.Y + RadiusTL}, {Bounds.Min.X, Bounds.Max.Y - RadiusBL}, Sunken ? Shadow : Highlight);
+
+	ArcOutline({ Bounds.Min.X + RadiusBL, Bounds.Max.Y - RadiusBL }, RadiusBL, 90.0f, 135.0f, Sunken ? Highlight : Shadow);
+	ArcOutline({ Bounds.Min.X + RadiusBL, Bounds.Max.Y - RadiusBL }, RadiusBL, 135.0f, 180.0f, Sunken ? Shadow : Highlight);
+	ArcOutline({ Bounds.Max.X - RadiusBR, Bounds.Max.Y - RadiusBR }, RadiusBR, 0.0f, 90.0f, Sunken ? Highlight : Shadow);
+	Line({Bounds.Min.X + RadiusBL, Bounds.Max.Y}, {Bounds.Max.X - RadiusBR, Bounds.Max.Y}, Sunken ? Highlight : Shadow);
+	Line({Bounds.Max.X, Bounds.Min.Y + RadiusTR}, {Bounds.Max.X, Bounds.Max.Y - RadiusBR}, Sunken ? Highlight : Shadow);
+}
+
 void Paint::RectangleOutline(const Rect& Bounds, const Color& Col, float Thickness)
 {
 	const Vector2 TopRight(Bounds.Min + Vector2(Bounds.GetSize().X, 0.0f));
@@ -187,22 +211,22 @@ void Paint::RectangleRounded(const Rect& Bounds, const Color& Col, const Rect& R
 	Offset += 4;
 
 	Vector2 Center { Left + RadiusTL, Top + RadiusTL };
-	std::vector<Vector2> Vertices = GetArcPoints(Center, RadiusTL, Steps, 180.0f);
+	std::vector<Vector2> Vertices = GetArcPoints(Center, RadiusTL, 180.0f, 270.0f, Steps);
 	AddTrianglesCircle(Center, Vertices, Col, Offset);
 	Offset += Steps;
 
 	Center = { Right - RadiusTR, Top + RadiusTR };
-	Vertices = GetArcPoints(Center, RadiusTR, Steps, 270.0f);
+	Vertices = GetArcPoints(Center, RadiusTR, 270.0f, 360.0f, Steps);
 	AddTrianglesCircle(Center, Vertices, Col, Offset);
 	Offset += Steps;
 
 	Center = { Right - RadiusBR, Bottom - RadiusBR };
-	Vertices = GetArcPoints(Center, RadiusBR, Steps);
+	Vertices = GetArcPoints(Center, RadiusBR, 0.0f, 90.0f, Steps);
 	AddTrianglesCircle(Center, Vertices, Col, Offset);
 	Offset += Steps;
 
 	Center = { Left + RadiusBL, Bottom - RadiusBL };
-	Vertices = GetArcPoints(Center, RadiusBL, Steps, 90.0f);
+	Vertices = GetArcPoints(Center, RadiusBL, 90.0f, 180.0f, Steps);
 	AddTrianglesCircle(Center, Vertices, Col, Offset);
 	Offset += Steps;
 }
@@ -331,12 +355,29 @@ void Paint::CircleOutline(const Vector2& Center, float Radius, const Color& Tint
 	Line(Start, Vertices.front(), Tint, Thickness);
 }
 
-void Paint::Arc(const Vector2& Center, float Radius, const Color& Tint, float AngleOffset, int Steps)
+void Paint::Arc(const Vector2& Center, float Radius, float StartAngle, float EndAngle, const Color& Tint, int Steps)
 {
-	std::vector<Vector2> Vertices = GetArcPoints(Center, Radius, Steps, AngleOffset);
+	std::vector<Vector2> Vertices = GetArcPoints(Center, Radius, StartAngle, EndAngle, Steps);
 
 	PushCommand(3 * Steps, 0);
 	AddTrianglesCircle(Center, Vertices, Tint);
+}
+
+void Paint::ArcOutline(const Vector2& Center, float Radius, float StartAngle, float EndAngle, const Color& Tint, float Thickness, int Steps)
+{
+	std::vector<Vector2> Vertices = GetArcPoints(Center, Radius, StartAngle, EndAngle, Steps);
+	if (Vertices.empty())
+	{
+		return;
+	}
+
+	Vector2 Start = Vertices[0];
+	for (size_t I = 1; I < Vertices.size(); I++)
+	{
+		const Vector2& End = Vertices[I];
+		Line(Start, End, Tint, Thickness);
+		Start = End;
+	}
 }
 
 void Paint::PushClip(const Rect& Bounds)
