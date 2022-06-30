@@ -123,7 +123,15 @@ void Button::OnPaint(Paint& Brush) const
 		const Rect Bounds = GetAbsoluteBounds();
 		const Color Highlight = GetProperty(ThemeProperties::Button_Highlight_3D).ToColor();
 		const Color Shadow = GetProperty(ThemeProperties::Button_Shadow_3D).ToColor();
-		Brush.Rectangle3D(Bounds, BackgroundColor, Highlight, Shadow, m_State == State::Pressed);
+
+		if (HasRadius())
+		{
+			Brush.Rectangle3DRounded(Bounds, m_Radius, BackgroundColor, Highlight, Shadow, m_State == State::Pressed);
+		}
+		else
+		{
+			Brush.Rectangle3D(Bounds, BackgroundColor, Highlight, Shadow, m_State == State::Pressed);
+		}
 	}
 	else
 	{
