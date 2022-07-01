@@ -29,6 +29,7 @@ SOFTWARE.
 #include "../Font.h"
 #include "../Json.h"
 #include "../Paint.h"
+#include "../String.h"
 #include "../Theme.h"
 #include "../Timer.h"
 #include "../Window.h"
@@ -87,8 +88,8 @@ public:
 		}
 		case Keyboard::Key::Backspace: m_Input->Delete(m_Input->GetRangeOr(-1)); return true;
 		case Keyboard::Key::Delete: m_Input->Delete(m_Input->GetRangeOr(1)); return true;
-		case Keyboard::Key::Left: m_Input->MovePosition(0, -1, m_Input->IsShiftPressed()); return true;
-		case Keyboard::Key::Right: m_Input->MovePosition(0, 1, m_Input->IsShiftPressed()); return true;
+		case Keyboard::Key::Left: m_Input->MovePosition(0, -1, m_Input->IsShiftPressed(), m_Input->IsCtrlPressed()); return true;
+		case Keyboard::Key::Right: m_Input->MovePosition(0, 1, m_Input->IsShiftPressed(), m_Input->IsCtrlPressed()); return true;
 		case Keyboard::Key::Up: m_Input->MovePosition(-1, 0, m_Input->IsShiftPressed()); return true;
 		case Keyboard::Key::Down: m_Input->MovePosition(1, 0, m_Input->IsShiftPressed()); return true;
 		case Keyboard::Key::Home: m_Input->MoveHome(); return true;
@@ -660,7 +661,7 @@ void TextInput::SetPosition(uint32_t Line, uint32_t Column, uint32_t Index)
 	Invalidate();
 }
 
-void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
+void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor, bool SkipWords)
 {
 	// This function will calculate the new line and column along with the index
 	// into the string buffer of the text object.
@@ -678,6 +679,26 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor)
 	}
 
 	const std::u32string& String = m_Text->GetString();
+
+	if (SkipWords)
+	{
+		const std::u32string Search { U" \t\n" };
+		const bool Reverse = Column < 0;
+		size_t Start = Reverse ? m_Position.Index() - 1 : m_Position.Index() + 1;
+		size_t Pos = Reverse
+			? String::FindFirstOfReverse(String, Search, Start)
+			: String.find_first_of(Search, Start);
+		// Check for end and any consecutive skippable characters.
+		while (Pos != std::string::npos && Pos == Start)
+		{
+			Start = Reverse ? Pos - 1 : Pos + 1;
+			Pos = Reverse
+				? String::FindFirstOfReverse(String, Search, Start)
+				: String.find_first_of(Search, Start);
+		}
+
+		Column = Pos - m_Position.Index();
+	}
 
 	// Special case to handle moving to the beginnging of the string if trying to go before the top line.
 	if (Line < 0 && m_Position.Line() == 0)

@@ -115,7 +115,7 @@ private:
 	void MoveHome();
 	void MoveEnd();
 	void SetPosition(uint32_t Line, uint32_t Column, uint32_t Index);
-	void MovePosition(int32_t Line, int32_t Column, bool UseAnchor = false);
+	void MovePosition(int32_t Line, int32_t Column, bool UseAnchor = false, bool SkipWords = false);
 	Vector2 GetPositionLocation(const TextPosition& Position, bool OffsetFirstLine = true) const;
 	TextPosition GetPosition(const Vector2& Position) const;
 	bool IsShiftPressed() const;
