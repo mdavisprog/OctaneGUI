@@ -45,6 +45,7 @@ set(SOURCE
 	Paint.cpp
 	Popup.cpp
 	Rect.cpp
+	String.cpp
 	Texture.cpp
 	TextureCache.cpp
 	Theme.cpp
