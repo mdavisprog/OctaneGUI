@@ -3,8 +3,8 @@
 	"Windows": {
 		"Main": {
 			"Title": "Designer",
-			"Width": 1280,
-			"Height": 720,
+			"Width": 960,
+			"Height": 540,
 			"MenuBar": {"Items": [
 				{"Text": "File", "ID": "File", "Items": [
 					{"Text": "Preview", "ID": "Preview"},
@@ -16,7 +16,7 @@
 				{"Type": "Panel", "Expand": "Both"},
 				{"Type": "MarginContainer", "Margins": [4, 4, 4, 4], "Expand": "Both", "Controls": [
 					{"Type": "VerticalContainer", "Expand": "Both", "Controls": [
-						{"Type": "TextEditor", "ID": "Document", "Expand": "Both"},
+						{"Type": "TextEditor", "ID": "Document", "Expand": "Both", "Text": {"Font": "SourceCodePro-Regular.ttf"}},
 						{"Type": "HorizontalContainer", "Expand": "Width", "Controls": [
 							{"Type": "MarginContainer", "Expand": "Width", "Controls": [
 								{"Type": "Panel", "ID": "StatusBar", "Expand": "Both"},

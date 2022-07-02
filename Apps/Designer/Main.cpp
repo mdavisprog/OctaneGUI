@@ -102,8 +102,8 @@ int main(int argc, char **argv)
 		.SetText(UR"({
 	"Windows": {
 		"Main": {"Title": "Untitled", "Width": 400, "Height": 200,
-			"MenuBar": {},
-			"Body": {}
+			"MenuBar": {"Items": []},
+			"Body": {"Controls": []}
 		}
 	}
 })");
