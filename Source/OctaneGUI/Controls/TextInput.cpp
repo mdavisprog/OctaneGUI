@@ -673,7 +673,7 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor, bool 
 	{
 		const std::u32string Search { U" \t\n" };
 		const bool Reverse = Column < 0;
-		size_t Start = Reverse ? m_Position.Index() - 1 : m_Position.Index() + 1;
+		size_t Start = Reverse ? m_Position.Index() : m_Position.Index() + 1;
 		size_t Pos = Reverse
 			? String::FindFirstOfReverse(String, Search, Start)
 			: String.find_first_of(Search, Start);
@@ -686,7 +686,14 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor, bool 
 				: String.find_first_of(Search, Start);
 		}
 
-		Column = Pos - m_Position.Index();
+		if (Pos == std::string::npos)
+		{
+			Column = Reverse ? 0 : String.length();
+		}
+		else
+		{
+			Column = Pos - m_Position.Index();
+		}
 	}
 
 	// Special case to handle moving to the beginnging of the string if trying to go before the top line.
