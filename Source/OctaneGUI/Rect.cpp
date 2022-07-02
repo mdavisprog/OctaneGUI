@@ -109,6 +109,11 @@ bool Rect::Contains(float X, float Y) const
 
 bool Rect::Contains(const Vector2& Point) const
 {
+	if (Width() == 0.0f || Height() == 0.0f)
+	{
+		return false;
+	}
+
 	return Min.X <= Point.X && Point.X <= Max.X && Min.Y <= Point.Y && Point.Y <= Max.Y;
 }
 
