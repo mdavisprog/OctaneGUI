@@ -73,9 +73,6 @@ public:
 			return true;
 		}
 
-		m_Input->m_DrawCursor = true;
-		m_Input->m_BlinkTimer->Stop();
-
 		switch (Key)
 		{
 		case Keyboard::Key::V:
@@ -100,12 +97,6 @@ public:
 		}
 
 		return false;
-	}
-
-	virtual void OnKeyReleased(Keyboard::Key Key) override
-	{
-		Control::OnKeyReleased(Key);
-		m_Input->ResetCursorTimer();
 	}
 
 	virtual void OnMouseMove(const Vector2& Position) override
@@ -608,7 +599,6 @@ void TextInput::AddText(const std::u32string& Contents)
 	m_LastVisibleLine = { m_LastVisibleLine.Line(), LineEndIndex(Index) - LineStartIndex(Index), Index };
 
 	MovePosition(0, Length);
-	ResetCursorTimer();
 }
 
 void TextInput::Delete(int32_t Range)
@@ -633,7 +623,6 @@ void TextInput::Delete(int32_t Range)
 
 	InternalSetText(Contents.c_str());
 	Scrollable()->Update();
-	ResetCursorTimer();
 
 	// Force update the visible lines
 	m_FirstVisibleLine.Invalidate();
@@ -819,6 +808,7 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor, bool 
 	NewColumn = std::max<int>(NewColumn, 0);
 
 	SetPosition((uint32_t)NewLine, (uint32_t)NewColumn, (uint32_t)NewIndex);
+	ResetCursorTimer();
 }
 
 Vector2 TextInput::GetPositionLocation(const TextPosition& Position, bool OffsetFirstLine) const
