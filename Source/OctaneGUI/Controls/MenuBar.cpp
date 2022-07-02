@@ -107,6 +107,15 @@ void MenuBar::GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const
 	}
 }
 
+MenuBar& MenuBar::ClearMenuItems()
+{
+	m_Container->ClearControls();
+	m_MenuItems.clear();
+	SetSize({ });
+	Invalidate(InvalidateType::Both);
+	return *this;
+}
+
 void MenuBar::Close()
 {
 	if (!m_Opened.expired())

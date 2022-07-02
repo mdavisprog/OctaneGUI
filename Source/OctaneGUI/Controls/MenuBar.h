@@ -46,6 +46,7 @@ public:
 	std::shared_ptr<Menu> AddItem(const char* InText);
 	std::shared_ptr<Menu> Item(const char* Name) const;
 	void GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const;
+	MenuBar& ClearMenuItems();
 	void Close();
 
 	virtual void OnLoad(const Json& Root) override;
