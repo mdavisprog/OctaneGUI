@@ -475,6 +475,8 @@ void Window::LoadContents(const Json& Root)
 
 	// Need to update the expansion type after OnLoad functions as it will be reset there.
 	m_Body->SetExpand(Expand::Both);
+
+	m_Container->Invalidate(InvalidateType::Both);
 }
 
 void Window::LoadContents(const Json& Root, ControlList& List)
@@ -485,7 +487,7 @@ void Window::LoadContents(const Json& Root, ControlList& List)
 
 void Window::Clear()
 {
-	m_MenuBar->ClearControls();
+	m_MenuBar->ClearMenuItems();
 	m_Body->ClearControls();
 	m_Popup.Close();
 	m_LayoutRequests.clear();
