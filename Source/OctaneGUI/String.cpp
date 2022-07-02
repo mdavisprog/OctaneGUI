@@ -31,9 +31,14 @@ namespace OctaneGUI
 
 size_t String::FindFirstOfReverse(const std::u32string& Ref, const std::u32string& Search, size_t Pos)
 {
+	if (Pos == 0)
+	{
+		return std::string::npos;
+	}
+
 	size_t Start = Pos - 1;
 	size_t Result = Ref.find_first_of(Search, Start);
-	while (Result != 0 && Result != std::string::npos && Result > Start)
+	while (Result != 0 && Result > Start)
 	{
 		Start = Start - 1;
 		Result = Ref.find_first_of(Search, Start);
