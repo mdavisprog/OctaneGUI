@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "TextInput.h"
 #include "../Application.h"
+#include "../Defines.h"
 #include "../Font.h"
 #include "../Json.h"
 #include "../Paint.h"
@@ -85,8 +86,8 @@ public:
 		}
 		case Keyboard::Key::Backspace: m_Input->Delete(m_Input->GetRangeOr(-1)); return true;
 		case Keyboard::Key::Delete: m_Input->Delete(m_Input->GetRangeOr(1)); return true;
-		case Keyboard::Key::Left: m_Input->MovePosition(0, -1, m_Input->IsShiftPressed(), m_Input->IsCtrlPressed()); return true;
-		case Keyboard::Key::Right: m_Input->MovePosition(0, 1, m_Input->IsShiftPressed(), m_Input->IsCtrlPressed()); return true;
+		case Keyboard::Key::Left: m_Input->MovePosition(0, -1, m_Input->IsShiftPressed(), m_Input->ShouldSkipWords()); return true;
+		case Keyboard::Key::Right: m_Input->MovePosition(0, 1, m_Input->IsShiftPressed(), m_Input->ShouldSkipWords()); return true;
 		case Keyboard::Key::Up: m_Input->MovePosition(-1, 0, m_Input->IsShiftPressed()); return true;
 		case Keyboard::Key::Down: m_Input->MovePosition(1, 0, m_Input->IsShiftPressed()); return true;
 		case Keyboard::Key::Home: m_Input->MoveHome(); return true;
@@ -903,6 +904,20 @@ bool TextInput::IsShiftPressed() const
 bool TextInput::IsCtrlPressed() const
 {
 	return IsKeyPressed(Keyboard::Key::LeftControl) || IsKeyPressed(Keyboard::Key::RightControl);
+}
+
+bool TextInput::IsAltPressed() const
+{
+	return IsKeyPressed(Keyboard::Key::LeftAlt) || IsKeyPressed(Keyboard::Key::RightAlt);
+}
+
+bool TextInput::ShouldSkipWords() const
+{
+#ifdef APPLE
+	return IsAltPressed();
+#else
+	return IsCtrlPressed();
+#endif
 }
 
 int32_t TextInput::GetRangeOr(int32_t Value) const

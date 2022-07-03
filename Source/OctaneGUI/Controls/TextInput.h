@@ -120,6 +120,8 @@ private:
 	TextPosition GetPosition(const Vector2& Position) const;
 	bool IsShiftPressed() const;
 	bool IsCtrlPressed() const;
+	bool IsAltPressed() const;
+	bool ShouldSkipWords() const;
 	int32_t GetRangeOr(int32_t Value) const;
 	uint32_t LineStartIndex(uint32_t Index) const;
 	uint32_t LineEndIndex(uint32_t Index) const;
