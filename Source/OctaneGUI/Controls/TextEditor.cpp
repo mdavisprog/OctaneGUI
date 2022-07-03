@@ -27,6 +27,7 @@ SOFTWARE.
 #include "TextEditor.h"
 #include "../Json.h"
 #include "../Paint.h"
+#include "../String.h"
 #include "ScrollableContainer.h"
 
 namespace OctaneGUI
@@ -86,11 +87,21 @@ void TextEditor::OnLoad(const Json& Root)
 	SetMulitline(true);
 }
 
-std::u32string TextEditor::ModifyText(const std::u32string& Pending) const
+std::u32string TextEditor::ModifyText(const std::u32string& Pending)
 {
 	if (Pending == U"\n")
 	{
 		return MatchIndent(Pending);
+	}
+
+	if (Pending == U"\"")
+	{
+		return MatchCharacter(Pending, U'"');
+	}
+
+	if (Pending == U"'")
+	{
+		return MatchCharacter(Pending, U'\'');
 	}
 
 	return Pending;
@@ -120,6 +131,16 @@ std::u32string TextEditor::MatchIndent(const std::u32string& Pending) const
 	}
 
 	return Result;
+}
+
+std::u32string TextEditor::MatchCharacter(const std::u32string& Pending, char32_t Character) const
+{
+	if (String::Count(Line(), Character) % 2 == 0)
+	{
+		return Pending + Character;
+	}
+
+	return Pending;
 }
 
 void TextEditor::PaintLineColors(std::shared_ptr<TextInput const>& Input, Paint& Brush) const

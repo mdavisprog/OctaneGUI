@@ -50,8 +50,9 @@ public:
 	virtual void OnLoad(const Json& Root) override;
 
 private:
-	std::u32string ModifyText(const std::u32string& Pending) const;
+	std::u32string ModifyText(const std::u32string& Pending);
 	std::u32string MatchIndent(const std::u32string& Pending) const;
+	std::u32string MatchCharacter(const std::u32string& Pending, char32_t Character) const;
 	void PaintLineColors(std::shared_ptr<TextInput const>& Input, Paint& Brush) const;
 
 	bool m_MatchIndent { true };
