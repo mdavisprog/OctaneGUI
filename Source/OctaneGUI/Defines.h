@@ -32,4 +32,6 @@ SOFTWARE.
 	#define WINDOWS
 #elif __linux__
 	#define LINUX
+#else
+	#error "Platform is not supported. Please add the platform to this list."
 #endif
