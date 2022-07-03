@@ -466,11 +466,15 @@ void Inspector::Close()
 {
 	m_MenuBarProxy->Clear();
 	m_BodyProxy->Clear();
-	m_Target->SetOnClose(nullptr);
-	m_Target->SetOnLayout(nullptr);
-	m_Target->GetMenuBar()->RemoveControl(m_MenuBarProxy);
-	m_Target->GetContainer()->RemoveControl(m_BodyProxy);
-	m_Target = nullptr;
+
+	if (m_Target != nullptr)
+	{
+		m_Target->SetOnClose(nullptr);
+		m_Target->SetOnLayout(nullptr);
+		m_Target->GetMenuBar()->RemoveControl(m_MenuBarProxy);
+		m_Target->GetContainer()->RemoveControl(m_BodyProxy);
+		m_Target = nullptr;
+	}
 }
 
 void Inspector::SetEnabled(const std::shared_ptr<InspectorProxy>& Proxy, bool Enabled, const Vector2& Size)

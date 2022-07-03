@@ -63,7 +63,8 @@ private:
 	void SetEnabled(const std::shared_ptr<InspectorProxy>& Proxy, bool Enabled, const Vector2& Size);
 	void OnSelected(const std::weak_ptr<Control>& Selected);
 
-	Window* m_Target {};
+	// TODO: Find a way to use a weak_ptr instead.
+	Window* m_Target { nullptr };
 	std::weak_ptr<Splitter> m_Root {};
 	std::weak_ptr<Tree> m_Tree {};
 	std::weak_ptr<Properties> m_Properties {};
