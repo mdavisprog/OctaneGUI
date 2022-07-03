@@ -88,7 +88,17 @@ void TextEditor::OnLoad(const Json& Root)
 
 std::u32string TextEditor::ModifyText(const std::u32string& Pending) const
 {
-	if (Pending != U"\n" || !m_MatchIndent)
+	if (Pending == U"\n")
+	{
+		return MatchIndent(Pending);
+	}
+
+	return Pending;
+}
+
+std::u32string TextEditor::MatchIndent(const std::u32string& Pending) const
+{
+	if (!m_MatchIndent)
 	{
 		return Pending;
 	}

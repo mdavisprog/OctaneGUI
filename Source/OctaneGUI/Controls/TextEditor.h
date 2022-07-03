@@ -51,6 +51,7 @@ public:
 
 private:
 	std::u32string ModifyText(const std::u32string& Pending) const;
+	std::u32string MatchIndent(const std::u32string& Pending) const;
 	void PaintLineColors(std::shared_ptr<TextInput const>& Input, Paint& Brush) const;
 
 	bool m_MatchIndent { true };
