@@ -55,6 +55,8 @@ OctaneGUI::Keyboard::Key GetKeyCode(sf::Keyboard::Key Key)
 	case sf::Keyboard::RShift: return OctaneGUI::Keyboard::Key::RightShift;
 	case sf::Keyboard::LControl: return OctaneGUI::Keyboard::Key::LeftControl;
 	case sf::Keyboard::RControl: return OctaneGUI::Keyboard::Key::RightControl;
+	case sf::Keyboard::LAlt: return OctaneGUI::Keyboard::Key::LeftAlt;
+	case sf::Keyboard::RAlt: return OctaneGUI::Keyboard::Key::RightAlt;
 	case sf::Keyboard::Enter: return OctaneGUI::Keyboard::Key::Enter;
 	case sf::Keyboard::Tilde: return OctaneGUI::Keyboard::Key::Tilde;
 	case sf::Keyboard::Tab: return OctaneGUI::Keyboard::Key::Tab;

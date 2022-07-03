@@ -50,6 +50,8 @@ public:
 		RightShift,
 		LeftControl,
 		RightControl,
+		LeftAlt,
+		RightAlt,
 		Enter,
 		Tilde,
 		Tab,
