@@ -36,6 +36,7 @@ class String
 {
 public:
 	static size_t FindFirstOfReverse(const std::u32string& Ref, const std::u32string& Search, size_t Pos);
+	static size_t Count(const std::u32string_view& Ref, char32_t Character);
 };
 
 }

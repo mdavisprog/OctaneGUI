@@ -56,4 +56,20 @@ size_t String::FindFirstOfReverse(const std::u32string& Ref, const std::u32strin
 	return Result;
 }
 
+size_t String::Count(const std::u32string_view& Ref, char32_t Character)
+{
+	size_t Result = 0;
+
+	size_t Start = 0;
+	size_t Pos = Ref.find(Character, Start);
+	while (Pos != std::string::npos)
+	{
+		Result++;
+		Start = Pos + 1;
+		Pos = Ref.find(Character, Start);
+	}
+
+	return Result;
+}
+
 }
