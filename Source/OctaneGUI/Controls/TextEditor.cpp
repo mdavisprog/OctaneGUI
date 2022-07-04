@@ -102,17 +102,18 @@ std::u32string TextEditor::ModifyText(const std::u32string& Pending)
 		return MatchIndent(Pending);
 	}
 
-	if (Pending == U"\"")
+	std::u32string Result = Pending;
+	if (Pending == U"\"" || Pending == U"'")
 	{
-		return MatchCharacter(Pending, U'"');
+		Result = MatchCharacter(Pending, Pending[0]);
+
+		if (Result.empty())
+		{
+			MovePosition(0, 1);
+		}
 	}
 
-	if (Pending == U"'")
-	{
-		return MatchCharacter(Pending, U'\'');
-	}
-
-	return Pending;
+	return Result;
 }
 
 std::u32string TextEditor::MatchIndent(const std::u32string& Pending) const
@@ -145,6 +146,11 @@ std::u32string TextEditor::MatchCharacter(const std::u32string& Pending, char32_
 {
 	if (String::Count(Line(), Character) % 2 == 0)
 	{
+		if (Right() == Character)
+		{
+			return U"";
+		}
+
 		return Pending + Character;
 	}
 
