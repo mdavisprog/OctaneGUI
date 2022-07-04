@@ -83,6 +83,9 @@ public:
 	const char32_t* GetText() const;
 	const std::u32string_view Line() const;
 
+	char32_t Left() const;
+	char32_t Right() const;
+
 	TextInput& SetReadOnly(bool Value);
 	bool ReadOnly() const;
 

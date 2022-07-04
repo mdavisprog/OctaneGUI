@@ -279,6 +279,32 @@ const std::u32string_view TextInput::Line() const
 	return std::u32string_view(&m_Text->GetString()[Start], End - Start);
 }
 
+char32_t TextInput::Left() const
+{
+	const std::u32string& Contents = m_Text->GetString();
+
+	const size_t Index = m_Position.Index() > 0 ? m_Position.Index() - 1 : 0;
+	if (Index >= Contents.length())
+	{
+		return U'\0';
+	}
+
+	return Contents[Index];
+}
+
+char32_t TextInput::Right() const
+{
+	const std::u32string& Contents = m_Text->GetString();
+
+	const size_t Index = m_Position.Index();
+	if (Index >= Contents.length())
+	{
+		return U'\0';
+	}
+
+	return Contents[Index];
+}
+
 TextInput& TextInput::SetReadOnly(bool Value)
 {
 	if (m_ReadOnly == Value)
