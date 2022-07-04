@@ -86,6 +86,10 @@ public:
 	char32_t Left() const;
 	char32_t Right() const;
 
+	size_t LineNumber() const;
+	size_t Column() const;
+	size_t Index() const;
+
 	TextInput& SetReadOnly(bool Value);
 	bool ReadOnly() const;
 

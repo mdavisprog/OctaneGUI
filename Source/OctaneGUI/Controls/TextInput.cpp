@@ -305,6 +305,21 @@ char32_t TextInput::Right() const
 	return Contents[Index];
 }
 
+size_t TextInput::LineNumber() const
+{
+	return (size_t)m_Position.Line();
+}
+
+size_t TextInput::Column() const
+{
+	return (size_t)m_Position.Column();
+}
+
+size_t TextInput::Index() const
+{
+	return (size_t)m_Position.Index();
+}
+
 TextInput& TextInput::SetReadOnly(bool Value)
 {
 	if (m_ReadOnly == Value)
