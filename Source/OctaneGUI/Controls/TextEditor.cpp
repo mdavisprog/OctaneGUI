@@ -89,7 +89,14 @@ void TextEditor::OnLoad(const Json& Root)
 
 void TextEditor::TextAdded(const std::u32string& Contents)
 {
-	if (Contents == U"\"\"" || Contents == U"''")
+	const bool Back = Contents == U"\"\""
+		|| Contents == U"''"
+		|| Contents == U"{}"
+		|| Contents == U"[]"
+		|| Contents == U"()";
+
+
+	if (Back)
 	{
 		MovePosition(0, -1);
 	}
@@ -111,6 +118,21 @@ std::u32string TextEditor::ModifyText(const std::u32string& Pending)
 		{
 			MovePosition(0, 1);
 		}
+	}
+
+	if (Pending == U"{")
+	{
+		Result = Pending + U"}";
+	}
+
+	if (Pending == U"[")
+	{
+		Result = Pending + U"]";
+	}
+
+	if (Pending == U"(")
+	{
+		Result = Pending + U")";
 	}
 
 	return Result;
