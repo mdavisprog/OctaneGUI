@@ -49,6 +49,9 @@ public:
 
 	virtual void OnLoad(const Json& Root) override;
 
+protected:
+	virtual void TextAdded(const std::u32string& Contents) override;
+
 private:
 	std::u32string ModifyText(const std::u32string& Pending);
 	std::u32string MatchIndent(const std::u32string& Pending) const;

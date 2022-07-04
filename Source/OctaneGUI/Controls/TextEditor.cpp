@@ -87,6 +87,14 @@ void TextEditor::OnLoad(const Json& Root)
 	SetMulitline(true);
 }
 
+void TextEditor::TextAdded(const std::u32string& Contents)
+{
+	if (Contents == U"\"\"" || Contents == U"''")
+	{
+		MovePosition(0, -1);
+	}
+}
+
 std::u32string TextEditor::ModifyText(const std::u32string& Pending)
 {
 	if (Pending == U"\n")
