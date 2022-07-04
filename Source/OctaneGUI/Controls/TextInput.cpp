@@ -916,7 +916,7 @@ TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
 			break;
 		}
 
-		const Vector2 Size = GetTheme()->GetFont()->Measure(Ch);
+		const Vector2 Size = m_Text->GetFont()->Measure(Ch);
 		Offset.X += Size.X;
 
 		if (Position.X - Scrollable()->GetPosition().X - TextOffset.X <= GetAbsolutePosition().X + Offset.X)
