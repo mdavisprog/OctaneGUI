@@ -103,6 +103,11 @@ public:
 	virtual void OnSave(Json& Root) const override;
 	virtual void OnThemeLoaded() override;
 
+protected:
+	void MovePosition(int32_t Line, int32_t Column, bool UseAnchor = false, bool SkipWords = false);
+
+	virtual void TextAdded(const std::u32string& Contents);
+
 private:
 	void MouseMove(const Vector2& Position);
 	bool MousePressed(const Vector2& Position, Mouse::Button Button);
@@ -115,7 +120,6 @@ private:
 	void MoveHome();
 	void MoveEnd();
 	void SetPosition(uint32_t Line, uint32_t Column, uint32_t Index);
-	void MovePosition(int32_t Line, int32_t Column, bool UseAnchor = false, bool SkipWords = false);
 	Vector2 GetPositionLocation(const TextPosition& Position, bool OffsetFirstLine = true) const;
 	TextPosition GetPosition(const Vector2& Position) const;
 	bool IsShiftPressed() const;

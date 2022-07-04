@@ -500,157 +500,6 @@ void TextInput::OnThemeLoaded()
 	UpdateSpans();
 }
 
-void TextInput::MouseMove(const Vector2& Position)
-{
-	if (m_Drag)
-	{
-		m_Position = GetPosition(Position);
-		Invalidate();
-		UpdateSpans();
-	}
-}
-
-bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button)
-{
-	m_Position = GetPosition(Position);
-	m_Anchor = m_Position;
-	m_Drag = true;
-	// Remove any multi-selected spans.
-	m_Text->ClearSpans();
-	SetVisibleLineSpan();
-	ResetCursorTimer();
-	Invalidate();
-
-	return true;
-}
-
-void TextInput::MouseReleased(const Vector2& Position, Mouse::Button Button)
-{
-	if (m_Anchor == m_Position)
-	{
-		m_Anchor.Invalidate();
-	}
-
-	m_Drag = false;
-}
-
-void TextInput::AddText(uint32_t Code)
-{
-	if (!std::isalnum(Code) && Code != '\n' && Code != ' ' && Code != '\t' && !std::ispunct(Code))
-	{
-		return;
-	}
-
-	std::u32string Value;
-	Value += Code;
-	AddText(Value);
-}
-
-void Remove(std::u32string& Contents, char32_t Character)
-{
-	size_t Length = Contents.length();
-
-	size_t Offset = Contents.find(Character);
-	while (Offset != std::string::npos)
-	{
-		Contents.erase(Offset, 1);
-		Offset = Contents.find(Character, Offset);
-	}
-}
-
-void TextInput::AddText(const std::u32string& Contents)
-{
-	if (m_ReadOnly)
-	{
-		return;
-	}
-
-	if (!m_Position.IsValid())
-	{
-		m_Position = { 0, 0, 0 };
-	}
-
-	if (m_Anchor.IsValid())
-	{
-		Delete(GetRangeOr(0));
-	}
-
-	std::u32string Pending = std::move(Contents);
-	if (m_OnModifyText)
-	{
-		Pending = m_OnModifyText(TShare<TextInput>(), Pending);
-	}
-
-	std::u32string Stripped = std::move(Pending);
-	Remove(Stripped, '\r');
-
-	if (!m_Multiline)
-	{
-		Remove(Stripped, '\n');
-	}
-
-	const uint32_t Length = (uint32_t)Stripped.length();
-	std::u32string Current = m_Text->GetText();
-	Current.insert(Current.begin() + m_Position.Index(), Stripped.begin(), Stripped.end());
-	InternalSetText(Current.c_str());
-	Scrollable()->Update();
-
-	// Need to update the last visible line index as it has changed to the length of the string changing.
-	const uint32_t Index = std::min<uint32_t>(m_LastVisibleLine.Index() + Length, m_Text->Length());
-	m_LastVisibleLine = { m_LastVisibleLine.Line(), LineEndIndex(Index) - LineStartIndex(Index), Index };
-
-	MovePosition(0, Length);
-}
-
-void TextInput::Delete(int32_t Range)
-{
-	uint32_t Index = m_Position.Index();
-
-	int32_t Min = std::min<int32_t>(Index, Index + (int32_t)Range);
-	Min = std::max<int32_t>(0, Min);
-
-	int32_t Max = std::max<int32_t>(Index, Index + (int32_t)Range);
-	Max = std::min<int32_t>(m_Text->Length(), Max);
-
-	// Only move the cursor if deleting characters to the left of the cursor.
-	// Move the position before updating the text object. This should place
-	// the position to the correct index in the string buffer.
-	int32_t Move = std::min<int32_t>(Range, 0);
-	MovePosition(0, Move);
-
-	// TODO: Maybe allow altering the contents in-place and repaint?
-	std::u32string Contents = m_Text->GetText();
-	Contents.erase(Contents.begin() + (uint32_t)Min, Contents.begin() + (uint32_t)Max);
-
-	InternalSetText(Contents.c_str());
-	Scrollable()->Update();
-
-	// Force update the visible lines
-	m_FirstVisibleLine.Invalidate();
-	UpdateVisibleLines(0.0f);
-	UpdateSpans();
-}
-
-void TextInput::MoveHome()
-{
-	int Index = LineStartIndex(m_Position.Index());
-	Index = Index > 0 ? Index + 1 : Index;
-	MovePosition(0, Index - m_Position.Index(), IsShiftPressed());
-}
-
-void TextInput::MoveEnd()
-{
-	MovePosition(0, LineEndIndex(m_Position.Index()) - m_Position.Index(), IsShiftPressed());
-}
-
-void TextInput::SetPosition(uint32_t Line, uint32_t Column, uint32_t Index)
-{
-	m_Position = { Line, Column, Index };
-	ScrollIntoView();
-	UpdateSpans();
-	Invalidate();
-}
-
 void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor, bool SkipWords)
 {
 	// This function will calculate the new line and column along with the index
@@ -817,6 +666,163 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor, bool 
 
 	SetPosition((uint32_t)NewLine, (uint32_t)NewColumn, (uint32_t)NewIndex);
 	ResetCursorTimer();
+}
+
+void TextInput::TextAdded(const std::u32string& Contents)
+{
+}
+
+void TextInput::MouseMove(const Vector2& Position)
+{
+	if (m_Drag)
+	{
+		m_Position = GetPosition(Position);
+		Invalidate();
+		UpdateSpans();
+	}
+}
+
+bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button)
+{
+	m_Position = GetPosition(Position);
+	m_Anchor = m_Position;
+	m_Drag = true;
+	// Remove any multi-selected spans.
+	m_Text->ClearSpans();
+	SetVisibleLineSpan();
+	ResetCursorTimer();
+	Invalidate();
+
+	return true;
+}
+
+void TextInput::MouseReleased(const Vector2& Position, Mouse::Button Button)
+{
+	if (m_Anchor == m_Position)
+	{
+		m_Anchor.Invalidate();
+	}
+
+	m_Drag = false;
+}
+
+void TextInput::AddText(uint32_t Code)
+{
+	if (!std::isalnum(Code) && Code != '\n' && Code != ' ' && Code != '\t' && !std::ispunct(Code))
+	{
+		return;
+	}
+
+	std::u32string Value;
+	Value += Code;
+	AddText(Value);
+}
+
+void Remove(std::u32string& Contents, char32_t Character)
+{
+	size_t Length = Contents.length();
+
+	size_t Offset = Contents.find(Character);
+	while (Offset != std::string::npos)
+	{
+		Contents.erase(Offset, 1);
+		Offset = Contents.find(Character, Offset);
+	}
+}
+
+void TextInput::AddText(const std::u32string& Contents)
+{
+	if (m_ReadOnly)
+	{
+		return;
+	}
+
+	if (!m_Position.IsValid())
+	{
+		m_Position = { 0, 0, 0 };
+	}
+
+	if (m_Anchor.IsValid())
+	{
+		Delete(GetRangeOr(0));
+	}
+
+	std::u32string Pending = std::move(Contents);
+	if (m_OnModifyText)
+	{
+		Pending = m_OnModifyText(TShare<TextInput>(), Pending);
+	}
+
+	std::u32string Stripped = std::move(Pending);
+	Remove(Stripped, '\r');
+
+	if (!m_Multiline)
+	{
+		Remove(Stripped, '\n');
+	}
+
+	const uint32_t Length = (uint32_t)Stripped.length();
+	std::u32string Current = m_Text->GetText();
+	Current.insert(Current.begin() + m_Position.Index(), Stripped.begin(), Stripped.end());
+	InternalSetText(Current.c_str());
+	Scrollable()->Update();
+
+	// Need to update the last visible line index as it has changed to the length of the string changing.
+	const uint32_t Index = std::min<uint32_t>(m_LastVisibleLine.Index() + Length, m_Text->Length());
+	m_LastVisibleLine = { m_LastVisibleLine.Line(), LineEndIndex(Index) - LineStartIndex(Index), Index };
+
+	MovePosition(0, Length);
+
+	TextAdded(Stripped);
+}
+
+void TextInput::Delete(int32_t Range)
+{
+	uint32_t Index = m_Position.Index();
+
+	int32_t Min = std::min<int32_t>(Index, Index + (int32_t)Range);
+	Min = std::max<int32_t>(0, Min);
+
+	int32_t Max = std::max<int32_t>(Index, Index + (int32_t)Range);
+	Max = std::min<int32_t>(m_Text->Length(), Max);
+
+	// Only move the cursor if deleting characters to the left of the cursor.
+	// Move the position before updating the text object. This should place
+	// the position to the correct index in the string buffer.
+	int32_t Move = std::min<int32_t>(Range, 0);
+	MovePosition(0, Move);
+
+	// TODO: Maybe allow altering the contents in-place and repaint?
+	std::u32string Contents = m_Text->GetText();
+	Contents.erase(Contents.begin() + (uint32_t)Min, Contents.begin() + (uint32_t)Max);
+
+	InternalSetText(Contents.c_str());
+	Scrollable()->Update();
+
+	// Force update the visible lines
+	m_FirstVisibleLine.Invalidate();
+	UpdateVisibleLines(0.0f);
+	UpdateSpans();
+}
+
+void TextInput::MoveHome()
+{
+	int Index = LineStartIndex(m_Position.Index());
+	Index = Index > 0 ? Index + 1 : Index;
+	MovePosition(0, Index - m_Position.Index(), IsShiftPressed());
+}
+
+void TextInput::MoveEnd()
+{
+	MovePosition(0, LineEndIndex(m_Position.Index()) - m_Position.Index(), IsShiftPressed());
+}
+
+void TextInput::SetPosition(uint32_t Line, uint32_t Column, uint32_t Index)
+{
+	m_Position = { Line, Column, Index };
+	ScrollIntoView();
+	UpdateSpans();
+	Invalidate();
 }
 
 Vector2 TextInput::GetPositionLocation(const TextPosition& Position, bool OffsetFirstLine) const
