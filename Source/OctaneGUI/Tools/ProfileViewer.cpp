@@ -304,7 +304,7 @@ void ProfileViewer::View(Window* InWindow)
 			   << "]}]},"
 			   << "\"Body\": {\"Controls\": ["
 			   << "{\"Type\": \"Panel\", \"Expand\": \"Both\"},"
-			   << "{\"Type\": \"MarginContainer\", \"Margins\": [4, 4, 4, 4], \"Controls\": ["
+			   << "{\"Type\": \"MarginContainer\", \"Margins\": [4, 4, 4, 4], \"Expand\": \"Both\", \"Controls\": ["
 			   << "{\"ID\": \"Root\", \"Type\": \"VerticalContainer\", \"Expand\": \"Both\", \"Controls\": ["
 			   << "]}"
 			   << "]}"
