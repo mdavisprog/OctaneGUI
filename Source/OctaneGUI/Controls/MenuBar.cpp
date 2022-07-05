@@ -111,7 +111,7 @@ MenuBar& MenuBar::ClearMenuItems()
 {
 	m_Container->ClearControls();
 	m_MenuItems.clear();
-	SetSize({ });
+	SetSize({});
 	Invalidate(InvalidateType::Both);
 	return *this;
 }

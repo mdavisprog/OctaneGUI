@@ -132,18 +132,18 @@ void Paint::Rectangle3DRounded(const Rect& Bounds, const Rect& Radius, const Col
 	const float RadiusTR = Radius.Min.Y;
 	const float RadiusBL = Radius.Min.X;
 	const float RadiusBR = Radius.Min.Y;
-	
+
 	ArcOutline({ Bounds.Min.X + RadiusTL, Bounds.Min.Y + RadiusTL }, RadiusTL, 180.0f, 270.0f, Sunken ? Shadow : Highlight);
 	ArcOutline({ Bounds.Max.X - RadiusTR, Bounds.Min.Y + RadiusTR }, RadiusTR, 270.0f, 315.0f, Sunken ? Shadow : Highlight);
 	ArcOutline({ Bounds.Max.X - RadiusTR, Bounds.Min.Y + RadiusTR }, RadiusTR, 315.0f, 360.0f, Sunken ? Highlight : Shadow);
-	Line({Bounds.Min.X + RadiusTL, Bounds.Min.Y}, {Bounds.Max.X - RadiusTR, Bounds.Min.Y}, Sunken ? Shadow : Highlight);
-	Line({Bounds.Min.X, Bounds.Min.Y + RadiusTL}, {Bounds.Min.X, Bounds.Max.Y - RadiusBL}, Sunken ? Shadow : Highlight);
+	Line({ Bounds.Min.X + RadiusTL, Bounds.Min.Y }, { Bounds.Max.X - RadiusTR, Bounds.Min.Y }, Sunken ? Shadow : Highlight);
+	Line({ Bounds.Min.X, Bounds.Min.Y + RadiusTL }, { Bounds.Min.X, Bounds.Max.Y - RadiusBL }, Sunken ? Shadow : Highlight);
 
 	ArcOutline({ Bounds.Min.X + RadiusBL, Bounds.Max.Y - RadiusBL }, RadiusBL, 90.0f, 135.0f, Sunken ? Highlight : Shadow);
 	ArcOutline({ Bounds.Min.X + RadiusBL, Bounds.Max.Y - RadiusBL }, RadiusBL, 135.0f, 180.0f, Sunken ? Shadow : Highlight);
 	ArcOutline({ Bounds.Max.X - RadiusBR, Bounds.Max.Y - RadiusBR }, RadiusBR, 0.0f, 90.0f, Sunken ? Highlight : Shadow);
-	Line({Bounds.Min.X + RadiusBL, Bounds.Max.Y}, {Bounds.Max.X - RadiusBR, Bounds.Max.Y}, Sunken ? Highlight : Shadow);
-	Line({Bounds.Max.X, Bounds.Min.Y + RadiusTR}, {Bounds.Max.X, Bounds.Max.Y - RadiusBR}, Sunken ? Highlight : Shadow);
+	Line({ Bounds.Min.X + RadiusBL, Bounds.Max.Y }, { Bounds.Max.X - RadiusBR, Bounds.Max.Y }, Sunken ? Highlight : Shadow);
+	Line({ Bounds.Max.X, Bounds.Min.Y + RadiusTR }, { Bounds.Max.X, Bounds.Max.Y - RadiusBR }, Sunken ? Highlight : Shadow);
 }
 
 void Paint::RectangleOutline(const Rect& Bounds, const Color& Col, float Thickness)

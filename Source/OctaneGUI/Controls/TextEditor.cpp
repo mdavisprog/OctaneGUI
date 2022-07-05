@@ -95,7 +95,6 @@ void TextEditor::TextAdded(const std::u32string& Contents)
 		|| Contents == U"[]"
 		|| Contents == U"()";
 
-
 	if (Back)
 	{
 		MovePosition(0, -1);
