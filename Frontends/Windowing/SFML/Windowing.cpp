@@ -87,8 +87,14 @@ void CreateWindow(OctaneGUI::Window* Window)
 {
 	if (g_Windows.find(Window) == g_Windows.end())
 	{
+		unsigned int Style = sf::Style::Titlebar | sf::Style::Close;
+		if (Window->IsResizable())
+		{
+			Style |= sf::Style::Resize;
+		}
+
 		const OctaneGUI::Vector2 Size = Window->GetSize();
-		sf::RenderWindow* RenderWindow = new sf::RenderWindow(sf::VideoMode((int)Size.X, (int)Size.Y), Window->GetTitle());
+		sf::RenderWindow* RenderWindow = new sf::RenderWindow(sf::VideoMode((int)Size.X, (int)Size.Y), Window->GetTitle(), Style);
 		RenderWindow->setFramerateLimit(0);
 		RenderWindow->setVerticalSyncEnabled(false);
 		g_Windows[Window] = std::shared_ptr<sf::RenderWindow>(RenderWindow);

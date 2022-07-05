@@ -85,11 +85,7 @@
 				]}
 			]}
 		},
-		"About": {
-			"Title": "About",
-			"Width": 400,
-			"Height": 200,
-			"Body": {"Controls": [
+		"About": {"Title": "About", "Width": 400, "Height": 200, "Resizable": false, "Body": {"Controls": [
 				{"Type": "Panel", "Expand": "Both"},
 				{"Type": "MarginContainer", "Expand": "Both", "Margins": [8, 8, 8, 8], "Controls": [
 					{"Type": "VerticalContainer", "Expand": "Both", "Grow": "Center", "Controls": [

@@ -92,7 +92,13 @@ void CreateWindow(OctaneGUI::Window* Window)
 {
 	if (g_Windows.find(Window) == g_Windows.end())
 	{
-		int Flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
+		int Flags = SDL_WINDOW_ALLOW_HIGHDPI;
+
+		if (Window->IsResizable())
+		{
+			Flags |= SDL_WINDOW_RESIZABLE;
+		}
+
 #if OPENGL
 		Flags |= SDL_WINDOW_OPENGL;
 #endif
