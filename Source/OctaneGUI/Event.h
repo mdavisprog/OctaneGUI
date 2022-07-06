@@ -50,6 +50,8 @@ public:
 		Text,
 		WindowClosed,
 		WindowResized,
+		WindowEnter,
+		WindowLeave,
 	};
 
 	struct Key

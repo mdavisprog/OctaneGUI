@@ -323,6 +323,20 @@ void Window::OnMouseWheel(const Vector2& Delta)
 	}
 }
 
+void Window::OnMouseEnter()
+{
+}
+
+void Window::OnMouseLeave()
+{
+	if (!m_Hovered.expired())
+	{
+		m_Hovered.lock()->OnMouseLeave();
+	}
+
+	m_Hovered.reset();
+}
+
 void Window::OnText(uint32_t Code)
 {
 	if (m_Focus.expired())

@@ -221,7 +221,13 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 				OctaneGUI::Event::WindowResized((float)Event.window.data1, (float)Event.window.data2));
 
 			case SDL_WINDOWEVENT_CLOSE: return OctaneGUI::Event(
-				OctaneGUI::Event::Event::Type::WindowClosed);
+				OctaneGUI::Event::Type::WindowClosed);
+
+			case SDL_WINDOWEVENT_ENTER: return OctaneGUI::Event(
+				OctaneGUI::Event::Type::WindowEnter);
+
+			case SDL_WINDOWEVENT_LEAVE: return OctaneGUI::Event(
+				OctaneGUI::Event::Type::WindowLeave);
 			}
 		}
 

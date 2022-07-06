@@ -96,6 +96,8 @@ public:
 	void OnMousePressed(const Vector2& Position, Mouse::Button Button);
 	void OnMouseReleased(const Vector2& Position, Mouse::Button Button);
 	void OnMouseWheel(const Vector2& Delta);
+	void OnMouseEnter();
+	void OnMouseLeave();
 	void OnText(uint32_t Code);
 	void ThemeLoaded();
 

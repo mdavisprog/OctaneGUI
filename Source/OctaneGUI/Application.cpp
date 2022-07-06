@@ -473,6 +473,14 @@ int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
 		Item->OnText(E.GetData().m_Text.Code);
 		break;
 
+	case Event::Type::WindowEnter:
+		Item->OnMouseEnter();
+		break;
+
+	case Event::Type::WindowLeave:
+		Item->OnMouseLeave();
+		break;
+
 	case Event::Type::None:
 	default: Processed--; break;
 	}

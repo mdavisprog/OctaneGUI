@@ -179,6 +179,12 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 			RenderWindow->setView(sf::View(sf::FloatRect(0.0f, 0.0f, (float)Event.size.width, (float)Event.size.height)));
 			return OctaneGUI::Event(OctaneGUI::Event::WindowResized((float)Event.size.width, (float)Event.size.height));
 
+		case sf::Event::MouseEntered:
+			return OctaneGUI::Event(OctaneGUI::Event::Type::WindowEnter);
+
+		case sf::Event::MouseLeft:
+			return OctaneGUI::Event(OctaneGUI::Event::Type::WindowLeave);
+
 		default: break;
 		}
 	}
