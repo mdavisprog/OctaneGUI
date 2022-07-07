@@ -50,6 +50,17 @@ void ControlList::AddControl(const std::shared_ptr<Control>& InControl)
 	m_Controls[InControl->GetFullID()] = InControl;
 }
 
+void ControlList::AddControls(const std::vector<std::shared_ptr<Control>>& Controls)
+{
+	for (const std::shared_ptr<Control>& Item : Controls)
+	{
+		if (Item->HasID())
+		{
+			AddControl(Item);
+		}
+	}
+}
+
 bool ControlList::Contains(const char* ID) const
 {
 	return m_Controls.find(ID) != m_Controls.end();

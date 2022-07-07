@@ -42,6 +42,7 @@ public:
 	~ControlList();
 
 	void AddControl(const std::shared_ptr<Control>& InControl);
+	void AddControls(const std::vector<std::shared_ptr<Control>>& Controls);
 	bool Contains(const char* ID) const;
 	std::weak_ptr<Control> Get(const char* ID) const;
 	std::vector<std::string> IDs() const;
