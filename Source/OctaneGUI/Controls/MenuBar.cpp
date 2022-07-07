@@ -29,6 +29,7 @@ SOFTWARE.
 #include "../Json.h"
 #include "../Theme.h"
 #include "../Window.h"
+#include "ControlList.h"
 #include "HorizontalContainer.h"
 #include "Menu.h"
 #include "MenuItem.h"
@@ -125,6 +126,16 @@ void MenuBar::Close()
 	}
 
 	m_Open = false;
+}
+
+void MenuBar::GetControlList(ControlList& List) const
+{
+	std::vector<std::shared_ptr<MenuItem>> Items;
+	GetMenuItems(Items);
+
+	std::vector<std::shared_ptr<Control>> ControlItems {};
+	ControlItems.insert(ControlItems.end(), Items.begin(), Items.end());
+	List.AddControls(ControlItems);
 }
 
 void MenuBar::OnLoad(const Json& Root)

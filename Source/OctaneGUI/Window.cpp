@@ -599,21 +599,7 @@ Window::Window()
 
 void Window::Populate(ControlList& List) const
 {
-	std::vector<std::shared_ptr<MenuItem>> MenuItems;
-	m_MenuBar->GetMenuItems(MenuItems);
-
-	std::vector<std::shared_ptr<Control>> Controls;
-	m_Body->GetControls(Controls);
-
-	Controls.insert(Controls.end(), MenuItems.begin(), MenuItems.end());
-
-	for (const std::shared_ptr<Control>& Item : Controls)
-	{
-		if (Item->HasID())
-		{
-			List.AddControl(Item);
-		}
-	}
+	m_Container->GetControlList(List);
 }
 
 void Window::RequestLayout(std::shared_ptr<Container> Request)

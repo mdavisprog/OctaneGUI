@@ -35,6 +35,8 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+class ControlList;
+
 class Container : public Control
 {
 	CLASS(Container)
@@ -84,6 +86,7 @@ public:
 	// TODO: Rename to GetAllControls.
 	void GetControls(std::vector<std::shared_ptr<Control>>& Controls) const;
 	const std::vector<std::shared_ptr<Control>>& Controls() const;
+	virtual void GetControlList(ControlList& List) const;
 	virtual Vector2 DesiredSize() const;
 	virtual void SetWindow(Window* InWindow) override;
 

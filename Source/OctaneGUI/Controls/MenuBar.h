@@ -49,6 +49,8 @@ public:
 	MenuBar& ClearMenuItems();
 	void Close();
 
+	virtual void GetControlList(ControlList& List) const override;
+
 	virtual void OnLoad(const Json& Root) override;
 	virtual void OnThemeLoaded() override;
 

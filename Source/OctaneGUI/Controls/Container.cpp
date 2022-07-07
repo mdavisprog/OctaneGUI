@@ -30,6 +30,7 @@ SOFTWARE.
 #include "../Profiler.h"
 #include "CheckBox.h"
 #include "ComboBox.h"
+#include "ControlList.h"
 #include "GroupBox.h"
 #include "HorizontalContainer.h"
 #include "Image.h"
@@ -326,6 +327,20 @@ void Container::GetControls(std::vector<std::shared_ptr<Control>>& Controls) con
 		if (ItemContainer)
 		{
 			ItemContainer->GetControls(Controls);
+		}
+	}
+}
+
+void Container::GetControlList(ControlList& List) const
+{
+	List.AddControls(Controls());
+
+	for (const std::shared_ptr<Control>& Item : Controls())
+	{
+		const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
+		if (ItemContainer)
+		{
+			ItemContainer->GetControlList(List);
 		}
 	}
 }
