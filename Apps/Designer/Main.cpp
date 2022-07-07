@@ -33,6 +33,7 @@ int main(int argc, char **argv)
 	std::shared_ptr<OctaneGUI::Text> StatusText { nullptr };
 	std::shared_ptr<OctaneGUI::Panel> StatusBar { nullptr };
 	std::shared_ptr<OctaneGUI::Window> PreviewWindow { nullptr };
+	std::shared_ptr<OctaneGUI::WindowContainer> Preview { nullptr };
 
 	std::shared_ptr<OctaneGUI::Window> MainWindow = Application.GetWindow("Main");
 	std::shared_ptr<OctaneGUI::Timer> CompileTimer = MainWindow->CreateTimer(500, false, [&]() -> void
@@ -65,6 +66,14 @@ int main(int argc, char **argv)
 						PreviewWindow->Clear();
 						PreviewWindow->LoadContents(Main);
 					}
+				}
+
+				if (Preview)
+				{
+					const OctaneGUI::Json& Main = Root["Windows"]["Main"];
+
+					Preview->Clear();
+					Preview->OnLoad(Main);
 				}
 			}
 		});
@@ -107,7 +116,9 @@ int main(int argc, char **argv)
 		}
 	}
 })");
-	
+
+	Preview = MainList.To<OctaneGUI::WindowContainer>("Preview");
+
 	StatusBar = MainList.To<OctaneGUI::Panel>("StatusBar");
 	StatusText = MainList.To<OctaneGUI::Text>("Status");
 	StatusText->SetText(U"New Document");
