@@ -134,6 +134,15 @@ std::u32string TextEditor::ModifyText(const std::u32string& Pending)
 		Result = Pending + U")";
 	}
 
+	if (Pending == U"}" || Pending == U"]" || Pending == U")")
+	{
+		if (Right() == Pending.front())
+		{
+			Result.clear();
+			MovePosition(0, 1);
+		}
+	}
+
 	return Result;
 }
 
