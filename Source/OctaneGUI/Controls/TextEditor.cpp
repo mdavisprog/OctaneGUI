@@ -192,6 +192,7 @@ void TextEditor::PaintLineColors(std::shared_ptr<TextInput const>& Input, Paint&
 	for (const std::pair<size_t, Color>& Line : m_LineColors)
 	{
 		Rect Bounds { Scrollable()->GetAbsoluteBounds() };
+		Bounds.Max.X = Bounds.Min.X + Scrollable()->ContentSize().X;
 		Bounds.Min.Y += (Line.first - 1) * LineHeight();
 		Bounds.Max.Y = Bounds.Min.Y + LineHeight();
 		Brush.Rectangle(Bounds, Line.second);
