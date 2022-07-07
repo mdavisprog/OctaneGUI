@@ -29,7 +29,7 @@ SOFTWARE.
 #include "Controls/ControlList.h"
 #include "Controls/MenuBar.h"
 #include "Controls/MenuItem.h"
-#include "Controls/VerticalContainer.h"
+#include "Controls/WindowContainer.h"
 #include "Json.h"
 #include "Paint.h"
 #include "Profiler.h"
@@ -65,7 +65,7 @@ Window::Window(Application* InApplication)
 				m_OnPopupClose = nullptr;
 			}
 
-			m_MenuBar->Close();
+			m_Container->CloseMenuBar();
 			m_Repaint = true;
 		});
 }
@@ -235,8 +235,7 @@ void Window::OnMouseMove(const Vector2& Position)
 
 	if (!m_Popup.IsModal() && Hovered.expired())
 	{
-		Hovered = m_MenuBar->GetControl(Position);
-		Hovered = Hovered.expired() ? m_Body->GetControl(Position) : Hovered;
+		Hovered = m_Container->GetControl(Position);
 	}
 
 	std::shared_ptr<Control> Current = Hovered.lock();
@@ -355,10 +354,8 @@ void Window::ThemeLoaded()
 
 void Window::CreateContainer()
 {
-	m_Container = std::make_shared<VerticalContainer>(this);
+	m_Container = std::make_shared<WindowContainer>(this);
 	m_Container
-		->SetSpacing({ 0.0f, 0.0f })
-		->SetExpand(Expand::Both)
 		->SetOnInvalidate([=](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
 			{
 				if ((Type == InvalidateType::Layout || Type == InvalidateType::Both))
@@ -369,23 +366,17 @@ void Window::CreateContainer()
 				m_Repaint = true;
 			});
 
-	m_MenuBar = std::make_shared<MenuBar>(this);
-	m_Container->InsertControl(m_MenuBar);
-
-	m_Body = m_Container->AddControl<Container>();
-	m_Body->SetExpand(Expand::Both);
-
 	m_Repaint = true;
 }
 
 std::shared_ptr<Container> Window::GetContainer() const
 {
-	return m_Body;
+	return m_Container->Body();
 }
 
 std::shared_ptr<MenuBar> Window::GetMenuBar() const
 {
-	return m_MenuBar;
+	return m_Container->GetMenuBar();
 }
 
 std::shared_ptr<Container> Window::GetRootContainer() const
@@ -493,16 +484,7 @@ void Window::LoadRoot(const Json& Root)
 
 void Window::LoadContents(const Json& Root)
 {
-	const Json& MB = Root["MenuBar"];
-	const Json& Body = Root["Body"];
-
-	m_MenuBar->OnLoad(MB);
-	m_Body->OnLoad(Body);
-
-	// Need to update the expansion type after OnLoad functions as it will be reset there.
-	m_Body->SetExpand(Expand::Both);
-
-	m_Container->Invalidate(InvalidateType::Both);
+	m_Container->OnLoad(Root);
 }
 
 void Window::LoadContents(const Json& Root, ControlList& List)
@@ -513,8 +495,7 @@ void Window::LoadContents(const Json& Root, ControlList& List)
 
 void Window::Clear()
 {
-	m_MenuBar->ClearMenuItems();
-	m_Body->ClearControls();
+	m_Container->Clear();
 	m_Popup.Close();
 	m_LayoutRequests.clear();
 }

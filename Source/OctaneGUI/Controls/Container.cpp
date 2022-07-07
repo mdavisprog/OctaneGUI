@@ -51,6 +51,7 @@ SOFTWARE.
 #include "TextSelectable.h"
 #include "Tree.h"
 #include "VerticalContainer.h"
+#include "WindowContainer.h"
 
 #include <algorithm>
 #include <cassert>
@@ -164,6 +165,10 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 	else if (Type == VerticalContainer::TypeName())
 	{
 		Result = AddControl<VerticalContainer>();
+	}
+	else if (Type == WindowContainer::TypeName())
+	{
+		Result = AddControl<WindowContainer>();
 	}
 
 	return Result;

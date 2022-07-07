@@ -58,6 +58,7 @@ SOFTWARE.
 #include "Controls/TextInput.h"
 #include "Controls/TextSelectable.h"
 #include "Controls/VerticalContainer.h"
+#include "Controls/WindowContainer.h"
 #include "DrawCommand.h"
 #include "Event.h"
 #include "Font.h"

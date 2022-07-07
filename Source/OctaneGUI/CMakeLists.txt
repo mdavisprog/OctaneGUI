@@ -32,6 +32,7 @@ set(SOURCE
 	Controls/TextSelectable.cpp
 	Controls/Tree.cpp
 	Controls/VerticalContainer.cpp
+	Controls/WindowContainer.cpp
 	Application.cpp
 	Assert.cpp
 	Class.cpp

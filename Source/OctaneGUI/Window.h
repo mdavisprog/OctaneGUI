@@ -52,7 +52,7 @@ class TextureCache;
 class Theme;
 class Timer;
 class VertexBuffer;
-class VerticalContainer;
+class WindowContainer;
 
 class Window
 {
@@ -158,9 +158,7 @@ private:
 	std::string m_ID {};
 	Vector2 m_MousePosition {};
 	Rect m_Bounds {};
-	std::shared_ptr<VerticalContainer> m_Container { nullptr };
-	std::shared_ptr<MenuBar> m_MenuBar { nullptr };
-	std::shared_ptr<Container> m_Body { nullptr };
+	std::shared_ptr<WindowContainer> m_Container { nullptr };
 	bool m_Repaint { false };
 	std::weak_ptr<Control> m_Focus {};
 	std::weak_ptr<Control> m_Hovered {};
