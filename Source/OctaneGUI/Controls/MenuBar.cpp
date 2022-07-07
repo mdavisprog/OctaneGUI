@@ -206,7 +206,7 @@ void MenuBar::Open(MenuItem& Item)
 		return;
 	}
 
-	const Vector2 Position = Item.GetPosition();
+	const Vector2 Position = Item.GetAbsolutePosition();
 	Item.GetMenu()->SetPosition(Position + Vector2(0.0f, GetSize().Y));
 	GetWindow()->SetPopup(Item.GetMenu());
 	Item.SetSelected(true);
