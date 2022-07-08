@@ -26,13 +26,14 @@ SOFTWARE.
 
 #include "BoxContainer.h"
 #include "../Json.h"
+#include "../String.h"
 
 namespace OctaneGUI
 {
 
 static Grow ToGrow(const std::string& Value)
 {
-	const std::string Lower = Json::ToLower(Value);
+	const std::string Lower = String::ToLower(Value);
 	if (Lower == "center")
 	{
 		return Grow::Center;

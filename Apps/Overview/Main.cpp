@@ -103,14 +103,14 @@ int main(int argc, char **argv)
 	std::shared_ptr<OctaneGUI::ComboBox> ThemesComboBox = List.To<OctaneGUI::ComboBox>("ThemesComboBox");
 	ThemesComboBox->SetOnSelected([&](const std::u32string& Selected) -> void
 		{
-			const std::string Name = OctaneGUI::Json::ToMultiByte(Selected);
+			const std::string Name = OctaneGUI::String::ToMultiByte(Selected);
 			LoadTheme(Application, Name.c_str());
 		});
 	for (const std::pair<std::string, std::string>& Item : Themes)
 	{
 		ThemesComboBox->AddItem(Item.first.c_str());
 	}
-	ThemesComboBox->SetSelected(OctaneGUI::Json::ToUTF32(Theme).c_str());
+	ThemesComboBox->SetSelected(OctaneGUI::String::ToUTF32(Theme).c_str());
 
 	const OctaneGUI::ControlList& AboutList = WindowControls["About"];
 	AboutList.To<OctaneGUI::Button>("OK")->SetOnClicked([](const OctaneGUI::Button& Button) -> void

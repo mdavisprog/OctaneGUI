@@ -27,6 +27,7 @@ SOFTWARE.
 #include "ComboBox.h"
 #include "../Icons.h"
 #include "../Json.h"
+#include "../String.h"
 #include "../ThemeProperties.h"
 #include "../Window.h"
 #include "ImageButton.h"
@@ -89,7 +90,7 @@ ComboBox::ComboBox(Window* InWindow)
 				}
 				else
 				{
-					ItemText = Json::ToUTF32(std::string("Item ") + std::to_string(Index));
+					ItemText = String::ToUTF32(std::string("Item ") + std::to_string(Index));
 				}
 
 				SetSelected(ItemText.c_str());

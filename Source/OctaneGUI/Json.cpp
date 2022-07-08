@@ -25,11 +25,11 @@ SOFTWARE.
 */
 
 #include "Json.h"
+#include "String.h"
 
 #include <cassert>
 #include <cctype>
 #include <climits>
-#include <codecvt>
 #include <cstdarg>
 #include <cstring>
 #include <utility>
@@ -101,78 +101,6 @@ private:
 	int m_Line { 1 };
 	int m_Column { 1 };
 };
-
-std::string Json::ToLower(const std::string& Value)
-{
-	std::string Result;
-
-	for (const char Ch : Value)
-	{
-		Result += std::tolower(Ch);
-	}
-
-	return Result;
-}
-
-std::u32string Json::ToLower(const std::u32string& Value)
-{
-	std::u32string Result;
-
-	for (const char32_t Ch : Value)
-	{
-		Result += std::tolower(Ch);
-	}
-
-	return Result;
-}
-
-class Converter : public std::codecvt<char32_t, char, std::mbstate_t>
-{
-public:
-	Converter()
-		: std::codecvt<char32_t, char, std::mbstate_t>()
-	{
-	}
-
-	~Converter()
-	{
-	}
-};
-
-std::string Json::ToMultiByte(const std::u32string& Value)
-{
-	std::string Result;
-
-	std::mbstate_t State {};
-	Converter Convert;
-
-	Result.resize(Value.length() * sizeof(char32_t));
-
-	const char32_t* From = nullptr;
-	char* To = nullptr;
-	Convert.out(State, Value.data(), &Value[Value.size()], From, Result.data(), &Result[Result.size()], To);
-
-	// TODO: Should probably do some error checking here.
-	Result.resize(To - Result.data());
-
-	return Result;
-}
-
-std::u32string Json::ToUTF32(const std::string& Value)
-{
-	std::u32string Result;
-
-	std::mbstate_t State {};
-	Converter Convert;
-
-	Result.resize(Value.length());
-
-	const char* From = nullptr;
-	char32_t* To = nullptr;
-	Convert.in(State, Value.data(), &Value[Value.size()], From, Result.data(), &Result[Result.size()], To);
-
-	return Result;
-}
 
 Json Json::Parse(const char* Stream)
 {
@@ -781,7 +709,7 @@ Json Json::ParseToken(const std::string& Token, bool& IsError)
 		return Result;
 	}
 
-	std::string Lower = ToLower(Token);
+	std::string Lower = String::ToLower(Token);
 	if (Token.front() == '\"' && Token.back() == '\"')
 	{
 		Result = Token.substr(1, Token.length() - 2);

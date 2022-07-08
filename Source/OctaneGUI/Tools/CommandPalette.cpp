@@ -29,7 +29,7 @@ SOFTWARE.
 #include "../Controls/Panel.h"
 #include "../Controls/TextInput.h"
 #include "../Controls/VerticalContainer.h"
-#include "../Json.h"
+#include "../String.h"
 #include "../Window.h"
 #include "Inspector.h"
 #include "ProfileViewer.h"
@@ -140,7 +140,7 @@ std::vector<std::u32string> CommandPalette::Tokenize(const std::u32string& Value
 
 bool CommandPalette::Process(const std::u32string& Command, const std::vector<std::u32string>& Arguments)
 {
-	std::u32string Lower = Json::ToLower(Command);
+	std::u32string Lower = String::ToLower(Command);
 	if (Lower == U"inspector")
 	{
 		Inspector::Get().Inspect(GetWindow());
@@ -150,7 +150,7 @@ bool CommandPalette::Process(const std::u32string& Command, const std::vector<st
 	{
 		if (!Arguments.empty())
 		{
-			Lower = Json::ToLower(Arguments.front());
+			Lower = String::ToLower(Arguments.front());
 
 			if (Lower == U"enable" || Lower == U"e")
 			{

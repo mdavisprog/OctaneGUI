@@ -256,7 +256,7 @@ void Exit()
 
 std::u32string GetClipboardContents()
 {
-	return OctaneGUI::Json::ToUTF32(SDL_GetClipboardText());
+	return OctaneGUI::String::ToUTF32(SDL_GetClipboardText());
 }
 
 void SetWindowTitle(OctaneGUI::Window* Window, const char* Title)

@@ -245,7 +245,7 @@ TextInput::~TextInput()
 
 TextInput& TextInput::SetText(const char* InText)
 {
-	SetText(Json::ToUTF32(InText).c_str());
+	SetText(String::ToUTF32(InText).c_str());
 	return *this;
 }
 

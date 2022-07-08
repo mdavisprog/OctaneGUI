@@ -26,6 +26,8 @@ SOFTWARE.
 
 #include "String.h"
 
+#include <codecvt>
+
 namespace OctaneGUI
 {
 
@@ -68,6 +70,78 @@ size_t String::Count(const std::u32string_view& Ref, char32_t Character)
 		Start = Pos + 1;
 		Pos = Ref.find(Character, Start);
 	}
+
+	return Result;
+}
+
+std::string String::ToLower(const std::string& Value)
+{
+	std::string Result;
+
+	for (const char Ch : Value)
+	{
+		Result += std::tolower(Ch);
+	}
+
+	return Result;
+}
+
+std::u32string String::ToLower(const std::u32string& Value)
+{
+	std::u32string Result;
+
+	for (const char32_t Ch : Value)
+	{
+		Result += std::tolower(Ch);
+	}
+
+	return Result;
+}
+
+class Converter : public std::codecvt<char32_t, char, std::mbstate_t>
+{
+public:
+	Converter()
+		: std::codecvt<char32_t, char, std::mbstate_t>()
+	{
+	}
+
+	~Converter()
+	{
+	}
+};
+
+std::string String::ToMultiByte(const std::u32string& Value)
+{
+	std::string Result;
+
+	std::mbstate_t State {};
+	Converter Convert;
+
+	Result.resize(Value.length() * sizeof(char32_t));
+
+	const char32_t* From = nullptr;
+	char* To = nullptr;
+	Convert.out(State, Value.data(), &Value[Value.size()], From, Result.data(), &Result[Result.size()], To);
+
+	// TODO: Should probably do some error checking here.
+	Result.resize(To - Result.data());
+
+	return Result;
+}
+
+std::u32string String::ToUTF32(const std::string& Value)
+{
+	std::u32string Result;
+
+	std::mbstate_t State {};
+	Converter Convert;
+
+	Result.resize(Value.length());
+
+	const char* From = nullptr;
+	char32_t* To = nullptr;
+	Convert.in(State, Value.data(), &Value[Value.size()], From, Result.data(), &Result[Result.size()], To);
 
 	return Result;
 }

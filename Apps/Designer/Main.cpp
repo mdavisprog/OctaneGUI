@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 	std::shared_ptr<OctaneGUI::Window> MainWindow = Application.GetWindow("Main");
 	std::shared_ptr<OctaneGUI::Timer> CompileTimer = MainWindow->CreateTimer(500, false, [&]() -> void
 		{
-			const std::string Contents = OctaneGUI::Json::ToMultiByte(Document->GetText());
+			const std::string Contents = OctaneGUI::String::ToMultiByte(Document->GetText());
 			bool IsError = false;
 			OctaneGUI::Json Root = OctaneGUI::Json::Parse(Contents.c_str(), IsError);
 
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 				size_t Line = (size_t)Root["Line"].Number();
 				Document->SetLineColor(Line, OctaneGUI::Color(148, 0, 0, 255));
 				StatusBar->SetProperty(OctaneGUI::ThemeProperties::Panel, OctaneGUI::Color(148, 0, 0, 255));
-				StatusText->SetText(OctaneGUI::Json::ToUTF32(Root["Error"].String()).c_str());
+				StatusText->SetText(OctaneGUI::String::ToUTF32(Root["Error"].String()).c_str());
 			}
 			else
 			{
@@ -146,7 +146,7 @@ int main(int argc, char **argv)
 	StatusText = MainList.To<OctaneGUI::Text>("Status");
 	StatusText->SetText(U"New Document");
 
-	PreviewWindow = Application.NewWindow("PreviewWindow", OctaneGUI::Json::ToMultiByte(Document->GetText()).c_str());
+	PreviewWindow = Application.NewWindow("PreviewWindow", OctaneGUI::String::ToMultiByte(Document->GetText()).c_str());
 	PreviewWindow->SetOnClose([&](OctaneGUI::Window& Target) -> void
 		{
 			PreviewWindowMenu->SetChecked(false);

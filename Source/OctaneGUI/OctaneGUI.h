@@ -67,6 +67,7 @@ SOFTWARE.
 #include "Mouse.h"
 #include "Paint.h"
 #include "Rect.h"
+#include "String.h"
 #include "Theme.h"
 #include "Timer.h"
 #include "Variant.h"

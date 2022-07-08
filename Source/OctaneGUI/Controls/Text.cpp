@@ -29,6 +29,7 @@ SOFTWARE.
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Profiler.h"
+#include "../String.h"
 #include "../Theme.h"
 
 #include <cassert>
@@ -47,7 +48,7 @@ Text::Text(Window* InWindow)
 
 Text& Text::SetText(const char* InContents)
 {
-	SetText(Json::ToUTF32(InContents).c_str());
+	SetText(String::ToUTF32(InContents).c_str());
 	return *this;
 }
 
@@ -159,7 +160,7 @@ void Text::OnSave(Json& Root) const
 {
 	Control::OnSave(Root);
 
-	Root["Text"] = Json::ToMultiByte(m_Contents);
+	Root["Text"] = String::ToMultiByte(m_Contents);
 	Root["ContentSize"] = std::move(Vector2::ToJson(m_ContentSize));
 	Root["Font"] = m_Font->Path();
 	Root["FontSize"] = GetProperty(ThemeProperties::FontSize).Float();

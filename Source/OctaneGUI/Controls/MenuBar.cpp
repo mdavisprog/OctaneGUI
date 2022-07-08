@@ -27,6 +27,7 @@ SOFTWARE.
 #include "MenuBar.h"
 #include "../Font.h"
 #include "../Json.h"
+#include "../String.h"
 #include "../Theme.h"
 #include "../Window.h"
 #include "ControlList.h"
@@ -84,7 +85,7 @@ std::shared_ptr<Menu> MenuBar::Item(const char* Name) const
 {
 	for (const std::shared_ptr<MenuItem>& Item_ : m_MenuItems)
 	{
-		if (Json::ToMultiByte(Item_->GetText()) == Name)
+		if (String::ToMultiByte(Item_->GetText()) == Name)
 		{
 			return Item_->GetMenu();
 		}

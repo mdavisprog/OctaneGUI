@@ -27,6 +27,7 @@ SOFTWARE.
 #include "Control.h"
 #include "../Json.h"
 #include "../Paint.h"
+#include "../String.h"
 #include "../Theme.h"
 #include "../Window.h"
 #include "Container.h"
@@ -38,7 +39,7 @@ namespace OctaneGUI
 
 Expand ToExpand(const std::string& Value)
 {
-	const std::string Lower = Json::ToLower(Value);
+	const std::string Lower = String::ToLower(Value);
 	if (Lower == "width")
 	{
 		return Expand::Width;

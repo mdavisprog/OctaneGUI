@@ -27,6 +27,7 @@ SOFTWARE.
 #include "Menu.h"
 #include "../Json.h"
 #include "../Paint.h"
+#include "../String.h"
 #include "MenuItem.h"
 #include "Panel.h"
 #include "Separator.h"
@@ -79,7 +80,7 @@ std::shared_ptr<MenuItem> Menu::GetItem(const char* InText) const
 	const std::string Value = InText;
 	for (const std::shared_ptr<MenuItem>& Item : m_Items)
 	{
-		if (Value == Json::ToMultiByte(Item->GetText()))
+		if (Value == String::ToMultiByte(Item->GetText()))
 		{
 			Result = Item;
 			break;

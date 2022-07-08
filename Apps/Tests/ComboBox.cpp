@@ -73,7 +73,7 @@ TEST_CASE(Select,
 	Utility::MouseClick(Application, Position);
 	Application.GetMainWindow()->Update();
 
-	VERIFYF(Selected == U"Red", "Selected item does not match the expected result: %s != Red\n", OctaneGUI::Json::ToMultiByte(Selected).c_str());
+	VERIFYF(Selected == U"Red", "Selected item does not match the expected result: %s != Red\n", OctaneGUI::String::ToMultiByte(Selected).c_str());
 	VERIFY(!ComboBox->IsOpen());
 
 	Selected = U"";
@@ -87,7 +87,7 @@ TEST_CASE(Select,
 	Utility::MouseClick(Application, Position);
 	Application.GetMainWindow()->Update();
 
-	VERIFYF(Selected == U"Green", "Selected item does not match the expected result: %s != Green\n", OctaneGUI::Json::ToMultiByte(Selected).c_str());
+	VERIFYF(Selected == U"Green", "Selected item does not match the expected result: %s != Green\n", OctaneGUI::String::ToMultiByte(Selected).c_str());
 	VERIFY(!ComboBox->IsOpen());
 
 	return true;
