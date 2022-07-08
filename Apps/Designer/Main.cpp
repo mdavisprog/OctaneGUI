@@ -33,7 +33,9 @@ int main(int argc, char **argv)
 	std::shared_ptr<OctaneGUI::Text> StatusText { nullptr };
 	std::shared_ptr<OctaneGUI::Panel> StatusBar { nullptr };
 	std::shared_ptr<OctaneGUI::Window> PreviewWindow { nullptr };
-	std::shared_ptr<OctaneGUI::WindowContainer> Preview { nullptr };
+	std::shared_ptr<OctaneGUI::WindowContainer> PreviewPane { nullptr };
+	std::shared_ptr<OctaneGUI::Container> Editor { nullptr };
+	std::shared_ptr<OctaneGUI::Splitter> Splitter { nullptr };
 
 	std::shared_ptr<OctaneGUI::Window> MainWindow = Application.GetWindow("Main");
 	std::shared_ptr<OctaneGUI::Timer> CompileTimer = MainWindow->CreateTimer(500, false, [&]() -> void
@@ -68,32 +70,50 @@ int main(int argc, char **argv)
 					}
 				}
 
-				if (Preview)
+				if (PreviewPane)
 				{
 					const OctaneGUI::Json& Main = Root["Windows"]["Main"];
 
-					Preview->Clear();
-					Preview->OnLoad(Main);
+					PreviewPane->Clear();
+					PreviewPane->OnLoad(Main);
 				}
 			}
 		});
 
 	const OctaneGUI::ControlList& MainList = WindowControls["Main"];
 
-	std::shared_ptr<OctaneGUI::MenuItem> PreviewMenu = MainList.To<OctaneGUI::MenuItem>("File.Preview");
-	PreviewMenu->SetOnPressed([&](OctaneGUI::TextSelectable& Item) -> void
+	std::shared_ptr<OctaneGUI::MenuItem> PreviewWindowMenu = MainList.To<OctaneGUI::MenuItem>("File.PreviewWindow");
+	PreviewWindowMenu->SetOnPressed([&](OctaneGUI::TextSelectable&) -> void
 		{
-			OctaneGUI::MenuItem& MenuItem = static_cast<OctaneGUI::MenuItem&>(Item);
-			MenuItem.SetChecked(!MenuItem.IsChecked());
+			PreviewWindowMenu->SetChecked(!PreviewWindowMenu->IsChecked());
 
-			if (MenuItem.IsChecked() && !PreviewWindow->IsVisible())
+			if (PreviewWindowMenu->IsChecked() && !PreviewWindow->IsVisible())
 			{
 				Application.DisplayWindow("PreviewWindow");
 				CompileTimer->Start();
 			}
-			else if (!MenuItem.IsChecked() && PreviewWindow->IsVisible())
+			else if (!PreviewWindowMenu->IsChecked() && PreviewWindow->IsVisible())
 			{
 				PreviewWindow->Close();
+			}
+		});
+	
+	std::shared_ptr<OctaneGUI::MenuItem> PreviewPaneMenu = MainList.To<OctaneGUI::MenuItem>("File.PreviewPane");
+	PreviewPaneMenu
+		->SetChecked(true)
+		.SetOnPressed([&](OctaneGUI::TextSelectable&) -> void
+		{
+			PreviewPaneMenu->SetChecked(!PreviewPaneMenu->IsChecked());
+
+			if (PreviewPaneMenu->IsChecked() && !Editor->HasControl(Splitter))
+			{
+				Editor->ClearControls();
+				Editor->InsertControl(Splitter);
+			}
+			else if (!PreviewPaneMenu->IsChecked() && !Editor->HasControl(Document))
+			{
+				Editor->ClearControls();
+				Editor->InsertControl(Document);
 			}
 		});
 
@@ -103,7 +123,10 @@ int main(int argc, char **argv)
 			Application.Quit();
 		});
 	
-	Document = MainList.To<OctaneGUI::TextEditor>("Document");
+	Editor = MainList.To<OctaneGUI::Container>("Editor");
+	Splitter = MainList.To<OctaneGUI::Splitter>("Editor.Splitter");
+
+	Document = MainList.To<OctaneGUI::TextEditor>("Editor.Splitter.Document");
 	Document->SetOnTextChanged([&](std::shared_ptr<OctaneGUI::TextInput>) -> void
 		{
 			CompileTimer->Start();
@@ -117,7 +140,7 @@ int main(int argc, char **argv)
 	}
 })");
 
-	Preview = MainList.To<OctaneGUI::WindowContainer>("Preview");
+	PreviewPane = MainList.To<OctaneGUI::WindowContainer>("Editor.Splitter.PreviewPane");
 
 	StatusBar = MainList.To<OctaneGUI::Panel>("StatusBar");
 	StatusText = MainList.To<OctaneGUI::Text>("Status");
@@ -126,7 +149,7 @@ int main(int argc, char **argv)
 	PreviewWindow = Application.NewWindow("PreviewWindow", OctaneGUI::Json::ToMultiByte(Document->GetText()).c_str());
 	PreviewWindow->SetOnClose([&](OctaneGUI::Window& Target) -> void
 		{
-			PreviewMenu->SetChecked(false);
+			PreviewWindowMenu->SetChecked(false);
 			Application.CloseWindow("PreviewWindow");
 		});
 

@@ -7,7 +7,8 @@
 			"Height": 540,
 			"MenuBar": {"Items": [
 				{"Text": "File", "ID": "File", "Items": [
-					{"Text": "Preview", "ID": "Preview"},
+					{"Text": "Preview Window", "ID": "PreviewWindow"},
+					{"Text": "Preview Pane", "ID": "PreviewPane"},
 					{"Type": "Separator"},
 					{"Text": "Quit", "ID": "Quit"}
 				]}
@@ -16,14 +17,16 @@
 				{"Type": "Panel", "Expand": "Both"},
 				{"Type": "MarginContainer", "Margins": [4, 4, 4, 4], "Expand": "Both", "Controls": [
 					{"Type": "VerticalContainer", "Expand": "Both", "Controls": [
-						{"Type": "Splitter", "Expand": "Both", "Orientation": "Vertical",
-							"First": {"Controls": [
-								{"Type": "TextEditor", "ID": "Document", "Expand": "Both", "Text": {"Font": "SourceCodePro-Regular.ttf", "FontSize": 14}}
-							]},
-							"Second": {"Controls": [
-								{"Type": "WindowContainer", "Expand": "Both", "ID": "Preview"}
-							]}
-						},
+						{"Type": "Container", "ID": "Editor", "Expand": "Both", "Controls": [
+							{"Type": "Splitter", "ID": "Splitter", "Expand": "Both", "Orientation": "Vertical",
+								"First": {"Controls": [
+									{"Type": "TextEditor", "ID": "Document", "Expand": "Both", "Text": {"Font": "SourceCodePro-Regular.ttf", "FontSize": 14}}
+								]},
+								"Second": {"Controls": [
+									{"Type": "WindowContainer", "Expand": "Both", "ID": "PreviewPane"}
+								]}
+							}
+						]},
 						{"Type": "HorizontalContainer", "Expand": "Width", "Controls": [
 							{"Type": "MarginContainer", "Expand": "Width", "Controls": [
 								{"Type": "Panel", "ID": "StatusBar", "Expand": "Both"},
