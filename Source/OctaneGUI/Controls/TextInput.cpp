@@ -280,6 +280,19 @@ const std::u32string_view TextInput::Line() const
 	return std::u32string_view(&m_Text->GetString()[Start], End - Start);
 }
 
+const std::u32string_view TextInput::VisibleText() const
+{
+	if (!m_FirstVisibleLine.IsValid() || !m_LastVisibleLine.IsValid())
+	{
+		return U"";
+	}
+
+	uint32_t Start = m_FirstVisibleLine.Index();
+	uint32_t End = m_LastVisibleLine.Index();
+
+	return std::u32string_view(&m_Text->GetString()[Start], End - Start);
+}
+
 char32_t TextInput::Left() const
 {
 	const std::u32string& Contents = m_Text->GetString();
@@ -319,6 +332,16 @@ size_t TextInput::Column() const
 size_t TextInput::Index() const
 {
 	return (size_t)m_Position.Index();
+}
+
+size_t TextInput::FirstVisibleIndex() const
+{
+	return (size_t)m_FirstVisibleLine.Index();
+}
+
+size_t TextInput::LastVisibleIndex() const
+{
+	return (size_t)m_LastVisibleLine.Index();
 }
 
 TextInput& TextInput::SetReadOnly(bool Value)
@@ -723,6 +746,10 @@ void TextInput::TextAdded(const std::u32string& Contents)
 {
 }
 
+void TextInput::TextDeleted(const std::u32string_view& Contents)
+{
+}
+
 void TextInput::MouseMove(const Vector2& Position)
 {
 	if (m_Drag)
@@ -845,6 +872,7 @@ void TextInput::Delete(int32_t Range)
 
 	// TODO: Maybe allow altering the contents in-place and repaint?
 	std::u32string Contents = m_Text->GetText();
+	TextDeleted({ &Contents[Min], (size_t)(Max - Min) });
 	Contents.erase(Contents.begin() + (uint32_t)Min, Contents.begin() + (uint32_t)Max);
 
 	InternalSetText(Contents.c_str());

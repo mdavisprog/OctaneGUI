@@ -82,6 +82,7 @@ public:
 	TextInput& SetText(const char32_t* InText);
 	const char32_t* GetText() const;
 	const std::u32string_view Line() const;
+	const std::u32string_view VisibleText() const;
 
 	char32_t Left() const;
 	char32_t Right() const;
@@ -89,6 +90,9 @@ public:
 	size_t LineNumber() const;
 	size_t Column() const;
 	size_t Index() const;
+
+	size_t FirstVisibleIndex() const;
+	size_t LastVisibleIndex() const;
 
 	TextInput& SetReadOnly(bool Value);
 	bool ReadOnly() const;
@@ -115,6 +119,7 @@ protected:
 	void MovePosition(int32_t Line, int32_t Column, bool UseAnchor = false, bool SkipWords = false);
 
 	virtual void TextAdded(const std::u32string& Contents);
+	virtual void TextDeleted(const std::u32string_view& Contents);
 
 private:
 	void MouseMove(const Vector2& Position);
