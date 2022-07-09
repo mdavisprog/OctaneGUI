@@ -49,6 +49,7 @@ public:
 		Array
 	};
 
+	static const char* ToString(Type InType);
 	static Json Parse(const char* Stream);
 	static Json Parse(const char* Stream, bool& IsError);
 

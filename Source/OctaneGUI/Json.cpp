@@ -25,9 +25,9 @@ SOFTWARE.
 */
 
 #include "Json.h"
+#include "Assert.h"
 #include "String.h"
 
-#include <cassert>
 #include <cctype>
 #include <climits>
 #include <cstdarg>
@@ -101,6 +101,21 @@ private:
 	int m_Line { 1 };
 	int m_Column { 1 };
 };
+
+const char* Json::ToString(Type InType)
+{
+	switch (InType)
+	{
+	case Type::Boolean: return "Boolean";
+	case Type::Number: return "Number";
+	case Type::String: return "String";
+	case Type::Object: return "Object";
+	case Type::Array: return "Array";
+	case Type::Null:
+	default: break;
+	}
+	return "Null";
+}
 
 Json Json::Parse(const char* Stream)
 {
@@ -365,14 +380,14 @@ Json& Json::operator[](unsigned int Index)
 
 Json& Json::Push(const Json& Value)
 {
-	assert(IsArray());
+	Assert(IsArray(), "Trying to push value onto non-array Json type: %s", ToString(GetType()));
 	m_Data.Array->push_back(Value);
 	return *this;
 }
 
 Json& Json::Push(Json&& Value)
 {
-	assert(IsArray());
+	Assert(IsArray(), "Trying to push value onto non-array Json type: %s", ToString(GetType()));
 	m_Data.Array->push_back(std::move(Value));
 	return *this;
 }
