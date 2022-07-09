@@ -233,7 +233,7 @@ TextInput::TextInput(Window* InWindow)
 		{
 			if (Delta.Y != 0.0f)
 			{
-				UpdateVisibleLines(Delta.Y);
+				UpdateVisibleLines();
 				UpdateSpans();
 			}
 		});
@@ -255,7 +255,8 @@ TextInput& TextInput::SetText(const char32_t* InText)
 	m_Anchor.Invalidate();
 	m_Position = { 0, 0, 0 };
 	// TODO: Should the scroll offset be reset to zero?
-	UpdateVisibleLines(0.0f);
+	m_FirstVisibleLine.Invalidate();
+	UpdateVisibleLines();
 	UpdateSpans();
 	Invalidate();
 	return *this;
@@ -532,6 +533,15 @@ void TextInput::OnSave(Json& Root) const
 	Root["Multiline"] = m_Multiline;
 	Root["ReadOnly"] = m_ReadOnly;
 	Root["BlinkTimer"] = (float)m_BlinkTimer->Interval();
+}
+
+void TextInput::OnResized()
+{
+	ScrollableViewControl::OnResized();
+
+	m_FirstVisibleLine.Invalidate();
+	UpdateVisibleLines();
+	UpdateSpans();
 }
 
 void TextInput::OnThemeLoaded()
@@ -842,7 +852,7 @@ void TextInput::Delete(int32_t Range)
 
 	// Force update the visible lines
 	m_FirstVisibleLine.Invalidate();
-	UpdateVisibleLines(0.0f);
+	UpdateVisibleLines();
 	UpdateSpans();
 }
 
@@ -1102,7 +1112,7 @@ void TextInput::ResetCursorTimer()
 	m_DrawCursor = true;
 }
 
-void TextInput::UpdateVisibleLines(float ScrollDelta)
+void TextInput::UpdateVisibleLines()
 {
 	if (!m_Multiline)
 	{
@@ -1111,12 +1121,12 @@ void TextInput::UpdateVisibleLines(float ScrollDelta)
 	}
 
 	const Vector2 Position = Scrollable()->GetPosition();
-	const float LineHeight = GetTheme()->GetFont()->Size();
+	const float LineHeight = m_Text->GetFont()->Size();
 	const float Y = -Position.Y;
 
 	const uint32_t Line = Y / LineHeight;
 	const uint32_t NumLines = GetSize().Y / LineHeight;
-	uint32_t LastLine = Line + NumLines + 1;
+	uint32_t LastLine = Line + NumLines;
 
 	if (m_FirstVisibleLine.Line() == Line)
 	{

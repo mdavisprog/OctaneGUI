@@ -108,6 +108,7 @@ public:
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnLoad(const Json& Root) override;
 	virtual void OnSave(Json& Root) const override;
+	virtual void OnResized() override;
 	virtual void OnThemeLoaded() override;
 
 protected:
@@ -141,7 +142,7 @@ private:
 	void UpdateSpans();
 	void InternalSetText(const char32_t* InText);
 	void ResetCursorTimer();
-	void UpdateVisibleLines(float ScrollDelta);
+	void UpdateVisibleLines();
 	void SetVisibleLineSpan();
 
 	std::shared_ptr<Text> m_Text { nullptr };
