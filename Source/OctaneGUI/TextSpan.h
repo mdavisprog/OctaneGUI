@@ -26,55 +26,16 @@ SOFTWARE.
 
 #pragma once
 
-#include "../TextSpan.h"
-#include "Control.h"
-
-#include <string>
+#include "Color.h"
 
 namespace OctaneGUI
 {
 
-class Font;
-
-class Text : public Control
+struct TextSpan
 {
-	CLASS(Text)
-
-public:
-	Text(Window* InWindow);
-
-	Text& SetText(const char* InContents);
-	Text& SetText(const char32_t* InContents);
-	const char32_t* GetText() const;
-	const std::u32string& GetString() const;
-	uint32_t Length() const;
-	const std::shared_ptr<Font>& GetFont() const;
-	float LineHeight() const;
-
-	Text& SetWrap(bool Wrap);
-	bool Wrap() const;
-
-	void PushSpan(const TextSpan& Span);
-	void ClearSpans();
-
-	virtual void Update() override;
-	virtual void OnPaint(Paint& Brush) const override;
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnSave(Json& Root) const override;
-	virtual void OnThemeLoaded() override;
-
-protected:
-	virtual bool IsFixedSize() const override;
-
-private:
-	void UpdateFont();
-	void UpdateSize();
-
-	std::u32string m_Contents {};
-	Vector2 m_ContentSize {};
-	std::vector<TextSpan> m_Spans {};
-	std::shared_ptr<Font> m_Font { nullptr };
-	bool m_Wrap { false };
+	size_t Start { 0 };
+	size_t End { 0 };
+	Color TextColor {};
 };
 
 }

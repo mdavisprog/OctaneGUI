@@ -31,6 +31,7 @@ SOFTWARE.
 #include "../Json.h"
 #include "../Paint.h"
 #include "../String.h"
+#include "../TextSpan.h"
 #include "../Theme.h"
 #include "../Timer.h"
 #include "../Window.h"

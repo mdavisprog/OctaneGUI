@@ -28,6 +28,7 @@ SOFTWARE.
 #include "Application.h"
 #include "Font.h"
 #include "Rect.h"
+#include "TextSpan.h"
 #include "Texture.h"
 #include "Theme.h"
 

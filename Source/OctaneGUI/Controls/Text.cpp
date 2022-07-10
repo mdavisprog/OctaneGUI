@@ -96,7 +96,7 @@ bool Text::Wrap() const
 	return m_Wrap;
 }
 
-void Text::PushSpan(const Paint::TextSpan& Span)
+void Text::PushSpan(const TextSpan& Span)
 {
 	m_Spans.push_back(Span);
 }

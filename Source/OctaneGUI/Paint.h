@@ -39,19 +39,13 @@ namespace OctaneGUI
 
 struct Rect;
 class Font;
+struct TextSpan;
 class Texture;
 class Theme;
 
 class Paint
 {
 public:
-	struct TextSpan
-	{
-		size_t Start { 0 };
-		size_t End { 0 };
-		Color TextColor {};
-	};
-
 	Paint();
 	Paint(const std::shared_ptr<Theme>& InTheme);
 	~Paint();
