@@ -55,6 +55,7 @@ public:
 	bool Wrap() const;
 
 	void PushSpan(const TextSpan& Span);
+	void PushSpans(const std::vector<TextSpan>& Spans);
 	void ClearSpans();
 
 	virtual void Update() override;

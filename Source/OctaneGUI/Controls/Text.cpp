@@ -101,6 +101,11 @@ void Text::PushSpan(const TextSpan& Span)
 	m_Spans.push_back(Span);
 }
 
+void Text::PushSpans(const std::vector<TextSpan>& Spans)
+{
+	m_Spans.insert(m_Spans.end(), Spans.begin(), Spans.end());
+}
+
 void Text::ClearSpans()
 {
 	m_Spans.clear();
