@@ -264,8 +264,8 @@ void Paint::Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, 
 	{
 		const TextSpan& Span = Spans[I];
 		const std::u32string_view& View = Views[I];
-		GatherGlyphs(InFont, Pos, Position, View, GlyphRects, GlyphUVs);
-		GlyphColors.insert(GlyphColors.end(), View.size(), Span.TextColor);
+		int Count = GatherGlyphs(InFont, Pos, Position, View, GlyphRects, GlyphUVs);
+		GlyphColors.insert(GlyphColors.end(), Count, Span.TextColor);
 	}
 
 	AddTriangles(GlyphRects, GlyphUVs, GlyphColors, InFont->ID());
@@ -299,8 +299,8 @@ void Paint::TextWrapped(const std::shared_ptr<Font>& InFont, const Vector2& Posi
 
 				std::vector<Rect> Rects;
 				std::vector<Rect> UVs;
-				GatherGlyphs(InFont, Pos, Position, View, Rects, UVs, false);
-				GlyphColors.insert(GlyphColors.end(), Count, Span.TextColor);
+				int Added = GatherGlyphs(InFont, Pos, Position, View, Rects, UVs, false);
+				GlyphColors.insert(GlyphColors.end(), Added, Span.TextColor);
 
 				float CurrentWidth = Pos.X - Position.X;
 				if (CurrentWidth > Width)
@@ -496,8 +496,9 @@ DrawCommand& Paint::PushCommand(uint32_t IndexCount, uint32_t TextureID)
 	return m_Buffer.PushCommand(IndexCount, TextureID, !m_ClipStack.empty() ? m_ClipStack.back() : Rect());
 }
 
-void Paint::GatherGlyphs(const std::shared_ptr<Font>& InFont, Vector2& Position, const Vector2& Origin, const std::u32string_view& Contents, std::vector<Rect>& Rects, std::vector<Rect>& UVs, bool ShouldClip)
+int Paint::GatherGlyphs(const std::shared_ptr<Font>& InFont, Vector2& Position, const Vector2& Origin, const std::u32string_view& Contents, std::vector<Rect>& Rects, std::vector<Rect>& UVs, bool ShouldClip)
 {
+	int Result = 0;
 	const Rect Clip = !m_ClipStack.empty() ? m_ClipStack.back() : Rect();
 	for (char32_t Char : Contents)
 	{
@@ -524,10 +525,13 @@ void Paint::GatherGlyphs(const std::shared_ptr<Font>& InFont, Vector2& Position,
 
 		if (!(ShouldClip && IsClipped(Vertices)))
 		{
+			Result++;
 			Rects.push_back(Vertices);
 			UVs.push_back(TexCoords);
 		}
 	}
+
+	return Result;
 }
 
 }

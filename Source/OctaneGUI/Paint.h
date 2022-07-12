@@ -81,7 +81,7 @@ private:
 	void AddTriangleIndices(uint32_t Offset);
 	DrawCommand& PushCommand(uint32_t IndexCount, uint32_t TextureID);
 
-	void GatherGlyphs(const std::shared_ptr<Font>& InFont, Vector2& Position, const Vector2& Origin, const std::u32string_view& Contents, std::vector<Rect>& Rects, std::vector<Rect>& UVs, bool ShouldClip = true);
+	int GatherGlyphs(const std::shared_ptr<Font>& InFont, Vector2& Position, const Vector2& Origin, const std::u32string_view& Contents, std::vector<Rect>& Rects, std::vector<Rect>& UVs, bool ShouldClip = true);
 
 	std::shared_ptr<Theme> m_Theme;
 	std::vector<Rect> m_ClipStack;
