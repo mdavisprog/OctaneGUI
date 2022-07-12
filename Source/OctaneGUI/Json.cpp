@@ -422,6 +422,16 @@ const Json& Json::operator[](unsigned int Index) const
 	return (*m_Data.Array)[Index];
 }
 
+bool Json::Contains(const std::string& Key) const
+{
+	if (!IsObject())
+	{
+		return false;
+	}
+
+	return m_Data.Object->find(Key) != m_Data.Object->end();
+}
+
 std::string Json::ToString() const
 {
 	std::string Result;

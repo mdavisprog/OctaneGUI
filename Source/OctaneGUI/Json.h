@@ -103,6 +103,8 @@ public:
 	const Json& operator[](const std::string& Key) const;
 	const Json& operator[](unsigned int Index) const;
 
+	bool Contains(const std::string& Key) const;
+
 	std::string ToString() const;
 
 private:
