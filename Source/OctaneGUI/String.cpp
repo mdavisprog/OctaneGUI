@@ -130,6 +130,16 @@ std::string String::ToMultiByte(const std::u32string& Value)
 	return Result;
 }
 
+std::string String::ToMultiByte(const char32_t* Value)
+{
+	return ToMultiByte(std::u32string{ Value });
+}
+
+std::string String::ToMultiByte(const std::u32string_view& Value)
+{
+	return ToMultiByte(std::u32string{ Value });
+}
+
 std::u32string String::ToUTF32(const std::string& Value)
 {
 	std::u32string Result;
@@ -144,6 +154,16 @@ std::u32string String::ToUTF32(const std::string& Value)
 	Convert.in(State, Value.data(), &Value[Value.size()], From, Result.data(), &Result[Result.size()], To);
 
 	return Result;
+}
+
+std::u32string String::ToUTF32(const char* Value)
+{
+	return ToUTF32(std::string{ Value });
+}
+
+std::u32string String::ToUTF32(const std::string_view& Value)
+{
+	return ToUTF32(std::string{ Value });
 }
 
 }
