@@ -28,6 +28,8 @@ SOFTWARE.
 
 #include "Color.h"
 
+#include <cstddef>
+
 namespace OctaneGUI
 {
 
