@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 		{
 			const std::string Contents = OctaneGUI::String::ToMultiByte(Document->GetText());
 			bool IsError = false;
-			OctaneGUI::Json Root = OctaneGUI::Json::Parse(Contents.c_str(), IsError);
+			const OctaneGUI::Json Root = OctaneGUI::Json::Parse(Contents.c_str(), IsError);
 
 			Document->ClearLineColors();
 
@@ -58,23 +58,31 @@ int main(int argc, char **argv)
 				StatusBar->ClearProperty(OctaneGUI::ThemeProperties::Panel);
 				StatusText->SetText(U"OK!");
 
+				PreviewWindow->Clear();
+				PreviewPane->Clear();
+
+				if (!Root.Contains("Windows"))
+				{
+					return;
+				}
+
+				const OctaneGUI::Json& Windows = Root["Windows"];
+				
+				if (!Windows.Contains("Main"))
+				{
+					return;
+				}
+
+				const OctaneGUI::Json& Main = Windows["Main"];
+
 				if (PreviewWindow->IsVisible())
 				{
-					const OctaneGUI::Json& Main = Root["Windows"]["Main"];
-
-					if (!Main.IsNull())
-					{
-						PreviewWindow->SetTitle(Main["Title"].String());
-						PreviewWindow->Clear();
-						PreviewWindow->LoadContents(Main);
-					}
+					PreviewWindow->SetTitle(Main["Title"].String());
+					PreviewWindow->LoadContents(Main);
 				}
 
 				if (PreviewPane)
 				{
-					const OctaneGUI::Json& Main = Root["Windows"]["Main"];
-
-					PreviewPane->Clear();
 					PreviewPane->OnLoad(Main);
 				}
 			}
@@ -127,7 +135,9 @@ int main(int argc, char **argv)
 	Splitter = MainList.To<OctaneGUI::Splitter>("Editor.Splitter");
 
 	Document = MainList.To<OctaneGUI::TextEditor>("Editor.Splitter.Document");
-	Document->SetOnTextChanged([&](std::shared_ptr<OctaneGUI::TextInput>) -> void
+	Document
+		->CreateHighlighter<OctaneGUI::Syntax::JsonHighlighter>()
+		.SetOnTextChanged([&](std::shared_ptr<OctaneGUI::TextInput>) -> void
 		{
 			CompileTimer->Start();
 		})
