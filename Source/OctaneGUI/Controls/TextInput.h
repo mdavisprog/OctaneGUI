@@ -35,6 +35,11 @@ class Text;
 class TextInputInteraction;
 class Timer;
 
+namespace Syntax
+{
+class Highlighter;
+}
+
 class TextInput : public ScrollableViewControl
 {
 	friend TextInputInteraction;
@@ -81,6 +86,7 @@ public:
 	TextInput& SetText(const char* InText);
 	TextInput& SetText(const char32_t* InText);
 	const char32_t* GetText() const;
+	const std::u32string& GetString() const;
 	const std::u32string_view Line() const;
 	const std::u32string_view VisibleText() const;
 
@@ -99,6 +105,15 @@ public:
 
 	TextInput& SetMulitline(bool Multiline);
 	bool Multiline() const;
+
+	TextInput& SetHighlighter(const std::shared_ptr<Syntax::Highlighter>& Value);
+	Color TextColor() const;
+
+	template <class T>
+	TextInput& CreateHighlighter()
+	{
+		return SetHighlighter(std::make_shared<T>());
+	}
 
 	void Focus();
 	void Unfocus();
@@ -163,6 +178,8 @@ private:
 
 	TextPosition m_FirstVisibleLine { 0, 0, 0 };
 	TextPosition m_LastVisibleLine {};
+
+	std::shared_ptr<Syntax::Highlighter> m_Highlighter { nullptr };
 
 	OnTextChangedSignature m_OnTextChanged { nullptr };
 	OnModifyTextSignature m_OnModifyText { nullptr };

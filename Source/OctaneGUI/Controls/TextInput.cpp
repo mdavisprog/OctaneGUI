@@ -37,6 +37,7 @@ SOFTWARE.
 #include "../Window.h"
 #include "MarginContainer.h"
 #include "ScrollableContainer.h"
+#include "Syntax/Highlighter.h"
 #include "Text.h"
 
 #define MARGIN 2.0f
@@ -268,6 +269,11 @@ const char32_t* TextInput::GetText() const
 	return m_Text->GetText();
 }
 
+const std::u32string& TextInput::GetString() const
+{
+	return m_Text->GetString();
+}
+
 const std::u32string_view TextInput::Line() const
 {
 	if (!m_Position.IsValid())
@@ -372,6 +378,23 @@ TextInput& TextInput::SetMulitline(bool Multiline)
 bool TextInput::Multiline() const
 {
 	return m_Multiline;
+}
+
+TextInput& TextInput::SetHighlighter(const std::shared_ptr<Syntax::Highlighter>& Value)
+{
+	m_Highlighter = Value;
+
+	if (m_Highlighter)
+	{
+		m_Highlighter->SetInput(TShare<TextInput>());
+	}
+
+	return *this;
+}
+
+Color TextInput::TextColor() const
+{
+	return GetProperty(ThemeProperties::Text).ToColor();
 }
 
 void TextInput::Focus()
@@ -767,8 +790,7 @@ bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button)
 	m_Anchor = m_Position;
 	m_Drag = true;
 	// Remove any multi-selected spans.
-	m_Text->ClearSpans();
-	SetVisibleLineSpan();
+	UpdateSpans();
 	ResetCursorTimer();
 	Invalidate();
 
@@ -1084,6 +1106,23 @@ void TextInput::ScrollIntoView()
 
 void TextInput::UpdateSpans()
 {
+	if (m_Highlighter)
+	{
+		std::vector<TextSpan> Spans = m_Highlighter->GetSpans(VisibleText());
+		if (!Spans.empty())
+		{
+			for (TextSpan& Span : Spans)
+			{
+				Span.Start += m_FirstVisibleLine.Index();
+				Span.End += m_FirstVisibleLine.Index();
+			}
+
+			m_Text->ClearSpans();
+			m_Text->PushSpans(Spans);
+			return;
+		}
+	}
+
 	m_Text->ClearSpans();
 
 	if (!m_Anchor.IsValid())
