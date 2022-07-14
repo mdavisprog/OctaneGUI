@@ -52,6 +52,7 @@ SOFTWARE.
 #include "Controls/ScrollableContainer.h"
 #include "Controls/Splitter.h"
 #include "Controls/Syntax/Highlighter.h"
+#include "Controls/Syntax/JsonHighlighter.h"
 #include "Controls/Table.h"
 #include "Controls/Text.h"
 #include "Controls/TextButton.h"
