@@ -30,6 +30,7 @@ SOFTWARE.
 #include "Control.h"
 
 #include <string>
+#include <vector>
 
 namespace OctaneGUI
 {
