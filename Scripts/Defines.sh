@@ -8,6 +8,7 @@ TOOLS=OFF
 WINDOWING=SDL2
 RENDERING=OpenGL
 CLEAN=false
+NO_APPS=OFF
 
 BIN_PATH=../bin
 BUILD_PATH=../Build
@@ -27,6 +28,7 @@ do
 		sdl2) SDL2=true ;;
 		ninja) NINJA=true ;;
 		clean) CLEAN=true ;;
+		noapps) NO_APPS=ON ;;
         *) break
     esac
 done
