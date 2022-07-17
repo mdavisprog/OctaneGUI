@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SDL2=false
+SDL2=true
 SFML=false
 NINJA=false
 CONFIGURATION=Release
@@ -19,7 +19,8 @@ fi
 
 for Var in "$@"
 do
-    case ${Var,,} in
+	Var=$(echo $Var | tr '[:upper:]' '[:lower:]')
+	case ${Var} in
         debug) CONFIGURATION=Debug ;;
         tools) TOOLS=ON ;;
         sfml) SFML=true ;;
