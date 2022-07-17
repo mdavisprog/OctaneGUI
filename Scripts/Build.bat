@@ -1,11 +1,10 @@
 @ECHO OFF
-SETLOCAL ENABLEDELAYEDEXPANSION
 
+CALL "%~dp0"\Defines.bat %*
+
+SETLOCAL ENABLEDELAYEDEXPANSION
 PUSHD "%~dp0"
 
-SET GENERATOR=Ninja
-
-SET VCVARS=
 CALL VCVars.bat %*
 
 IF NOT EXIST "%VCVARS%" (
@@ -15,10 +14,13 @@ IF NOT EXIST "%VCVARS%" (
 
 CALL "%VCVARS%"
 CALL Generate.bat %*
-CALL Defines.bat
 
-ninja --version
-ninja -C %BUILD_PATH%
+IF "%NINJA%" == "TRUE" (
+	ninja --version
+	ninja -C %BUILD_PATH%
+) ELSE (
+	msbuild %BUILD_PATH%\OctaneGUI.sln /p:Configuration=%CONFIGURATION%
+)
 
 POPD
 ENDLOCAL
