@@ -27,8 +27,8 @@ SOFTWARE.
 #pragma once
 
 #include "../Clock.h"
+#include "../FlyString.h"
 
-#include <string>
 #include <vector>
 
 namespace OctaneGUI
@@ -45,7 +45,7 @@ public:
 
 	public:
 		Event();
-		Event(const std::string& Name, int64_t Elapsed);
+		Event(const FlyString& Name, int64_t Elapsed);
 
 		const char* Name() const;
 		int64_t Elapsed() const;
@@ -54,7 +54,7 @@ public:
 		const std::vector<Event>& Events() const;
 
 	private:
-		std::string m_Name {};
+		FlyString m_Name {};
 		int64_t m_Elapsed { 0 };
 		unsigned int m_ExclusiveCount { 1 };
 		unsigned int m_InclusiveCount { 1 };
@@ -71,7 +71,7 @@ public:
 		~Sample();
 
 	private:
-		std::string m_Name {};
+		FlyString m_Name {};
 		int64_t m_Start { 0 };
 		bool m_Begin { false };
 		bool m_Group { false };

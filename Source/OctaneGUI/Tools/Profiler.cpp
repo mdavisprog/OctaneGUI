@@ -37,15 +37,15 @@ Profiler::Event::Event()
 {
 }
 
-Profiler::Event::Event(const std::string& Name, int64_t Elapsed)
-	: m_Name(std::move(Name))
+Profiler::Event::Event(const FlyString& Name, int64_t Elapsed)
+	: m_Name(Name)
 	, m_Elapsed(Elapsed)
 {
 }
 
 const char* Profiler::Event::Name() const
 {
-	return m_Name.c_str();
+	return m_Name.Data();
 }
 
 int64_t Profiler::Event::Elapsed() const
@@ -253,7 +253,7 @@ void Profiler::BeginSample(Sample& Sample_)
 
 	if (Sample_.m_Group)
 	{
-		m_Groups.emplace_back(Sample_.m_Name.c_str(), 0);
+		m_Groups.emplace_back(Sample_.m_Name.Data(), 0);
 	}
 }
 
