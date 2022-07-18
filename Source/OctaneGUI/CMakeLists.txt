@@ -42,6 +42,7 @@ set(SOURCE
 	Color.cpp
 	DrawCommand.cpp
 	Event.cpp
+	FlyString.cpp
 	Font.cpp
 	Icons.cpp
 	Json.cpp

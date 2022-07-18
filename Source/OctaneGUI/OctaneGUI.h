@@ -63,6 +63,7 @@ SOFTWARE.
 #include "Controls/WindowContainer.h"
 #include "DrawCommand.h"
 #include "Event.h"
+#include "FlyString.h"
 #include "Font.h"
 #include "Json.h"
 #include "Keyboard.h"
