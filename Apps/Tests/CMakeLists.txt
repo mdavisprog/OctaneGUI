@@ -6,6 +6,7 @@ add_executable(
 	CheckBox.cpp
 	ComboBox.cpp
 	Container.cpp
+	FlyString.cpp
 	Json.cpp
 	Main.cpp
 	RadioButton.cpp
