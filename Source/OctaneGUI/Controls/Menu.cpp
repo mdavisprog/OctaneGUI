@@ -141,10 +141,8 @@ void Menu::Resize()
 	const Vector2 Margins = GetProperty(ThemeProperties::Menu_Margins).Vector();
 	const float RightPadding = GetProperty(ThemeProperties::Menu_RightPadding).Float();
 
-	std::vector<std::shared_ptr<Control>> Controls;
-	m_Container->GetControls(Controls);
 	Vector2 Size = { std::max<float>(RightPadding, GetSize().X) + Margins.X, Margins.Y * 2.0f };
-	for (const std::shared_ptr<Control>& Item : Controls)
+	for (const std::shared_ptr<Control>& Item : m_Container->Controls())
 	{
 		const Vector2 ItemSize = Item->GetSize();
 		if (ItemSize.X > Size.X)
