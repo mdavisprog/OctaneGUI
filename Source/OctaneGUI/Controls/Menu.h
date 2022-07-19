@@ -26,7 +26,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "Container.h"
+#include "VerticalContainer.h"
 
 #include <unordered_map>
 
@@ -44,6 +44,12 @@ class Menu : public Container
 public:
 	Menu(Window* InWindow);
 
+	template<class T, typename... TArgs>
+	std::shared_ptr<T> AddItem(TArgs ...Args)
+	{
+		return m_Container->AddControl<T>(Args...);
+	}
+
 	Menu& AddItem(const char* InText, OnEmptySignature Fn = nullptr);
 	std::shared_ptr<MenuItem> GetItem(const char* InText) const;
 	Menu& AddSeparator();
@@ -51,12 +57,16 @@ public:
 
 	void GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const;
 
+	void Resize();
+
 	virtual void OnLoad(const Json& Root) override;
 
 private:
 	typedef std::unordered_map<const MenuItem*, OnEmptySignature> MenuItemMap;
 
-	void Resize();
+	using Container::AddControl;
+	using Container::InsertControl;
+
 	void OnHovered(const MenuItem& Item);
 	void OnSelected(const MenuItem& Item);
 	void SetSelected(const std::shared_ptr<Menu>& InMenu, bool Selected) const;

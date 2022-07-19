@@ -32,7 +32,6 @@ SOFTWARE.
 #include "Panel.h"
 #include "Separator.h"
 #include "TextSelectable.h"
-#include "VerticalContainer.h"
 
 namespace OctaneGUI
 {
@@ -68,7 +67,6 @@ Menu& Menu::AddItem(const char* InText, OnEmptySignature Fn)
 
 	m_Items.push_back(Item);
 	m_Callbacks[Item.get()] = Fn;
-	Resize();
 
 	return *this;
 }
@@ -103,7 +101,6 @@ Menu& Menu::AddSeparator()
 			}
 		});
 	m_Container->InsertControl(Item);
-	Resize();
 	return *this;
 }
 
@@ -139,6 +136,28 @@ void Menu::GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const
 	}
 }
 
+void Menu::Resize()
+{
+	const Vector2 Margins = GetProperty(ThemeProperties::Menu_Margins).Vector();
+	const float RightPadding = GetProperty(ThemeProperties::Menu_RightPadding).Float();
+
+	std::vector<std::shared_ptr<Control>> Controls;
+	m_Container->GetControls(Controls);
+	Vector2 Size = { std::max<float>(RightPadding, GetSize().X) + Margins.X, Margins.Y * 2.0f };
+	for (const std::shared_ptr<Control>& Item : Controls)
+	{
+		const Vector2 ItemSize = Item->GetSize();
+		if (ItemSize.X > Size.X)
+		{
+			Size.X = ItemSize.X + RightPadding;
+		}
+		Size.Y += ItemSize.Y;
+	}
+
+	m_Container->SetPosition(Margins);
+	SetSize(Size);
+}
+
 void Menu::OnLoad(const Json& Root)
 {
 	Container::OnLoad(Root);
@@ -164,25 +183,6 @@ void Menu::OnLoad(const Json& Root)
 	}
 }
 
-void Menu::Resize()
-{
-	const Vector2 Margins = GetProperty(ThemeProperties::Menu_Margins).Vector();
-	const float RightPadding = GetProperty(ThemeProperties::Menu_RightPadding).Float();
-
-	std::vector<std::shared_ptr<Control>> Controls;
-	m_Container->GetControls(Controls);
-	Vector2 Size;
-	for (const std::shared_ptr<Control>& Item : Controls)
-	{
-		const Vector2 ItemSize = Item->GetSize();
-		Size.X = std::max<float>(Size.X, ItemSize.X);
-		Size.Y += ItemSize.Y;
-	}
-
-	m_Container->SetPosition(Margins);
-	SetSize(Size + Vector2(RightPadding, Margins.Y * 2.0f));
-}
-
 void Menu::OnHovered(const MenuItem& Item)
 {
 	if (m_Menu && Item.GetMenu() == m_Menu)
@@ -204,6 +204,7 @@ void Menu::OnHovered(const MenuItem& Item)
 	const Vector2 Margins = GetProperty(ThemeProperties::Menu_Margins).Vector();
 	const Vector2 Position = Item.GetPosition() + Vector2(GetSize().X, 0.0f);
 	m_Menu->SetPosition(Position);
+	m_Menu->Resize();
 	InsertControl(m_Menu);
 }
 
