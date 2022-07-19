@@ -52,6 +52,9 @@ public:
 	const std::shared_ptr<Font>& GetFont() const;
 	float LineHeight() const;
 
+	Text& SetFont(const char* Path);
+	Text& SetFontSize(float Size);
+
 	Text& SetWrap(bool Wrap);
 	bool Wrap() const;
 

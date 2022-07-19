@@ -85,6 +85,20 @@ float Text::LineHeight() const
 	return m_Font->Size();
 }
 
+Text& Text::SetFont(const char* Path)
+{
+	SetProperty(ThemeProperties::FontPath, Path);
+	UpdateFont();
+	return *this;
+}
+
+Text& Text::SetFontSize(float Size)
+{
+	SetProperty(ThemeProperties::FontSize, Size);
+	UpdateFont();
+	return *this;
+}
+
 Text& Text::SetWrap(bool Wrap)
 {
 	m_Wrap = Wrap;
