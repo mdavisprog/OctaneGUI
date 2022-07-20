@@ -131,12 +131,14 @@ void MenuBar::Close()
 
 void MenuBar::GetControlList(ControlList& List) const
 {
-	std::vector<std::shared_ptr<MenuItem>> Items;
-	GetMenuItems(Items);
-
-	std::vector<std::shared_ptr<Control>> ControlItems {};
-	ControlItems.insert(ControlItems.end(), Items.begin(), Items.end());
-	List.AddControls(ControlItems);
+	for (const std::shared_ptr<MenuItem>& Item : m_MenuItems)
+	{
+		List.AddControl(Item);
+		if (Item->GetMenu())
+		{
+			Item->GetMenu()->GetControlList(List);
+		}
+	}
 }
 
 void MenuBar::OnLoad(const Json& Root)
