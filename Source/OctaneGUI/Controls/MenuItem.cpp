@@ -79,6 +79,28 @@ bool MenuItem::IsChecked() const
 	return m_IsChecked;
 }
 
+void MenuItem::OpenMenu(const Vector2& Position) const
+{
+	if (!m_Menu)
+	{
+		return;
+	}
+
+	m_Menu->SetPosition(Position);
+	m_Menu->Resize();
+
+	if (m_OnOpenMenu)
+	{
+		m_OnOpenMenu(TShare<MenuItem>());
+	}
+}
+
+MenuItem& MenuItem::SetOnOpenMenu(OnMenuItemSignature&& Fn)
+{
+	m_OnOpenMenu = std::move(Fn);
+	return *this;
+}
+
 void MenuItem::OnPaint(Paint& Brush) const
 {
 	TextSelectable::OnPaint(Brush);

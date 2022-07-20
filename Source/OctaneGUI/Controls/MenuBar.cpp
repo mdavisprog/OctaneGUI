@@ -210,8 +210,7 @@ void MenuBar::Open(MenuItem& Item)
 	}
 
 	const Vector2 Position = Item.GetAbsolutePosition();
-	Item.GetMenu()->SetPosition(Position + Vector2(0.0f, GetSize().Y));
-	Item.GetMenu()->Resize();
+	Item.OpenMenu(Position + Vector2(0.0f, GetSize().Y));
 	GetWindow()->SetPopup(Item.GetMenu());
 	Item.SetSelected(true);
 	m_Open = true;

@@ -204,10 +204,8 @@ void Menu::OnHovered(const MenuItem& Item)
 
 	SetSelected(m_Menu, true);
 
-	const Vector2 Margins = GetProperty(ThemeProperties::Menu_Margins).Vector();
 	const Vector2 Position = Item.GetPosition() + Vector2(GetSize().X, 0.0f);
-	m_Menu->SetPosition(Position);
-	m_Menu->Resize();
+	Item.OpenMenu(Position);
 	InsertControl(m_Menu);
 }
 

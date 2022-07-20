@@ -44,8 +44,8 @@ class Menu : public Container
 public:
 	Menu(Window* InWindow);
 
-	template<class T, typename... TArgs>
-	std::shared_ptr<T> AddItem(TArgs ...Args)
+	template <class T, typename... TArgs>
+	std::shared_ptr<T> AddItem(TArgs... Args)
 	{
 		return m_Container->AddControl<T>(Args...);
 	}

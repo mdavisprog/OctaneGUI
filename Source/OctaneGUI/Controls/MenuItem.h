@@ -38,6 +38,8 @@ class MenuItem : public TextSelectable
 	CLASS(MenuItem)
 
 public:
+	typedef std::function<void(std::shared_ptr<MenuItem const>)> OnMenuItemSignature;
+
 	MenuItem(Window* InWindow);
 
 	std::shared_ptr<Menu> CreateMenu();
@@ -47,6 +49,9 @@ public:
 
 	MenuItem& SetChecked(bool Checked);
 	bool IsChecked() const;
+
+	void OpenMenu(const Vector2& Position) const;
+	MenuItem& SetOnOpenMenu(OnMenuItemSignature&& Fn);
 
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void Update() override;
@@ -58,6 +63,7 @@ private:
 	std::shared_ptr<Menu> m_Menu { nullptr };
 	bool m_IsMenuBar { false };
 	bool m_IsChecked { false };
+	OnMenuItemSignature m_OnOpenMenu { nullptr };
 };
 
 }
