@@ -68,7 +68,15 @@ bool ControlList::Contains(const char* ID) const
 
 std::weak_ptr<Control> ControlList::Get(const char* ID) const
 {
-	Assert(Contains(ID), "Control with ID '%s' does not exist!", ID);
+	if (!Contains(ID))
+	{
+		std::string List;
+		for (const std::pair<std::string, std::weak_ptr<Control>>& Item : m_Controls)
+		{
+			List += Item.first + "\n";
+		}
+		Assert(Contains(ID), "Control with ID '%s' does not exist! Below is a list of existing IDs:\n%s", ID, List.c_str());
+	}
 	return m_Controls.at(ID);
 }
 
