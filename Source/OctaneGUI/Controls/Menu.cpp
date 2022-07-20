@@ -164,9 +164,10 @@ void Menu::OnLoad(const Json& Root)
 	for (int I = 0; I < Items.Count(); I++)
 	{
 		const Json& Item = Items[I];
+		const Json& Type = Item["Type"];
 
 		// TODO: More generic way of adding separator types.
-		if (Item["Type"].IsNull())
+		if (Type.IsNull())
 		{
 			AddItem(Item["Text"].String());
 
@@ -174,9 +175,13 @@ void Menu::OnLoad(const Json& Root)
 			MI->OnLoad(Item);
 			MI->SetExpand(Expand::Width);
 		}
-		else if (std::string(Item["Type"].String()) == "Separator")
+		else
 		{
-			AddSeparator();
+			std::shared_ptr<Control> Added = m_Container->CreateControl(Type.String());
+			if (Added)
+			{
+				Added->OnLoad(Item);
+			}
 		}
 	}
 }
