@@ -166,4 +166,24 @@ std::u32string String::ToUTF32(const std::string_view& Value)
 	return ToUTF32(std::string { Value });
 }
 
+float String::ToFloat(const std::string& Value)
+{
+	return std::stof(Value);
+}
+
+float String::ToFloat(const std::u32string& Value)
+{
+	return ToFloat(ToMultiByte(Value));
+}
+
+std::string String::ToMultiByte(float Value)
+{
+	return std::to_string(Value);
+}
+
+std::u32string String::ToUTF32(float Value)
+{
+	return ToUTF32(ToMultiByte(Value));
+}
+
 }

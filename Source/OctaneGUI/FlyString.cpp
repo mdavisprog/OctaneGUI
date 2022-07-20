@@ -36,7 +36,7 @@ std::unordered_map<size_t, std::string> g_Table {};
 
 std::string_view Get(const char* Value)
 {
-	size_t Hash = std::hash<std::string_view>{}(Value);
+	size_t Hash = std::hash<std::string_view> {}(Value);
 	if (g_Table.find(Hash) == g_Table.end())
 	{
 		g_Table[Hash] = Value;

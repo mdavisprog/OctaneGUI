@@ -47,6 +47,12 @@ public:
 	static std::u32string ToUTF32(const std::string& Value);
 	static std::u32string ToUTF32(const char* Value);
 	static std::u32string ToUTF32(const std::string_view& Value);
+
+	static float ToFloat(const std::string& Value);
+	static float ToFloat(const std::u32string& Value);
+
+	static std::string ToMultiByte(float Value);
+	static std::u32string ToUTF32(float Value);
 };
 
 }
