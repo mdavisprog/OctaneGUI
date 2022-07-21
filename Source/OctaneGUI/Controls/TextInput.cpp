@@ -397,6 +397,17 @@ Color TextInput::TextColor() const
 	return GetProperty(ThemeProperties::Text).ToColor();
 }
 
+TextInput& TextInput::SetNumbersOnly(bool NumbersOnly)
+{
+	m_NumbersOnly = NumbersOnly;
+	return *this;
+}
+
+bool TextInput::NumbersOnly() const
+{
+	return m_NumbersOnly;
+}
+
 void TextInput::Focus()
 {
 	if (!m_Position.IsValid())
@@ -570,6 +581,7 @@ void TextInput::OnLoad(const Json& Root)
 {
 	Container::OnLoad(Root);
 
+	m_NumbersOnly = Root["NumbersOnly"].Boolean(m_NumbersOnly);
 	SetMulitline(Root["Multiline"].Boolean());
 	if (m_Multiline)
 	{
@@ -854,6 +866,34 @@ void TextInput::AddText(const std::u32string& Contents)
 	if (m_ReadOnly)
 	{
 		return;
+	}
+
+	if (m_NumbersOnly)
+	{
+		if (Contents.find_first_not_of(U"0123456789.-") != std::string::npos)
+		{
+			return;
+		}
+
+		if (Contents.find_first_of(U'.') != std::string::npos && GetString().find_first_of(U'.') != std::string::npos)
+		{
+			return;
+		}
+
+		if (Contents.find_first_of(U'-') != std::string::npos)
+		{
+			// Already exists.
+			if (GetString().find_first_of(U'-') != std::string::npos)
+			{
+				return;
+			}
+
+			// The negative sign is only allowed as the first character.
+			if (m_Position.Index() != 0)
+			{
+				return;
+			}
+		}
 	}
 
 	if (!m_Position.IsValid())

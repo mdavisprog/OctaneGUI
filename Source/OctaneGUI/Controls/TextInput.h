@@ -109,6 +109,9 @@ public:
 	TextInput& SetHighlighter(const std::shared_ptr<Syntax::Highlighter>& Value);
 	Color TextColor() const;
 
+	TextInput& SetNumbersOnly(bool NumbersOnly);
+	bool NumbersOnly() const;
+
 	template <class T>
 	TextInput& CreateHighlighter()
 	{
@@ -175,6 +178,7 @@ private:
 	bool m_Drag { false };
 	bool m_Multiline { false };
 	bool m_ReadOnly { false };
+	bool m_NumbersOnly { false };
 
 	std::shared_ptr<Timer> m_BlinkTimer { nullptr };
 	bool m_DrawCursor { false };
