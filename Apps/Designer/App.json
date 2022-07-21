@@ -11,6 +11,14 @@
 					{"Text": "Preview Pane", "ID": "PreviewPane"},
 					{"Type": "Separator"},
 					{"Text": "Quit", "ID": "Quit"}
+				]},
+				{"Text": "Font", "ID": "Font", "Items": [
+					{"Type": "MarginContainer", "Margins": [8, 0, 8, 0], "Expand": "Width", "Controls": [
+						{"Type": "VerticalContainer", "Expand": "Width", "Controls": [
+							{"Type": "Text", "Text": "Font Size", "FontSize": 12},
+							{"Type": "TextInput", "ID": "FontSize", "Expand": "Width", "NumbersOnly": true}
+						]}
+					]}
 				]}
 			]},
 			"Body": {"Controls": [

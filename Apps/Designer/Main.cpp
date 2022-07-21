@@ -124,6 +124,25 @@ int main(int argc, char **argv)
 				Editor->InsertControl(Document);
 			}
 		});
+	
+	std::shared_ptr<OctaneGUI::MenuItem> FontMenu = MainList.To<OctaneGUI::MenuItem>("Font");
+	std::shared_ptr<OctaneGUI::TextInput> FontSizeMenu = MainList.To<OctaneGUI::TextInput>("Font.FontSize");
+
+	FontMenu->SetOnOpenMenu([&](std::shared_ptr<OctaneGUI::MenuItem const> MenuItem) -> void
+		{
+			const float FontSize = Document->LineHeight();
+			FontSizeMenu->SetText(OctaneGUI::String::ToMultiByte(FontSize).c_str());
+		});
+
+	FontSizeMenu->SetOnConfirm([&](std::shared_ptr<OctaneGUI::TextInput> Input) -> void
+		{
+			if (!FontSizeMenu->GetString().empty())
+			{
+				const float FontSize = OctaneGUI::String::ToFloat(FontSizeMenu->GetText());
+				Document->SetFontSize(FontSize);
+			}
+			Input->GetWindow()->ClosePopup();
+		});
 
 	std::shared_ptr<OctaneGUI::MenuItem> QuitMenu = MainList.To<OctaneGUI::MenuItem>("File.Quit");
 	QuitMenu->SetOnPressed([&](OctaneGUI::TextSelectable& Item) -> void
