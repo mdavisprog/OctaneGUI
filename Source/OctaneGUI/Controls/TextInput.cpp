@@ -94,7 +94,7 @@ public:
 		case Keyboard::Key::Down: m_Input->MovePosition(1, 0, m_Input->IsShiftPressed()); return true;
 		case Keyboard::Key::Home: m_Input->MoveHome(); return true;
 		case Keyboard::Key::End: m_Input->MoveEnd(); return true;
-		case Keyboard::Key::Enter: m_Input->AddText('\n'); return true;
+		case Keyboard::Key::Enter: m_Input->EnterPressed(); return true;
 		case Keyboard::Key::Tab: m_Input->AddText('\t'); return true;
 		default: break;
 		}
@@ -416,9 +416,15 @@ void TextInput::Unfocus()
 	Invalidate();
 }
 
-TextInput& TextInput::SetOnTextChanged(OnTextChangedSignature&& Fn)
+TextInput& TextInput::SetOnTextChanged(OnTextInputSignature&& Fn)
 {
 	m_OnTextChanged = std::move(Fn);
+	return *this;
+}
+
+TextInput& TextInput::SetOnConfirm(OnTextInputSignature&& Fn)
+{
+	m_OnConfirm = std::move(Fn);
 	return *this;
 }
 
@@ -431,6 +437,18 @@ TextInput& TextInput::SetOnModifyText(OnModifyTextSignature&& Fn)
 TextInput& TextInput::SetOnPrePaintText(OnPaintSignature&& Fn)
 {
 	m_OnPrePaintText = std::move(Fn);
+	return *this;
+}
+
+TextInput& TextInput::SetFontSize(float FontSize)
+{
+	if (FontSize == m_Text->LineHeight())
+	{
+		return *this;
+	}
+
+	m_Text->SetFontSize(FontSize);
+	InvalidateLayout();
 	return *this;
 }
 
@@ -875,6 +893,21 @@ void TextInput::AddText(const std::u32string& Contents)
 	MovePosition(0, Length);
 
 	TextAdded(Stripped);
+}
+
+void TextInput::EnterPressed()
+{
+	if (m_Multiline)
+	{
+		AddText('\n');
+	}
+	else
+	{
+		if (m_OnConfirm)
+		{
+			m_OnConfirm(TShare<TextInput>());
+		}
+	}
 }
 
 void TextInput::Delete(int32_t Range)

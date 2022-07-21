@@ -47,7 +47,7 @@ class TextInput : public ScrollableViewControl
 	CLASS(TextInput)
 
 public:
-	typedef std::function<void(std::shared_ptr<TextInput>)> OnTextChangedSignature;
+	typedef std::function<void(std::shared_ptr<TextInput>)> OnTextInputSignature;
 	typedef std::function<std::u32string(std::shared_ptr<TextInput>, const std::u32string&)> OnModifyTextSignature;
 	typedef std::function<void(std::shared_ptr<TextInput const>, Paint&)> OnPaintSignature;
 
@@ -118,10 +118,12 @@ public:
 	void Focus();
 	void Unfocus();
 
-	TextInput& SetOnTextChanged(OnTextChangedSignature&& Fn);
+	TextInput& SetOnTextChanged(OnTextInputSignature&& Fn);
+	TextInput& SetOnConfirm(OnTextInputSignature&& Fn);
 	TextInput& SetOnModifyText(OnModifyTextSignature&& Fn);
 	TextInput& SetOnPrePaintText(OnPaintSignature&& Fn);
 
+	TextInput& SetFontSize(float FontSize);
 	float LineHeight() const;
 
 	virtual void OnPaint(Paint& Brush) const override;
@@ -143,6 +145,7 @@ private:
 
 	void AddText(uint32_t Code);
 	void AddText(const std::u32string& Contents);
+	void EnterPressed();
 
 	void Delete(int32_t Range);
 	void MoveHome();
@@ -181,7 +184,8 @@ private:
 
 	std::shared_ptr<Syntax::Highlighter> m_Highlighter { nullptr };
 
-	OnTextChangedSignature m_OnTextChanged { nullptr };
+	OnTextInputSignature m_OnTextChanged { nullptr };
+	OnTextInputSignature m_OnConfirm { nullptr };
 	OnModifyTextSignature m_OnModifyText { nullptr };
 	OnPaintSignature m_OnPrePaintText { nullptr };
 };
