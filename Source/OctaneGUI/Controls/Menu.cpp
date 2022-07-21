@@ -144,7 +144,14 @@ void Menu::Resize()
 	Vector2 Size = { std::max<float>(RightPadding, GetSize().X) + Margins.X, Margins.Y * 2.0f };
 	for (const std::shared_ptr<Control>& Item : m_Container->Controls())
 	{
-		const Vector2 ItemSize = Item->GetSize();
+		Vector2 ItemSize = Item->GetSize();
+
+		const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
+		if (ItemContainer)
+		{
+			ItemSize = ItemContainer->DesiredSize();
+		}
+
 		if (ItemSize.X > Size.X)
 		{
 			Size.X = ItemSize.X + RightPadding;
