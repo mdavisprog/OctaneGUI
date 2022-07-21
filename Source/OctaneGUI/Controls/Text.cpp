@@ -94,6 +94,11 @@ Text& Text::SetFont(const char* Path)
 
 Text& Text::SetFontSize(float Size)
 {
+	if (Size <= 0.0f)
+	{
+		return *this;
+	}
+
 	SetProperty(ThemeProperties::FontSize, Size);
 	UpdateFont();
 	return *this;
