@@ -58,6 +58,33 @@ size_t String::FindFirstOfReverse(const std::u32string& Ref, const std::u32strin
 	return Result;
 }
 
+size_t String::FirdFirstNotOfReverse(const std::u32string& Ref, const std::u32string& Search, size_t Pos)
+{
+	if (Pos == 0)
+	{
+		return std::string::npos;
+	}
+
+	size_t Start = Pos - 1;
+	size_t Result = Ref.find_first_not_of(Search, Start);
+	while (Result != 0 && Result > Start)
+	{
+		Start = Start - 1;
+		Result = Ref.find_first_not_of(Search, Start);
+	}
+
+	if (Result == 0)
+	{
+		Result = std::string::npos;
+	}
+	else
+	{
+		Result++;
+	}
+
+	return Result;
+}
+
 size_t String::Count(const std::u32string_view& Ref, char32_t Character)
 {
 	size_t Result = 0;
