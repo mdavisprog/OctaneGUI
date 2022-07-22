@@ -143,7 +143,7 @@ protected:
 
 private:
 	void MouseMove(const Vector2& Position);
-	bool MousePressed(const Vector2& Position, Mouse::Button Button);
+	bool MousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count);
 	void MouseReleased(const Vector2& Position, Mouse::Button Button);
 
 	void AddText(uint32_t Code);
@@ -170,6 +170,7 @@ private:
 	void ResetCursorTimer();
 	void UpdateVisibleLines();
 	void SetVisibleLineSpan();
+	void SelectWord();
 
 	std::shared_ptr<Text> m_Text { nullptr };
 	TextPosition m_Position {};

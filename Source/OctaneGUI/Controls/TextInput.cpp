@@ -116,7 +116,7 @@ public:
 			return Handled;
 		}
 
-		return m_Input->MousePressed(Position, Button);
+		return m_Input->MousePressed(Position, Button, Count);
 	}
 
 	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override
@@ -814,7 +814,7 @@ void TextInput::MouseMove(const Vector2& Position)
 	}
 }
 
-bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button)
+bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
 {
 	m_Position = GetPosition(Position);
 	m_Anchor = m_Position;
@@ -823,6 +823,11 @@ bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button)
 	UpdateSpans();
 	ResetCursorTimer();
 	Invalidate();
+
+	if (Count == Mouse::Count::Double)
+	{
+		SelectWord();
+	}
 
 	return true;
 }
@@ -1338,6 +1343,34 @@ void TextInput::SetVisibleLineSpan()
 
 	m_Text->ClearSpans();
 	m_Text->PushSpan({ m_FirstVisibleLine.Index(), m_LastVisibleLine.Index(), GetProperty(ThemeProperties::Text).ToColor() });
+}
+
+void TextInput::SelectWord()
+{
+	const char32_t* SpaceChars = U" \t\n\r";
+
+	const bool IsSpace = std::isspace(Right());
+	size_t Start = IsSpace
+		? String::FirdFirstNotOfReverse(GetString(), SpaceChars, Index())
+		: String::FindFirstOfReverse(GetString(), SpaceChars, Index());
+	
+	size_t End = IsSpace
+		? GetString().find_first_not_of(SpaceChars, Index() + 1)
+		: GetString().find_first_of(SpaceChars, Index() + 1);
+	
+	if (Start == std::string::npos)
+	{
+		Start = 0;
+	}
+
+	if (End == std::string::npos)
+	{
+		End = m_Text->Length();
+	}
+	
+	MovePosition(0, Start - Index());
+	m_Anchor = m_Position;
+	MovePosition(0, End - Start, true);
 }
 
 }
