@@ -349,7 +349,7 @@ void Control::OnMouseMove(const Vector2& Position)
 {
 }
 
-bool Control::OnMousePressed(const Vector2& Position, Mouse::Button Button)
+bool Control::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
 {
 	return false;
 }

@@ -34,7 +34,10 @@ SOFTWARE.
 namespace Windowing
 {
 
+#define DOUBLE_CLICK_TIME_MS 300
+
 std::unordered_map<OctaneGUI::Window*, std::shared_ptr<sf::RenderWindow>> g_Windows {};
+OctaneGUI::Clock g_MouseButtonClock {};
 
 OctaneGUI::Keyboard::Key GetKeyCode(sf::Keyboard::Key Key)
 {
@@ -143,14 +146,18 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 			return OctaneGUI::Event(OctaneGUI::Event::MouseMove((float)Event.mouseMove.x, (float)Event.mouseMove.y));
 
 		case sf::Event::MouseButtonPressed:
+		{
+			OctaneGUI::Mouse::Count Count = g_MouseButtonClock.MeasureMS() <= DOUBLE_CLICK_TIME_MS ? OctaneGUI::Mouse::Count::Double : OctaneGUI::Mouse::Count::Single;
+			g_MouseButtonClock.Reset();
 			return OctaneGUI::Event(
 				OctaneGUI::Event::Type::MousePressed,
-				OctaneGUI::Event::MouseButton(GetMouseButton(Event.mouseButton.button), (float)Event.mouseButton.x, (float)Event.mouseButton.y));
+				OctaneGUI::Event::MouseButton(GetMouseButton(Event.mouseButton.button), (float)Event.mouseButton.x, (float)Event.mouseButton.y, Count));
+		}
 
 		case sf::Event::MouseButtonReleased:
 			return OctaneGUI::Event(
 				OctaneGUI::Event::Type::MouseReleased,
-				OctaneGUI::Event::MouseButton(GetMouseButton(Event.mouseButton.button), (float)Event.mouseButton.x, (float)Event.mouseButton.y));
+				OctaneGUI::Event::MouseButton(GetMouseButton(Event.mouseButton.button), (float)Event.mouseButton.x, (float)Event.mouseButton.y, OctaneGUI::Mouse::Count::Single));
 
 		case sf::Event::MouseWheelScrolled:
 		{

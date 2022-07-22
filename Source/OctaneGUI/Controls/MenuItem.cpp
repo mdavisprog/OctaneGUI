@@ -168,9 +168,9 @@ void MenuItem::OnSave(Json& Root) const
 	Root["HasMenu"] = m_Menu != nullptr;
 }
 
-bool MenuItem::OnMousePressed(const Vector2& Position, Mouse::Button Button)
+bool MenuItem::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
 {
-	TextSelectable::OnMousePressed(Position, Button);
+	TextSelectable::OnMousePressed(Position, Button, Count);
 
 	if (m_Menu)
 	{

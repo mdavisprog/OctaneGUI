@@ -178,9 +178,10 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 				break;
 			}
 
+			OctaneGUI::Mouse::Count Count = Event.button.clicks == 2 ? OctaneGUI::Mouse::Count::Double : OctaneGUI::Mouse::Count::Single;
 			return OctaneGUI::Event(
 				Event.button.type == SDL_MOUSEBUTTONDOWN ? OctaneGUI::Event::Type::MousePressed : OctaneGUI::Event::Type::MouseReleased,
-				OctaneGUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y));
+				OctaneGUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y, Count));
 		}
 
 		case SDL_MOUSEWHEEL:

@@ -93,7 +93,7 @@ public:
 	void OnKeyPressed(Keyboard::Key Key);
 	void OnKeyReleased(Keyboard::Key Key);
 	void OnMouseMove(const Vector2& Position);
-	void OnMousePressed(const Vector2& Position, Mouse::Button Button);
+	void OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count = Mouse::Count::Single);
 	void OnMouseReleased(const Vector2& Position, Mouse::Button Button);
 	void OnMouseWheel(const Vector2& Delta);
 	void OnMouseEnter();

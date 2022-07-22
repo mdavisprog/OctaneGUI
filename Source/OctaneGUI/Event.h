@@ -85,19 +85,19 @@ public:
 	{
 	public:
 		MouseButton()
-			: m_Button(Mouse::Button::Left)
-			, m_Position()
 		{
 		}
 
-		MouseButton(Mouse::Button InButton, float X, float Y)
+		MouseButton(Mouse::Button InButton, float X, float Y, Mouse::Count Count)
 			: m_Button(InButton)
 			, m_Position(X, Y)
+			, m_Count(Count)
 		{
 		}
 
-		Mouse::Button m_Button;
-		Vector2 m_Position;
+		Mouse::Button m_Button { Mouse::Button::Left };
+		Vector2 m_Position {};
+		Mouse::Count m_Count { Mouse::Count::Single };
 	};
 
 	struct MouseWheel

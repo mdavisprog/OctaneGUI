@@ -108,9 +108,9 @@ public:
 		m_Input->MouseMove(Position);
 	}
 
-	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override
 	{
-		bool Handled = ScrollableViewInteraction::OnMousePressed(Position, Button);
+		bool Handled = ScrollableViewInteraction::OnMousePressed(Position, Button, Count);
 		if (Handled)
 		{
 			return Handled;

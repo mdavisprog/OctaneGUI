@@ -164,7 +164,7 @@ public:
 		m_Text->OnPaint(Brush);
 	}
 
-	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override
 	{
 		const Rect ToggleBounds = { GetAbsolutePosition(), GetAbsolutePosition() + Vector2(TOGGLE_SIZE, TOGGLE_SIZE) };
 		if (ToggleBounds.Contains(Position))

@@ -301,14 +301,14 @@ void ScrollableContainer::OnMouseMove(const Vector2& Position)
 	m_VerticalSB->OnMouseMove(Position);
 }
 
-bool ScrollableContainer::OnMousePressed(const Vector2& Position, Mouse::Button Button)
+bool ScrollableContainer::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
 {
-	if (m_HorizontalSB->OnMousePressed(Position, Button))
+	if (m_HorizontalSB->OnMousePressed(Position, Button, Count))
 	{
 		return true;
 	}
 
-	if (m_VerticalSB->OnMousePressed(Position, Button))
+	if (m_VerticalSB->OnMousePressed(Position, Button, Count))
 	{
 		return true;
 	}

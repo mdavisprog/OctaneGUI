@@ -58,7 +58,7 @@ public:
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnSave(Json& Root) const override;
 	virtual void OnMouseMove(const Vector2& Position) override;
-	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;
 	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnMouseLeave() override;
 
@@ -101,7 +101,7 @@ public:
 	virtual void OnPaint(Paint& Brush) const override;
 	virtual void OnSave(Json& Root) const override;
 	virtual void OnMouseMove(const Vector2& Position) override;
-	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override;
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;
 	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
 	virtual void OnThemeLoaded() override;
 

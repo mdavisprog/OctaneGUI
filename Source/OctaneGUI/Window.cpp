@@ -271,13 +271,13 @@ void Window::OnMouseMove(const Vector2& Position)
 	}
 }
 
-void Window::OnMousePressed(const Vector2& Position, Mouse::Button MouseButton)
+void Window::OnMousePressed(const Vector2& Position, Mouse::Button MouseButton, Mouse::Count Count)
 {
 	std::shared_ptr<Control> New = nullptr;
 	if (!m_Hovered.expired())
 	{
 		std::shared_ptr<Control> Hovered = m_Hovered.lock();
-		bool Pressed = Hovered->OnMousePressed(Position, MouseButton);
+		bool Pressed = Hovered->OnMousePressed(Position, MouseButton, Count);
 
 		if (Pressed)
 		{

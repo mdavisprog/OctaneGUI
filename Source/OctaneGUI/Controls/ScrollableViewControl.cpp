@@ -64,11 +64,11 @@ void ScrollableViewInteraction::OnMouseMove(const Vector2& Position)
 	}
 }
 
-bool ScrollableViewInteraction::OnMousePressed(const Vector2& Position, Mouse::Button Button)
+bool ScrollableViewInteraction::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
 {
 	if (m_AlwaysFocus)
 	{
-		return ScrollableView().OnMousePressed(Position, Button);
+		return ScrollableView().OnMousePressed(Position, Button, Count);
 	}
 
 	return false;
@@ -186,9 +186,9 @@ void ScrollableViewControl::OnMouseMove(const Vector2& Position)
 	m_Scrollable->OnMouseMove(Position);
 }
 
-bool ScrollableViewControl::OnMousePressed(const Vector2& Position, Mouse::Button Button)
+bool ScrollableViewControl::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
 {
-	return m_Scrollable->OnMousePressed(Position, Button);
+	return m_Scrollable->OnMousePressed(Position, Button, Count);
 }
 
 void ScrollableViewControl::OnMouseReleased(const Vector2& Position, Mouse::Button Button)

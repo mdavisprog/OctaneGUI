@@ -40,6 +40,12 @@ public:
 		Middle,
 		Right
 	};
+
+	enum class Count : uint8_t
+	{
+		Single,
+		Double
+	};
 };
 
 }

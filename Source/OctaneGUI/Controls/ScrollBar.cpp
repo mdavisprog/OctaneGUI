@@ -177,7 +177,7 @@ void ScrollBarHandle::OnMouseMove(const Vector2& Position)
 	}
 }
 
-bool ScrollBarHandle::OnMousePressed(const Vector2& Position, Mouse::Button Button)
+bool ScrollBarHandle::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
 {
 	if (m_Hovered && Button == Mouse::Button::Left)
 	{
@@ -385,24 +385,24 @@ void ScrollBar::OnMouseMove(const Vector2& Position)
 	HandleMouseMove(m_Handle, Position);
 }
 
-bool ScrollBar::OnMousePressed(const Vector2& Position, Mouse::Button Button)
+bool ScrollBar::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
 {
 	if (!m_Enabled)
 	{
 		return false;
 	}
 
-	if (m_MinButton && m_MinButton->OnMousePressed(Position, Button))
+	if (m_MinButton && m_MinButton->OnMousePressed(Position, Button, Count))
 	{
 		return true;
 	}
 
-	if (m_MaxButton && m_MaxButton->OnMousePressed(Position, Button))
+	if (m_MaxButton && m_MaxButton->OnMousePressed(Position, Button, Count))
 	{
 		return true;
 	}
 
-	if (m_Handle && m_Handle->OnMousePressed(Position, Button))
+	if (m_Handle && m_Handle->OnMousePressed(Position, Button, Count))
 	{
 		return true;
 	}

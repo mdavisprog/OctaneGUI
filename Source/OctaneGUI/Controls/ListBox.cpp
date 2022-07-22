@@ -114,7 +114,7 @@ public:
 		SetHoveredIndex(NewIndex);
 	}
 
-	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override
 	{
 		if (m_Hovered_Index == -1)
 		{

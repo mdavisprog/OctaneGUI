@@ -454,7 +454,7 @@ int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
 		break;
 
 	case Event::Type::MousePressed:
-		Item->OnMousePressed(E.GetData().m_MouseButton.m_Position, E.GetData().m_MouseButton.m_Button);
+		Item->OnMousePressed(E.GetData().m_MouseButton.m_Position, E.GetData().m_MouseButton.m_Button, E.GetData().m_MouseButton.m_Count);
 		break;
 
 	case Event::Type::MouseReleased:

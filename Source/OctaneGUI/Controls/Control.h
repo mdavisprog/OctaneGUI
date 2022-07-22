@@ -179,7 +179,7 @@ public:
 	virtual bool OnKeyPressed(Keyboard::Key Key);
 	virtual void OnKeyReleased(Keyboard::Key Key);
 	virtual void OnMouseMove(const Vector2& Position);
-	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button);
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count);
 	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button);
 	virtual void OnMouseWheel(const Vector2& Delta);
 	virtual void OnMouseEnter();

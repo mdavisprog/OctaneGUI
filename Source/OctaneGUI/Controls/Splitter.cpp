@@ -64,7 +64,7 @@ public:
 		m_Anchor = Position;
 	}
 
-	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button) override
+	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override
 	{
 		if (m_Owner->m_Separator->Contains(Position))
 		{
