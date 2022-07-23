@@ -828,6 +828,10 @@ bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button, Mous
 	{
 		SelectWord();
 	}
+	else if (Count == Mouse::Count::Triple)
+	{
+		SelectLine();
+	}
 
 	return true;
 }
@@ -1371,6 +1375,14 @@ void TextInput::SelectWord()
 	MovePosition(0, Start - Index());
 	m_Anchor = m_Position;
 	MovePosition(0, End - Start, true);
+}
+
+void TextInput::SelectLine()
+{
+	const size_t Start = LineStartIndex(Index());
+	const size_t End = LineEndIndex(Index());
+	MovePosition(0, Start - Index());
+	MovePosition(0, End - Index(), true);
 }
 
 }

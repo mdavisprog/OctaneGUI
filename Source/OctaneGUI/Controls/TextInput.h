@@ -171,6 +171,7 @@ private:
 	void UpdateVisibleLines();
 	void SetVisibleLineSpan();
 	void SelectWord();
+	void SelectLine();
 
 	std::shared_ptr<Text> m_Text { nullptr };
 	TextPosition m_Position {};
