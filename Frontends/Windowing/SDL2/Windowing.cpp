@@ -178,7 +178,16 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 				break;
 			}
 
-			OctaneGUI::Mouse::Count Count = Event.button.clicks == 2 ? OctaneGUI::Mouse::Count::Double : OctaneGUI::Mouse::Count::Single;
+			OctaneGUI::Mouse::Count Count = OctaneGUI::Mouse::Count::Single;
+			if (Event.button.clicks == 2)
+			{
+				Count = OctaneGUI::Mouse::Count::Double;
+			}
+			else if (Event.button.clicks == 3)
+			{
+				Count = OctaneGUI::Mouse::Count::Triple;
+			}
+
 			return OctaneGUI::Event(
 				Event.button.type == SDL_MOUSEBUTTONDOWN ? OctaneGUI::Event::Type::MousePressed : OctaneGUI::Event::Type::MouseReleased,
 				OctaneGUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y, Count));

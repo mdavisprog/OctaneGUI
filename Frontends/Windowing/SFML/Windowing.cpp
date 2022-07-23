@@ -34,10 +34,11 @@ SOFTWARE.
 namespace Windowing
 {
 
-#define DOUBLE_CLICK_TIME_MS 300
+#define MULTI_CLICK_TIME_MS 300
 
 std::unordered_map<OctaneGUI::Window*, std::shared_ptr<sf::RenderWindow>> g_Windows {};
 OctaneGUI::Clock g_MouseButtonClock {};
+std::unordered_map<OctaneGUI::Mouse::Button, uint8_t> g_MouseClicks {};
 
 OctaneGUI::Keyboard::Key GetKeyCode(sf::Keyboard::Key Key)
 {
@@ -147,11 +148,27 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 
 		case sf::Event::MouseButtonPressed:
 		{
-			OctaneGUI::Mouse::Count Count = g_MouseButtonClock.MeasureMS() <= DOUBLE_CLICK_TIME_MS ? OctaneGUI::Mouse::Count::Double : OctaneGUI::Mouse::Count::Single;
+			const bool IncClick = g_MouseButtonClock.MeasureMS() <= MULTI_CLICK_TIME_MS;
+			const OctaneGUI::Mouse::Button Button = GetMouseButton(Event.mouseButton.button);
+
+			uint8_t& Clicks = g_MouseClicks[Button];
+			Clicks = IncClick ? Clicks + 1 : 1;
+			Clicks = Clicks > 3 ? 1 : Clicks;
+
+			OctaneGUI::Mouse::Count Count = OctaneGUI::Mouse::Count::Single;
+			if (Clicks == 2)
+			{
+				Count = OctaneGUI::Mouse::Count::Double;
+			}
+			else if (Clicks == 3)
+			{
+				Count = OctaneGUI::Mouse::Count::Triple;
+			}
+
 			g_MouseButtonClock.Reset();
 			return OctaneGUI::Event(
 				OctaneGUI::Event::Type::MousePressed,
-				OctaneGUI::Event::MouseButton(GetMouseButton(Event.mouseButton.button), (float)Event.mouseButton.x, (float)Event.mouseButton.y, Count));
+				OctaneGUI::Event::MouseButton(Button, (float)Event.mouseButton.x, (float)Event.mouseButton.y, Count));
 		}
 
 		case sf::Event::MouseButtonReleased:

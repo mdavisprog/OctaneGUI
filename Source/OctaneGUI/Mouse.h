@@ -44,7 +44,8 @@ public:
 	enum class Count : uint8_t
 	{
 		Single,
-		Double
+		Double,
+		Triple
 	};
 };
 
