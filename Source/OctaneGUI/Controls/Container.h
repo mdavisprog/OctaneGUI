@@ -86,6 +86,7 @@ public:
 	// TODO: Rename to GetAllControls.
 	void GetControls(std::vector<std::shared_ptr<Control>>& Controls) const;
 	const std::vector<std::shared_ptr<Control>>& Controls() const;
+	Vector2 ChildrenSize() const;
 	virtual void GetControlList(ControlList& List) const;
 	virtual Vector2 DesiredSize() const;
 	virtual void SetWindow(Window* InWindow) override;

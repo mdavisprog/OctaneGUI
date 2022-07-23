@@ -336,6 +336,27 @@ void Container::GetControls(std::vector<std::shared_ptr<Control>>& Controls) con
 	}
 }
 
+Vector2 Container::ChildrenSize() const
+{
+	Vector2 Result;
+
+	for (const std::shared_ptr<Control>& Item : m_Controls)
+	{
+		Vector2 Size = Item->GetSize();
+
+		const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
+		if (ItemContainer)
+		{
+			Size = ItemContainer->DesiredSize();
+		}
+
+		Result.X = std::max<float>(Result.X, Item->GetBounds().Max.X);
+		Result.Y = std::max<float>(Result.Y, Item->GetBounds().Max.Y);
+	}
+
+	return Result;
+}
+
 void Container::GetControlList(ControlList& List) const
 {
 	List.AddControls(Controls());
