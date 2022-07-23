@@ -31,6 +31,7 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+class BoxContainer;
 class Separator;
 class SplitterInteraction;
 
@@ -50,6 +51,7 @@ public:
 	std::shared_ptr<Container> Second() const;
 
 	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
+	virtual Vector2 DesiredSize() const override;
 
 	virtual void Update() override;
 	virtual void OnLoad(const Json& Root) override;
@@ -63,6 +65,7 @@ private:
 	std::shared_ptr<Container> m_First { nullptr };
 	std::shared_ptr<Container> m_Second { nullptr };
 	std::shared_ptr<SplitterInteraction> m_Interaction { nullptr };
+	std::shared_ptr<BoxContainer> m_Split { nullptr };
 	bool m_UpdateLayout { false };
 };
 

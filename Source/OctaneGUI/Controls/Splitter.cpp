@@ -137,6 +137,11 @@ std::weak_ptr<Control> Splitter::GetControl(const Vector2& Point) const
 	return Result;
 }
 
+Vector2 Splitter::DesiredSize() const
+{
+	return m_Split->DesiredSize();
+}
+
 void Splitter::Update()
 {
 	if (m_UpdateLayout)
@@ -178,26 +183,26 @@ void Splitter::UpdateLayout()
 {
 	ClearControls();
 
-	std::shared_ptr<BoxContainer> Split = nullptr;
+	m_Split = nullptr;
 	if (m_Separator->GetOrientation() == Orientation::Vertical)
 	{
-		Split = AddControl<HorizontalContainer>();
+		m_Split = AddControl<HorizontalContainer>();
 		m_First->SetSize({ GetSize().X * 0.5f - m_Separator->GetSize().X * 0.5f, m_First->GetSize().Y });
 	}
 	else
 	{
-		Split = AddControl<VerticalContainer>();
+		m_Split = AddControl<VerticalContainer>();
 		m_First->SetSize({ m_First->GetSize().X, m_First->GetSize().Y * 0.5f - m_Separator->GetSize().Y * 0.5f });
 	}
 
-	Split
+	m_Split
 		->SetSpacing({ 0.0f, 0.0f })
 		->SetExpand(Expand::Both);
 
-	Split->InsertControl(m_First);
-	Split->InsertControl(m_Separator);
-	Split->InsertControl(m_Second);
-	Split->InsertControl(m_Interaction);
+	m_Split->InsertControl(m_First);
+	m_Split->InsertControl(m_Separator);
+	m_Split->InsertControl(m_Second);
+	m_Split->InsertControl(m_Interaction);
 
 	m_UpdateLayout = true;
 }
