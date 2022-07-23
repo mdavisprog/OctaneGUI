@@ -87,6 +87,7 @@ void GroupBox::OnLoad(const Json& Root)
 	Copy["Margins"] = std::move(Rect::ToJson(Margins));
 
 	m_Margins->OnLoad(Copy);
+	m_Margins->SetExpand(Expand::Both);
 }
 
 float GroupBox::TopMargin() const
