@@ -32,12 +32,13 @@
 										{"Type": "ImageButton", "Image": {"Texture": "thumbs_up.png"}},
 										{"Type": "ImageButton", "Disabled": true, "Image": {"Texture": "thumbs_up.png"}}
 									]}
-								]}
-							]},
-							{"Type": "GroupBox", "Text": "Combo Box", "Controls": [
-								{"Type": "HorizontalContainer", "Spacing": [8, 0], "Controls": [
-									{"Type": "Text", "Text": "Themes"},
-									{"Type": "ComboBox", "ID": "ThemesComboBox"}
+								]},
+								{"Type": "Separator", "Orientation": "Vertical"},
+								{"Type": "GroupBox", "Text": "Combo Box", "Controls": [
+									{"Type": "HorizontalContainer", "Spacing": [8, 0], "Controls": [
+										{"Type": "Text", "Text": "Themes"},
+										{"Type": "ComboBox", "ID": "ThemesComboBox"}
+									]}
 								]}
 							]},
 							{"Type": "HorizontalContainer", "Expand": "Width", "Controls": [
@@ -56,6 +57,7 @@
 										{"Type": "CheckBox", "Text": {"Text": "Tri-State"}, "TriState": true}
 									]}
 								]},
+								{"Type": "Separator", "Orientation": "Vertical"},
 								{"Type": "GroupBox", "Text": "Radio Buttons", "Controls": [
 									{"Type": "HorizontalContainer", "Controls": [
 										{"Type": "RadioButton", "Text": {"Text": "One"}},
@@ -70,6 +72,7 @@
 										{"Type": "Text", "Text": "This is a very long string!", "Wrap": true}
 									]}
 								]},
+								{"Type": "Separator", "Orientation": "Vertical"},
 								{"Type": "GroupBox", "Text": "Tree", "Controls": [
 									{"Type": "VerticalContainer", "Controls": [
 										{"Type": "Tree", "Text": "Root 1", "Items": [
@@ -82,7 +85,9 @@
 											{"Type": "Tree", "Text": "Child 2"}
 										]}
 									]}
-								]},
+								]}
+							]},
+							{"Type": "HorizontalContainer", "Controls": [
 								{"Type": "GroupBox", "Text": "List Box", "Controls": [
 									{"Type": "ListBox", "ID": "ListBox"}
 								]}
