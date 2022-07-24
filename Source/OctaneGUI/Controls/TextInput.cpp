@@ -1357,11 +1357,11 @@ void TextInput::SelectWord()
 	size_t Start = IsSpace
 		? String::FirdFirstNotOfReverse(GetString(), SpaceChars, Index())
 		: String::FindFirstOfReverse(GetString(), SpaceChars, Index());
-	
+
 	size_t End = IsSpace
 		? GetString().find_first_not_of(SpaceChars, Index() + 1)
 		: GetString().find_first_of(SpaceChars, Index() + 1);
-	
+
 	if (Start == std::string::npos)
 	{
 		Start = 0;
@@ -1371,7 +1371,7 @@ void TextInput::SelectWord()
 	{
 		End = m_Text->Length();
 	}
-	
+
 	MovePosition(0, Start - Index());
 	m_Anchor = m_Position;
 	MovePosition(0, End - Start, true);
