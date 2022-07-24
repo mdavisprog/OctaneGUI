@@ -90,8 +90,9 @@ public:
 		int Index = 0;
 		for (const std::shared_ptr<Control>& ListItem : List->Controls())
 		{
-			const Vector2 ItemPos = ListItem->GetAbsolutePosition();
-			const Rect Bounds = { ItemPos, ItemPos + Vector2(List->GetSize().X, ListItem->GetSize().Y) };
+			const Vector2 ItemPos { ListItem->GetAbsolutePosition() };
+			const Vector2 ItemSize { std::max<float>(GetParent()->GetSize().X, List->GetSize().X), ListItem->GetSize().Y };
+			const Rect Bounds = { ItemPos, ItemPos + ItemSize };
 
 			if (Bounds.Contains(Position))
 			{
