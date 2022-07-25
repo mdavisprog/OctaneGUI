@@ -100,7 +100,7 @@ ComboBox::ComboBox(Window* InWindow)
 					m_OnSelected(ItemText);
 				}
 			})
-		->SetParent(this)
+		.SetParent(this)
 		->SetPosition({ 0.0f, m_Input->GetSize().Y });
 }
 

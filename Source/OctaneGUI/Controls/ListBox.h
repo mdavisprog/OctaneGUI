@@ -55,8 +55,11 @@ public:
 	ListBox& ClearItems();
 
 	int Index() const;
-	ListBox* SetOnSelect(OnSelectSignature Fn);
+	int Count() const;
+	ListBox& Deselect();
+	ListBox& SetOnSelect(OnSelectSignature Fn);
 	Vector2 ListSize() const;
+	const std::shared_ptr<Control>& Item(size_t Index) const;
 
 	virtual void OnLoad(const Json& Root) override;
 	virtual void OnPaint(Paint& Brush) const override;

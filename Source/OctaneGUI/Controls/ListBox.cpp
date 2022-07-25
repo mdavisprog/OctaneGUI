@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "ListBox.h"
+#include "../Assert.h"
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Profiler.h"
@@ -58,6 +59,11 @@ public:
 	int HoveredIndex() const
 	{
 		return m_Hovered_Index;
+	}
+
+	void Clear()
+	{
+		m_Index = -1;
 	}
 
 	ListBoxInteraction& SetOnSelect(ListBox::OnSelectSignature Fn)
@@ -225,15 +231,33 @@ int ListBox::Index() const
 	return Interaction->Index();
 }
 
-ListBox* ListBox::SetOnSelect(OnSelectSignature Fn)
+int ListBox::Count() const
+{
+	return (int)m_List->Controls().size();
+}
+
+ListBox& ListBox::Deselect()
+{
+	const std::shared_ptr<ListBoxInteraction>& Interaction = std::static_pointer_cast<ListBoxInteraction>(this->Interaction());
+	Interaction->Clear();
+	return *this;
+}
+
+ListBox& ListBox::SetOnSelect(OnSelectSignature Fn)
 {
 	m_OnSelect = Fn;
-	return this;
+	return *this;
 }
 
 Vector2 ListBox::ListSize() const
 {
 	return m_List->DesiredSize();
+}
+
+const std::shared_ptr<Control>& ListBox::Item(size_t Index) const
+{
+	Assert(Index >= 0 && Index < Count(), "Index '%d' is not the valid range [0..%d)!", Index, Count());
+	return m_List->Controls()[Index];
 }
 
 void ListBox::OnLoad(const Json& Root)
