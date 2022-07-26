@@ -190,6 +190,16 @@ const std::shared_ptr<Container>& Window::GetPopup() const
 	return m_Popup.GetContainer();
 }
 
+bool Window::IsPopupOpen() const
+{
+	if (m_Popup.GetContainer())
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void Window::OnKeyPressed(Keyboard::Key Key)
 {
 #if TOOLS
