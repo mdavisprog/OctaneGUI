@@ -37,8 +37,9 @@ namespace Tests
 namespace Utility
 {
 
-void Load(OctaneGUI::Application& Application, const char* Json, OctaneGUI::ControlList& List, int WindowWidth, int WindowHeight);
-void Load(OctaneGUI::Application& Application, const char* Json, OctaneGUI::ControlList& List);
+void Load(OctaneGUI::Application& Application, const char* MenuBarJson, const char* BodyJson, OctaneGUI::ControlList& List, int WindowWidth, int WindowHeight);
+void Load(OctaneGUI::Application& Application, const char* BodyJson, OctaneGUI::ControlList& List);
+void Load(OctaneGUI::Application& Application, const char* MenuBarJson, const char* BodyJson, OctaneGUI::ControlList& List);
 void MouseMove(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Position);
 void MouseClick(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Position, OctaneGUI::Mouse::Button Button = OctaneGUI::Mouse::Button::Left);
 

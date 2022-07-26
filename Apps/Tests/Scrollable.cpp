@@ -36,7 +36,7 @@ void Load(OctaneGUI::Application& Application, const char* Json, OctaneGUI::Cont
 	std::string Stream = "{\"ID\": \"View\", \"Type\": \"ScrollableViewControl\", \"Expand\": \"Both\", \"Controls\": [";
 	Stream += Json;
 	Stream += "]}";
-	Utility::Load(Application, Stream.c_str(), List, Width, Height);
+	Utility::Load(Application, "", Stream.c_str(), List, Width, Height);
 }
 
 TEST_SUITE(Scrollable,

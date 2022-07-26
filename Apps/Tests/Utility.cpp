@@ -34,23 +34,28 @@ namespace Tests
 namespace Utility
 {
 
-void Load(OctaneGUI::Application& Application, const char* Json, OctaneGUI::ControlList& List, int WindowWidth, int WindowHeight)
+void Load(OctaneGUI::Application& Application, const char* MenuBarJson, const char* BodyJson, OctaneGUI::ControlList& List, int WindowWidth, int WindowHeight)
 {
 	std::stringstream Stream;
 	Stream << "{\"Width\": "
 		<< WindowWidth
 		<< ", \"Height\": "
 		<< WindowHeight
-		<< ", \"Body\": {\"Controls\": ["
-		<< Json
+		<< ", \"MenuBar\": {" << MenuBarJson << "}"
+		<< ", \"Body\": {\"Controls\": [" << BodyJson
 		<< "]}}";
 	Application.GetMainWindow()->Load(Stream.str().c_str(), List);
 	Application.GetMainWindow()->Update();
 }
 
-void Load(OctaneGUI::Application& Application, const char* Json, OctaneGUI::ControlList& List)
+void Load(OctaneGUI::Application& Application, const char* BodyJson, OctaneGUI::ControlList& List)
 {
-	Load(Application, Json, List, 1280, 720);
+	Load(Application, "", BodyJson, List, 1280, 720);
+}
+
+void Load(OctaneGUI::Application& Application, const char* MenuBarJson, const char* BodyJson, OctaneGUI::ControlList& List)
+{
+	Load(Application, MenuBarJson, BodyJson, List, 1280, 720);
 }
 
 void MouseMove(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Position)
