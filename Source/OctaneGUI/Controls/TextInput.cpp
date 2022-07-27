@@ -585,7 +585,10 @@ void TextInput::OnLoad(const Json& Root)
 	SetMulitline(Root["Multiline"].Boolean());
 	if (m_Multiline)
 	{
-		SetSize({ 200.0f, 200.0f });
+		if (Root["Size"].IsNull())
+		{
+			SetSize({ 200.0f, 200.0f });
+		}
 	}
 
 	m_Text->OnLoad(Root["Text"]);
