@@ -28,6 +28,7 @@ SOFTWARE.
 #include "../Json.h"
 #include "../Paint.h"
 #include "../String.h"
+#include "ControlList.h"
 #include "MenuItem.h"
 #include "Panel.h"
 #include "Separator.h"
@@ -163,6 +164,19 @@ void Menu::Resize()
 	SetSize(Size);
 }
 
+void Menu::GetControlList(ControlList& List) const
+{
+	Container::GetControlList(List);
+
+	for (const std::shared_ptr<MenuItem>& Item : m_Items)
+	{
+		if (Item->GetMenu())
+		{
+			Item->GetMenu()->GetControlList(List);
+		}
+	}
+}
+
 void Menu::OnLoad(const Json& Root)
 {
 	Container::OnLoad(Root);
@@ -173,7 +187,6 @@ void Menu::OnLoad(const Json& Root)
 		const Json& Item = Items[I];
 		const Json& Type = Item["Type"];
 
-		// TODO: More generic way of adding separator types.
 		if (Type.IsNull())
 		{
 			AddItem(Item["Text"].String());

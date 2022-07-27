@@ -59,6 +59,8 @@ public:
 
 	void Resize();
 
+	virtual void GetControlList(ControlList& List) const override;
+
 	virtual void OnLoad(const Json& Root) override;
 
 private:
