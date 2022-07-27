@@ -14,6 +14,7 @@ add_executable(
 	RadioButton.cpp
 	Scrollable.cpp
 	TestSuite.cpp
+	Text.cpp
 	Utility.cpp
 	Variant.cpp
 )
