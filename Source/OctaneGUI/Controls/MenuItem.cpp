@@ -46,6 +46,7 @@ std::shared_ptr<Menu> MenuItem::CreateMenu()
 	if (!m_Menu)
 	{
 		m_Menu = std::make_shared<Menu>(GetWindow());
+		m_Menu->SetParent(this);
 	}
 
 	return m_Menu;
@@ -155,8 +156,10 @@ void MenuItem::OnLoad(const Json& Root)
 	const Json& Items = Root["Items"];
 	if (!Items.IsNull())
 	{
+		Json Copy = Root;
+		Copy["ID"] = Json();
 		const std::shared_ptr<Menu>& NewMenu = CreateMenu();
-		NewMenu->OnLoad(Root);
+		NewMenu->OnLoad(Copy);
 	}
 }
 
