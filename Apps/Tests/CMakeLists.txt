@@ -15,6 +15,7 @@ add_executable(
 	Scrollable.cpp
 	TestSuite.cpp
 	Text.cpp
+	TextInput.cpp
 	Utility.cpp
 	Variant.cpp
 )
