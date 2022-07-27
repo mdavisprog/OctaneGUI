@@ -10,6 +10,7 @@ add_executable(
 	Json.cpp
 	ListBox.cpp
 	Main.cpp
+	MenuBar.cpp
 	RadioButton.cpp
 	Scrollable.cpp
 	TestSuite.cpp
