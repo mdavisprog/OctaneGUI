@@ -70,5 +70,13 @@ void MouseClick(OctaneGUI::Application& Application, const OctaneGUI::Vector2& P
 	Application.GetMainWindow()->OnMouseReleased(Position, Button);
 }
 
+void TextEvent(OctaneGUI::Application& Application, const std::u32string& Text)
+{
+	for (const char32_t Ch : Text)
+	{
+		Application.GetMainWindow()->OnText((uint32_t)Ch);
+	}
+}
+
 }
 }

@@ -26,6 +26,8 @@ SOFTWARE.
 
 #pragma once
 
+#include <string>
+
 namespace OctaneGUI
 {
 class Application;
@@ -42,6 +44,7 @@ void Load(OctaneGUI::Application& Application, const char* BodyJson, OctaneGUI::
 void Load(OctaneGUI::Application& Application, const char* MenuBarJson, const char* BodyJson, OctaneGUI::ControlList& List);
 void MouseMove(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Position);
 void MouseClick(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Position, OctaneGUI::Mouse::Button Button = OctaneGUI::Mouse::Button::Left);
+void TextEvent(OctaneGUI::Application& Application, const std::u32string& Text);
 
 }
 }

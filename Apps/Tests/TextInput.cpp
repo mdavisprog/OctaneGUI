@@ -59,6 +59,20 @@ TEST_CASE(MultiLine_ScrollBars,
 	return TextInput->Scrollable()->HorizontalScrollBar()->ShouldPaint() && TextInput->Scrollable()->VerticalScrollBar()->ShouldPaint();
 })
 
+TEST_CASE(TextEvent,
+{
+	OctaneGUI::ControlList List;
+	Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\"}", List);
+
+	const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+	Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
+	Application.Update();
+
+	Utility::TextEvent(Application, U"Well Hello Friends");
+
+	return TextInput->GetString() == U"Well Hello Friends";
+})
+
 )
 
 }
