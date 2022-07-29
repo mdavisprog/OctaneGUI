@@ -54,6 +54,7 @@ public:
 	std::shared_ptr<MenuItem> GetItem(const char* InText) const;
 	Menu& AddSeparator();
 	Menu& Close();
+	Vector2 Margins() const;
 
 	void GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const;
 

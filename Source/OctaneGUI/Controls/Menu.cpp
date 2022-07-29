@@ -122,6 +122,11 @@ Menu& Menu::Close()
 	return *this;
 }
 
+Vector2 Menu::Margins() const
+{
+	return GetProperty(ThemeProperties::Menu_Margins).Vector();
+}
+
 void Menu::GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const
 {
 	Items.insert(Items.end(), m_Items.begin(), m_Items.end());
@@ -139,7 +144,7 @@ void Menu::GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const
 
 void Menu::Resize()
 {
-	const Vector2 Margins = GetProperty(ThemeProperties::Menu_Margins).Vector();
+	const Vector2 Margins = this->Margins();
 	const float RightPadding = GetProperty(ThemeProperties::Menu_RightPadding).Float();
 
 	Vector2 Size = { GetSize().X + Margins.X, Margins.Y * 2.0f };
@@ -224,8 +229,7 @@ void Menu::OnHovered(const MenuItem& Item)
 
 	SetSelected(m_Menu, true);
 
-	const Vector2 Position = Item.GetPosition() + Vector2(GetSize().X, 0.0f);
-	Item.OpenMenu(Position);
+	Item.OpenMenu({ GetSize().X, Item.GetPosition().Y });
 	InsertControl(m_Menu);
 }
 
