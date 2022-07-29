@@ -28,6 +28,8 @@ SOFTWARE.
 #include "TestSuite.h"
 #include "Utility.h"
 
+#include <cmath>
+
 namespace Tests
 {
 
@@ -133,6 +135,58 @@ TEST_CASE(SubMenu,
 	
 	VERIFYF(IsTwoMenuSelected, "The sub-menu was not clicked!");
 	VERIFYF(!Window->IsPopupOpen(), "Menus are still open when they should not be!");
+
+	return true;
+})
+
+TEST_CASE(Position,
+{
+	OctaneGUI::ControlList List;
+	Utility::Load(Application, MenuBarJson, "", List);
+
+	const std::shared_ptr<OctaneGUI::Window> Window = Application.GetMainWindow();
+	const std::shared_ptr<OctaneGUI::MenuItem> FileMenu = List.To<OctaneGUI::MenuItem>("File");
+	const std::shared_ptr<OctaneGUI::MenuItem> HelpMenu = List.To<OctaneGUI::MenuItem>("Help");
+
+	const OctaneGUI::Vector2 FilePosition = FileMenu->GetAbsolutePosition();
+	Utility::MouseClick(Application, FilePosition);
+	Application.Update();
+
+	const OctaneGUI::Vector2 FileMenuPos = FileMenu->GetMenu()->GetAbsolutePosition();
+	VERIFYF(FilePosition.X == FileMenuPos.X, "File menu's X position '%.2f' does not match the label '%.2f'!", FileMenuPos.X, FilePosition.X);
+	VERIFYF(FileMenuPos.Y == FileMenu->GetSize().Y, "File menu's Y position '%.2f' is not below the menu bar '%.2f'!", FileMenuPos.Y, FileMenu->GetSize().Y);
+
+	const OctaneGUI::Vector2 HelpPosition = HelpMenu->GetAbsolutePosition();
+	Utility::MouseMove(Application, HelpPosition);
+	Application.Update();
+
+	const OctaneGUI::Vector2 HelpMenuPos = HelpMenu->GetMenu()->GetAbsolutePosition();
+	VERIFYF(HelpPosition.X == HelpMenuPos.X, "Help menu's X position '%.2f' does not match the label '%.2f'!", HelpMenuPos.X, HelpPosition.X);
+	VERIFYF(HelpMenuPos.Y == HelpMenu->GetSize().Y, "File menu's Y position '%.2f' is not below the menu bar '%.2f'!", HelpMenuPos.Y, HelpMenu->GetSize().Y);
+
+	return true;
+})
+
+TEST_CASE(SubMenuPosition,
+{
+	OctaneGUI::ControlList List;
+	Utility::Load(Application, MenuBarJson, "", List);
+
+	const std::shared_ptr<OctaneGUI::MenuItem> HelpMenu = List.To<OctaneGUI::MenuItem>("Help");
+	const std::shared_ptr<OctaneGUI::MenuItem> OneMenu = List.To<OctaneGUI::MenuItem>("Help.One");
+
+	Utility::MouseClick(Application, HelpMenu->GetAbsolutePosition());
+	Application.Update();
+
+	const OctaneGUI::Vector2 Margins = HelpMenu->GetMenu()->Margins();
+	const OctaneGUI::Vector2 OnePosition = OneMenu->GetAbsolutePosition();
+	Utility::MouseMove(Application, OnePosition);
+	Application.Update();
+
+	const OctaneGUI::Vector2 OneMenuPos = OneMenu->GetMenu()->GetAbsolutePosition() + OctaneGUI::Vector2(0.0f, Margins.Y);
+	const float Expected = std::roundf(OnePosition.X + OneMenu->GetSize().X);
+	VERIFYF(Expected == OneMenuPos.X, "One's menu X position '%.2f' is not at the expected position '%.2f'!", OneMenuPos.X, Expected);
+	VERIFYF(OnePosition.Y == OneMenuPos.Y, "One's menu Y position '%.2f' is not at the expected position '%.2f'!", OneMenuPos.Y, OnePosition.Y);
 
 	return true;
 })
