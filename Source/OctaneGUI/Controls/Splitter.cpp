@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "Splitter.h"
 #include "../Json.h"
+#include "../Window.h"
 #include "HorizontalContainer.h"
 #include "Separator.h"
 #include "VerticalContainer.h"
@@ -47,6 +48,7 @@ public:
 
 	virtual void OnMouseMove(const Vector2& Position) override
 	{
+		bool UpdateMouseCursor = false;
 		if (m_Drag)
 		{
 			const Vector2 Delta = Position - m_Anchor;
@@ -59,9 +61,19 @@ public:
 				m_Owner->SetSplitterPosition(m_Owner->m_Separator->GetPosition().Y + Delta.Y);
 			}
 			m_Owner->InvalidateLayout();
+			UpdateMouseCursor = true;
+		}
+		else
+		{
+			UpdateMouseCursor = m_Owner->m_Separator->Contains(Position);
 		}
 
 		m_Anchor = Position;
+
+		if (UpdateMouseCursor)
+		{
+			GetWindow()->SetMouseCursor(MouseCursor());
+		}
 	}
 
 	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override
@@ -80,7 +92,19 @@ public:
 		m_Drag = false;
 	}
 
+	virtual void OnMouseLeave() override
+	{
+		GetWindow()->SetMouseCursor(Mouse::Cursor::Arrow);
+	}
+
 private:
+	Mouse::Cursor MouseCursor() const
+	{
+		return m_Owner->GetOrientation() == Orientation::Vertical
+			? Mouse::Cursor::SizeWE
+			: Mouse::Cursor::SizeNS;
+	}
+
 	Splitter* m_Owner { nullptr };
 	bool m_Drag { false };
 	Vector2 m_Anchor {};
