@@ -421,8 +421,19 @@ bool Window::IsKeyPressed(Keyboard::Key Key) const
 
 Window& Window::SetMouseCursor(Mouse::Cursor Cursor)
 {
+	if (m_MouseCursor == Cursor)
+	{
+		return *this;
+	}
+
+	m_MouseCursor = Cursor;
 	m_Application->SetMouseCursor(this, Cursor);
 	return *this;
+}
+
+Mouse::Cursor Window::MouseCursor() const
+{
+	return m_MouseCursor;
 }
 
 void Window::Update()

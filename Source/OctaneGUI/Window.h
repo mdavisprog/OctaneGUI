@@ -113,6 +113,7 @@ public:
 	Vector2 GetMousePosition() const;
 	bool IsKeyPressed(Keyboard::Key Key) const;
 	Window& SetMouseCursor(Mouse::Cursor Cursor);
+	Mouse::Cursor MouseCursor() const;
 
 	void Update();
 	void DoPaint(Paint& Brush);
@@ -159,6 +160,7 @@ private:
 	std::string m_Title {};
 	std::string m_ID {};
 	Vector2 m_MousePosition {};
+	Mouse::Cursor m_MouseCursor { Mouse::Cursor::Arrow };
 	Rect m_Bounds {};
 	std::shared_ptr<WindowContainer> m_Container { nullptr };
 	bool m_Repaint { false };
