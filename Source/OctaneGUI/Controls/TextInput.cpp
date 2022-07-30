@@ -125,6 +125,16 @@ public:
 		m_Input->MouseReleased(Position, Button);
 	}
 
+	virtual void OnMouseEnter() override
+	{
+		GetWindow()->SetMouseCursor(Mouse::Cursor::IBeam);
+	}
+
+	virtual void OnMouseLeave() override
+	{
+		GetWindow()->SetMouseCursor(Mouse::Cursor::Arrow);
+	}
+
 	virtual void OnText(uint32_t Code) override
 	{
 		m_Input->AddText(Code);
