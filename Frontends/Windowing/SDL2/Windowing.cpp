@@ -77,6 +77,20 @@ OctaneGUI::Mouse::Button GetMouseButton(uint8_t Button)
 	return OctaneGUI::Mouse::Button::Left;
 }
 
+SDL_SystemCursor GetMouseCursor(OctaneGUI::Mouse::Cursor Cursor)
+{
+	switch (Cursor)
+	{
+	case OctaneGUI::Mouse::Cursor::IBeam: return SDL_SYSTEM_CURSOR_IBEAM;
+	case OctaneGUI::Mouse::Cursor::Arrow:
+	default: break;
+	}
+
+	return SDL_SYSTEM_CURSOR_ARROW;
+}
+
+std::unordered_map<SDL_SystemCursor, SDL_Cursor*> g_SystemCursors {};
+
 bool Initialize()
 {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
@@ -84,6 +98,9 @@ bool Initialize()
 		printf("Failed to initialize SDL: %s\n", SDL_GetError());
 		return false;
 	}
+
+	g_SystemCursors[SDL_SYSTEM_CURSOR_ARROW] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
+	g_SystemCursors[SDL_SYSTEM_CURSOR_IBEAM] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_IBEAM);
 
 	return true;
 }
@@ -255,6 +272,11 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 
 void Exit()
 {
+	for (const std::pair<SDL_SystemCursor, SDL_Cursor*>& SystemCursor : g_SystemCursors)
+	{
+		SDL_FreeCursor(SystemCursor.second);
+	}
+
 	for (const std::pair<OctaneGUI::Window*, SDL_Window*>& Item : g_Windows)
 	{
 		SDL_DestroyWindow(Item.second);
@@ -277,6 +299,24 @@ void SetWindowTitle(OctaneGUI::Window* Window, const char* Title)
 	}
 
 	SDL_SetWindowTitle(g_Windows[Window], Title);
+}
+
+void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor)
+{
+	if (g_Windows.find(Window) == g_Windows.end())
+	{
+		return;
+	}
+
+	SDL_SystemCursor SystemCursor = GetMouseCursor(Cursor);
+	
+	if (g_SystemCursors.find(SystemCursor) == g_SystemCursors.end())
+	{
+		printf("System cursor %d not supported or implemented!\n", (int)SystemCursor);
+		return;
+	}
+
+	SDL_SetCursor(g_SystemCursors[SystemCursor]);
 }
 
 SDL_Window* Get(OctaneGUI::Window* Window)

@@ -26,6 +26,8 @@ SOFTWARE.
 
 #pragma once
 
+#include "OctaneGUI/Mouse.h"
+
 #include <string>
 
 namespace OctaneGUI
@@ -46,5 +48,6 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window);
 void Exit();
 std::u32string GetClipboardContents();
 void SetWindowTitle(OctaneGUI::Window* Window, const char* Title);
+void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor);
 
 }

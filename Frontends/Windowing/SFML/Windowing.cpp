@@ -82,6 +82,25 @@ OctaneGUI::Mouse::Button GetMouseButton(sf::Mouse::Button Button)
 	return OctaneGUI::Mouse::Button::Left;
 }
 
+sf::Cursor::Type GetCursorType(OctaneGUI::Mouse::Cursor Cursor)
+{
+	switch (Cursor)
+	{
+	case OctaneGUI::Mouse::Cursor::IBeam: return sf::Cursor::Text;
+	case OctaneGUI::Mouse::Cursor::Arrow:
+	default: break;
+	}
+
+	return sf::Cursor::Arrow;
+}
+
+void SetMouseCursor(const std::shared_ptr<sf::RenderWindow>& Window, sf::Cursor::Type Type)
+{
+	sf::Cursor Cursor;
+	Cursor.loadFromSystem(Type);
+	Window->setMouseCursor(Cursor);
+}
+
 bool Initialize()
 {
 	return true;
@@ -246,6 +265,16 @@ void SetWindowTitle(OctaneGUI::Window* Window, const char* Title)
 	}
 
 	g_Windows[Window]->setTitle(Title);
+}
+
+void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor)
+{
+	if (g_Windows.find(Window) == g_Windows.end())
+	{
+		return;
+	}
+
+	SetMouseCursor(g_Windows[Window], GetCursorType(Cursor));
 }
 
 const std::shared_ptr<sf::RenderWindow>& Get(OctaneGUI::Window* Window)

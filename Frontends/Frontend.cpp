@@ -75,6 +75,11 @@ void OnSetWindowTitle(OctaneGUI::Window* Window, const char* Title)
 	Windowing::SetWindowTitle(Window, Title);
 }
 
+void OnSetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor)
+{
+	Windowing::SetMouseCursor(Window, Cursor);
+}
+
 void Initialize(OctaneGUI::Application& Application)
 {
 	Windowing::Initialize();
@@ -88,7 +93,8 @@ void Initialize(OctaneGUI::Application& Application)
 		.SetOnLoadTexture(OnLoadTexture)
 		.SetOnExit(OnExit)
 		.SetOnGetClipboardContents(OnGetClipboardContents)
-		.SetOnSetWindowTitle(OnSetWindowTitle);
+		.SetOnSetWindowTitle(OnSetWindowTitle)
+		.SetOnSetMouseCursor(OnSetMouseCursor);
 }
 
 }
