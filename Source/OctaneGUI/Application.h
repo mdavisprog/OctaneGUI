@@ -28,6 +28,7 @@ SOFTWARE.
 
 #include "CallbackDefs.h"
 #include "Keyboard.h"
+#include "Mouse.h"
 #include "TextureCache.h"
 #include "Vector2.h"
 
@@ -56,6 +57,7 @@ public:
 	typedef std::function<uint32_t(const std::vector<uint8_t>&, uint32_t, uint32_t)> OnLoadTextureSignature;
 	typedef std::function<std::u32string(void)> OnGetClipboardContentsSignature;
 	typedef std::function<void(Window*, const char*)> OnSetWindowTitleSignature;
+	typedef std::function<void(Window*, Mouse::Cursor)> OnSetMouseCursorSignature;
 
 	Application();
 	virtual ~Application();
@@ -78,6 +80,7 @@ public:
 	TextureCache& GetTextureCache();
 	bool IsKeyPressed(Keyboard::Key Key) const;
 	std::u32string ClipboardContents() const;
+	Application& SetMouseCursor(Window* Target, Mouse::Cursor Cursor);
 
 	Application& SetOnCreateWindow(OnWindowSignature&& Fn);
 	Application& SetOnDestroyWindow(OnWindowSignature&& Fn);
@@ -87,6 +90,7 @@ public:
 	Application& SetOnExit(OnEmptySignature&& Fn);
 	Application& SetOnGetClipboardContents(OnGetClipboardContentsSignature&& Fn);
 	Application& SetOnSetWindowTitle(OnSetWindowTitleSignature&& Fn);
+	Application& SetOnSetMouseCursor(OnSetMouseCursorSignature&& Fn);
 
 private:
 	void OnPaint(Window* InWindow, const VertexBuffer& Buffer);
@@ -110,6 +114,7 @@ private:
 	OnEmptySignature m_OnExit { nullptr };
 	OnGetClipboardContentsSignature m_OnGetClipboardContents { nullptr };
 	OnSetWindowTitleSignature m_OnSetWindowTitle { nullptr };
+	OnSetMouseCursorSignature m_OnSetMouseCursor { nullptr };
 };
 
 }

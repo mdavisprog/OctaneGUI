@@ -319,6 +319,21 @@ std::u32string Application::ClipboardContents() const
 	return U"";
 }
 
+Application& Application::SetMouseCursor(Window* Target, Mouse::Cursor Cursor)
+{
+	if (Target == nullptr)
+	{
+		return *this;
+	}
+
+	if (m_OnSetMouseCursor)
+	{
+		m_OnSetMouseCursor(Target, Cursor);
+	}
+
+	return *this;
+}
+
 Application& Application::SetOnCreateWindow(OnWindowSignature&& Fn)
 {
 	m_OnCreateWindow = std::move(Fn);
@@ -364,6 +379,12 @@ Application& Application::SetOnGetClipboardContents(OnGetClipboardContentsSignat
 Application& Application::SetOnSetWindowTitle(OnSetWindowTitleSignature&& Fn)
 {
 	m_OnSetWindowTitle = std::move(Fn);
+	return *this;
+}
+
+Application& Application::SetOnSetMouseCursor(OnSetMouseCursorSignature&& Fn)
+{
+	m_OnSetMouseCursor = std::move(Fn);
 	return *this;
 }
 

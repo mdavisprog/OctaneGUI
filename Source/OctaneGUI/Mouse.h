@@ -47,6 +47,12 @@ public:
 		Double,
 		Triple
 	};
+
+	enum class Cursor : uint8_t
+	{
+		Arrow,
+		IBeam,
+	};
 };
 
 }

@@ -112,6 +112,7 @@ public:
 	TextureCache& GetTextureCache() const;
 	Vector2 GetMousePosition() const;
 	bool IsKeyPressed(Keyboard::Key Key) const;
+	Window& SetMouseCursor(Mouse::Cursor Cursor);
 
 	void Update();
 	void DoPaint(Paint& Brush);

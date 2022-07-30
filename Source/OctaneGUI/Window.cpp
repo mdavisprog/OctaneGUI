@@ -419,6 +419,12 @@ bool Window::IsKeyPressed(Keyboard::Key Key) const
 	return m_Application->IsKeyPressed(Key);
 }
 
+Window& Window::SetMouseCursor(Mouse::Cursor Cursor)
+{
+	m_Application->SetMouseCursor(this, Cursor);
+	return *this;
+}
+
 void Window::Update()
 {
 	PROFILER_SAMPLE_GROUP((std::string("Window::Update (") + GetTitle() + ")").c_str());
