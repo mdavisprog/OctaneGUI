@@ -3,7 +3,7 @@
 SDL2=true
 SFML=false
 NINJA=false
-CONFIGURATION=Release
+CONFIGURATION=Debug
 TOOLS=OFF
 WINDOWING=SDL2
 RENDERING=OpenGL
@@ -23,7 +23,7 @@ for Var in "$@"
 do
 	Var=$(echo $Var | tr '[:upper:]' '[:lower:]')
 	case ${Var} in
-        debug) CONFIGURATION=Debug ;;
+        release) CONFIGURATION=Release ;;
         tools) TOOLS=ON ;;
         sfml) SFML=true ;;
 		sdl2) SDL2=true ;;
@@ -48,7 +48,7 @@ fi
 
 if [ "$HELP" = true ] ; then
 	echo "This is a list of arguments and a description for each:"
-	echo "debug          Sets the configuration to Debug. The default is Release."
+	echo "release        Sets the configuration to Release. The default is Debug."
 	echo "tools          Compiles with tools enabled. This can be compiled in any configuration."
 	echo "ninja          Use the ninja build system instead of the default (make). The path"
 	echo "               to the ninja build system must be added to the PATH environment variable."

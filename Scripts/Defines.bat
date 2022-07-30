@@ -3,7 +3,7 @@
 SET SDL2=FALSE
 SET SFML=TRUE
 SET NINJA=FALSE
-SET CONFIGURATION=Release
+SET CONFIGURATION=Debug
 SET BUILD_TOOLS=OFF
 SET CLEAN=FALSE
 SET WINDOWING=SFML
@@ -17,7 +17,7 @@ SET SOURCE_PATH=..
 
 :PARSE_ARGS
 IF NOT "%1" == "" (
-	IF /I "%1" == "Debug" SET CONFIGURATION=Debug
+	IF /I "%1" == "Release" SET CONFIGURATION=Release
 	IF /I "%1" == "Tools" SET BUILD_TOOLS=ON
 	IF /I "%1" == "SDL2" SET SDL2=TRUE
 	IF /I "%1" == "SFML" SET SFML=TRUE
@@ -47,7 +47,7 @@ IF "%NINJA%" == "TRUE" (
 
 IF "%HELP%" == "TRUE" (
 	ECHO This is a list of arguments and a description for each:
-	ECHO debug          Sets the configuration to Debug. The default is Release.
+	ECHO release        Sets the configuration to Release. The default is Debug.
 	ECHO tools          Compiles with tools enabled. This can be compiled in any configuration.
 	ECHO ninja          Use the ninja build system instead of the default (msbuild^). The path
 	ECHO                to the ninja build system must be added to the PATH environment variable.
