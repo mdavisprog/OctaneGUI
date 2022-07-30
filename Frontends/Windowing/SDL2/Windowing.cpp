@@ -82,6 +82,8 @@ SDL_SystemCursor GetMouseCursor(OctaneGUI::Mouse::Cursor Cursor)
 	switch (Cursor)
 	{
 	case OctaneGUI::Mouse::Cursor::IBeam: return SDL_SYSTEM_CURSOR_IBEAM;
+	case OctaneGUI::Mouse::Cursor::SizeWE: return SDL_SYSTEM_CURSOR_SIZEWE;
+	case OctaneGUI::Mouse::Cursor::SizeNS: return SDL_SYSTEM_CURSOR_SIZENS;
 	case OctaneGUI::Mouse::Cursor::Arrow:
 	default: break;
 	}
@@ -101,6 +103,8 @@ bool Initialize()
 
 	g_SystemCursors[SDL_SYSTEM_CURSOR_ARROW] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
 	g_SystemCursors[SDL_SYSTEM_CURSOR_IBEAM] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_IBEAM);
+	g_SystemCursors[SDL_SYSTEM_CURSOR_SIZEWE] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEWE);
+	g_SystemCursors[SDL_SYSTEM_CURSOR_SIZENS] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENS);
 
 	return true;
 }

@@ -52,6 +52,8 @@ public:
 	{
 		Arrow,
 		IBeam,
+		SizeWE,
+		SizeNS,
 	};
 };
 

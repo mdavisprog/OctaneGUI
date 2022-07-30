@@ -87,6 +87,8 @@ sf::Cursor::Type GetCursorType(OctaneGUI::Mouse::Cursor Cursor)
 	switch (Cursor)
 	{
 	case OctaneGUI::Mouse::Cursor::IBeam: return sf::Cursor::Text;
+	case OctaneGUI::Mouse::Cursor::SizeWE: return sf::Cursor::SizeHorizontal;
+	case OctaneGUI::Mouse::Cursor::SizeNS: return sf::Cursor::SizeVertical;
 	case OctaneGUI::Mouse::Cursor::Arrow:
 	default: break;
 	}
