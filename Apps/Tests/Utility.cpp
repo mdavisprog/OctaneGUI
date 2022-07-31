@@ -58,6 +58,12 @@ void Load(OctaneGUI::Application& Application, const char* MenuBarJson, const ch
 	Load(Application, MenuBarJson, BodyJson, List, 1280, 720);
 }
 
+void KeyEvent(OctaneGUI::Application& Application, OctaneGUI::Keyboard::Key Key)
+{
+	Application.GetMainWindow()->OnKeyPressed(Key);
+	Application.GetMainWindow()->OnKeyReleased(Key);
+}
+
 void MouseMove(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Position)
 {
 	Application.GetMainWindow()->OnMouseMove(Position);
