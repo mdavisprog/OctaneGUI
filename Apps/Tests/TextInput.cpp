@@ -73,6 +73,54 @@ TEST_CASE(TextEvent,
 	return TextInput->GetString() == U"Well Hello Friends";
 })
 
+TEST_CASE(MoveCursorRightNextLine,
+{
+	OctaneGUI::ControlList List;
+	Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Multiline\": true, \"Text\": {\"Text\": \"Hello\nFriends\"}}", List);
+
+	const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+	Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
+	Application.Update();
+
+	for (int I = 0; I < 5; I++)
+	{
+		Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Right);
+
+		VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line (%zu) is not 0!\n", TextInput->LineNumber());
+		VERIFYF(TextInput->Column() == I + 1, "TextInput cursor column (%zu) is not %d\n", TextInput->Column(), I + 1);
+	}
+
+	Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Right);
+	VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line (%zu) is not 1!\n", TextInput->LineNumber());
+	VERIFYF(TextInput->Column() == 0, "TextInput cursor line (%zu) is not 0\n", TextInput->Column());
+
+	return true;
+})
+
+TEST_CASE(MoveCursorLeftPrevLine,
+{
+	OctaneGUI::ControlList List;
+	Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Multiline\": true, \"Text\": {\"Text\": \"Hello\nFriends\"}}", List);
+
+	const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+	Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
+	Application.Update();
+
+	for (int I = 0; I < 6; I++)
+	{
+		Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Right);
+	}
+
+	VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line (%zu) is not 1!\n", TextInput->LineNumber());
+	VERIFYF(TextInput->Column() == 0, "TextInput cursor line (%zu) is not 0\n", TextInput->Column());
+
+	Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Left);
+	VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line (%zu) is not 0!\n", TextInput->LineNumber());
+	VERIFYF(TextInput->Column() == 5, "TextInput cursor line (%zu) is not 5\n", TextInput->Column());
+
+	return true;
+})
+
 )
 
 }
