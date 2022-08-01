@@ -84,36 +84,57 @@ The following tables displays what platforms are supported and which windowing a
 
 Below are instructions for how to build this project out of the repository itself or integrate it into other projects.
 
-## Repository
+## Prerequisites
 
-Before setting up the build process, some external libraries are needed. Refer to the [table](#Support) to see which libraries are desired for the target platform. The project uses CMake to generate projects and can be downloaded [here](https://cmake.org/download/).
+Before beginning the process of building the project, some tools will be needed. Below is a list of the tools that will need to be installed:
 
-* SDL2
-	* The development packages can be downloaded from [here](https://libsdl.org/download-2.0.php).
-	* The downloaded package doesn't come with any CMake files, however, there is a great resource provided [here](https://trenki2.github.io/blog/2017/06/02/using-sdl2-with-cmake/).
-* SFML
-	* The development packages can be downloaded from [here](https://www.sfml-dev.org/download/sfml/2.5.1/). Some compiler versions may not be available here, which may require building from source with the latest compiler.
+* [CMake](https://cmake.org/download/) - This is a tool that helps with generating projects. It is a common tool used for many open source projects.
+* Compiler - A C++ compiler is needed to compile the library and its apps. This is platform specific and the compiler for each platform is listed below.
+	* [Visual Studio](https://visualstudio.microsoft.com/) - This is the compiler used on Windows. A Community version is offered for free which provides the compiler along with the IDE. The IDE is not required as the build scripts will find the proper tools needed to compile.
+		* Visual Studio Build Tools - This is a download offered that will only install the compiler and other tools needed to compile the project without the IDE.
+	* GCC - This is the compiler used on Linux. Please refer to your Linux distribution for proper instructions on how to install these tools.
+	* XCode - This project has used 'Command Line Tools for Xcode' to build on Macs.
+* (Optional) [Ninja](https://ninja-build.org/) - This is a light-weight build system that is supported on all platforms. If this is not used, then 'msbuild'/Visual Studio is used on Windows and 'Make' is used on other platforms.
+* An installation of either the [SDL2](https://libsdl.org/) or [SFML](https://www.sfml-dev.org/) development libraries.
 
-Use the following CMake command to genereate the project while replacing any values denoted in curly braces {}.
+## Scripts
 
+The repository provides shell scripts and batch files to make building the project and its applications easier. These files can be found in the 'Scripts' folder. The 'Build' script is the main script to run when building this project. This can be run from any directory and accpets a number of arguments. Below is the list of arguments and a desription for each:
+
+* release - Sets the configuration to Release. The default is Debug.
+* tools - Compiles with tools enabled. This can be compiled in any configuration.
+* ninja - Use the ninja build system instead of the default (make or msbuild). The path to the ninja build system must be added to the PATH environment variable.
+* clean - Cleans the intermediate files before generating and building. This forces a full rebuild of the project.
+* noapps - Only compiles the library.
+* sfml - Builds the apps using the SFML library. The SFML_DIR variable must be set for the generator to locate the library.
+* sdl2 - Builds the app using the SDL library. The SDL2 cmake and library paths must be locatable by the generator through either the environment variables or the SDL2_DIR and SDL2_MODULE_PATH variables.
+* help - Displays this help message.
+
+On Windows, a VCVars.bat file is called which will load Visual Studio tools into the current environment. This will attempt to load Visual Studio 2019 first, then 2017. More versions of Visual Studio will be added in the future.
+
+The path to CMake/Ninja will need to be set in the PATH environment variable on your system. This may be set during the installation of these tools. The PATH can also be set in your own script before calling the 'Build' script. Below are example scripts that can be used to build the project.
+
+```batch
+@ECHO OFF
+SETLOCAL ENABLEDELAYEDEXPANSION
+
+SET PATH=%PATH%;"PATH\TO\CMake\bin\"
+SET PATH=%PATH%;"PATH\TO\Ninja\"
+SET SFML_DIR=PATH\TO\SFML\lib\cmake\SFML
+SET SDL2_MODULE_PATH="PATH\TO\SDL2\cmake"
+SET SDL2_DIR="PATH\TO\SDL2"
+
+CALL Scripts\Build.bat %*
+
+ENDLOCAL
 ```
-cmake -S {PROJECT_PATH} -DCMAKE_BUILD_TYPE={CONFIGURATION} -DTOOLS={TOOLS_VALUE} -DWINDOWING={WINDOWING_LIBRARY} -DRENDERING={RENDERING_LIBRARY} -DCMAKE_MODULE_PATH={LIBRARY_CMAKE_LOCATION} {LIBRARY_SPECIFIC_OPTIONS}
+
+```bash
+#!/bin/bash
+PATH="$PATH:/PATH/TO/CMake/bin:/PATH/TO/Ninja"
+source Scripts/Build.sh
 ```
 
-* PROJECT_PATH - The location of the repository.
-* CONFIGURATION - This should either be Release or Debug. The default value is Release.
-* TOOLS_VALUE - Should be ON or OFF. This determines if the 'Tools' directory is included when compiling the OctaneGUI library. The default value is OFF.
-* WINDOWING_LIBRARY - Can be one of SDL2 or SFML. The default on Mac is SDL2 and Windows/Linux is SFML.
-* RENDERING_LIBRARY - Can be one of SFML, OpenGL, or Metal. The default on Mac is Metal and Windows/Linux is SFML.
-* LIBRARY_CMAKE_LOCATION - This should be the location of the associated cmake file for the desired library. This may not be needed on some systems as CMake will attempt to find the appropriate cmake files in system directories.
-* LIBRARY_SPECIFIC_OPTIONS - This is an option that is required by the desired library. This may be the the location of the libraries headers and linkable libraries through the SDL2_DIR or SFML_DIR variables.
-
-This command will generate the files needed to build the project for the desired build system such as Visual Studio or Make.
-
-Once the project is built, several binaries are generated in the bin folder. These are the applications found in the 'Apps' folder. Dependencies such as dynamic link libraries may need to be copied into the bin folder to run these applications.
-
-In the future, a 'Scripts' folder may be introduced to provide example batch or bash scripts that can be tailored for use to custom build systems.
-
-### Integration
+## Integration
 
 TODO
