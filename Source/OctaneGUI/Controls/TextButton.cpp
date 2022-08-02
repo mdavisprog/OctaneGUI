@@ -32,97 +32,97 @@ namespace OctaneGUI
 {
 
 TextButton::TextButton(Window* InWindow)
-	: Button(InWindow)
+    : Button(InWindow)
 {
-	m_Text = std::make_shared<Text>(InWindow);
-	m_Text->SetParent(this);
+    m_Text = std::make_shared<Text>(InWindow);
+    m_Text->SetParent(this);
 }
 
 Button* TextButton::SetText(const char* InText)
 {
-	m_Text->SetText(InText);
-	UpdateSize();
-	return this;
+    m_Text->SetText(InText);
+    UpdateSize();
+    return this;
 }
 
 const char32_t* TextButton::GetText() const
 {
-	return m_Text->GetText();
+    return m_Text->GetText();
 }
 
 void TextButton::SetWindow(Window* InWindow)
 {
-	Control::SetWindow(InWindow);
-	m_Text->SetWindow(InWindow);
+    Control::SetWindow(InWindow);
+    m_Text->SetWindow(InWindow);
 }
 
 void TextButton::OnPaint(Paint& Brush) const
 {
-	Button::OnPaint(Brush);
+    Button::OnPaint(Brush);
 
-	m_Text->OnPaint(Brush);
+    m_Text->OnPaint(Brush);
 }
 
 void TextButton::Update()
 {
-	if (IsDisabled())
-	{
-		m_Text->SetProperty(ThemeProperties::Text, GetProperty(ThemeProperties::Text_Disabled));
-	}
-	else
-	{
-		m_Text->ClearProperty(ThemeProperties::Text);
-	}
+    if (IsDisabled())
+    {
+        m_Text->SetProperty(ThemeProperties::Text, GetProperty(ThemeProperties::Text_Disabled));
+    }
+    else
+    {
+        m_Text->ClearProperty(ThemeProperties::Text);
+    }
 
-	UpdateTextPosition(IsPressed());
+    UpdateTextPosition(IsPressed());
 }
 
 void TextButton::OnLoad(const Json& Root)
 {
-	Button::OnLoad(Root);
+    Button::OnLoad(Root);
 
-	m_Text->OnLoad(Root["Text"]);
-	UpdateSize();
+    m_Text->OnLoad(Root["Text"]);
+    UpdateSize();
 }
 
 void TextButton::OnSave(Json& Root) const
 {
-	Button::OnSave(Root);
+    Button::OnSave(Root);
 
-	Json TextRoot(Json::Type::Object);
-	m_Text->OnSave(TextRoot);
-	Root["Text"] = std::move(TextRoot);
+    Json TextRoot(Json::Type::Object);
+    m_Text->OnSave(TextRoot);
+    Root["Text"] = std::move(TextRoot);
 }
 
 void TextButton::OnPressed()
 {
-	UpdateTextPosition(true);
+    UpdateTextPosition(true);
 }
 
 void TextButton::OnReleased()
 {
-	UpdateTextPosition(false);
+    UpdateTextPosition(false);
 }
 
 void TextButton::UpdateTextPosition(bool Pressed)
 {
-	const Vector2 Size = GetSize() * 0.5f;
-	const Vector2 TextSize = m_Text->GetSize() * 0.5f;
-	Vector2 Position = Size - TextSize;
+    const Vector2 Size = GetSize() * 0.5f;
+    const Vector2 TextSize = m_Text->GetSize() * 0.5f;
+    Vector2 Position = Size - TextSize;
 
-	if (GetProperty(ThemeProperties::Button_3D).Bool() && Pressed)
-	{
-		Position += Vector2(1.0f, 1.0f);
-	}
+    if (GetProperty(ThemeProperties::Button_3D).Bool() && Pressed)
+    {
+        Position += Vector2(1.0f, 1.0f);
+    }
 
-	m_Text->SetPosition(Position);
+    m_Text->SetPosition(Position);
 }
 
 void TextButton::UpdateSize()
 {
-	Vector2 Padding = GetProperty(ThemeProperties::Button_Padding).Vector();
-	Vector2 Size = m_Text->GetSize() + Padding * 2.0f;
-	SetSize(Size);
+    Vector2 Padding = GetProperty(ThemeProperties::Button_Padding).Vector();
+    Vector2 Size = m_Text->GetSize() + Padding * 2.0f;
+    SetSize(Size);
 }
 
 }

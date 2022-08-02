@@ -35,29 +35,29 @@ class Text;
 
 class RadioButton : public Button
 {
-	CLASS(RadioButton)
+    CLASS(RadioButton)
 
 public:
-	RadioButton(Window* InWindow);
+    RadioButton(Window* InWindow);
 
-	RadioButton& SetText(const char32_t* InText);
-	const char32_t* GetText() const;
+    RadioButton& SetText(const char32_t* InText);
+    const char32_t* GetText() const;
 
-	RadioButton& SetSelected(bool Selected);
-	bool IsSelected() const;
+    RadioButton& SetSelected(bool Selected);
+    bool IsSelected() const;
 
-	virtual void OnPaint(Paint& Brush) const override;
-	virtual void OnLoad(const Json& Root) override;
+    virtual void OnPaint(Paint& Brush) const override;
+    virtual void OnLoad(const Json& Root) override;
 
 protected:
-	virtual void OnClicked() override;
+    virtual void OnClicked() override;
 
 private:
-	void Layout();
+    void Layout();
 
-	std::shared_ptr<Text> m_Text { nullptr };
-	float m_Radius { 0.0f };
-	bool m_Selected { false };
+    std::shared_ptr<Text> m_Text { nullptr };
+    float m_Radius { 0.0f };
+    bool m_Selected { false };
 };
 
 }

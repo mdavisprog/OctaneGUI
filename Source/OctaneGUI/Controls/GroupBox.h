@@ -36,21 +36,21 @@ class Text;
 
 class GroupBox : public Container
 {
-	CLASS(GroupBox)
+    CLASS(GroupBox)
 
 public:
-	GroupBox(Window* InWindow);
+    GroupBox(Window* InWindow);
 
-	virtual Vector2 DesiredSize() const override;
+    virtual Vector2 DesiredSize() const override;
 
-	virtual void OnPaint(Paint& Brush) const override;
-	virtual void OnLoad(const Json& Root) override;
+    virtual void OnPaint(Paint& Brush) const override;
+    virtual void OnLoad(const Json& Root) override;
 
 private:
-	float TopMargin() const;
+    float TopMargin() const;
 
-	std::shared_ptr<Text> m_Text { nullptr };
-	std::shared_ptr<MarginContainer> m_Margins { nullptr };
+    std::shared_ptr<Text> m_Text { nullptr };
+    std::shared_ptr<MarginContainer> m_Margins { nullptr };
 };
 
 }

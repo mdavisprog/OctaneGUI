@@ -35,29 +35,29 @@ const Color Color::Black = { 0, 0, 0, 255 };
 
 Color Color::Parse(const Json& Root)
 {
-	if (!Root.IsArray())
-	{
-		return Color::White;
-	}
+    if (!Root.IsArray())
+    {
+        return Color::White;
+    }
 
-	return {
-		Root.Count() > 0 ? (uint8_t)Root[0u].Number() : (uint8_t)255,
-		Root.Count() > 1 ? (uint8_t)Root[1u].Number() : (uint8_t)255,
-		Root.Count() > 2 ? (uint8_t)Root[2u].Number() : (uint8_t)255,
-		Root.Count() > 3 ? (uint8_t)Root[3u].Number() : (uint8_t)255
-	};
+    return {
+        Root.Count() > 0 ? (uint8_t)Root[0u].Number() : (uint8_t)255,
+        Root.Count() > 1 ? (uint8_t)Root[1u].Number() : (uint8_t)255,
+        Root.Count() > 2 ? (uint8_t)Root[2u].Number() : (uint8_t)255,
+        Root.Count() > 3 ? (uint8_t)Root[3u].Number() : (uint8_t)255
+    };
 }
 
 Json Color::ToJson(const Color& Value)
 {
-	Json Result(Json::Type::Array);
+    Json Result(Json::Type::Array);
 
-	Result.Push((float)Value.R);
-	Result.Push((float)Value.G);
-	Result.Push((float)Value.B);
-	Result.Push((float)Value.A);
+    Result.Push((float)Value.R);
+    Result.Push((float)Value.G);
+    Result.Push((float)Value.B);
+    Result.Push((float)Value.A);
 
-	return std::move(Result);
+    return std::move(Result);
 }
 
 Color::Color()
@@ -65,21 +65,21 @@ Color::Color()
 }
 
 Color::Color(uint8_t InR, uint8_t InG, uint8_t InB, uint8_t InA)
-	: R(InR)
-	, G(InG)
-	, B(InB)
-	, A(InA)
+    : R(InR)
+    , G(InG)
+    , B(InB)
+    , A(InA)
 {
 }
 
 bool Color::operator==(const Color& Other) const
 {
-	return R == Other.R && G == Other.G && B == Other.B && A == Other.A;
+    return R == Other.R && G == Other.G && B == Other.B && A == Other.A;
 }
 
 bool Color::operator!=(const Color& Other) const
 {
-	return !(R == Other.R && G == Other.G && B == Other.B && A == Other.A);
+    return !(R == Other.R && G == Other.G && B == Other.B && A == Other.A);
 }
 
 }

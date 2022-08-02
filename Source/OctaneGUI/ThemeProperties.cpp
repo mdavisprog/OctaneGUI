@@ -37,24 +37,24 @@ ThemeProperties::ThemeProperties()
 
 bool ThemeProperties::Has(Property Index) const
 {
-	return m_Properties.find(Index) != m_Properties.end();
+    return m_Properties.find(Index) != m_Properties.end();
 }
 
 void ThemeProperties::Clear(Property Index)
 {
-	m_Properties.erase(Index);
+    m_Properties.erase(Index);
 }
 
 Variant& ThemeProperties::operator[](Property Index)
 {
-	assert(Index < Max);
-	return m_Properties[Index];
+    assert(Index < Max);
+    return m_Properties[Index];
 }
 
 const Variant& ThemeProperties::operator[](Property Index) const
 {
-	assert(Index < Max);
-	return m_Properties.at(Index);
+    assert(Index < Max);
+    return m_Properties.at(Index);
 }
 
 }

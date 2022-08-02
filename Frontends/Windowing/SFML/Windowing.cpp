@@ -42,246 +42,246 @@ std::unordered_map<OctaneGUI::Mouse::Button, uint8_t> g_MouseClicks {};
 
 OctaneGUI::Keyboard::Key GetKeyCode(sf::Keyboard::Key Key)
 {
-	switch (Key)
-	{
-	case sf::Keyboard::P: return OctaneGUI::Keyboard::Key::P;
-	case sf::Keyboard::V: return OctaneGUI::Keyboard::Key::V;
-	case sf::Keyboard::Escape: return OctaneGUI::Keyboard::Key::Escape;
-	case sf::Keyboard::Backspace: return OctaneGUI::Keyboard::Key::Backspace;
-	case sf::Keyboard::Delete: return OctaneGUI::Keyboard::Key::Delete;
-	case sf::Keyboard::Left: return OctaneGUI::Keyboard::Key::Left;
-	case sf::Keyboard::Right: return OctaneGUI::Keyboard::Key::Right;
-	case sf::Keyboard::Up: return OctaneGUI::Keyboard::Key::Up;
-	case sf::Keyboard::Down: return OctaneGUI::Keyboard::Key::Down;
-	case sf::Keyboard::Home: return OctaneGUI::Keyboard::Key::Home;
-	case sf::Keyboard::End: return OctaneGUI::Keyboard::Key::End;
-	case sf::Keyboard::LShift: return OctaneGUI::Keyboard::Key::LeftShift;
-	case sf::Keyboard::RShift: return OctaneGUI::Keyboard::Key::RightShift;
-	case sf::Keyboard::LControl: return OctaneGUI::Keyboard::Key::LeftControl;
-	case sf::Keyboard::RControl: return OctaneGUI::Keyboard::Key::RightControl;
-	case sf::Keyboard::LAlt: return OctaneGUI::Keyboard::Key::LeftAlt;
-	case sf::Keyboard::RAlt: return OctaneGUI::Keyboard::Key::RightAlt;
-	case sf::Keyboard::Enter: return OctaneGUI::Keyboard::Key::Enter;
-	case sf::Keyboard::Tilde: return OctaneGUI::Keyboard::Key::Tilde;
-	case sf::Keyboard::Tab: return OctaneGUI::Keyboard::Key::Tab;
-	default: break;
-	}
+    switch (Key)
+    {
+    case sf::Keyboard::P: return OctaneGUI::Keyboard::Key::P;
+    case sf::Keyboard::V: return OctaneGUI::Keyboard::Key::V;
+    case sf::Keyboard::Escape: return OctaneGUI::Keyboard::Key::Escape;
+    case sf::Keyboard::Backspace: return OctaneGUI::Keyboard::Key::Backspace;
+    case sf::Keyboard::Delete: return OctaneGUI::Keyboard::Key::Delete;
+    case sf::Keyboard::Left: return OctaneGUI::Keyboard::Key::Left;
+    case sf::Keyboard::Right: return OctaneGUI::Keyboard::Key::Right;
+    case sf::Keyboard::Up: return OctaneGUI::Keyboard::Key::Up;
+    case sf::Keyboard::Down: return OctaneGUI::Keyboard::Key::Down;
+    case sf::Keyboard::Home: return OctaneGUI::Keyboard::Key::Home;
+    case sf::Keyboard::End: return OctaneGUI::Keyboard::Key::End;
+    case sf::Keyboard::LShift: return OctaneGUI::Keyboard::Key::LeftShift;
+    case sf::Keyboard::RShift: return OctaneGUI::Keyboard::Key::RightShift;
+    case sf::Keyboard::LControl: return OctaneGUI::Keyboard::Key::LeftControl;
+    case sf::Keyboard::RControl: return OctaneGUI::Keyboard::Key::RightControl;
+    case sf::Keyboard::LAlt: return OctaneGUI::Keyboard::Key::LeftAlt;
+    case sf::Keyboard::RAlt: return OctaneGUI::Keyboard::Key::RightAlt;
+    case sf::Keyboard::Enter: return OctaneGUI::Keyboard::Key::Enter;
+    case sf::Keyboard::Tilde: return OctaneGUI::Keyboard::Key::Tilde;
+    case sf::Keyboard::Tab: return OctaneGUI::Keyboard::Key::Tab;
+    default: break;
+    }
 
-	return OctaneGUI::Keyboard::Key::None;
+    return OctaneGUI::Keyboard::Key::None;
 }
 
 OctaneGUI::Mouse::Button GetMouseButton(sf::Mouse::Button Button)
 {
-	switch (Button)
-	{
-	case sf::Mouse::Button::Right: return OctaneGUI::Mouse::Button::Right;
-	case sf::Mouse::Button::Middle: return OctaneGUI::Mouse::Button::Middle;
-	default: break;
-	}
+    switch (Button)
+    {
+    case sf::Mouse::Button::Right: return OctaneGUI::Mouse::Button::Right;
+    case sf::Mouse::Button::Middle: return OctaneGUI::Mouse::Button::Middle;
+    default: break;
+    }
 
-	return OctaneGUI::Mouse::Button::Left;
+    return OctaneGUI::Mouse::Button::Left;
 }
 
 sf::Cursor::Type GetCursorType(OctaneGUI::Mouse::Cursor Cursor)
 {
-	switch (Cursor)
-	{
-	case OctaneGUI::Mouse::Cursor::IBeam: return sf::Cursor::Text;
-	case OctaneGUI::Mouse::Cursor::SizeWE: return sf::Cursor::SizeHorizontal;
-	case OctaneGUI::Mouse::Cursor::SizeNS: return sf::Cursor::SizeVertical;
-	case OctaneGUI::Mouse::Cursor::Arrow:
-	default: break;
-	}
+    switch (Cursor)
+    {
+    case OctaneGUI::Mouse::Cursor::IBeam: return sf::Cursor::Text;
+    case OctaneGUI::Mouse::Cursor::SizeWE: return sf::Cursor::SizeHorizontal;
+    case OctaneGUI::Mouse::Cursor::SizeNS: return sf::Cursor::SizeVertical;
+    case OctaneGUI::Mouse::Cursor::Arrow:
+    default: break;
+    }
 
-	return sf::Cursor::Arrow;
+    return sf::Cursor::Arrow;
 }
 
 void SetMouseCursor(const std::shared_ptr<sf::RenderWindow>& Window, sf::Cursor::Type Type)
 {
-	sf::Cursor Cursor;
-	Cursor.loadFromSystem(Type);
-	Window->setMouseCursor(Cursor);
+    sf::Cursor Cursor;
+    Cursor.loadFromSystem(Type);
+    Window->setMouseCursor(Cursor);
 }
 
 bool Initialize()
 {
-	return true;
+    return true;
 }
 
 void CreateWindow(OctaneGUI::Window* Window)
 {
-	if (g_Windows.find(Window) == g_Windows.end())
-	{
-		unsigned int Style = sf::Style::Titlebar | sf::Style::Close;
-		if (Window->IsResizable())
-		{
-			Style |= sf::Style::Resize;
-		}
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        unsigned int Style = sf::Style::Titlebar | sf::Style::Close;
+        if (Window->IsResizable())
+        {
+            Style |= sf::Style::Resize;
+        }
 
-		const OctaneGUI::Vector2 Size = Window->GetSize();
-		sf::RenderWindow* RenderWindow = new sf::RenderWindow(sf::VideoMode((int)Size.X, (int)Size.Y), Window->GetTitle(), Style);
-		RenderWindow->setFramerateLimit(0);
-		RenderWindow->setVerticalSyncEnabled(false);
-		g_Windows[Window] = std::shared_ptr<sf::RenderWindow>(RenderWindow);
-	}
+        const OctaneGUI::Vector2 Size = Window->GetSize();
+        sf::RenderWindow* RenderWindow = new sf::RenderWindow(sf::VideoMode((int)Size.X, (int)Size.Y), Window->GetTitle(), Style);
+        RenderWindow->setFramerateLimit(0);
+        RenderWindow->setVerticalSyncEnabled(false);
+        g_Windows[Window] = std::shared_ptr<sf::RenderWindow>(RenderWindow);
+    }
 }
 
 void DestroyWindow(OctaneGUI::Window* Window)
 {
-	if (g_Windows.find(Window) == g_Windows.end())
-	{
-		return;
-	}
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        return;
+    }
 
-	g_Windows[Window]->close();
-	g_Windows.erase(Window);
+    g_Windows[Window]->close();
+    g_Windows.erase(Window);
 }
 
 OctaneGUI::Event Event(OctaneGUI::Window* Window)
 {
-	if (g_Windows.find(Window) == g_Windows.end())
-	{
-		return OctaneGUI::Event(OctaneGUI::Event::Type::None);
-	}
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        return OctaneGUI::Event(OctaneGUI::Event::Type::None);
+    }
 
-	const std::shared_ptr<sf::RenderWindow>& RenderWindow = g_Windows[Window];
+    const std::shared_ptr<sf::RenderWindow>& RenderWindow = g_Windows[Window];
 
-	sf::Event Event;
-	if (RenderWindow->pollEvent(Event))
-	{
-		switch (Event.type)
-		{
-		case sf::Event::Closed:
-			return OctaneGUI::Event(OctaneGUI::Event::Type::WindowClosed);
+    sf::Event Event;
+    if (RenderWindow->pollEvent(Event))
+    {
+        switch (Event.type)
+        {
+        case sf::Event::Closed:
+            return OctaneGUI::Event(OctaneGUI::Event::Type::WindowClosed);
 
-		case sf::Event::KeyPressed:
-			return OctaneGUI::Event(
-				OctaneGUI::Event::Type::KeyPressed,
-				OctaneGUI::Event::Key(GetKeyCode(Event.key.code)));
+        case sf::Event::KeyPressed:
+            return OctaneGUI::Event(
+                OctaneGUI::Event::Type::KeyPressed,
+                OctaneGUI::Event::Key(GetKeyCode(Event.key.code)));
 
-		case sf::Event::KeyReleased:
-			return OctaneGUI::Event(
-				OctaneGUI::Event::Type::KeyReleased,
-				OctaneGUI::Event::Key(GetKeyCode(Event.key.code)));
+        case sf::Event::KeyReleased:
+            return OctaneGUI::Event(
+                OctaneGUI::Event::Type::KeyReleased,
+                OctaneGUI::Event::Key(GetKeyCode(Event.key.code)));
 
-		case sf::Event::MouseMoved:
-			return OctaneGUI::Event(OctaneGUI::Event::MouseMove((float)Event.mouseMove.x, (float)Event.mouseMove.y));
+        case sf::Event::MouseMoved:
+            return OctaneGUI::Event(OctaneGUI::Event::MouseMove((float)Event.mouseMove.x, (float)Event.mouseMove.y));
 
-		case sf::Event::MouseButtonPressed:
-		{
-			const bool IncClick = g_MouseButtonClock.MeasureMS() <= MULTI_CLICK_TIME_MS;
-			const OctaneGUI::Mouse::Button Button = GetMouseButton(Event.mouseButton.button);
+        case sf::Event::MouseButtonPressed:
+        {
+            const bool IncClick = g_MouseButtonClock.MeasureMS() <= MULTI_CLICK_TIME_MS;
+            const OctaneGUI::Mouse::Button Button = GetMouseButton(Event.mouseButton.button);
 
-			uint8_t& Clicks = g_MouseClicks[Button];
-			Clicks = IncClick ? Clicks + 1 : 1;
-			Clicks = Clicks > 3 ? 1 : Clicks;
+            uint8_t& Clicks = g_MouseClicks[Button];
+            Clicks = IncClick ? Clicks + 1 : 1;
+            Clicks = Clicks > 3 ? 1 : Clicks;
 
-			OctaneGUI::Mouse::Count Count = OctaneGUI::Mouse::Count::Single;
-			if (Clicks == 2)
-			{
-				Count = OctaneGUI::Mouse::Count::Double;
-			}
-			else if (Clicks == 3)
-			{
-				Count = OctaneGUI::Mouse::Count::Triple;
-			}
+            OctaneGUI::Mouse::Count Count = OctaneGUI::Mouse::Count::Single;
+            if (Clicks == 2)
+            {
+                Count = OctaneGUI::Mouse::Count::Double;
+            }
+            else if (Clicks == 3)
+            {
+                Count = OctaneGUI::Mouse::Count::Triple;
+            }
 
-			g_MouseButtonClock.Reset();
-			return OctaneGUI::Event(
-				OctaneGUI::Event::Type::MousePressed,
-				OctaneGUI::Event::MouseButton(Button, (float)Event.mouseButton.x, (float)Event.mouseButton.y, Count));
-		}
+            g_MouseButtonClock.Reset();
+            return OctaneGUI::Event(
+                OctaneGUI::Event::Type::MousePressed,
+                OctaneGUI::Event::MouseButton(Button, (float)Event.mouseButton.x, (float)Event.mouseButton.y, Count));
+        }
 
-		case sf::Event::MouseButtonReleased:
-			return OctaneGUI::Event(
-				OctaneGUI::Event::Type::MouseReleased,
-				OctaneGUI::Event::MouseButton(GetMouseButton(Event.mouseButton.button), (float)Event.mouseButton.x, (float)Event.mouseButton.y, OctaneGUI::Mouse::Count::Single));
+        case sf::Event::MouseButtonReleased:
+            return OctaneGUI::Event(
+                OctaneGUI::Event::Type::MouseReleased,
+                OctaneGUI::Event::MouseButton(GetMouseButton(Event.mouseButton.button), (float)Event.mouseButton.x, (float)Event.mouseButton.y, OctaneGUI::Mouse::Count::Single));
 
-		case sf::Event::MouseWheelScrolled:
-		{
-			if (Event.mouseWheelScroll.wheel == sf::Mouse::Wheel::HorizontalWheel)
-			{
-				return OctaneGUI::Event(
-					OctaneGUI::Event::MouseWheel((int)Event.mouseWheelScroll.delta, 0));
-			}
+        case sf::Event::MouseWheelScrolled:
+        {
+            if (Event.mouseWheelScroll.wheel == sf::Mouse::Wheel::HorizontalWheel)
+            {
+                return OctaneGUI::Event(
+                    OctaneGUI::Event::MouseWheel((int)Event.mouseWheelScroll.delta, 0));
+            }
 
-			return OctaneGUI::Event(
-				OctaneGUI::Event::MouseWheel(0, (int)Event.mouseWheelScroll.delta));
-		}
+            return OctaneGUI::Event(
+                OctaneGUI::Event::MouseWheel(0, (int)Event.mouseWheelScroll.delta));
+        }
 
-		case sf::Event::TextEntered:
-		{
-			// Ignore tab characters when using SFML. The 'sf::Keyboard::Key::Tab' will capture these characters.
-			if (Event.text.unicode == '\t')
-			{
-				break;
-			}
+        case sf::Event::TextEntered:
+        {
+            // Ignore tab characters when using SFML. The 'sf::Keyboard::Key::Tab' will capture these characters.
+            if (Event.text.unicode == '\t')
+            {
+                break;
+            }
 
-			return OctaneGUI::Event(OctaneGUI::Event::Text(Event.text.unicode));
-		}
+            return OctaneGUI::Event(OctaneGUI::Event::Text(Event.text.unicode));
+        }
 
-		case sf::Event::Resized:
-			RenderWindow->setView(sf::View(sf::FloatRect(0.0f, 0.0f, (float)Event.size.width, (float)Event.size.height)));
-			return OctaneGUI::Event(OctaneGUI::Event::WindowResized((float)Event.size.width, (float)Event.size.height));
+        case sf::Event::Resized:
+            RenderWindow->setView(sf::View(sf::FloatRect(0.0f, 0.0f, (float)Event.size.width, (float)Event.size.height)));
+            return OctaneGUI::Event(OctaneGUI::Event::WindowResized((float)Event.size.width, (float)Event.size.height));
 
-		case sf::Event::MouseEntered:
-			return OctaneGUI::Event(OctaneGUI::Event::Type::WindowEnter);
+        case sf::Event::MouseEntered:
+            return OctaneGUI::Event(OctaneGUI::Event::Type::WindowEnter);
 
-		case sf::Event::MouseLeft:
-			return OctaneGUI::Event(OctaneGUI::Event::Type::WindowLeave);
+        case sf::Event::MouseLeft:
+            return OctaneGUI::Event(OctaneGUI::Event::Type::WindowLeave);
 
-		default: break;
-		}
-	}
+        default: break;
+        }
+    }
 
-	return OctaneGUI::Event(OctaneGUI::Event::Type::None);
+    return OctaneGUI::Event(OctaneGUI::Event::Type::None);
 }
 
 void Exit()
 {
-	for (const std::pair<OctaneGUI::Window*, std::shared_ptr<sf::RenderWindow>>& Item : g_Windows)
-	{
-		Item.second->close();
-	}
+    for (const std::pair<OctaneGUI::Window*, std::shared_ptr<sf::RenderWindow>>& Item : g_Windows)
+    {
+        Item.second->close();
+    }
 
-	g_Windows.clear();
+    g_Windows.clear();
 }
 
 std::u32string GetClipboardContents()
 {
-	std::u32string Result;
+    std::u32string Result;
 
-	for (const sf::Uint32 Ch : sf::Clipboard::getString().toUtf32())
-	{
-		Result += Ch;
-	}
+    for (const sf::Uint32 Ch : sf::Clipboard::getString().toUtf32())
+    {
+        Result += Ch;
+    }
 
-	return Result;
+    return Result;
 }
 
 void SetWindowTitle(OctaneGUI::Window* Window, const char* Title)
 {
-	if (g_Windows.find(Window) == g_Windows.end())
-	{
-		return;
-	}
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        return;
+    }
 
-	g_Windows[Window]->setTitle(Title);
+    g_Windows[Window]->setTitle(Title);
 }
 
 void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor)
 {
-	if (g_Windows.find(Window) == g_Windows.end())
-	{
-		return;
-	}
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        return;
+    }
 
-	SetMouseCursor(g_Windows[Window], GetCursorType(Cursor));
+    SetMouseCursor(g_Windows[Window], GetCursorType(Cursor));
 }
 
 const std::shared_ptr<sf::RenderWindow>& Get(OctaneGUI::Window* Window)
 {
-	return g_Windows[Window];
+    return g_Windows[Window];
 }
 
 }

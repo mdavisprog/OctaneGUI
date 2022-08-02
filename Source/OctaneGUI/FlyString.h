@@ -34,20 +34,20 @@ namespace OctaneGUI
 class FlyString
 {
 public:
-	FlyString();
-	FlyString(const char* Value);
-	FlyString(const FlyString& Value);
-	// TODO: Provide a constexpr constructor. Custom constexpr hash function is needed.
+    FlyString();
+    FlyString(const char* Value);
+    FlyString(const FlyString& Value);
+    // TODO: Provide a constexpr constructor. Custom constexpr hash function is needed.
 
-	FlyString& operator=(const char* Value);
-	FlyString& operator=(const FlyString& Value);
+    FlyString& operator=(const char* Value);
+    FlyString& operator=(const FlyString& Value);
 
-	bool operator==(const FlyString& Value) const;
+    bool operator==(const FlyString& Value) const;
 
-	const char* Data() const;
+    const char* Data() const;
 
 private:
-	std::string_view m_String {};
+    std::string_view m_String {};
 };
 
 }

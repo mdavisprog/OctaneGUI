@@ -47,32 +47,32 @@ class Properties;
 class Inspector
 {
 public:
-	static Inspector& Get();
+    static Inspector& Get();
 
-	void Inspect(Window* Target);
+    void Inspect(Window* Target);
 
 private:
-	static Inspector s_Inspector;
+    static Inspector s_Inspector;
 
-	Inspector();
-	void Populate();
-	bool ExpandTree(const std::shared_ptr<Tree>& Root, Control const* Target);
-	void ParseProperty(Control const* Target);
-	void Close();
+    Inspector();
+    void Populate();
+    bool ExpandTree(const std::shared_ptr<Tree>& Root, Control const* Target);
+    void ParseProperty(Control const* Target);
+    void Close();
 
-	void SetEnabled(const std::shared_ptr<InspectorProxy>& Proxy, bool Enabled, const Vector2& Size);
-	void OnSelected(const std::weak_ptr<Control>& Selected);
+    void SetEnabled(const std::shared_ptr<InspectorProxy>& Proxy, bool Enabled, const Vector2& Size);
+    void OnSelected(const std::weak_ptr<Control>& Selected);
 
-	// TODO: Find a way to use a weak_ptr instead.
-	Window* m_Target { nullptr };
-	std::weak_ptr<Splitter> m_Root {};
-	std::weak_ptr<Tree> m_Tree {};
-	std::weak_ptr<Properties> m_Properties {};
-	std::weak_ptr<Window> m_Window {};
-	std::weak_ptr<Control> m_PendingFocus {};
+    // TODO: Find a way to use a weak_ptr instead.
+    Window* m_Target { nullptr };
+    std::weak_ptr<Splitter> m_Root {};
+    std::weak_ptr<Tree> m_Tree {};
+    std::weak_ptr<Properties> m_Properties {};
+    std::weak_ptr<Window> m_Window {};
+    std::weak_ptr<Control> m_PendingFocus {};
 
-	std::shared_ptr<InspectorProxy> m_MenuBarProxy { nullptr };
-	std::shared_ptr<InspectorProxy> m_BodyProxy { nullptr };
+    std::shared_ptr<InspectorProxy> m_MenuBarProxy { nullptr };
+    std::shared_ptr<InspectorProxy> m_BodyProxy { nullptr };
 };
 
 }

@@ -32,30 +32,30 @@ namespace OctaneGUI
 class Keyboard
 {
 public:
-	enum class Key : unsigned short
-	{
-		None,
-		P,
-		V,
-		Escape,
-		Backspace,
-		Delete,
-		Left,
-		Right,
-		Up,
-		Down,
-		Home,
-		End,
-		LeftShift,
-		RightShift,
-		LeftControl,
-		RightControl,
-		LeftAlt,
-		RightAlt,
-		Enter,
-		Tilde,
-		Tab,
-	};
+    enum class Key : unsigned short
+    {
+        None,
+        P,
+        V,
+        Escape,
+        Backspace,
+        Delete,
+        Left,
+        Right,
+        Up,
+        Down,
+        Home,
+        End,
+        LeftShift,
+        RightShift,
+        LeftControl,
+        RightControl,
+        LeftAlt,
+        RightAlt,
+        Enter,
+        Tilde,
+        Tab,
+    };
 };
 
 }

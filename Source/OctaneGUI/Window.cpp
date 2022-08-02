@@ -36,7 +36,7 @@ SOFTWARE.
 #include "Timer.h"
 
 #if TOOLS
-	#include "Tools/CommandPalette.h"
+    #include "Tools/CommandPalette.h"
 #endif
 
 #include <algorithm>
@@ -45,291 +45,291 @@ namespace OctaneGUI
 {
 
 Window::Window(Application* InApplication)
-	: m_Application(InApplication)
+    : m_Application(InApplication)
 {
-	m_Popup.SetOnInvalidate([=](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
-		{
-			if ((Type == InvalidateType::Layout || Type == InvalidateType::Both))
-			{
-				RequestLayout(std::dynamic_pointer_cast<Container>(Focus));
-			}
+    m_Popup.SetOnInvalidate([=](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
+        {
+            if ((Type == InvalidateType::Layout || Type == InvalidateType::Both))
+            {
+                RequestLayout(std::dynamic_pointer_cast<Container>(Focus));
+            }
 
-			m_Repaint = true;
-		});
+            m_Repaint = true;
+        });
 
-	m_Popup.SetOnClose([=](const Container& Focus) -> void
-		{
-			if (m_OnPopupClose)
-			{
-				m_OnPopupClose(Focus);
-				m_OnPopupClose = nullptr;
-			}
+    m_Popup.SetOnClose([=](const Container& Focus) -> void
+        {
+            if (m_OnPopupClose)
+            {
+                m_OnPopupClose(Focus);
+                m_OnPopupClose = nullptr;
+            }
 
-			m_Container->CloseMenuBar();
-			m_Repaint = true;
-		});
+            m_Container->CloseMenuBar();
+            m_Repaint = true;
+        });
 }
 
 Window::~Window()
 {
-	m_Container = nullptr;
+    m_Container = nullptr;
 }
 
 void Window::SetTitle(const char* Title)
 {
-	m_Title = Title;
+    m_Title = Title;
 
-	if (m_OnSetTitle)
-	{
-		m_OnSetTitle(*this, Title);
-	}
+    if (m_OnSetTitle)
+    {
+        m_OnSetTitle(*this, Title);
+    }
 }
 
 const char* Window::GetTitle() const
 {
-	return m_Title.c_str();
+    return m_Title.c_str();
 }
 
 void Window::SetSize(Vector2 Size)
 {
-	m_Bounds.Max = m_Bounds.Min + Size;
-	m_Container->SetSize(m_Bounds.GetSize());
-	m_Container->InvalidateLayout();
+    m_Bounds.Max = m_Bounds.Min + Size;
+    m_Container->SetSize(m_Bounds.GetSize());
+    m_Container->InvalidateLayout();
 }
 
 Vector2 Window::GetSize() const
 {
-	return m_Bounds.Max - m_Bounds.Min;
+    return m_Bounds.Max - m_Bounds.Min;
 }
 
 void Window::SetID(const char* ID)
 {
-	m_ID = ID;
+    m_ID = ID;
 }
 
 const char* Window::ID() const
 {
-	return m_ID.c_str();
+    return m_ID.c_str();
 }
 
 bool Window::HasID() const
 {
-	return !m_ID.empty();
+    return !m_ID.empty();
 }
 
 Window& Window::SetVisible(bool Visible)
 {
-	m_Visible = Visible;
-	m_Repaint = Visible;
-	return *this;
+    m_Visible = Visible;
+    m_Repaint = Visible;
+    return *this;
 }
 
 bool Window::IsVisible() const
 {
-	return m_Visible;
+    return m_Visible;
 }
 
 Window& Window::RequestClose(bool Request)
 {
-	m_RequestClose = Request;
-	return *this;
+    m_RequestClose = Request;
+    return *this;
 }
 
 bool Window::ShouldClose() const
 {
-	return m_RequestClose;
+    return m_RequestClose;
 }
 
 void Window::Close()
 {
-	if (m_OnClose)
-	{
-		m_OnClose(*this);
-	}
+    if (m_OnClose)
+    {
+        m_OnClose(*this);
+    }
 }
 
 Window& Window::SetResizable(bool Resizable)
 {
-	m_Resizable = Resizable;
-	return *this;
+    m_Resizable = Resizable;
+    return *this;
 }
 
 bool Window::IsResizable() const
 {
-	return m_Resizable;
+    return m_Resizable;
 }
 
 Application& Window::App() const
 {
-	return *m_Application;
+    return *m_Application;
 }
 
 void Window::SetPopup(const std::shared_ptr<Container>& Popup, OnContainerSignature Callback, bool Modal)
 {
-	m_Popup.Open(Popup, Modal);
-	m_OnPopupClose = Callback;
-	RequestLayout(Popup);
+    m_Popup.Open(Popup, Modal);
+    m_OnPopupClose = Callback;
+    RequestLayout(Popup);
 }
 
 void Window::ClosePopup()
 {
-	if (!m_Focus.expired())
-	{
-		if (m_Popup.HasControl(m_Focus.lock()))
-		{
-			m_Focus.lock()->OnUnfocused();
-			m_Focus.reset();
-		}
-	}
+    if (!m_Focus.expired())
+    {
+        if (m_Popup.HasControl(m_Focus.lock()))
+        {
+            m_Focus.lock()->OnUnfocused();
+            m_Focus.reset();
+        }
+    }
 
-	m_Popup.Close();
+    m_Popup.Close();
 }
 
 const std::shared_ptr<Container>& Window::GetPopup() const
 {
-	return m_Popup.GetContainer();
+    return m_Popup.GetContainer();
 }
 
 bool Window::IsPopupOpen() const
 {
-	if (m_Popup.GetContainer())
-	{
-		return true;
-	}
+    if (m_Popup.GetContainer())
+    {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 void Window::OnKeyPressed(Keyboard::Key Key)
 {
 #if TOOLS
-	if (Key == Keyboard::Key::P && (IsKeyPressed(Keyboard::Key::LeftControl) || IsKeyPressed(Keyboard::Key::RightControl)))
-	{
-		std::shared_ptr<Tools::CommandPalette> CommandPalette = Tools::CommandPalette::Get(this);
-		if (m_Popup.GetContainer() != CommandPalette)
-		{
-			CommandPalette->Show();
-			SetPopup(CommandPalette);
-			UpdateFocus(CommandPalette->Input());
-			m_Repaint = true;
-		}
-		return;
-	}
+    if (Key == Keyboard::Key::P && (IsKeyPressed(Keyboard::Key::LeftControl) || IsKeyPressed(Keyboard::Key::RightControl)))
+    {
+        std::shared_ptr<Tools::CommandPalette> CommandPalette = Tools::CommandPalette::Get(this);
+        if (m_Popup.GetContainer() != CommandPalette)
+        {
+            CommandPalette->Show();
+            SetPopup(CommandPalette);
+            UpdateFocus(CommandPalette->Input());
+            m_Repaint = true;
+        }
+        return;
+    }
 #endif
 
-	if (m_Focus.expired() || Key == Keyboard::Key::None)
-	{
-		return;
-	}
+    if (m_Focus.expired() || Key == Keyboard::Key::None)
+    {
+        return;
+    }
 
-	std::shared_ptr<Control> Focused = m_Focus.lock();
-	Focused->OnKeyPressed(Key);
+    std::shared_ptr<Control> Focused = m_Focus.lock();
+    Focused->OnKeyPressed(Key);
 }
 
 void Window::OnKeyReleased(Keyboard::Key Key)
 {
-	if (m_Focus.expired() || Key == Keyboard::Key::None)
-	{
-		return;
-	}
+    if (m_Focus.expired() || Key == Keyboard::Key::None)
+    {
+        return;
+    }
 
-	std::shared_ptr<Control> Focused = m_Focus.lock();
-	Focused->OnKeyReleased(Key);
+    std::shared_ptr<Control> Focused = m_Focus.lock();
+    Focused->OnKeyReleased(Key);
 }
 
 void Window::OnMouseMove(const Vector2& Position)
 {
-	m_MousePosition = Position;
+    m_MousePosition = Position;
 
-	std::weak_ptr<Control> Hovered = m_Popup.GetControl(Position);
+    std::weak_ptr<Control> Hovered = m_Popup.GetControl(Position);
 
-	if (!m_Popup.IsModal() && Hovered.expired())
-	{
-		Hovered = m_Container->GetControl(Position);
-	}
+    if (!m_Popup.IsModal() && Hovered.expired())
+    {
+        Hovered = m_Container->GetControl(Position);
+    }
 
-	std::shared_ptr<Control> Current = Hovered.lock();
-	std::shared_ptr<Control> Previous = m_Hovered.lock();
-	if (Current != Previous)
-	{
-		if (Previous)
-		{
-			Previous->OnMouseLeave();
-		}
+    std::shared_ptr<Control> Current = Hovered.lock();
+    std::shared_ptr<Control> Previous = m_Hovered.lock();
+    if (Current != Previous)
+    {
+        if (Previous)
+        {
+            Previous->OnMouseLeave();
+        }
 
-		m_Hovered = Hovered;
+        m_Hovered = Hovered;
 
-		if (Current)
-		{
-			Current->OnMouseEnter();
-		}
-	}
+        if (Current)
+        {
+            Current->OnMouseEnter();
+        }
+    }
 
-	if (Current)
-	{
-		Current->OnMouseMove(Position);
-	}
+    if (Current)
+    {
+        Current->OnMouseMove(Position);
+    }
 
-	if (!m_Focus.expired())
-	{
-		std::shared_ptr<Control> Focused = m_Focus.lock();
+    if (!m_Focus.expired())
+    {
+        std::shared_ptr<Control> Focused = m_Focus.lock();
 
-		if (Current != Focused)
-		{
-			Focused->OnMouseMove(Position);
-		}
-	}
+        if (Current != Focused)
+        {
+            Focused->OnMouseMove(Position);
+        }
+    }
 }
 
 void Window::OnMousePressed(const Vector2& Position, Mouse::Button MouseButton, Mouse::Count Count)
 {
-	std::shared_ptr<Control> New = nullptr;
-	if (!m_Hovered.expired())
-	{
-		std::shared_ptr<Control> Hovered = m_Hovered.lock();
-		bool Pressed = Hovered->OnMousePressed(Position, MouseButton, Count);
+    std::shared_ptr<Control> New = nullptr;
+    if (!m_Hovered.expired())
+    {
+        std::shared_ptr<Control> Hovered = m_Hovered.lock();
+        bool Pressed = Hovered->OnMousePressed(Position, MouseButton, Count);
 
-		if (Pressed)
-		{
-			New = Hovered;
-		}
-	}
+        if (Pressed)
+        {
+            New = Hovered;
+        }
+    }
 
-	UpdateFocus(New);
+    UpdateFocus(New);
 }
 
 void Window::OnMouseReleased(const Vector2& Position, Mouse::Button MouseButton)
 {
-	std::shared_ptr<Control> Hovered;
-	std::shared_ptr<Control> Focused;
+    std::shared_ptr<Control> Hovered;
+    std::shared_ptr<Control> Focused;
 
-	if (!m_Hovered.expired())
-	{
-		Hovered = m_Hovered.lock();
-	}
+    if (!m_Hovered.expired())
+    {
+        Hovered = m_Hovered.lock();
+    }
 
-	if (!m_Focus.expired())
-	{
-		Focused = m_Focus.lock();
-	}
+    if (!m_Focus.expired())
+    {
+        Focused = m_Focus.lock();
+    }
 
-	if (Hovered && Hovered != Focused)
-	{
-		Hovered->OnMouseReleased(Position, MouseButton);
-	}
+    if (Hovered && Hovered != Focused)
+    {
+        Hovered->OnMouseReleased(Position, MouseButton);
+    }
 
-	if (Focused)
-	{
-		Focused->OnMouseReleased(Position, MouseButton);
-	}
+    if (Focused)
+    {
+        Focused->OnMouseReleased(Position, MouseButton);
+    }
 }
 
 void Window::OnMouseWheel(const Vector2& Delta)
 {
-	if (!m_Hovered.expired())
-	{
-		m_Hovered.lock()->OnMouseWheel(Delta);
-	}
+    if (!m_Hovered.expired())
+    {
+        m_Hovered.lock()->OnMouseWheel(Delta);
+    }
 }
 
 void Window::OnMouseEnter()
@@ -338,267 +338,267 @@ void Window::OnMouseEnter()
 
 void Window::OnMouseLeave()
 {
-	if (!m_Hovered.expired())
-	{
-		m_Hovered.lock()->OnMouseLeave();
-	}
+    if (!m_Hovered.expired())
+    {
+        m_Hovered.lock()->OnMouseLeave();
+    }
 
-	m_Hovered.reset();
+    m_Hovered.reset();
 }
 
 void Window::OnText(uint32_t Code)
 {
-	if (m_Focus.expired())
-	{
-		return;
-	}
+    if (m_Focus.expired())
+    {
+        return;
+    }
 
-	std::shared_ptr<Control> Focused = m_Focus.lock();
-	Focused->OnText(Code);
+    std::shared_ptr<Control> Focused = m_Focus.lock();
+    Focused->OnText(Code);
 }
 
 void Window::ThemeLoaded()
 {
-	m_Container->OnThemeLoaded();
+    m_Container->OnThemeLoaded();
 }
 
 void Window::CreateContainer()
 {
-	m_Container = std::make_shared<WindowContainer>(this);
-	m_Container
-		->SetOnInvalidate([=](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
-			{
-				if ((Type == InvalidateType::Layout || Type == InvalidateType::Both))
-				{
-					RequestLayout(std::dynamic_pointer_cast<Container>(Focus));
-				}
+    m_Container = std::make_shared<WindowContainer>(this);
+    m_Container
+        ->SetOnInvalidate([=](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
+            {
+                if ((Type == InvalidateType::Layout || Type == InvalidateType::Both))
+                {
+                    RequestLayout(std::dynamic_pointer_cast<Container>(Focus));
+                }
 
-				m_Repaint = true;
-			});
+                m_Repaint = true;
+            });
 
-	m_Repaint = true;
+    m_Repaint = true;
 }
 
 std::shared_ptr<Container> Window::GetContainer() const
 {
-	return m_Container->Body();
+    return m_Container->Body();
 }
 
 std::shared_ptr<MenuBar> Window::GetMenuBar() const
 {
-	return m_Container->GetMenuBar();
+    return m_Container->GetMenuBar();
 }
 
 std::shared_ptr<Container> Window::GetRootContainer() const
 {
-	return m_Container;
+    return m_Container;
 }
 
 std::shared_ptr<Theme> Window::GetTheme() const
 {
-	return m_Application->GetTheme();
+    return m_Application->GetTheme();
 }
 
 std::shared_ptr<Icons> Window::GetIcons() const
 {
-	return m_Application->GetIcons();
+    return m_Application->GetIcons();
 }
 
 TextureCache& Window::GetTextureCache() const
 {
-	return m_Application->GetTextureCache();
+    return m_Application->GetTextureCache();
 }
 
 Vector2 Window::GetMousePosition() const
 {
-	return m_MousePosition;
+    return m_MousePosition;
 }
 
 bool Window::IsKeyPressed(Keyboard::Key Key) const
 {
-	return m_Application->IsKeyPressed(Key);
+    return m_Application->IsKeyPressed(Key);
 }
 
 Window& Window::SetMouseCursor(Mouse::Cursor Cursor)
 {
-	if (m_MouseCursor == Cursor)
-	{
-		return *this;
-	}
+    if (m_MouseCursor == Cursor)
+    {
+        return *this;
+    }
 
-	m_MouseCursor = Cursor;
-	m_Application->SetMouseCursor(this, Cursor);
-	return *this;
+    m_MouseCursor = Cursor;
+    m_Application->SetMouseCursor(this, Cursor);
+    return *this;
 }
 
 Mouse::Cursor Window::MouseCursor() const
 {
-	return m_MouseCursor;
+    return m_MouseCursor;
 }
 
 void Window::Update()
 {
-	PROFILER_SAMPLE_GROUP((std::string("Window::Update (") + GetTitle() + ")").c_str());
+    PROFILER_SAMPLE_GROUP((std::string("Window::Update (") + GetTitle() + ")").c_str());
 
-	UpdateTimers();
+    UpdateTimers();
 
-	if (!m_LayoutRequests.empty())
-	{
-		for (const std::weak_ptr<Container>& Item : m_LayoutRequests)
-		{
-			if (!Item.expired())
-			{
-				Item.lock()->Layout();
-			}
-		}
-		m_LayoutRequests.clear();
+    if (!m_LayoutRequests.empty())
+    {
+        for (const std::weak_ptr<Container>& Item : m_LayoutRequests)
+        {
+            if (!Item.expired())
+            {
+                Item.lock()->Layout();
+            }
+        }
+        m_LayoutRequests.clear();
 
-		if (m_OnLayout)
-		{
-			m_OnLayout(*this);
-		}
-	}
+        if (m_OnLayout)
+        {
+            m_OnLayout(*this);
+        }
+    }
 
-	m_Popup.Update();
+    m_Popup.Update();
 }
 
 void Window::DoPaint(Paint& Brush)
 {
-	if (m_Repaint)
-	{
-		PROFILER_SAMPLE_GROUP((std::string("Window::OnPaint (") + GetTitle() + ")").c_str());
+    if (m_Repaint)
+    {
+        PROFILER_SAMPLE_GROUP((std::string("Window::OnPaint (") + GetTitle() + ")").c_str());
 
-		m_Container->OnPaint(Brush);
-		m_Popup.OnPaint(Brush);
-		m_Repaint = false;
-		m_OnPaint(this, Brush.GetBuffer());
-	}
+        m_Container->OnPaint(Brush);
+        m_Popup.OnPaint(Brush);
+        m_Repaint = false;
+        m_OnPaint(this, Brush.GetBuffer());
+    }
 }
 
 void Window::Load(const char* JsonStream)
 {
-	Load(Json::Parse(JsonStream));
+    Load(Json::Parse(JsonStream));
 }
 
 void Window::Load(const char* JsonStream, ControlList& List)
 {
-	Load(Json::Parse(JsonStream));
-	Populate(List);
+    Load(Json::Parse(JsonStream));
+    Populate(List);
 }
 
 void Window::Load(const Json& Root)
 {
-	LoadRoot(Root);
-	LoadContents(Root);
+    LoadRoot(Root);
+    LoadContents(Root);
 }
 
 void Window::Load(const Json& Root, ControlList& List)
 {
-	Load(Root);
-	Populate(List);
+    Load(Root);
+    Populate(List);
 }
 
 void Window::LoadRoot(const Json& Root)
 {
-	const std::string Title = Root["Title"].String();
-	float Width = Root["Width"].Number(640.0f);
-	float Height = Root["Height"].Number(480.0f);
+    const std::string Title = Root["Title"].String();
+    float Width = Root["Width"].Number(640.0f);
+    float Height = Root["Height"].Number(480.0f);
 
-	SetTitle(Title.c_str());
-	SetSize({ Width, Height });
-	SetResizable(Root["Resizable"].Boolean(IsResizable()));
+    SetTitle(Title.c_str());
+    SetSize({ Width, Height });
+    SetResizable(Root["Resizable"].Boolean(IsResizable()));
 }
 
 void Window::LoadContents(const Json& Root)
 {
-	m_Container->OnLoad(Root);
+    m_Container->OnLoad(Root);
 }
 
 void Window::LoadContents(const Json& Root, ControlList& List)
 {
-	LoadContents(Root);
-	Populate(List);
+    LoadContents(Root);
+    Populate(List);
 }
 
 void Window::Clear()
 {
-	m_Container->Clear();
-	m_Popup.Close();
-	m_LayoutRequests.clear();
+    m_Container->Clear();
+    m_Popup.Close();
+    m_LayoutRequests.clear();
 }
 
 std::shared_ptr<Timer> Window::CreateTimer(int Interval, bool Repeat, OnEmptySignature&& Callback)
 {
-	std::shared_ptr Result = std::make_unique<Timer>(Interval, Repeat, this, std::move(Callback));
-	return std::move(Result);
+    std::shared_ptr Result = std::make_unique<Timer>(Interval, Repeat, this, std::move(Callback));
+    return std::move(Result);
 }
 
 void Window::StartTimer(const std::shared_ptr<Timer>& Object)
 {
-	for (std::vector<TimerHandle>::iterator It = m_Timers.begin(); It != m_Timers.end();)
-	{
-		TimerHandle& Handle = *It;
+    for (std::vector<TimerHandle>::iterator It = m_Timers.begin(); It != m_Timers.end();)
+    {
+        TimerHandle& Handle = *It;
 
-		if (Handle.Object.expired())
-		{
-			It = m_Timers.erase(It);
-		}
-		else if (Handle.Object.lock() == Object)
-		{
-			Handle.Elapsed.Reset();
-			return;
-		}
-		else
-		{
-			It++;
-		}
-	}
+        if (Handle.Object.expired())
+        {
+            It = m_Timers.erase(It);
+        }
+        else if (Handle.Object.lock() == Object)
+        {
+            Handle.Elapsed.Reset();
+            return;
+        }
+        else
+        {
+            It++;
+        }
+    }
 
-	m_Timers.emplace_back(Object);
+    m_Timers.emplace_back(Object);
 }
 
 bool Window::ClearTimer(const std::shared_ptr<Timer>& Object)
 {
-	for (std::vector<TimerHandle>::const_iterator It = m_Timers.begin(); It != m_Timers.end();)
-	{
-		const TimerHandle& Handle = *It;
+    for (std::vector<TimerHandle>::const_iterator It = m_Timers.begin(); It != m_Timers.end();)
+    {
+        const TimerHandle& Handle = *It;
 
-		if (Handle.Object.expired() || Handle.Object.lock() == Object)
-		{
-			m_Timers.erase(It);
-			return true;
-		}
-		else
-		{
-			++It;
-		}
-	}
+        if (Handle.Object.expired() || Handle.Object.lock() == Object)
+        {
+            m_Timers.erase(It);
+            return true;
+        }
+        else
+        {
+            ++It;
+        }
+    }
 
-	return false;
+    return false;
 }
 
 Window& Window::SetOnPaint(OnPaintSignature&& Fn)
 {
-	m_OnPaint = std::move(Fn);
-	return *this;
+    m_OnPaint = std::move(Fn);
+    return *this;
 }
 
 Window& Window::SetOnSetTitle(OnSetTitleSignature&& Fn)
 {
-	m_OnSetTitle = std::move(Fn);
-	return *this;
+    m_OnSetTitle = std::move(Fn);
+    return *this;
 }
 
 Window& Window::SetOnClose(OnWindowSignature&& Fn)
 {
-	m_OnClose = std::move(Fn);
-	return *this;
+    m_OnClose = std::move(Fn);
+    return *this;
 }
 
 Window& Window::SetOnLayout(OnWindowSignature&& Fn)
 {
-	m_OnLayout = std::move(Fn);
-	return *this;
+    m_OnLayout = std::move(Fn);
+    return *this;
 }
 
 Window::Window()
@@ -607,95 +607,95 @@ Window::Window()
 
 void Window::Populate(ControlList& List) const
 {
-	m_Container->GetControlList(List);
+    m_Container->GetControlList(List);
 }
 
 void Window::RequestLayout(std::shared_ptr<Container> Request)
 {
-	if (!Request)
-	{
-		return;
-	}
+    if (!Request)
+    {
+        return;
+    }
 
-	bool Found = false;
-	for (const std::weak_ptr<Container>& Item : m_LayoutRequests)
-	{
-		if (!Item.expired() && Item.lock() == Request)
-		{
-			Found = true;
-			break;
-		}
-	}
+    bool Found = false;
+    for (const std::weak_ptr<Container>& Item : m_LayoutRequests)
+    {
+        if (!Item.expired() && Item.lock() == Request)
+        {
+            Found = true;
+            break;
+        }
+    }
 
-	if (!Found)
-	{
-		m_LayoutRequests.push_back(Request);
-	}
+    if (!Found)
+    {
+        m_LayoutRequests.push_back(Request);
+    }
 }
 
 void Window::UpdateTimers()
 {
-	for (std::vector<TimerHandle>::iterator It = m_Timers.begin(); It != m_Timers.end();)
-	{
-		TimerHandle& Handle = *It;
+    for (std::vector<TimerHandle>::iterator It = m_Timers.begin(); It != m_Timers.end();)
+    {
+        TimerHandle& Handle = *It;
 
-		if (Handle.Object.expired())
-		{
-			It = m_Timers.erase(It);
-			continue;
-		}
+        if (Handle.Object.expired())
+        {
+            It = m_Timers.erase(It);
+            continue;
+        }
 
-		std::shared_ptr<Timer> Object = Handle.Object.lock();
-		if (Handle.Elapsed.MeasureMS() >= Object->Interval())
-		{
-			Object->Invoke();
+        std::shared_ptr<Timer> Object = Handle.Object.lock();
+        if (Handle.Elapsed.MeasureMS() >= Object->Interval())
+        {
+            Object->Invoke();
 
-			if (Object->Repeat())
-			{
-				Handle.Elapsed.Reset();
-				It++;
-			}
-			else
-			{
-				It = m_Timers.erase(It);
-			}
-		}
-		else
-		{
-			It++;
-		}
-	}
+            if (Object->Repeat())
+            {
+                Handle.Elapsed.Reset();
+                It++;
+            }
+            else
+            {
+                It = m_Timers.erase(It);
+            }
+        }
+        else
+        {
+            It++;
+        }
+    }
 }
 
 void Window::UpdateFocus(const std::shared_ptr<Control>& Focus)
 {
-	std::shared_ptr<Control> Focused = m_Focus.lock();
+    std::shared_ptr<Control> Focused = m_Focus.lock();
 
-	bool ShouldClosePopup = false;
-	if (Focus != Focused)
-	{
-		if (Focused)
-		{
-			Focused->OnUnfocused();
-		}
+    bool ShouldClosePopup = false;
+    if (Focus != Focused)
+    {
+        if (Focused)
+        {
+            Focused->OnUnfocused();
+        }
 
-		m_Focus = Focus;
+        m_Focus = Focus;
 
-		if (Focus)
-		{
-			ShouldClosePopup = !m_Popup.HasControl(Focus);
-			Focus->OnFocused();
-		}
-		else
-		{
-			ShouldClosePopup = true;
-		}
-	}
+        if (Focus)
+        {
+            ShouldClosePopup = !m_Popup.HasControl(Focus);
+            Focus->OnFocused();
+        }
+        else
+        {
+            ShouldClosePopup = true;
+        }
+    }
 
-	if (ShouldClosePopup)
-	{
-		m_Popup.Close();
-	}
+    if (ShouldClosePopup)
+    {
+        m_Popup.Close();
+    }
 }
 
 }

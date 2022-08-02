@@ -44,34 +44,34 @@ struct Vector2;
 class Popup
 {
 public:
-	enum class State : uint8_t
-	{
-		None,
-		Opening,
-		Opened
-	};
+    enum class State : uint8_t
+    {
+        None,
+        Opening,
+        Opened
+    };
 
-	Popup();
-	~Popup();
+    Popup();
+    ~Popup();
 
-	void Open(const std::shared_ptr<Container>& InContainer, bool Modal);
-	void Close();
-	void Update();
-	bool IsModal() const;
-	const std::shared_ptr<Container>& GetContainer() const;
-	bool HasControl(const std::shared_ptr<Control>& Item) const;
-	void OnMouseMove(const Vector2& Position);
-	std::weak_ptr<Control> GetControl(const Vector2& Position) const;
-	void OnPaint(Paint& Brush);
-	void SetOnInvalidate(OnInvalidateSignature Fn);
-	void SetOnClose(OnContainerSignature Fn);
+    void Open(const std::shared_ptr<Container>& InContainer, bool Modal);
+    void Close();
+    void Update();
+    bool IsModal() const;
+    const std::shared_ptr<Container>& GetContainer() const;
+    bool HasControl(const std::shared_ptr<Control>& Item) const;
+    void OnMouseMove(const Vector2& Position);
+    std::weak_ptr<Control> GetControl(const Vector2& Position) const;
+    void OnPaint(Paint& Brush);
+    void SetOnInvalidate(OnInvalidateSignature Fn);
+    void SetOnClose(OnContainerSignature Fn);
 
 private:
-	std::shared_ptr<Container> m_Container;
-	bool m_Modal;
-	State m_State;
-	OnInvalidateSignature m_OnInvalidate;
-	OnContainerSignature m_OnClose;
+    std::shared_ptr<Container> m_Container;
+    bool m_Modal;
+    State m_State;
+    OnInvalidateSignature m_OnInvalidate;
+    OnContainerSignature m_OnClose;
 };
 
 }

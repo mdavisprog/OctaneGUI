@@ -36,42 +36,42 @@ class Text;
 
 class Table : public Container
 {
-	CLASS(Table)
+    CLASS(Table)
 
 public:
-	Table(Window* InWindow);
+    Table(Window* InWindow);
 
-	Table& SetColumns(int Columns);
-	int Columns() const;
-	const std::shared_ptr<Container>& Column(int Index) const;
+    Table& SetColumns(int Columns);
+    int Columns() const;
+    const std::shared_ptr<Container>& Column(int Index) const;
 
-	Table& SetColumnSpacing(float Spacing);
+    Table& SetColumnSpacing(float Spacing);
 
-	Table& SetHeader(int Index, const char* Header);
+    Table& SetHeader(int Index, const char* Header);
 
-	virtual Vector2 DesiredSize() const override;
+    virtual Vector2 DesiredSize() const override;
 
 private:
-	class TableColumn : public Container
-	{
-		CLASS(TableColumn)
+    class TableColumn : public Container
+    {
+        CLASS(TableColumn)
 
-	public:
-		TableColumn(Window* InWindow);
+    public:
+        TableColumn(Window* InWindow);
 
-		TableColumn& SetHeader(const char* Header);
+        TableColumn& SetHeader(const char* Header);
 
-		const std::shared_ptr<Container>& Body() const;
+        const std::shared_ptr<Container>& Body() const;
 
-		virtual Vector2 DesiredSize() const override;
+        virtual Vector2 DesiredSize() const override;
 
-	private:
-		std::shared_ptr<Container> m_Outer { nullptr };
-		std::shared_ptr<Text> m_Header { nullptr };
-		std::shared_ptr<Container> m_Body { nullptr };
-	};
+    private:
+        std::shared_ptr<Container> m_Outer { nullptr };
+        std::shared_ptr<Text> m_Header { nullptr };
+        std::shared_ptr<Container> m_Body { nullptr };
+    };
 
-	std::shared_ptr<BoxContainer> m_Row { nullptr };
+    std::shared_ptr<BoxContainer> m_Row { nullptr };
 };
 
 }

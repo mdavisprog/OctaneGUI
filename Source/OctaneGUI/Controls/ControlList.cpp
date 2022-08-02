@@ -41,55 +41,55 @@ ControlList::~ControlList()
 
 void ControlList::AddControl(const std::shared_ptr<Control>& InControl)
 {
-	if (!InControl || !InControl->HasID())
-	{
-		return;
-	}
+    if (!InControl || !InControl->HasID())
+    {
+        return;
+    }
 
-	Assert(!Contains(InControl->GetFullID().c_str()), "Control with ID '%s' already exists!", InControl->GetFullID().c_str());
-	m_Controls[InControl->GetFullID()] = InControl;
+    Assert(!Contains(InControl->GetFullID().c_str()), "Control with ID '%s' already exists!", InControl->GetFullID().c_str());
+    m_Controls[InControl->GetFullID()] = InControl;
 }
 
 void ControlList::AddControls(const std::vector<std::shared_ptr<Control>>& Controls)
 {
-	for (const std::shared_ptr<Control>& Item : Controls)
-	{
-		if (Item->HasID())
-		{
-			AddControl(Item);
-		}
-	}
+    for (const std::shared_ptr<Control>& Item : Controls)
+    {
+        if (Item->HasID())
+        {
+            AddControl(Item);
+        }
+    }
 }
 
 bool ControlList::Contains(const char* ID) const
 {
-	return m_Controls.find(ID) != m_Controls.end();
+    return m_Controls.find(ID) != m_Controls.end();
 }
 
 std::weak_ptr<Control> ControlList::Get(const char* ID) const
 {
-	if (!Contains(ID))
-	{
-		std::string List;
-		for (const std::pair<std::string, std::weak_ptr<Control>>& Item : m_Controls)
-		{
-			List += Item.first + "\n";
-		}
-		Assert(Contains(ID), "Control with ID '%s' does not exist! Below is a list of existing IDs:\n%s", ID, List.c_str());
-	}
-	return m_Controls.at(ID);
+    if (!Contains(ID))
+    {
+        std::string List;
+        for (const std::pair<std::string, std::weak_ptr<Control>>& Item : m_Controls)
+        {
+            List += Item.first + "\n";
+        }
+        Assert(Contains(ID), "Control with ID '%s' does not exist! Below is a list of existing IDs:\n%s", ID, List.c_str());
+    }
+    return m_Controls.at(ID);
 }
 
 std::vector<std::string> ControlList::IDs() const
 {
-	std::vector<std::string> Result;
+    std::vector<std::string> Result;
 
-	for (Map::const_iterator It = m_Controls.begin(); It != m_Controls.end(); ++It)
-	{
-		Result.push_back(It->first);
-	}
+    for (Map::const_iterator It = m_Controls.begin(); It != m_Controls.end(); ++It)
+    {
+        Result.push_back(It->first);
+    }
 
-	return Result;
+    return Result;
 }
 
 }

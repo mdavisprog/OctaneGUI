@@ -34,38 +34,38 @@ class Json;
 struct Vector2
 {
 public:
-	static Vector2 Zero;
-	static Json ToJson(const Vector2& Value);
-	static Vector2 FromJson(const Json& Value, const Vector2& Default = {});
+    static Vector2 Zero;
+    static Json ToJson(const Vector2& Value);
+    static Vector2 FromJson(const Json& Value, const Vector2& Default = {});
 
-	float X { 0.0f };
-	float Y { 0.0f };
+    float X { 0.0f };
+    float Y { 0.0f };
 
-	Vector2();
-	Vector2(float InX, float InY);
+    Vector2();
+    Vector2(float InX, float InY);
 
-	Vector2 operator-() const;
-	Vector2 operator+(const Vector2& Other) const;
-	Vector2 operator-(const Vector2& Other) const;
-	Vector2 operator*(const Vector2& Other) const;
-	Vector2 operator/(const Vector2& Other) const;
+    Vector2 operator-() const;
+    Vector2 operator+(const Vector2& Other) const;
+    Vector2 operator-(const Vector2& Other) const;
+    Vector2 operator*(const Vector2& Other) const;
+    Vector2 operator/(const Vector2& Other) const;
 
-	Vector2 operator*(float Other) const;
+    Vector2 operator*(float Other) const;
 
-	Vector2& operator+=(const Vector2& Other);
-	Vector2& operator-=(const Vector2& Other);
-	Vector2& operator*=(const Vector2& Other);
-	Vector2& operator/=(const Vector2& Other);
+    Vector2& operator+=(const Vector2& Other);
+    Vector2& operator-=(const Vector2& Other);
+    Vector2& operator*=(const Vector2& Other);
+    Vector2& operator/=(const Vector2& Other);
 
-	bool operator==(const Vector2& Other) const;
-	bool operator!=(const Vector2& Other) const;
+    bool operator==(const Vector2& Other) const;
+    bool operator!=(const Vector2& Other) const;
 
-	float Length() const;
-	float LengthSq() const;
-	Vector2 Invert() const;
-	Vector2 Unit() const;
-	Vector2 Floor() const;
-	bool IsZero() const;
+    float Length() const;
+    float LengthSq() const;
+    Vector2 Invert() const;
+    Vector2 Unit() const;
+    Vector2 Floor() const;
+    bool IsZero() const;
 };
 
 }

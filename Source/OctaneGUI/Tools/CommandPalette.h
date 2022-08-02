@@ -39,29 +39,29 @@ namespace Tools
 
 class CommandPalette : public Container
 {
-	CLASS(CommandPalette)
+    CLASS(CommandPalette)
 
 public:
-	static std::shared_ptr<CommandPalette> Get(Window* InWindow);
+    static std::shared_ptr<CommandPalette> Get(Window* InWindow);
 
-	CommandPalette(Window* InWindow);
+    CommandPalette(Window* InWindow);
 
-	void Show();
+    void Show();
 
-	std::shared_ptr<Control> Input() const;
+    std::shared_ptr<Control> Input() const;
 
-	virtual bool OnKeyPressed(Keyboard::Key Key) override;
+    virtual bool OnKeyPressed(Keyboard::Key Key) override;
 
 private:
-	static std::shared_ptr<CommandPalette> s_Root;
+    static std::shared_ptr<CommandPalette> s_Root;
 
-	// TODO: Maybe create an args parser class that can be used in multiple places.
-	static std::vector<std::u32string> Tokenize(const std::u32string& Value);
+    // TODO: Maybe create an args parser class that can be used in multiple places.
+    static std::vector<std::u32string> Tokenize(const std::u32string& Value);
 
-	bool Process(const std::u32string& Command, const std::vector<std::u32string>& Arguments);
+    bool Process(const std::u32string& Command, const std::vector<std::u32string>& Arguments);
 
-	std::shared_ptr<VerticalContainer> m_Container { nullptr };
-	std::shared_ptr<TextInput> m_Input { nullptr };
+    std::shared_ptr<VerticalContainer> m_Container { nullptr };
+    std::shared_ptr<TextInput> m_Input { nullptr };
 };
 
 }

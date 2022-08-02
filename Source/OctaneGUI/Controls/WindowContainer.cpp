@@ -34,63 +34,63 @@ namespace OctaneGUI
 {
 
 WindowContainer::WindowContainer(Window* InWindow)
-	: VerticalContainer(InWindow)
+    : VerticalContainer(InWindow)
 {
-	SetExpand(Expand::Both);
-	SetSpacing({ 0.0f, 0.0f });
+    SetExpand(Expand::Both);
+    SetSpacing({ 0.0f, 0.0f });
 
-	m_MenuBar = AddControl<MenuBar>();
-	m_Body = AddControl<Container>();
-	m_Body->SetExpand(Expand::Both);
+    m_MenuBar = AddControl<MenuBar>();
+    m_Body = AddControl<Container>();
+    m_Body->SetExpand(Expand::Both);
 }
 
 WindowContainer& WindowContainer::Clear()
 {
-	m_MenuBar->ClearMenuItems();
-	m_Body->ClearControls();
-	return *this;
+    m_MenuBar->ClearMenuItems();
+    m_Body->ClearControls();
+    return *this;
 }
 
 WindowContainer& WindowContainer::CloseMenuBar()
 {
-	m_MenuBar->Close();
-	return *this;
+    m_MenuBar->Close();
+    return *this;
 }
 
 const std::shared_ptr<Container>& WindowContainer::Body() const
 {
-	return m_Body;
+    return m_Body;
 }
 
 const std::shared_ptr<MenuBar>& WindowContainer::GetMenuBar() const
 {
-	return m_MenuBar;
+    return m_MenuBar;
 }
 
 std::weak_ptr<Control> WindowContainer::GetControl(const Vector2& Point) const
 {
-	std::weak_ptr<Control> Result = m_MenuBar->GetControl(Point);
+    std::weak_ptr<Control> Result = m_MenuBar->GetControl(Point);
 
-	if (Result.expired())
-	{
-		Result = m_Body->GetControl(Point);
-	}
+    if (Result.expired())
+    {
+        Result = m_Body->GetControl(Point);
+    }
 
-	return Result;
+    return Result;
 }
 
 void WindowContainer::OnLoad(const Json& Root)
 {
-	Container::OnLoad(Root);
+    Container::OnLoad(Root);
 
-	const Json& MB = Root["MenuBar"];
-	const Json& Body = Root["Body"];
+    const Json& MB = Root["MenuBar"];
+    const Json& Body = Root["Body"];
 
-	m_MenuBar->OnLoad(MB);
-	m_Body->OnLoad(Body);
-	m_Body->SetExpand(Expand::Both);
+    m_MenuBar->OnLoad(MB);
+    m_Body->OnLoad(Body);
+    m_Body->SetExpand(Expand::Both);
 
-	Invalidate(InvalidateType::Both);
+    Invalidate(InvalidateType::Both);
 }
 
 }

@@ -40,230 +40,230 @@ template <typename CHAR>
 class Lexer
 {
 public:
-	class Token
-	{
-	public:
-		Token()
-		{
-		}
+    class Token
+    {
+    public:
+        Token()
+        {
+        }
 
-		Token(CHAR const* Ptr, size_t Length)
-			: m_Ptr(Ptr)
-			, m_Length(Length)
-		{
-		}
+        Token(CHAR const* Ptr, size_t Length)
+            : m_Ptr(Ptr)
+            , m_Length(Length)
+        {
+        }
 
-		std::string_view ToAnsi() const
-		{
-			return { m_Ptr, m_Length };
-		}
+        std::string_view ToAnsi() const
+        {
+            return { m_Ptr, m_Length };
+        }
 
-		std::u32string_view ToUTF32() const
-		{
-			return { m_Ptr, m_Length };
-		}
+        std::u32string_view ToUTF32() const
+        {
+            return { m_Ptr, m_Length };
+        }
 
-		size_t Length() const
-		{
-			return m_Length;
-		}
+        size_t Length() const
+        {
+            return m_Length;
+        }
 
-		bool IsEmpty() const
-		{
-			return m_Length == 0;
-		}
+        bool IsEmpty() const
+        {
+            return m_Length == 0;
+        }
 
-		CHAR const* Ptr() const
-		{
-			return m_Ptr;
-		}
+        CHAR const* Ptr() const
+        {
+            return m_Ptr;
+        }
 
-		void Clear()
-		{
-			m_Ptr = nullptr;
-			m_Length = 0;
-		}
+        void Clear()
+        {
+            m_Ptr = nullptr;
+            m_Length = 0;
+        }
 
-	private:
-		CHAR const* m_Ptr { nullptr };
-		size_t m_Length { 0 };
-	};
+    private:
+        CHAR const* m_Ptr { nullptr };
+        size_t m_Length { 0 };
+    };
 
-	typedef std::function<void(const Token&)> OnTokenSignature;
-	typedef std::function<void(const CHAR)> OnSymbolSignature;
+    typedef std::function<void(const Token&)> OnTokenSignature;
+    typedef std::function<void(const CHAR)> OnSymbolSignature;
 
-	Lexer()
-	{
-	}
+    Lexer()
+    {
+    }
 
-	bool Begin(CHAR const* Buffer, size_t Length)
-	{
-		m_Buffer = Buffer;
-		m_Length = Length;
-		m_Index = 0;
+    bool Begin(CHAR const* Buffer, size_t Length)
+    {
+        m_Buffer = Buffer;
+        m_Length = Length;
+        m_Index = 0;
 
-		SkipWhitespace();
+        SkipWhitespace();
 
-		size_t Pos = 0;
-		while (!IsEnd())
-		{
-			CHAR Symbol = Current();
-			if (IsSymbolRegistered(Symbol))
-			{
-				EmitToken(Pos);
+        size_t Pos = 0;
+        while (!IsEnd())
+        {
+            CHAR Symbol = Current();
+            if (IsSymbolRegistered(Symbol))
+            {
+                EmitToken(Pos);
 
-				if (m_OnEmitSymbol)
-				{
-					m_OnEmitSymbol(Symbol);
-				}
+                if (m_OnEmitSymbol)
+                {
+                    m_OnEmitSymbol(Symbol);
+                }
 
-				Pos = m_Index + 1;
-			}
-			else if (IsWhitespace())
-			{
-				EmitToken(Pos);
-				Pos = m_Index + 1;
-			}
+                Pos = m_Index + 1;
+            }
+            else if (IsWhitespace())
+            {
+                EmitToken(Pos);
+                Pos = m_Index + 1;
+            }
 
-			Next();
-		}
+            Next();
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	CHAR Current() const
-	{
-		if (m_Index >= m_Length)
-		{
-			return 0;
-		}
+    CHAR Current() const
+    {
+        if (m_Index >= m_Length)
+        {
+            return 0;
+        }
 
-		return *(m_Buffer + m_Index);
-	}
+        return *(m_Buffer + m_Index);
+    }
 
-	CHAR Peek() const
-	{
-		const size_t Index = m_Index + 1;
-		if (Index >= m_Length)
-		{
-			return 0;
-		}
-		return *(m_Buffer + Index);
-	}
+    CHAR Peek() const
+    {
+        const size_t Index = m_Index + 1;
+        if (Index >= m_Length)
+        {
+            return 0;
+        }
+        return *(m_Buffer + Index);
+    }
 
-	CHAR PeekNextValid() const
-	{
-		size_t Index = m_Index + 1;
+    CHAR PeekNextValid() const
+    {
+        size_t Index = m_Index + 1;
 
-		while (Index < m_Length)
-		{
-			const CHAR Ch = *(m_Buffer + Index);
+        while (Index < m_Length)
+        {
+            const CHAR Ch = *(m_Buffer + Index);
 
-			if (!std::isspace(Ch))
-			{
-				return Ch;
-			}
+            if (!std::isspace(Ch))
+            {
+                return Ch;
+            }
 
-			Index++;
-		}
+            Index++;
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 
-	CHAR Next()
-	{
-		if (m_Index >= m_Length)
-		{
-			return Current();
-		}
+    CHAR Next()
+    {
+        if (m_Index >= m_Length)
+        {
+            return Current();
+        }
 
-		m_Index++;
-		return Current();
-	}
+        m_Index++;
+        return Current();
+    }
 
-	size_t Index() const
-	{
-		return m_Index;
-	}
+    size_t Index() const
+    {
+        return m_Index;
+    }
 
-	Token ParseUntil(const CHAR Symbol)
-	{
-		const size_t Index = m_Index;
-		while (Current() != Symbol && !IsEnd())
-		{
-			Next();
-		}
-		return { m_Buffer + Index, m_Index - Index };
-	}
+    Token ParseUntil(const CHAR Symbol)
+    {
+        const size_t Index = m_Index;
+        while (Current() != Symbol && !IsEnd())
+        {
+            Next();
+        }
+        return { m_Buffer + Index, m_Index - Index };
+    }
 
-	bool IsWhitespace() const
-	{
-		return std::isspace(Current());
-	}
+    bool IsWhitespace() const
+    {
+        return std::isspace(Current());
+    }
 
-	CHAR SkipWhitespace()
-	{
-		while (!IsEnd() && IsWhitespace())
-		{
-			Next();
-		}
+    CHAR SkipWhitespace()
+    {
+        while (!IsEnd() && IsWhitespace())
+        {
+            Next();
+        }
 
-		return Current();
-	}
+        return Current();
+    }
 
-	bool IsEnd() const
-	{
-		return m_Index >= m_Length;
-	}
+    bool IsEnd() const
+    {
+        return m_Index >= m_Length;
+    }
 
-	Lexer& RegisterSymbols(const std::vector<CHAR>& Symbols)
-	{
-		m_Symbols = Symbols;
-		return *this;
-	}
+    Lexer& RegisterSymbols(const std::vector<CHAR>& Symbols)
+    {
+        m_Symbols = Symbols;
+        return *this;
+    }
 
-	Lexer& SetOnEmitToken(OnTokenSignature&& Fn)
-	{
-		m_OnEmitToken = std::move(Fn);
-		return *this;
-	}
+    Lexer& SetOnEmitToken(OnTokenSignature&& Fn)
+    {
+        m_OnEmitToken = std::move(Fn);
+        return *this;
+    }
 
-	Lexer& SetOnEmitSymbol(OnSymbolSignature&& Fn)
-	{
-		m_OnEmitSymbol = std::move(Fn);
-		return *this;
-	}
+    Lexer& SetOnEmitSymbol(OnSymbolSignature&& Fn)
+    {
+        m_OnEmitSymbol = std::move(Fn);
+        return *this;
+    }
 
 private:
-	bool IsSymbolRegistered(const CHAR Symbol) const
-	{
-		if (m_Symbols.empty())
-		{
-			return false;
-		}
+    bool IsSymbolRegistered(const CHAR Symbol) const
+    {
+        if (m_Symbols.empty())
+        {
+            return false;
+        }
 
-		return std::find(m_Symbols.begin(), m_Symbols.end(), Symbol) != m_Symbols.end();
-	}
+        return std::find(m_Symbols.begin(), m_Symbols.end(), Symbol) != m_Symbols.end();
+    }
 
-	void EmitToken(size_t Start) const
-	{
-		if (Start >= m_Index)
-		{
-			return;
-		}
+    void EmitToken(size_t Start) const
+    {
+        if (Start >= m_Index)
+        {
+            return;
+        }
 
-		if (m_OnEmitToken)
-		{
-			m_OnEmitToken({ m_Buffer + Start, m_Index - Start });
-		}
-	}
+        if (m_OnEmitToken)
+        {
+            m_OnEmitToken({ m_Buffer + Start, m_Index - Start });
+        }
+    }
 
-	CHAR const* m_Buffer { nullptr };
-	size_t m_Length { 0 };
-	size_t m_Index { 0 };
-	std::vector<CHAR> m_Symbols {};
-	OnTokenSignature m_OnEmitToken { nullptr };
-	OnSymbolSignature m_OnEmitSymbol { nullptr };
+    CHAR const* m_Buffer { nullptr };
+    size_t m_Length { 0 };
+    size_t m_Index { 0 };
+    std::vector<CHAR> m_Symbols {};
+    OnTokenSignature m_OnEmitToken { nullptr };
+    OnSymbolSignature m_OnEmitSymbol { nullptr };
 };
 
 typedef Lexer<char> LexerAnsi;

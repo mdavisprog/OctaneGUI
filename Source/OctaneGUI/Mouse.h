@@ -34,27 +34,27 @@ namespace OctaneGUI
 class Mouse
 {
 public:
-	enum class Button : uint8_t
-	{
-		Left,
-		Middle,
-		Right
-	};
+    enum class Button : uint8_t
+    {
+        Left,
+        Middle,
+        Right
+    };
 
-	enum class Count : uint8_t
-	{
-		Single,
-		Double,
-		Triple
-	};
+    enum class Count : uint8_t
+    {
+        Single,
+        Double,
+        Triple
+    };
 
-	enum class Cursor : uint8_t
-	{
-		Arrow,
-		IBeam,
-		SizeWE,
-		SizeNS,
-	};
+    enum class Cursor : uint8_t
+    {
+        Arrow,
+        IBeam,
+        SizeWE,
+        SizeNS,
+    };
 };
 
 }

@@ -37,24 +37,24 @@ namespace OctaneGUI
 bool AssertFunc(bool Condition, const char* Format, ...)
 {
 #if !NDEBUG
-	if (!Condition)
-	{
-		va_list List;
-		va_start(List, Format);
+    if (!Condition)
+    {
+        va_list List;
+        va_start(List, Format);
 
-		std::string Buffer;
-		Buffer.resize(SHRT_MAX);
-		vsnprintf(Buffer.data(), Buffer.size(), Format, List);
+        std::string Buffer;
+        Buffer.resize(SHRT_MAX);
+        vsnprintf(Buffer.data(), Buffer.size(), Format, List);
 
-		va_end(List);
+        va_end(List);
 
-		printf("Assertion failed: %s:%d\n", __FILE__, __LINE__);
-		printf("%s\n", Buffer.c_str());
-		std::abort();
-	}
+        printf("Assertion failed: %s:%d\n", __FILE__, __LINE__);
+        printf("%s\n", Buffer.c_str());
+        std::abort();
+    }
 #endif
 
-	return Condition;
+    return Condition;
 }
 
 }

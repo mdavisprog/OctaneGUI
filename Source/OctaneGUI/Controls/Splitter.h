@@ -37,36 +37,36 @@ class SplitterInteraction;
 
 class Splitter : public Container
 {
-	friend SplitterInteraction;
+    friend SplitterInteraction;
 
-	CLASS(Splitter)
+    CLASS(Splitter)
 
 public:
-	Splitter(Window* InWindow);
+    Splitter(Window* InWindow);
 
-	Splitter& SetOrientation(Orientation InOrientation);
-	Orientation GetOrientation() const;
+    Splitter& SetOrientation(Orientation InOrientation);
+    Orientation GetOrientation() const;
 
-	std::shared_ptr<Container> First() const;
-	std::shared_ptr<Container> Second() const;
+    std::shared_ptr<Container> First() const;
+    std::shared_ptr<Container> Second() const;
 
-	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
-	virtual Vector2 DesiredSize() const override;
+    virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
+    virtual Vector2 DesiredSize() const override;
 
-	virtual void Update() override;
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnResized() override;
+    virtual void Update() override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnResized() override;
 
 private:
-	void UpdateLayout();
-	void SetSplitterPosition(float Position);
+    void UpdateLayout();
+    void SetSplitterPosition(float Position);
 
-	std::shared_ptr<Separator> m_Separator { nullptr };
-	std::shared_ptr<Container> m_First { nullptr };
-	std::shared_ptr<Container> m_Second { nullptr };
-	std::shared_ptr<SplitterInteraction> m_Interaction { nullptr };
-	std::shared_ptr<BoxContainer> m_Split { nullptr };
-	bool m_UpdateLayout { false };
+    std::shared_ptr<Separator> m_Separator { nullptr };
+    std::shared_ptr<Container> m_First { nullptr };
+    std::shared_ptr<Container> m_Second { nullptr };
+    std::shared_ptr<SplitterInteraction> m_Interaction { nullptr };
+    std::shared_ptr<BoxContainer> m_Split { nullptr };
+    bool m_UpdateLayout { false };
 };
 
 }

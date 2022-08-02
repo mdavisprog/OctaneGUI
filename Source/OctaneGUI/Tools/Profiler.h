@@ -39,87 +39,87 @@ namespace Tools
 class Profiler
 {
 public:
-	class Event
-	{
-		friend Profiler;
+    class Event
+    {
+        friend Profiler;
 
-	public:
-		Event();
-		Event(const FlyString& Name, int64_t Elapsed);
+    public:
+        Event();
+        Event(const FlyString& Name, int64_t Elapsed);
 
-		const char* Name() const;
-		int64_t Elapsed() const;
-		unsigned int ExclusiveCount() const;
-		unsigned int InclusiveCount() const;
-		const std::vector<Event>& Events() const;
+        const char* Name() const;
+        int64_t Elapsed() const;
+        unsigned int ExclusiveCount() const;
+        unsigned int InclusiveCount() const;
+        const std::vector<Event>& Events() const;
 
-	private:
-		FlyString m_Name {};
-		int64_t m_Elapsed { 0 };
-		unsigned int m_ExclusiveCount { 1 };
-		unsigned int m_InclusiveCount { 1 };
-		std::vector<Event> m_Events {};
-	};
+    private:
+        FlyString m_Name {};
+        int64_t m_Elapsed { 0 };
+        unsigned int m_ExclusiveCount { 1 };
+        unsigned int m_InclusiveCount { 1 };
+        std::vector<Event> m_Events {};
+    };
 
-	class Sample
-	{
-		friend Profiler;
+    class Sample
+    {
+        friend Profiler;
 
-	public:
-		Sample();
-		Sample(const char* Name, bool Group);
-		~Sample();
+    public:
+        Sample();
+        Sample(const char* Name, bool Group);
+        ~Sample();
 
-	private:
-		FlyString m_Name {};
-		int64_t m_Start { 0 };
-		bool m_Begin { false };
-		bool m_Group { false };
-	};
+    private:
+        FlyString m_Name {};
+        int64_t m_Start { 0 };
+        bool m_Begin { false };
+        bool m_Group { false };
+    };
 
-	class Frame
-	{
-		friend Profiler;
+    class Frame
+    {
+        friend Profiler;
 
-	public:
-		Frame(bool Begin = true);
-		~Frame();
+    public:
+        Frame(bool Begin = true);
+        ~Frame();
 
-		int64_t Elapsed() const;
-		unsigned int InclusiveCount() const;
-		unsigned int ExclusiveCount() const;
-		const std::vector<Event>& Events() const;
+        int64_t Elapsed() const;
+        unsigned int InclusiveCount() const;
+        unsigned int ExclusiveCount() const;
+        const std::vector<Event>& Events() const;
 
-	private:
-		void CoalesceEvents();
-		void CoalesceEvents(Event& Group);
+    private:
+        void CoalesceEvents();
+        void CoalesceEvents(Event& Group);
 
-		Sample m_Sample {};
-		Event m_Root {};
-		bool m_Begin { false };
-	};
+        Sample m_Sample {};
+        Event m_Root {};
+        bool m_Begin { false };
+    };
 
-	static Profiler& Get();
+    static Profiler& Get();
 
-	void Enable();
-	void Disable();
-	bool IsEnabled() const;
+    void Enable();
+    void Disable();
+    bool IsEnabled() const;
 
-	const std::vector<Frame>& Frames() const;
+    const std::vector<Frame>& Frames() const;
 
 private:
-	Profiler();
+    Profiler();
 
-	void BeginFrame();
-	void EndFrame();
+    void BeginFrame();
+    void EndFrame();
 
-	void BeginSample(Sample& Sample_);
-	void EndSample(Sample& Sample_);
+    void BeginSample(Sample& Sample_);
+    void EndSample(Sample& Sample_);
 
-	bool m_Enabled { false };
-	std::vector<Frame> m_Frames {};
-	std::vector<Event> m_Groups {};
-	Clock m_Clock {};
+    bool m_Enabled { false };
+    std::vector<Frame> m_Frames {};
+    std::vector<Event> m_Groups {};
+    Clock m_Clock {};
 };
 
 }

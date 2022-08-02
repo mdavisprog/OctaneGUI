@@ -51,70 +51,70 @@ class Window;
 class Application
 {
 public:
-	typedef std::function<void(Window*)> OnWindowSignature;
-	typedef std::function<void(Window*, const VertexBuffer&)> OnWindowPaintSignature;
-	typedef std::function<Event(Window*)> OnWindowEventSignature;
-	typedef std::function<uint32_t(const std::vector<uint8_t>&, uint32_t, uint32_t)> OnLoadTextureSignature;
-	typedef std::function<std::u32string(void)> OnGetClipboardContentsSignature;
-	typedef std::function<void(Window*, const char*)> OnSetWindowTitleSignature;
-	typedef std::function<void(Window*, Mouse::Cursor)> OnSetMouseCursorSignature;
+    typedef std::function<void(Window*)> OnWindowSignature;
+    typedef std::function<void(Window*, const VertexBuffer&)> OnWindowPaintSignature;
+    typedef std::function<Event(Window*)> OnWindowEventSignature;
+    typedef std::function<uint32_t(const std::vector<uint8_t>&, uint32_t, uint32_t)> OnLoadTextureSignature;
+    typedef std::function<std::u32string(void)> OnGetClipboardContentsSignature;
+    typedef std::function<void(Window*, const char*)> OnSetWindowTitleSignature;
+    typedef std::function<void(Window*, Mouse::Cursor)> OnSetMouseCursorSignature;
 
-	Application();
-	virtual ~Application();
+    Application();
+    virtual ~Application();
 
-	bool Initialize(const char* JsonStream, std::unordered_map<std::string, ControlList>& WindowControls);
-	void Shutdown();
-	void Update();
-	int Run();
-	void Quit();
+    bool Initialize(const char* JsonStream, std::unordered_map<std::string, ControlList>& WindowControls);
+    void Shutdown();
+    void Update();
+    int Run();
+    void Quit();
 
-	std::shared_ptr<Window> GetMainWindow() const;
-	std::shared_ptr<Window> GetWindow(const char* ID) const;
-	bool IsMainWindow(Window* InWindow) const;
-	std::shared_ptr<Window> NewWindow(const char* ID, const char* JsonStream);
-	std::shared_ptr<Window> NewWindow(const char* ID, const char* JsonStream, ControlList& List);
-	bool DisplayWindow(const char* ID) const;
-	void CloseWindow(const char* ID);
-	std::shared_ptr<Theme> GetTheme() const;
-	std::shared_ptr<Icons> GetIcons() const;
-	TextureCache& GetTextureCache();
-	bool IsKeyPressed(Keyboard::Key Key) const;
-	std::u32string ClipboardContents() const;
-	Application& SetMouseCursor(Window* Target, Mouse::Cursor Cursor);
+    std::shared_ptr<Window> GetMainWindow() const;
+    std::shared_ptr<Window> GetWindow(const char* ID) const;
+    bool IsMainWindow(Window* InWindow) const;
+    std::shared_ptr<Window> NewWindow(const char* ID, const char* JsonStream);
+    std::shared_ptr<Window> NewWindow(const char* ID, const char* JsonStream, ControlList& List);
+    bool DisplayWindow(const char* ID) const;
+    void CloseWindow(const char* ID);
+    std::shared_ptr<Theme> GetTheme() const;
+    std::shared_ptr<Icons> GetIcons() const;
+    TextureCache& GetTextureCache();
+    bool IsKeyPressed(Keyboard::Key Key) const;
+    std::u32string ClipboardContents() const;
+    Application& SetMouseCursor(Window* Target, Mouse::Cursor Cursor);
 
-	Application& SetOnCreateWindow(OnWindowSignature&& Fn);
-	Application& SetOnDestroyWindow(OnWindowSignature&& Fn);
-	Application& SetOnPaint(OnWindowPaintSignature&& Fn);
-	Application& SetOnEvent(OnWindowEventSignature&& Fn);
-	Application& SetOnLoadTexture(OnLoadTextureSignature&& Fn);
-	Application& SetOnExit(OnEmptySignature&& Fn);
-	Application& SetOnGetClipboardContents(OnGetClipboardContentsSignature&& Fn);
-	Application& SetOnSetWindowTitle(OnSetWindowTitleSignature&& Fn);
-	Application& SetOnSetMouseCursor(OnSetMouseCursorSignature&& Fn);
+    Application& SetOnCreateWindow(OnWindowSignature&& Fn);
+    Application& SetOnDestroyWindow(OnWindowSignature&& Fn);
+    Application& SetOnPaint(OnWindowPaintSignature&& Fn);
+    Application& SetOnEvent(OnWindowEventSignature&& Fn);
+    Application& SetOnLoadTexture(OnLoadTextureSignature&& Fn);
+    Application& SetOnExit(OnEmptySignature&& Fn);
+    Application& SetOnGetClipboardContents(OnGetClipboardContentsSignature&& Fn);
+    Application& SetOnSetWindowTitle(OnSetWindowTitleSignature&& Fn);
+    Application& SetOnSetMouseCursor(OnSetMouseCursorSignature&& Fn);
 
 private:
-	void OnPaint(Window* InWindow, const VertexBuffer& Buffer);
-	std::shared_ptr<Window> CreateWindow(const char* ID);
-	void DestroyWindow(const std::shared_ptr<Window>& Item);
-	int ProcessEvent(const std::shared_ptr<Window>& Item);
-	bool Initialize();
+    void OnPaint(Window* InWindow, const VertexBuffer& Buffer);
+    std::shared_ptr<Window> CreateWindow(const char* ID);
+    void DestroyWindow(const std::shared_ptr<Window>& Item);
+    int ProcessEvent(const std::shared_ptr<Window>& Item);
+    bool Initialize();
 
-	std::unordered_map<std::string, std::shared_ptr<Window>> m_Windows;
-	std::shared_ptr<Theme> m_Theme { nullptr };
-	std::shared_ptr<Icons> m_Icons { nullptr };
-	bool m_IsRunning { false };
-	std::vector<Keyboard::Key> m_PressedKeys {};
-	TextureCache m_TextureCache {};
+    std::unordered_map<std::string, std::shared_ptr<Window>> m_Windows;
+    std::shared_ptr<Theme> m_Theme { nullptr };
+    std::shared_ptr<Icons> m_Icons { nullptr };
+    bool m_IsRunning { false };
+    std::vector<Keyboard::Key> m_PressedKeys {};
+    TextureCache m_TextureCache {};
 
-	OnWindowSignature m_OnCreateWindow { nullptr };
-	OnWindowSignature m_OnDestroyWindow { nullptr };
-	OnWindowPaintSignature m_OnPaint { nullptr };
-	OnWindowEventSignature m_OnEvent { nullptr };
-	OnLoadTextureSignature m_OnLoadTexture { nullptr };
-	OnEmptySignature m_OnExit { nullptr };
-	OnGetClipboardContentsSignature m_OnGetClipboardContents { nullptr };
-	OnSetWindowTitleSignature m_OnSetWindowTitle { nullptr };
-	OnSetMouseCursorSignature m_OnSetMouseCursor { nullptr };
+    OnWindowSignature m_OnCreateWindow { nullptr };
+    OnWindowSignature m_OnDestroyWindow { nullptr };
+    OnWindowPaintSignature m_OnPaint { nullptr };
+    OnWindowEventSignature m_OnEvent { nullptr };
+    OnLoadTextureSignature m_OnLoadTexture { nullptr };
+    OnEmptySignature m_OnExit { nullptr };
+    OnGetClipboardContentsSignature m_OnGetClipboardContents { nullptr };
+    OnSetWindowTitleSignature m_OnSetWindowTitle { nullptr };
+    OnSetMouseCursorSignature m_OnSetMouseCursor { nullptr };
 };
 
 }

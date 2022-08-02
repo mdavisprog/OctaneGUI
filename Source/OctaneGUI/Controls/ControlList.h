@@ -38,32 +38,32 @@ class Control;
 class ControlList
 {
 public:
-	ControlList();
-	~ControlList();
+    ControlList();
+    ~ControlList();
 
-	void AddControl(const std::shared_ptr<Control>& InControl);
-	void AddControls(const std::vector<std::shared_ptr<Control>>& Controls);
-	bool Contains(const char* ID) const;
-	std::weak_ptr<Control> Get(const char* ID) const;
-	std::vector<std::string> IDs() const;
+    void AddControl(const std::shared_ptr<Control>& InControl);
+    void AddControls(const std::vector<std::shared_ptr<Control>>& Controls);
+    bool Contains(const char* ID) const;
+    std::weak_ptr<Control> Get(const char* ID) const;
+    std::vector<std::string> IDs() const;
 
-	template <class T>
-	std::shared_ptr<T> To(const char* ID) const
-	{
-		std::shared_ptr<T> Result;
-		std::weak_ptr<Control> Item = Get(ID);
-		if (!Item.expired())
-		{
-			Result = std::dynamic_pointer_cast<T>(Item.lock());
-		}
+    template <class T>
+    std::shared_ptr<T> To(const char* ID) const
+    {
+        std::shared_ptr<T> Result;
+        std::weak_ptr<Control> Item = Get(ID);
+        if (!Item.expired())
+        {
+            Result = std::dynamic_pointer_cast<T>(Item.lock());
+        }
 
-		return Result;
-	}
+        return Result;
+    }
 
 private:
-	typedef std::unordered_map<std::string, std::weak_ptr<Control>> Map;
+    typedef std::unordered_map<std::string, std::weak_ptr<Control>> Map;
 
-	Map m_Controls;
+    Map m_Controls;
 };
 
 }

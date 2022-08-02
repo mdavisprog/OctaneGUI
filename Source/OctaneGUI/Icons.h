@@ -39,31 +39,31 @@ class Texture;
 class Icons
 {
 public:
-	enum class Type : uint8_t
-	{
-		ArrowLeft,
-		ArrowRight,
-		ArrowUp,
-		ArrowDown,
-		Check,
-		Expand,
-		Collapse,
-		Plus,
-		Minus,
-		Max
-	};
+    enum class Type : uint8_t
+    {
+        ArrowLeft,
+        ArrowRight,
+        ArrowUp,
+        ArrowDown,
+        Check,
+        Expand,
+        Collapse,
+        Plus,
+        Minus,
+        Max
+    };
 
-	Icons();
-	~Icons();
+    Icons();
+    ~Icons();
 
-	void Initialize();
-	std::shared_ptr<Texture> GetTexture() const;
-	Rect GetUVs(Type InType) const;
-	Rect GetUVsNormalized(Type InType) const;
+    void Initialize();
+    std::shared_ptr<Texture> GetTexture() const;
+    Rect GetUVs(Type InType) const;
+    Rect GetUVsNormalized(Type InType) const;
 
 private:
-	std::shared_ptr<Texture> m_Texture;
-	Rect m_UVs[(uint32_t)Type::Max];
+    std::shared_ptr<Texture> m_Texture;
+    Rect m_UVs[(uint32_t)Type::Max];
 };
 
 }

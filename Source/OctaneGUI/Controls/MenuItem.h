@@ -35,35 +35,35 @@ class Menu;
 
 class MenuItem : public TextSelectable
 {
-	CLASS(MenuItem)
+    CLASS(MenuItem)
 
 public:
-	typedef std::function<void(std::shared_ptr<MenuItem const>)> OnMenuItemSignature;
+    typedef std::function<void(std::shared_ptr<MenuItem const>)> OnMenuItemSignature;
 
-	MenuItem(Window* InWindow);
+    MenuItem(Window* InWindow);
 
-	std::shared_ptr<Menu> CreateMenu();
-	std::shared_ptr<Menu> GetMenu() const;
-	MenuItem& DestroyMenu();
-	MenuItem& SetIsMenuBar(bool IsMenuBar);
+    std::shared_ptr<Menu> CreateMenu();
+    std::shared_ptr<Menu> GetMenu() const;
+    MenuItem& DestroyMenu();
+    MenuItem& SetIsMenuBar(bool IsMenuBar);
 
-	MenuItem& SetChecked(bool Checked);
-	bool IsChecked() const;
+    MenuItem& SetChecked(bool Checked);
+    bool IsChecked() const;
 
-	void OpenMenu(const Vector2& Position) const;
-	MenuItem& SetOnOpenMenu(OnMenuItemSignature&& Fn);
+    void OpenMenu(const Vector2& Position) const;
+    MenuItem& SetOnOpenMenu(OnMenuItemSignature&& Fn);
 
-	virtual void OnPaint(Paint& Brush) const override;
-	virtual void Update() override;
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnSave(Json& Root) const override;
-	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;
+    virtual void OnPaint(Paint& Brush) const override;
+    virtual void Update() override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnSave(Json& Root) const override;
+    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;
 
 private:
-	std::shared_ptr<Menu> m_Menu { nullptr };
-	bool m_IsMenuBar { false };
-	bool m_IsChecked { false };
-	OnMenuItemSignature m_OnOpenMenu { nullptr };
+    std::shared_ptr<Menu> m_Menu { nullptr };
+    bool m_IsMenuBar { false };
+    bool m_IsChecked { false };
+    OnMenuItemSignature m_OnOpenMenu { nullptr };
 };
 
 }

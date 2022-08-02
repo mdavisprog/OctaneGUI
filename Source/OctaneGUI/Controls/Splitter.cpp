@@ -36,220 +36,220 @@ namespace OctaneGUI
 
 class SplitterInteraction : public Control
 {
-	CLASS(SplitterInteraction)
+    CLASS(SplitterInteraction)
 
 public:
-	SplitterInteraction(Window* InWindow, Splitter* Owner)
-		: Control(InWindow)
-		, m_Owner(Owner)
-	{
-		SetExpand(Expand::Both);
-	}
+    SplitterInteraction(Window* InWindow, Splitter* Owner)
+        : Control(InWindow)
+        , m_Owner(Owner)
+    {
+        SetExpand(Expand::Both);
+    }
 
-	virtual void OnMouseMove(const Vector2& Position) override
-	{
-		bool UpdateMouseCursor = false;
-		if (m_Drag)
-		{
-			const Vector2 Delta = Position - m_Anchor;
-			if (m_Owner->GetOrientation() == Orientation::Vertical)
-			{
-				m_Owner->SetSplitterPosition(m_Owner->m_Separator->GetPosition().X + Delta.X);
-			}
-			else
-			{
-				m_Owner->SetSplitterPosition(m_Owner->m_Separator->GetPosition().Y + Delta.Y);
-			}
-			m_Owner->InvalidateLayout();
-			UpdateMouseCursor = true;
-		}
-		else
-		{
-			UpdateMouseCursor = m_Owner->m_Separator->Contains(Position);
-		}
+    virtual void OnMouseMove(const Vector2& Position) override
+    {
+        bool UpdateMouseCursor = false;
+        if (m_Drag)
+        {
+            const Vector2 Delta = Position - m_Anchor;
+            if (m_Owner->GetOrientation() == Orientation::Vertical)
+            {
+                m_Owner->SetSplitterPosition(m_Owner->m_Separator->GetPosition().X + Delta.X);
+            }
+            else
+            {
+                m_Owner->SetSplitterPosition(m_Owner->m_Separator->GetPosition().Y + Delta.Y);
+            }
+            m_Owner->InvalidateLayout();
+            UpdateMouseCursor = true;
+        }
+        else
+        {
+            UpdateMouseCursor = m_Owner->m_Separator->Contains(Position);
+        }
 
-		m_Anchor = Position;
+        m_Anchor = Position;
 
-		if (UpdateMouseCursor)
-		{
-			GetWindow()->SetMouseCursor(MouseCursor());
-		}
-	}
+        if (UpdateMouseCursor)
+        {
+            GetWindow()->SetMouseCursor(MouseCursor());
+        }
+    }
 
-	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override
-	{
-		if (m_Owner->m_Separator->Contains(Position))
-		{
-			m_Drag = true;
-			return true;
-		}
+    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override
+    {
+        if (m_Owner->m_Separator->Contains(Position))
+        {
+            m_Drag = true;
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override
-	{
-		m_Drag = false;
-	}
+    virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override
+    {
+        m_Drag = false;
+    }
 
-	virtual void OnMouseLeave() override
-	{
-		GetWindow()->SetMouseCursor(Mouse::Cursor::Arrow);
-	}
+    virtual void OnMouseLeave() override
+    {
+        GetWindow()->SetMouseCursor(Mouse::Cursor::Arrow);
+    }
 
 private:
-	Mouse::Cursor MouseCursor() const
-	{
-		return m_Owner->GetOrientation() == Orientation::Vertical
-			? Mouse::Cursor::SizeWE
-			: Mouse::Cursor::SizeNS;
-	}
+    Mouse::Cursor MouseCursor() const
+    {
+        return m_Owner->GetOrientation() == Orientation::Vertical
+            ? Mouse::Cursor::SizeWE
+            : Mouse::Cursor::SizeNS;
+    }
 
-	Splitter* m_Owner { nullptr };
-	bool m_Drag { false };
-	Vector2 m_Anchor {};
+    Splitter* m_Owner { nullptr };
+    bool m_Drag { false };
+    Vector2 m_Anchor {};
 };
 
 Splitter::Splitter(Window* InWindow)
-	: Container(InWindow)
+    : Container(InWindow)
 {
-	m_First = std::make_shared<Container>(InWindow);
-	m_Separator = std::make_shared<Separator>(InWindow);
-	m_Second = std::make_shared<Container>(InWindow);
-	m_Interaction = std::make_shared<SplitterInteraction>(InWindow, this);
+    m_First = std::make_shared<Container>(InWindow);
+    m_Separator = std::make_shared<Separator>(InWindow);
+    m_Second = std::make_shared<Container>(InWindow);
+    m_Interaction = std::make_shared<SplitterInteraction>(InWindow, this);
 
-	UpdateLayout();
+    UpdateLayout();
 }
 
 Splitter& Splitter::SetOrientation(Orientation InOrientation)
 {
-	if (m_Separator->GetOrientation() == InOrientation)
-	{
-		return *this;
-	}
+    if (m_Separator->GetOrientation() == InOrientation)
+    {
+        return *this;
+    }
 
-	m_Separator->SetOrientation(InOrientation);
-	UpdateLayout();
-	InvalidateLayout();
-	return *this;
+    m_Separator->SetOrientation(InOrientation);
+    UpdateLayout();
+    InvalidateLayout();
+    return *this;
 }
 
 Orientation Splitter::GetOrientation() const
 {
-	return m_Separator->GetOrientation();
+    return m_Separator->GetOrientation();
 }
 
 std::shared_ptr<Container> Splitter::First() const
 {
-	return m_First;
+    return m_First;
 }
 
 std::shared_ptr<Container> Splitter::Second() const
 {
-	return m_Second;
+    return m_Second;
 }
 
 std::weak_ptr<Control> Splitter::GetControl(const Vector2& Point) const
 {
-	std::weak_ptr<Control> Result = Container::GetControl(Point);
+    std::weak_ptr<Control> Result = Container::GetControl(Point);
 
-	if (!Result.expired() && Result.lock() == m_Separator)
-	{
-		Result = m_Interaction;
-	}
+    if (!Result.expired() && Result.lock() == m_Separator)
+    {
+        Result = m_Interaction;
+    }
 
-	return Result;
+    return Result;
 }
 
 Vector2 Splitter::DesiredSize() const
 {
-	return m_Split->DesiredSize();
+    return m_Split->DesiredSize();
 }
 
 void Splitter::Update()
 {
-	if (m_UpdateLayout)
-	{
-		const float Position = m_Separator->GetOrientation() == Orientation::Vertical
-			? GetSize().X * 0.5f - m_Separator->GetSize().X * 0.5f
-			: GetSize().Y * 0.5f - m_Separator->GetSize().Y * 0.5f;
-		SetSplitterPosition(Position);
-		m_UpdateLayout = false;
-	}
+    if (m_UpdateLayout)
+    {
+        const float Position = m_Separator->GetOrientation() == Orientation::Vertical
+            ? GetSize().X * 0.5f - m_Separator->GetSize().X * 0.5f
+            : GetSize().Y * 0.5f - m_Separator->GetSize().Y * 0.5f;
+        SetSplitterPosition(Position);
+        m_UpdateLayout = false;
+    }
 }
 
 void Splitter::OnLoad(const Json& Root)
 {
-	Container::OnLoad(Root);
+    Container::OnLoad(Root);
 
-	SetOrientation(ToOrientation(Root["Orientation"].String()));
-	m_First->OnLoad(Root["First"]);
-	m_Second->OnLoad(Root["Second"]);
+    SetOrientation(ToOrientation(Root["Orientation"].String()));
+    m_First->OnLoad(Root["First"]);
+    m_Second->OnLoad(Root["Second"]);
 }
 
 void Splitter::OnResized()
 {
-	float Position = 0.0f;
+    float Position = 0.0f;
 
-	if (m_Separator->GetOrientation() == Orientation::Vertical)
-	{
-		Position = m_First->GetSize().X;
-	}
-	else
-	{
-		Position = m_First->GetSize().Y;
-	}
+    if (m_Separator->GetOrientation() == Orientation::Vertical)
+    {
+        Position = m_First->GetSize().X;
+    }
+    else
+    {
+        Position = m_First->GetSize().Y;
+    }
 
-	SetSplitterPosition(Position);
+    SetSplitterPosition(Position);
 }
 
 void Splitter::UpdateLayout()
 {
-	ClearControls();
+    ClearControls();
 
-	m_Split = nullptr;
-	if (m_Separator->GetOrientation() == Orientation::Vertical)
-	{
-		m_Split = AddControl<HorizontalContainer>();
-		m_First->SetSize({ GetSize().X * 0.5f - m_Separator->GetSize().X * 0.5f, m_First->GetSize().Y });
-	}
-	else
-	{
-		m_Split = AddControl<VerticalContainer>();
-		m_First->SetSize({ m_First->GetSize().X, m_First->GetSize().Y * 0.5f - m_Separator->GetSize().Y * 0.5f });
-	}
+    m_Split = nullptr;
+    if (m_Separator->GetOrientation() == Orientation::Vertical)
+    {
+        m_Split = AddControl<HorizontalContainer>();
+        m_First->SetSize({ GetSize().X * 0.5f - m_Separator->GetSize().X * 0.5f, m_First->GetSize().Y });
+    }
+    else
+    {
+        m_Split = AddControl<VerticalContainer>();
+        m_First->SetSize({ m_First->GetSize().X, m_First->GetSize().Y * 0.5f - m_Separator->GetSize().Y * 0.5f });
+    }
 
-	m_Split
-		->SetSpacing({ 0.0f, 0.0f })
-		->SetExpand(Expand::Both);
+    m_Split
+        ->SetSpacing({ 0.0f, 0.0f })
+        ->SetExpand(Expand::Both);
 
-	m_Split->InsertControl(m_First);
-	m_Split->InsertControl(m_Separator);
-	m_Split->InsertControl(m_Second);
-	m_Split->InsertControl(m_Interaction);
+    m_Split->InsertControl(m_First);
+    m_Split->InsertControl(m_Separator);
+    m_Split->InsertControl(m_Second);
+    m_Split->InsertControl(m_Interaction);
 
-	m_UpdateLayout = true;
+    m_UpdateLayout = true;
 }
 
 void Splitter::SetSplitterPosition(float Position)
 {
-	const Vector2 Size = GetSize();
-	const Vector2 SplitterSize = m_Separator->GetSize();
+    const Vector2 Size = GetSize();
+    const Vector2 SplitterSize = m_Separator->GetSize();
 
-	if (m_Separator->GetOrientation() == Orientation::Vertical)
-	{
-		float Width = std::max<float>(Position, 0.0f);
-		Width = std::min<float>(Width, Size.X - SplitterSize.X);
-		m_First->SetSize({ Width, Size.Y });
-		m_Second->SetSize({ Size.X - Width - SplitterSize.X, Size.Y });
-	}
-	else
-	{
-		float Height = std::max<float>(Position, 0.0f);
-		Height = std::min<float>(Height, Size.Y - SplitterSize.Y);
-		m_First->SetSize({ Size.X, Height });
-		m_Second->SetSize({ Size.X, Size.Y - Height - SplitterSize.Y });
-	}
+    if (m_Separator->GetOrientation() == Orientation::Vertical)
+    {
+        float Width = std::max<float>(Position, 0.0f);
+        Width = std::min<float>(Width, Size.X - SplitterSize.X);
+        m_First->SetSize({ Width, Size.Y });
+        m_Second->SetSize({ Size.X - Width - SplitterSize.X, Size.Y });
+    }
+    else
+    {
+        float Height = std::max<float>(Position, 0.0f);
+        Height = std::min<float>(Height, Size.Y - SplitterSize.Y);
+        m_First->SetSize({ Size.X, Height });
+        m_Second->SetSize({ Size.X, Size.Y - Height - SplitterSize.Y });
+    }
 }
 
 }

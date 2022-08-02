@@ -36,30 +36,30 @@ class Texture;
 
 class Image : public Control
 {
-	CLASS(Image)
+    CLASS(Image)
 
 public:
-	Image(Window* InWindow);
-	virtual ~Image();
+    Image(Window* InWindow);
+    virtual ~Image();
 
-	Image& SetTexture(const char* Path);
-	Image& SetTexture(const std::shared_ptr<Texture>& InTexture);
-	Image& SetUVs(const Rect& UVs);
+    Image& SetTexture(const char* Path);
+    Image& SetTexture(const std::shared_ptr<Texture>& InTexture);
+    Image& SetUVs(const Rect& UVs);
 
-	Image& SetTint(const Color& Tint);
-	Color Tint() const;
+    Image& SetTint(const Color& Tint);
+    Color Tint() const;
 
-	virtual void OnPaint(Paint& Brush) const override;
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnSave(Json& Root) const override;
+    virtual void OnPaint(Paint& Brush) const override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnSave(Json& Root) const override;
 
 protected:
-	virtual bool IsFixedSize() const override;
+    virtual bool IsFixedSize() const override;
 
 private:
-	std::shared_ptr<Texture> m_Texture { nullptr };
-	Rect m_UVs {};
-	Color m_Tint { Color::White };
+    std::shared_ptr<Texture> m_Texture { nullptr };
+    Rect m_UVs {};
+    Color m_Tint { Color::White };
 };
 
 }

@@ -35,14 +35,14 @@ namespace OctaneGUI
 struct Vertex
 {
 public:
-	Vector2 Position;
-	Vector2 TexCoords;
-	Color Col;
+    Vector2 Position;
+    Vector2 TexCoords;
+    Color Col;
 
-	Vertex();
-	Vertex(const Vector2& InPosition);
-	Vertex(const Vector2& InPosition, const Color& InCol);
-	Vertex(const Vector2& InPosition, const Vector2& InTexCoords, const Color& InCol);
+    Vertex();
+    Vertex(const Vector2& InPosition);
+    Vertex(const Vector2& InPosition, const Color& InCol);
+    Vertex(const Vector2& InPosition, const Vector2& InTexCoords, const Color& InCol);
 };
 
 }

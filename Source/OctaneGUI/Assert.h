@@ -34,7 +34,7 @@ bool AssertFunc(bool Condition, const char* Format, ...);
 }
 
 #if NDEBUG
-	#define Assert(Condition, Format, ...)
+    #define Assert(Condition, Format, ...)
 #else
-	#define Assert(Condition, Format, ...) OctaneGUI::AssertFunc(Condition, Format, ##__VA_ARGS__);
+    #define Assert(Condition, Format, ...) OctaneGUI::AssertFunc(Condition, Format, ##__VA_ARGS__);
 #endif

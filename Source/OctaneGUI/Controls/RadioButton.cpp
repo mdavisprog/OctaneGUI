@@ -39,116 +39,116 @@ namespace OctaneGUI
 {
 
 RadioButton::RadioButton(Window* InWindow)
-	: Button(InWindow)
+    : Button(InWindow)
 {
-	m_Text = std::make_shared<Text>(InWindow);
-	m_Text->SetParent(this);
-	m_Radius = std::round(m_Text->GetFont()->Size() * 0.5f);
+    m_Text = std::make_shared<Text>(InWindow);
+    m_Text->SetParent(this);
+    m_Radius = std::round(m_Text->GetFont()->Size() * 0.5f);
 
-	m_Text->SetPosition({ m_Radius * 2.0f, 0.0f });
+    m_Text->SetPosition({ m_Radius * 2.0f, 0.0f });
 }
 
 RadioButton& RadioButton::SetText(const char32_t* InText)
 {
-	m_Text->SetText(InText);
-	Layout();
-	return *this;
+    m_Text->SetText(InText);
+    Layout();
+    return *this;
 }
 
 const char32_t* RadioButton::GetText() const
 {
-	return m_Text->GetText();
+    return m_Text->GetText();
 }
 
 RadioButton& RadioButton::SetSelected(bool Selected)
 {
-	if (m_Selected == Selected)
-	{
-		return *this;
-	}
+    if (m_Selected == Selected)
+    {
+        return *this;
+    }
 
-	m_Selected = Selected;
+    m_Selected = Selected;
 
-	if (Selected)
-	{
-		Container* Parent = dynamic_cast<Container*>(GetParent());
-		if (Parent != nullptr)
-		{
-			for (const std::shared_ptr<Control>& Item : Parent->Controls())
-			{
-				if (Item.get() == this)
-				{
-					continue;
-				}
+    if (Selected)
+    {
+        Container* Parent = dynamic_cast<Container*>(GetParent());
+        if (Parent != nullptr)
+        {
+            for (const std::shared_ptr<Control>& Item : Parent->Controls())
+            {
+                if (Item.get() == this)
+                {
+                    continue;
+                }
 
-				const std::shared_ptr<RadioButton> ItemButton = std::dynamic_pointer_cast<RadioButton>(Item);
-				if (ItemButton)
-				{
-					ItemButton->SetSelected(false);
-				}
-			}
-		}
-	}
+                const std::shared_ptr<RadioButton> ItemButton = std::dynamic_pointer_cast<RadioButton>(Item);
+                if (ItemButton)
+                {
+                    ItemButton->SetSelected(false);
+                }
+            }
+        }
+    }
 
-	Invalidate();
-	return *this;
+    Invalidate();
+    return *this;
 }
 
 bool RadioButton::IsSelected() const
 {
-	return m_Selected;
+    return m_Selected;
 }
 
 void RadioButton::OnPaint(Paint& Brush) const
 {
-	PROFILER_SAMPLE_GROUP("RadioButton::OnPaint");
+    PROFILER_SAMPLE_GROUP("RadioButton::OnPaint");
 
-	Color BackgroundTint = GetProperty(ThemeProperties::RadioButton).ToColor();
-	Color OutlineTint = GetProperty(ThemeProperties::RadioButton_Outline).ToColor();
-	float OutlineThickness = GetProperty(ThemeProperties::RadioButton_Outline_Thickness).Float();
-	if (IsHovered())
-	{
-		BackgroundTint = GetProperty(ThemeProperties::RadioButton_Hovered).ToColor();
-	}
-	else if (IsPressed())
-	{
-		BackgroundTint = GetProperty(ThemeProperties::RadioButton_Pressed).ToColor();
-	}
+    Color BackgroundTint = GetProperty(ThemeProperties::RadioButton).ToColor();
+    Color OutlineTint = GetProperty(ThemeProperties::RadioButton_Outline).ToColor();
+    float OutlineThickness = GetProperty(ThemeProperties::RadioButton_Outline_Thickness).Float();
+    if (IsHovered())
+    {
+        BackgroundTint = GetProperty(ThemeProperties::RadioButton_Hovered).ToColor();
+    }
+    else if (IsPressed())
+    {
+        BackgroundTint = GetProperty(ThemeProperties::RadioButton_Pressed).ToColor();
+    }
 
-	const Vector2 Position = GetAbsolutePosition() + Vector2(m_Radius * 0.5f, m_Radius);
-	Brush.Circle(Position, m_Radius, BackgroundTint);
-	Brush.CircleOutline(Position, m_Radius, OutlineTint, OutlineThickness);
+    const Vector2 Position = GetAbsolutePosition() + Vector2(m_Radius * 0.5f, m_Radius);
+    Brush.Circle(Position, m_Radius, BackgroundTint);
+    Brush.CircleOutline(Position, m_Radius, OutlineTint, OutlineThickness);
 
-	if (m_Selected)
-	{
-		Brush.Circle(Position, std::round(m_Radius * 0.5f), GetProperty(ThemeProperties::RadioButton_Selected).ToColor());
-	}
+    if (m_Selected)
+    {
+        Brush.Circle(Position, std::round(m_Radius * 0.5f), GetProperty(ThemeProperties::RadioButton_Selected).ToColor());
+    }
 
-	m_Text->OnPaint(Brush);
+    m_Text->OnPaint(Brush);
 }
 
 void RadioButton::OnLoad(const Json& Root)
 {
-	Button::OnLoad(Root);
+    Button::OnLoad(Root);
 
-	m_Text->OnLoad(Root["Text"]);
-	m_Radius = Root["Radius"].Number(m_Radius);
+    m_Text->OnLoad(Root["Text"]);
+    m_Radius = Root["Radius"].Number(m_Radius);
 
-	Layout();
+    Layout();
 }
 
 void RadioButton::OnClicked()
 {
-	SetSelected(true);
+    SetSelected(true);
 }
 
 void RadioButton::Layout()
 {
-	const Vector2 TextSize = m_Text->GetSize();
-	m_Radius = std::round(TextSize.Y * 0.5f);
-	const float Offset = m_Radius * 2.5;
-	m_Text->SetPosition({ Offset, 0.0f });
-	SetSize({ m_Radius + Offset + TextSize.X, TextSize.Y });
+    const Vector2 TextSize = m_Text->GetSize();
+    m_Radius = std::round(TextSize.Y * 0.5f);
+    const float Offset = m_Radius * 2.5;
+    m_Text->SetPosition({ Offset, 0.0f });
+    SetSize({ m_Radius + Offset + TextSize.X, TextSize.Y });
 }
 
 }

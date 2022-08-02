@@ -38,28 +38,28 @@ class Window;
 class Timer : public std::enable_shared_from_this<Timer>
 {
 public:
-	Timer(int Interval, bool Repeat, Window* InWindow, OnEmptySignature&& Fn);
-	virtual ~Timer();
+    Timer(int Interval, bool Repeat, Window* InWindow, OnEmptySignature&& Fn);
+    virtual ~Timer();
 
-	Timer& SetOnTimeout(OnEmptySignature&& Fn);
-	void Invoke() const;
+    Timer& SetOnTimeout(OnEmptySignature&& Fn);
+    void Invoke() const;
 
-	Timer& SetInterval(int Interval);
-	int Interval() const;
+    Timer& SetInterval(int Interval);
+    int Interval() const;
 
-	Timer& SetRepeat(bool Repeat);
-	bool Repeat() const;
+    Timer& SetRepeat(bool Repeat);
+    bool Repeat() const;
 
-	void Start();
-	void Stop();
+    void Start();
+    void Stop();
 
 private:
-	Timer();
+    Timer();
 
-	int m_Interval { 0 };
-	bool m_Repeat { false };
-	Window* m_Window { nullptr };
-	OnEmptySignature m_OnTimeout { nullptr };
+    int m_Interval { 0 };
+    bool m_Repeat { false };
+    Window* m_Window { nullptr };
+    OnEmptySignature m_OnTimeout { nullptr };
 };
 
 }

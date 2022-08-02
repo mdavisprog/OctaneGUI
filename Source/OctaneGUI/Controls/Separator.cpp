@@ -33,90 +33,90 @@ namespace OctaneGUI
 {
 
 Separator::Separator(Window* InWindow)
-	: Control(InWindow)
+    : Control(InWindow)
 {
-	SetExpand(Expand::Width);
-	SetSize({ 0.0f, 16.0f });
+    SetExpand(Expand::Width);
+    SetSize({ 0.0f, 16.0f });
 }
 
 Separator& Separator::SetOnHover(OnControlSignature&& Fn)
 {
-	m_OnHover = std::move(Fn);
-	return *this;
+    m_OnHover = std::move(Fn);
+    return *this;
 }
 
 Separator& Separator::SetOrientation(Orientation InOrientation)
 {
-	if (m_Orientation == InOrientation)
-	{
-		return *this;
-	}
+    if (m_Orientation == InOrientation)
+    {
+        return *this;
+    }
 
-	m_Orientation = InOrientation;
-	UpdateLayout();
-	Invalidate(InvalidateType::Both);
-	return *this;
+    m_Orientation = InOrientation;
+    UpdateLayout();
+    Invalidate(InvalidateType::Both);
+    return *this;
 }
 
 Orientation Separator::GetOrientation() const
 {
-	return m_Orientation;
+    return m_Orientation;
 }
 
 void Separator::OnPaint(Paint& Brush) const
 {
-	PROFILER_SAMPLE_GROUP("Separator::OnPaint");
+    PROFILER_SAMPLE_GROUP("Separator::OnPaint");
 
-	const Color Fill = GetProperty(ThemeProperties::Separator).ToColor();
-	const float Thickness = GetProperty(ThemeProperties::Separator_Thickness).Float();
-	const float Margins = GetProperty(ThemeProperties::Separator_Margins).Float();
+    const Color Fill = GetProperty(ThemeProperties::Separator).ToColor();
+    const float Thickness = GetProperty(ThemeProperties::Separator_Thickness).Float();
+    const float Margins = GetProperty(ThemeProperties::Separator_Margins).Float();
 
-	const Vector2 HalfSize = GetSize() * 0.5f;
-	Vector2 Start;
-	Vector2 End;
+    const Vector2 HalfSize = GetSize() * 0.5f;
+    Vector2 Start;
+    Vector2 End;
 
-	if (m_Orientation == Orientation::Vertical)
-	{
-		Start = GetAbsolutePosition() + Vector2(HalfSize.X, Margins);
-		End = GetAbsolutePosition() + Vector2(HalfSize.X, GetSize().Y - Margins);
-	}
-	else
-	{
-		Start = GetAbsolutePosition() + Vector2(Margins, HalfSize.Y);
-		End = GetAbsolutePosition() + Vector2(GetSize().X - Margins, HalfSize.Y);
-	}
+    if (m_Orientation == Orientation::Vertical)
+    {
+        Start = GetAbsolutePosition() + Vector2(HalfSize.X, Margins);
+        End = GetAbsolutePosition() + Vector2(HalfSize.X, GetSize().Y - Margins);
+    }
+    else
+    {
+        Start = GetAbsolutePosition() + Vector2(Margins, HalfSize.Y);
+        End = GetAbsolutePosition() + Vector2(GetSize().X - Margins, HalfSize.Y);
+    }
 
-	Brush.Line(Start, End, Fill, Thickness);
+    Brush.Line(Start, End, Fill, Thickness);
 }
 
 void Separator::OnLoad(const Json& Root)
 {
-	Control::OnLoad(Root);
+    Control::OnLoad(Root);
 
-	m_Orientation = ToOrientation(Root["Orientation"].String());
-	UpdateLayout();
+    m_Orientation = ToOrientation(Root["Orientation"].String());
+    UpdateLayout();
 }
 
 void Separator::OnMouseEnter()
 {
-	if (m_OnHover)
-	{
-		m_OnHover(*this);
-	}
+    if (m_OnHover)
+    {
+        m_OnHover(*this);
+    }
 }
 
 void Separator::UpdateLayout()
 {
-	if (m_Orientation == Orientation::Vertical)
-	{
-		SetExpand(Expand::Height);
-		SetSize({ 16.0f, 0.0f });
-	}
-	else
-	{
-		SetExpand(Expand::Width);
-		SetSize({ 0.0f, 16.0f });
-	}
+    if (m_Orientation == Orientation::Vertical)
+    {
+        SetExpand(Expand::Height);
+        SetSize({ 16.0f, 0.0f });
+    }
+    else
+    {
+        SetExpand(Expand::Width);
+        SetSize({ 0.0f, 16.0f });
+    }
 }
 
 }

@@ -36,78 +36,78 @@ namespace OctaneGUI
 class ThemeProperties
 {
 public:
-	enum Property
-	{
-		// Colors
-		Text,
-		Text_Disabled,
-		Button,
-		Button_Highlight_3D,
-		Button_Shadow_3D,
-		Button_Hovered,
-		Button_Pressed,
-		Check,
-		ImageButton,
-		TextSelectable_Text_Hovered,
-		TextSelectable_Hovered,
-		TextInput_Background,
-		TextInput_FocusedOutline,
-		TextInput_Cursor,
-		TextInput_Selection,
-		Panel,
-		PanelOutline,
-		Separator,
-		ScrollBar,
-		ScrollBar_Handle,
-		ScrollBar_HandleHovered,
-		Tree_Toggle_Icon,
-		RadioButton,
-		RadioButton_Outline,
-		RadioButton_Hovered,
-		RadioButton_Pressed,
-		RadioButton_Selected,
+    enum Property
+    {
+        // Colors
+        Text,
+        Text_Disabled,
+        Button,
+        Button_Highlight_3D,
+        Button_Shadow_3D,
+        Button_Hovered,
+        Button_Pressed,
+        Check,
+        ImageButton,
+        TextSelectable_Text_Hovered,
+        TextSelectable_Hovered,
+        TextInput_Background,
+        TextInput_FocusedOutline,
+        TextInput_Cursor,
+        TextInput_Selection,
+        Panel,
+        PanelOutline,
+        Separator,
+        ScrollBar,
+        ScrollBar_Handle,
+        ScrollBar_HandleHovered,
+        Tree_Toggle_Icon,
+        RadioButton,
+        RadioButton_Outline,
+        RadioButton_Hovered,
+        RadioButton_Pressed,
+        RadioButton_Selected,
 
-		// Floats
-		Separator_Thickness,
-		Separator_Margins,
-		Menu_RightPadding,
-		ScrollBar_Size,
-		ScrollBar_HandleMinSize,
-		FontSize,
-		RadioButton_Outline_Thickness,
+        // Floats
+        Separator_Thickness,
+        Separator_Margins,
+        Menu_RightPadding,
+        ScrollBar_Size,
+        ScrollBar_HandleMinSize,
+        FontSize,
+        RadioButton_Outline_Thickness,
 
-		// Vector2
-		Button_Padding,
-		TextSelectable_Padding,
-		TextSelectable_Offset,
-		Menu_Margins,
-		MenuBar_Padding,
+        // Vector2
+        Button_Padding,
+        TextSelectable_Padding,
+        TextSelectable_Offset,
+        Menu_Margins,
+        MenuBar_Padding,
 
-		// Flags
-		Button_3D,
-		TextInput_3D,
-		ScrollBar_3D,
-		ScrollBar_AlwaysPaint,
-		ScrollBar_Buttons,
-		Tree_Classic_Icons,
-		Tree_Highlight_Row,
+        // Flags
+        Button_3D,
+        TextInput_3D,
+        ScrollBar_3D,
+        ScrollBar_AlwaysPaint,
+        ScrollBar_Buttons,
+        Tree_Classic_Icons,
+        Tree_Highlight_Row,
 
-		// Strings
-		FontPath,
+        // Strings
+        FontPath,
 
-		Max
-	};
+        Max
+    };
 
-	ThemeProperties();
+    ThemeProperties();
 
-	bool Has(Property Index) const;
-	void Clear(Property Index);
+    bool Has(Property Index) const;
+    void Clear(Property Index);
 
-	Variant& operator[](Property Index);
-	const Variant& operator[](Property Index) const;
+    Variant& operator[](Property Index);
+    const Variant& operator[](Property Index) const;
 
 private:
-	std::unordered_map<Property, Variant> m_Properties {};
+    std::unordered_map<Property, Variant> m_Properties {};
 };
 
 }

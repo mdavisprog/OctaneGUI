@@ -34,14 +34,14 @@ namespace OctaneGUI
 class Clock
 {
 public:
-	Clock();
+    Clock();
 
-	float Measure() const;
-	int64_t MeasureMS() const;
-	void Reset();
+    float Measure() const;
+    int64_t MeasureMS() const;
+    void Reset();
 
 private:
-	std::chrono::time_point<std::chrono::high_resolution_clock> m_Stamp { std::chrono::high_resolution_clock::now() };
+    std::chrono::time_point<std::chrono::high_resolution_clock> m_Stamp { std::chrono::high_resolution_clock::now() };
 };
 
 }

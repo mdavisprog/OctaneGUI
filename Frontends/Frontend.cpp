@@ -34,67 +34,67 @@ namespace Frontend
 
 void OnCreateWindow(OctaneGUI::Window* Window)
 {
-	Windowing::CreateWindow(Window);
-	Rendering::CreateRenderer(Window);
+    Windowing::CreateWindow(Window);
+    Rendering::CreateRenderer(Window);
 }
 
 void OnDestroyWindow(OctaneGUI::Window* Window)
 {
-	Rendering::DestroyRenderer(Window);
-	Windowing::DestroyWindow(Window);
+    Rendering::DestroyRenderer(Window);
+    Windowing::DestroyWindow(Window);
 }
 
 OctaneGUI::Event OnEvent(OctaneGUI::Window* Window)
 {
-	return Windowing::Event(Window);
+    return Windowing::Event(Window);
 }
 
 void OnPaint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& Buffer)
 {
-	Rendering::Paint(Window, Buffer);
+    Rendering::Paint(Window, Buffer);
 }
 
 uint32_t OnLoadTexture(const std::vector<uint8_t>& Data, uint32_t Width, uint32_t Height)
 {
-	return Rendering::LoadTexture(Data, Width, Height);
+    return Rendering::LoadTexture(Data, Width, Height);
 }
 
 void OnExit()
 {
-	Rendering::Exit();
-	Windowing::Exit();
+    Rendering::Exit();
+    Windowing::Exit();
 }
 
 std::u32string OnGetClipboardContents()
 {
-	return Windowing::GetClipboardContents();
+    return Windowing::GetClipboardContents();
 }
 
 void OnSetWindowTitle(OctaneGUI::Window* Window, const char* Title)
 {
-	Windowing::SetWindowTitle(Window, Title);
+    Windowing::SetWindowTitle(Window, Title);
 }
 
 void OnSetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor)
 {
-	Windowing::SetMouseCursor(Window, Cursor);
+    Windowing::SetMouseCursor(Window, Cursor);
 }
 
 void Initialize(OctaneGUI::Application& Application)
 {
-	Windowing::Initialize();
-	Rendering::Initialize();
+    Windowing::Initialize();
+    Rendering::Initialize();
 
-	Application
-		.SetOnCreateWindow(OnCreateWindow)
-		.SetOnDestroyWindow(OnDestroyWindow)
-		.SetOnEvent(OnEvent)
-		.SetOnPaint(OnPaint)
-		.SetOnLoadTexture(OnLoadTexture)
-		.SetOnExit(OnExit)
-		.SetOnGetClipboardContents(OnGetClipboardContents)
-		.SetOnSetWindowTitle(OnSetWindowTitle)
-		.SetOnSetMouseCursor(OnSetMouseCursor);
+    Application
+        .SetOnCreateWindow(OnCreateWindow)
+        .SetOnDestroyWindow(OnDestroyWindow)
+        .SetOnEvent(OnEvent)
+        .SetOnPaint(OnPaint)
+        .SetOnLoadTexture(OnLoadTexture)
+        .SetOnExit(OnExit)
+        .SetOnGetClipboardContents(OnGetClipboardContents)
+        .SetOnSetWindowTitle(OnSetWindowTitle)
+        .SetOnSetMouseCursor(OnSetMouseCursor);
 }
 
 }

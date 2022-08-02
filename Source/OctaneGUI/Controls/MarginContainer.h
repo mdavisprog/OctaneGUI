@@ -33,24 +33,24 @@ namespace OctaneGUI
 
 class MarginContainer : public Container
 {
-	CLASS(MarginContainer)
+    CLASS(MarginContainer)
 
 public:
-	MarginContainer(Window* InWindow);
+    MarginContainer(Window* InWindow);
 
-	MarginContainer& SetMargins(const Rect& Margins);
-	Rect Margins() const;
+    MarginContainer& SetMargins(const Rect& Margins);
+    Rect Margins() const;
 
-	virtual Vector2 DesiredSize() const override;
+    virtual Vector2 DesiredSize() const override;
 
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnSave(Json& Root) const override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnSave(Json& Root) const override;
 
 protected:
-	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const override;
+    virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const override;
 
 private:
-	Rect m_Margins {};
+    Rect m_Margins {};
 };
 
 }

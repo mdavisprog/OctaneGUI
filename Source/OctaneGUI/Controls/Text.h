@@ -39,47 +39,47 @@ class Font;
 
 class Text : public Control
 {
-	CLASS(Text)
+    CLASS(Text)
 
 public:
-	Text(Window* InWindow);
+    Text(Window* InWindow);
 
-	Text& SetText(const char* InContents);
-	Text& SetText(const char32_t* InContents);
-	const char32_t* GetText() const;
-	const std::u32string& GetString() const;
-	uint32_t Length() const;
-	const std::shared_ptr<Font>& GetFont() const;
-	float LineHeight() const;
+    Text& SetText(const char* InContents);
+    Text& SetText(const char32_t* InContents);
+    const char32_t* GetText() const;
+    const std::u32string& GetString() const;
+    uint32_t Length() const;
+    const std::shared_ptr<Font>& GetFont() const;
+    float LineHeight() const;
 
-	Text& SetFont(const char* Path);
-	Text& SetFontSize(float Size);
+    Text& SetFont(const char* Path);
+    Text& SetFontSize(float Size);
 
-	Text& SetWrap(bool Wrap);
-	bool Wrap() const;
+    Text& SetWrap(bool Wrap);
+    bool Wrap() const;
 
-	void PushSpan(const TextSpan& Span);
-	void PushSpans(const std::vector<TextSpan>& Spans);
-	void ClearSpans();
+    void PushSpan(const TextSpan& Span);
+    void PushSpans(const std::vector<TextSpan>& Spans);
+    void ClearSpans();
 
-	virtual void Update() override;
-	virtual void OnPaint(Paint& Brush) const override;
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnSave(Json& Root) const override;
-	virtual void OnThemeLoaded() override;
+    virtual void Update() override;
+    virtual void OnPaint(Paint& Brush) const override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnSave(Json& Root) const override;
+    virtual void OnThemeLoaded() override;
 
 protected:
-	virtual bool IsFixedSize() const override;
+    virtual bool IsFixedSize() const override;
 
 private:
-	void UpdateFont();
-	void UpdateSize();
+    void UpdateFont();
+    void UpdateSize();
 
-	std::u32string m_Contents {};
-	Vector2 m_ContentSize {};
-	std::vector<TextSpan> m_Spans {};
-	std::shared_ptr<Font> m_Font { nullptr };
-	bool m_Wrap { false };
+    std::u32string m_Contents {};
+    Vector2 m_ContentSize {};
+    std::vector<TextSpan> m_Spans {};
+    std::shared_ptr<Font> m_Font { nullptr };
+    bool m_Wrap { false };
 };
 
 }

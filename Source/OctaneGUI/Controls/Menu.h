@@ -39,46 +39,46 @@ class VerticalContainer;
 
 class Menu : public Container
 {
-	CLASS(Menu)
+    CLASS(Menu)
 
 public:
-	Menu(Window* InWindow);
+    Menu(Window* InWindow);
 
-	template <class T, typename... TArgs>
-	std::shared_ptr<T> AddItem(TArgs... Args)
-	{
-		return m_Container->AddControl<T>(Args...);
-	}
+    template <class T, typename... TArgs>
+    std::shared_ptr<T> AddItem(TArgs... Args)
+    {
+        return m_Container->AddControl<T>(Args...);
+    }
 
-	Menu& AddItem(const char* InText, OnEmptySignature Fn = nullptr);
-	std::shared_ptr<MenuItem> GetItem(const char* InText) const;
-	Menu& AddSeparator();
-	Menu& Close();
-	Vector2 Margins() const;
+    Menu& AddItem(const char* InText, OnEmptySignature Fn = nullptr);
+    std::shared_ptr<MenuItem> GetItem(const char* InText) const;
+    Menu& AddSeparator();
+    Menu& Close();
+    Vector2 Margins() const;
 
-	void GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const;
+    void GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const;
 
-	void Resize();
+    void Resize();
 
-	virtual void GetControlList(ControlList& List) const override;
+    virtual void GetControlList(ControlList& List) const override;
 
-	virtual void OnLoad(const Json& Root) override;
+    virtual void OnLoad(const Json& Root) override;
 
 private:
-	typedef std::unordered_map<const MenuItem*, OnEmptySignature> MenuItemMap;
+    typedef std::unordered_map<const MenuItem*, OnEmptySignature> MenuItemMap;
 
-	using Container::AddControl;
-	using Container::InsertControl;
+    using Container::AddControl;
+    using Container::InsertControl;
 
-	void OnHovered(const MenuItem& Item);
-	void OnSelected(const MenuItem& Item);
-	void SetSelected(const std::shared_ptr<Menu>& InMenu, bool Selected) const;
+    void OnHovered(const MenuItem& Item);
+    void OnSelected(const MenuItem& Item);
+    void SetSelected(const std::shared_ptr<Menu>& InMenu, bool Selected) const;
 
-	std::shared_ptr<Panel> m_Panel { nullptr };
-	std::shared_ptr<VerticalContainer> m_Container {};
-	std::vector<std::shared_ptr<MenuItem>> m_Items {};
-	MenuItemMap m_Callbacks {};
-	std::shared_ptr<Menu> m_Menu { nullptr };
+    std::shared_ptr<Panel> m_Panel { nullptr };
+    std::shared_ptr<VerticalContainer> m_Container {};
+    std::vector<std::shared_ptr<MenuItem>> m_Items {};
+    MenuItemMap m_Callbacks {};
+    std::shared_ptr<Menu> m_Menu { nullptr };
 };
 
 }

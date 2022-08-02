@@ -34,54 +34,54 @@ namespace OctaneGUI
 
 class Button : public Control
 {
-	CLASS(Button)
+    CLASS(Button)
 
 public:
-	Button(Window* InWindow);
+    Button(Window* InWindow);
 
-	Button& SetOnPressed(OnButtonSignature&& Fn);
-	Button& SetOnClicked(OnButtonSignature&& Fn);
-	Button& SetOnReleased(OnButtonSignature&& Fn);
+    Button& SetOnPressed(OnButtonSignature&& Fn);
+    Button& SetOnClicked(OnButtonSignature&& Fn);
+    Button& SetOnReleased(OnButtonSignature&& Fn);
 
-	Button& SetDisabled(bool Disabled);
-	bool IsDisabled() const;
-	bool IsHovered() const;
-	bool IsPressed() const;
+    Button& SetDisabled(bool Disabled);
+    bool IsDisabled() const;
+    bool IsHovered() const;
+    bool IsPressed() const;
 
-	Button& SetRadius(float Radius);
-	Button& SetRadius(const Rect& Radius);
-	Rect Radius() const;
-	bool HasRadius() const;
+    Button& SetRadius(float Radius);
+    Button& SetRadius(const Rect& Radius);
+    Rect Radius() const;
+    bool HasRadius() const;
 
-	virtual void OnPaint(Paint& Brush) const override;
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnSave(Json& Root) const override;
-	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;
-	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
-	virtual void OnMouseEnter() override;
-	virtual void OnMouseLeave() override;
+    virtual void OnPaint(Paint& Brush) const override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnSave(Json& Root) const override;
+    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;
+    virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
+    virtual void OnMouseEnter() override;
+    virtual void OnMouseLeave() override;
 
 protected:
-	virtual void OnPressed();
-	virtual void OnReleased();
-	virtual void OnClicked();
+    virtual void OnPressed();
+    virtual void OnReleased();
+    virtual void OnClicked();
 
 private:
-	enum class State : uint8_t
-	{
-		None,
-		Hovered,
-		Pressed
-	};
+    enum class State : uint8_t
+    {
+        None,
+        Hovered,
+        Pressed
+    };
 
-	static const char* ToString(State Type);
+    static const char* ToString(State Type);
 
-	State m_State { State::None };
-	OnButtonSignature m_OnPressed { nullptr };
-	OnButtonSignature m_OnClicked { nullptr };
-	OnButtonSignature m_OnReleased { nullptr };
-	bool m_Disabled { false };
-	Rect m_Radius {};
+    State m_State { State::None };
+    OnButtonSignature m_OnPressed { nullptr };
+    OnButtonSignature m_OnClicked { nullptr };
+    OnButtonSignature m_OnReleased { nullptr };
+    bool m_Disabled { false };
+    Rect m_Radius {};
 };
 
 }

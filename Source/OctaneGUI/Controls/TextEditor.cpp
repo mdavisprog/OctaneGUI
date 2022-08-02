@@ -34,169 +34,169 @@ namespace OctaneGUI
 {
 
 TextEditor::TextEditor(Window* InWindow)
-	: TextInput(InWindow)
+    : TextInput(InWindow)
 {
-	SetMulitline(true);
+    SetMulitline(true);
 
-	SetOnModifyText([this](std::shared_ptr<TextInput>, const std::u32string& Pending) -> std::u32string
-		{
-			return ModifyText(Pending);
-		});
+    SetOnModifyText([this](std::shared_ptr<TextInput>, const std::u32string& Pending) -> std::u32string
+        {
+            return ModifyText(Pending);
+        });
 
-	SetOnPrePaintText([this](std::shared_ptr<TextInput const> Input, Paint& Brush) -> void
-		{
-			PaintLineColors(Input, Brush);
-		});
+    SetOnPrePaintText([this](std::shared_ptr<TextInput const> Input, Paint& Brush) -> void
+        {
+            PaintLineColors(Input, Brush);
+        });
 }
 
 TextEditor& TextEditor::SetMatchIndent(bool MatchIndent)
 {
-	m_MatchIndent = MatchIndent;
-	return *this;
+    m_MatchIndent = MatchIndent;
+    return *this;
 }
 
 bool TextEditor::MatchIndent() const
 {
-	return m_MatchIndent;
+    return m_MatchIndent;
 }
 
 TextEditor& TextEditor::SetLineColor(const size_t Line, const Color& _Color)
 {
-	m_LineColors[Line] = _Color;
-	return *this;
+    m_LineColors[Line] = _Color;
+    return *this;
 }
 
 TextEditor& TextEditor::ClearLineColor(const size_t Line)
 {
-	m_LineColors.erase(Line);
-	return *this;
+    m_LineColors.erase(Line);
+    return *this;
 }
 
 TextEditor& TextEditor::ClearLineColors()
 {
-	m_LineColors.clear();
-	return *this;
+    m_LineColors.clear();
+    return *this;
 }
 
 void TextEditor::OnLoad(const Json& Root)
 {
-	TextInput::OnLoad(Root);
+    TextInput::OnLoad(Root);
 
-	SetMatchIndent(Root["MatchIndent"].Boolean(m_MatchIndent));
+    SetMatchIndent(Root["MatchIndent"].Boolean(m_MatchIndent));
 
-	SetMulitline(true);
+    SetMulitline(true);
 }
 
 void TextEditor::TextAdded(const std::u32string& Contents)
 {
-	const bool Back = Contents == U"\"\""
-		|| Contents == U"''"
-		|| Contents == U"{}"
-		|| Contents == U"[]"
-		|| Contents == U"()";
+    const bool Back = Contents == U"\"\""
+        || Contents == U"''"
+        || Contents == U"{}"
+        || Contents == U"[]"
+        || Contents == U"()";
 
-	if (Back)
-	{
-		MovePosition(0, -1);
-	}
+    if (Back)
+    {
+        MovePosition(0, -1);
+    }
 }
 
 std::u32string TextEditor::ModifyText(const std::u32string& Pending)
 {
-	if (Pending == U"\n")
-	{
-		return MatchIndent(Pending);
-	}
+    if (Pending == U"\n")
+    {
+        return MatchIndent(Pending);
+    }
 
-	std::u32string Result = Pending;
-	if (Pending == U"\"" || Pending == U"'")
-	{
-		Result = MatchCharacter(Pending, Pending[0]);
+    std::u32string Result = Pending;
+    if (Pending == U"\"" || Pending == U"'")
+    {
+        Result = MatchCharacter(Pending, Pending[0]);
 
-		if (Result.empty())
-		{
-			MovePosition(0, 1);
-		}
-	}
+        if (Result.empty())
+        {
+            MovePosition(0, 1);
+        }
+    }
 
-	if (Pending == U"{")
-	{
-		Result = Pending + U"}";
-	}
+    if (Pending == U"{")
+    {
+        Result = Pending + U"}";
+    }
 
-	if (Pending == U"[")
-	{
-		Result = Pending + U"]";
-	}
+    if (Pending == U"[")
+    {
+        Result = Pending + U"]";
+    }
 
-	if (Pending == U"(")
-	{
-		Result = Pending + U")";
-	}
+    if (Pending == U"(")
+    {
+        Result = Pending + U")";
+    }
 
-	if (Pending == U"}" || Pending == U"]" || Pending == U")")
-	{
-		if (Right() == Pending.front())
-		{
-			Result.clear();
-			MovePosition(0, 1);
-		}
-	}
+    if (Pending == U"}" || Pending == U"]" || Pending == U")")
+    {
+        if (Right() == Pending.front())
+        {
+            Result.clear();
+            MovePosition(0, 1);
+        }
+    }
 
-	return Result;
+    return Result;
 }
 
 std::u32string TextEditor::MatchIndent(const std::u32string& Pending) const
 {
-	if (!m_MatchIndent)
-	{
-		return Pending;
-	}
+    if (!m_MatchIndent)
+    {
+        return Pending;
+    }
 
-	std::u32string Line { this->Line() };
+    std::u32string Line { this->Line() };
 
-	size_t TabCount = 0;
-	size_t Pos = Line.find_first_of('\t');
-	while (Pos == TabCount + 1)
-	{
-		TabCount++;
-		Pos = Line.find_first_of('\t', Pos + 1);
-	}
+    size_t TabCount = 0;
+    size_t Pos = Line.find_first_of('\t');
+    while (Pos == TabCount + 1)
+    {
+        TabCount++;
+        Pos = Line.find_first_of('\t', Pos + 1);
+    }
 
-	std::u32string Result = Pending;
-	if (TabCount > 0)
-	{
-		Result += std::u32string(TabCount, '\t');
-	}
+    std::u32string Result = Pending;
+    if (TabCount > 0)
+    {
+        Result += std::u32string(TabCount, '\t');
+    }
 
-	return Result;
+    return Result;
 }
 
 std::u32string TextEditor::MatchCharacter(const std::u32string& Pending, char32_t Character) const
 {
-	if (String::Count(Line(), Character) % 2 == 0)
-	{
-		if (Right() == Character)
-		{
-			return U"";
-		}
+    if (String::Count(Line(), Character) % 2 == 0)
+    {
+        if (Right() == Character)
+        {
+            return U"";
+        }
 
-		return Pending + Character;
-	}
+        return Pending + Character;
+    }
 
-	return Pending;
+    return Pending;
 }
 
 void TextEditor::PaintLineColors(std::shared_ptr<TextInput const>& Input, Paint& Brush) const
 {
-	for (const std::pair<size_t, Color>& Line : m_LineColors)
-	{
-		Rect Bounds { Scrollable()->GetAbsoluteBounds() };
-		Bounds.Max.X = Bounds.Min.X + Scrollable()->ContentSize().X;
-		Bounds.Min.Y += (Line.first - 1) * LineHeight();
-		Bounds.Max.Y = Bounds.Min.Y + LineHeight();
-		Brush.Rectangle(Bounds, Line.second);
-	}
+    for (const std::pair<size_t, Color>& Line : m_LineColors)
+    {
+        Rect Bounds { Scrollable()->GetAbsoluteBounds() };
+        Bounds.Max.X = Bounds.Min.X + Scrollable()->ContentSize().X;
+        Bounds.Min.Y += (Line.first - 1) * LineHeight();
+        Bounds.Max.Y = Bounds.Min.Y + LineHeight();
+        Brush.Rectangle(Bounds, Line.second);
+    }
 }
 
 }

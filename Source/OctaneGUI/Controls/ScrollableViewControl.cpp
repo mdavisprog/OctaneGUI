@@ -36,55 +36,55 @@ namespace OctaneGUI
 //
 
 ScrollableViewInteraction::ScrollableViewInteraction(Window* InWindow)
-	: Control(InWindow)
+    : Control(InWindow)
 {
 }
 
 ScrollableViewControl& ScrollableViewInteraction::ScrollableView() const
 {
-	return *static_cast<ScrollableViewControl*>(GetParent());
+    return *static_cast<ScrollableViewControl*>(GetParent());
 }
 
 ScrollableViewInteraction& ScrollableViewInteraction::SetAlwaysFocus(bool AlwaysFocus)
 {
-	m_AlwaysFocus = AlwaysFocus;
-	return *this;
+    m_AlwaysFocus = AlwaysFocus;
+    return *this;
 }
 
 bool ScrollableViewInteraction::AlwaysFocus() const
 {
-	return m_AlwaysFocus;
+    return m_AlwaysFocus;
 }
 
 void ScrollableViewInteraction::OnMouseMove(const Vector2& Position)
 {
-	if (m_AlwaysFocus)
-	{
-		ScrollableView().OnMouseMove(Position);
-	}
+    if (m_AlwaysFocus)
+    {
+        ScrollableView().OnMouseMove(Position);
+    }
 }
 
 bool ScrollableViewInteraction::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
 {
-	if (m_AlwaysFocus)
-	{
-		return ScrollableView().OnMousePressed(Position, Button, Count);
-	}
+    if (m_AlwaysFocus)
+    {
+        return ScrollableView().OnMousePressed(Position, Button, Count);
+    }
 
-	return false;
+    return false;
 }
 
 void ScrollableViewInteraction::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 {
-	if (m_AlwaysFocus)
-	{
-		ScrollableView().OnMouseReleased(Position, Button);
-	}
+    if (m_AlwaysFocus)
+    {
+        ScrollableView().OnMouseReleased(Position, Button);
+    }
 }
 
 void ScrollableViewInteraction::OnMouseWheel(const Vector2& Delta)
 {
-	ScrollableView().Scrollable()->OnMouseWheel(Delta);
+    ScrollableView().Scrollable()->OnMouseWheel(Delta);
 }
 
 //
@@ -92,118 +92,118 @@ void ScrollableViewInteraction::OnMouseWheel(const Vector2& Delta)
 //
 
 ScrollableViewControl::ScrollableViewControl(Window* InWindow)
-	: Container(InWindow)
+    : Container(InWindow)
 {
-	m_Scrollable = AddControl<ScrollableContainer>();
-	m_Scrollable->SetOnInvalidate([this](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
-		{
-			if (Type == InvalidateType::Paint)
-			{
-				HandleInvalidate(Focus, Type);
-			}
-			else
-			{
-				Invalidate(Type);
-			}
-		});
+    m_Scrollable = AddControl<ScrollableContainer>();
+    m_Scrollable->SetOnInvalidate([this](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
+        {
+            if (Type == InvalidateType::Paint)
+            {
+                HandleInvalidate(Focus, Type);
+            }
+            else
+            {
+                Invalidate(Type);
+            }
+        });
 
-	// The interaction should not have a size. This allows for the mouse to pass through to grab the control within the scrollable contents.
-	// The GetControl function will check to make sure the Point is within this container itself.
-	m_Interaction = AddControl<ScrollableViewInteraction>();
+    // The interaction should not have a size. This allows for the mouse to pass through to grab the control within the scrollable contents.
+    // The GetControl function will check to make sure the Point is within this container itself.
+    m_Interaction = AddControl<ScrollableViewInteraction>();
 }
 
 ScrollableViewControl& ScrollableViewControl::SetInteraction(const std::shared_ptr<ScrollableViewInteraction>& Interaction)
 {
-	if (m_Interaction)
-	{
-		RemoveControl(m_Interaction);
-	}
+    if (m_Interaction)
+    {
+        RemoveControl(m_Interaction);
+    }
 
-	m_Interaction = Interaction;
+    m_Interaction = Interaction;
 
-	if (m_Interaction)
-	{
-		InsertControl(m_Interaction);
-	}
-	return *this;
+    if (m_Interaction)
+    {
+        InsertControl(m_Interaction);
+    }
+    return *this;
 }
 
 const std::shared_ptr<ScrollableViewInteraction>& ScrollableViewControl::Interaction() const
 {
-	return m_Interaction;
+    return m_Interaction;
 }
 
 const std::shared_ptr<ScrollableContainer>& ScrollableViewControl::Scrollable() const
 {
-	return m_Scrollable;
+    return m_Scrollable;
 }
 
 ScrollableViewControl& ScrollableViewControl::SetIgnoreOwnedControls(bool IgnoreOwnedControls)
 {
-	m_IgnoreOwnedControls = IgnoreOwnedControls;
-	return *this;
+    m_IgnoreOwnedControls = IgnoreOwnedControls;
+    return *this;
 }
 
 std::weak_ptr<Control> ScrollableViewControl::GetControl(const Vector2& Point) const
 {
-	if (m_Scrollable->IsInScrollBar(Point) && !AlwaysFocusInteraction())
-	{
-		return m_Scrollable->GetControl(Point);
-	}
+    if (m_Scrollable->IsInScrollBar(Point) && !AlwaysFocusInteraction())
+    {
+        return m_Scrollable->GetControl(Point);
+    }
 
-	std::weak_ptr<Control> Result = Container::GetControl(Point);
-	if (!Result.expired())
-	{
-		if (!m_IgnoreOwnedControls || !HasControl(Result.lock()))
-		{
-			return Result;
-		}
-	}
+    std::weak_ptr<Control> Result = Container::GetControl(Point);
+    if (!Result.expired())
+    {
+        if (!m_IgnoreOwnedControls || !HasControl(Result.lock()))
+        {
+            return Result;
+        }
+    }
 
-	if (Contains(Point) && m_Interaction)
-	{
-		return m_Interaction;
-	}
+    if (Contains(Point) && m_Interaction)
+    {
+        return m_Interaction;
+    }
 
-	return std::weak_ptr<Control>();
+    return std::weak_ptr<Control>();
 }
 
 void ScrollableViewControl::OnLoad(const Json& Root)
 {
-	Json Copy = Root;
-	Copy["Controls"] = Json();
+    Json Copy = Root;
+    Copy["Controls"] = Json();
 
-	Container::OnLoad(Copy);
+    Container::OnLoad(Copy);
 
-	// Prevent the ID to be set for the scrollable container. The ScrollableViewControl should be the only container with the desired ID.
-	Copy["ID"] = Json();
-	Copy["Controls"] = std::move(Root["Controls"]);
-	m_Scrollable->OnLoad(Copy);
+    // Prevent the ID to be set for the scrollable container. The ScrollableViewControl should be the only container with the desired ID.
+    Copy["ID"] = Json();
+    Copy["Controls"] = std::move(Root["Controls"]);
+    m_Scrollable->OnLoad(Copy);
 }
 
 void ScrollableViewControl::OnMouseMove(const Vector2& Position)
 {
-	m_Scrollable->OnMouseMove(Position);
+    m_Scrollable->OnMouseMove(Position);
 }
 
 bool ScrollableViewControl::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
 {
-	return m_Scrollable->OnMousePressed(Position, Button, Count);
+    return m_Scrollable->OnMousePressed(Position, Button, Count);
 }
 
 void ScrollableViewControl::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 {
-	m_Scrollable->OnMouseReleased(Position, Button);
+    m_Scrollable->OnMouseReleased(Position, Button);
 }
 
 bool ScrollableViewControl::AlwaysFocusInteraction() const
 {
-	if (!m_Interaction)
-	{
-		return false;
-	}
+    if (!m_Interaction)
+    {
+        return false;
+    }
 
-	return m_Interaction->AlwaysFocus();
+    return m_Interaction->AlwaysFocus();
 }
 
 }

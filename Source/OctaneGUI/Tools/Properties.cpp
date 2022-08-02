@@ -35,44 +35,44 @@ namespace Tools
 {
 
 Properties::Properties(Window* InWindow)
-	: HorizontalContainer(InWindow)
+    : HorizontalContainer(InWindow)
 {
-	SetSpacing({ 8.0f, 0.0f });
+    SetSpacing({ 8.0f, 0.0f });
 
-	m_KeyList = AddControl<VerticalContainer>();
-	m_ValueList = AddControl<VerticalContainer>();
+    m_KeyList = AddControl<VerticalContainer>();
+    m_ValueList = AddControl<VerticalContainer>();
 }
 
 void Properties::Parse(const Json& Root)
 {
-	m_KeyList->ClearControls();
-	m_ValueList->ClearControls();
+    m_KeyList->ClearControls();
+    m_ValueList->ClearControls();
 
-	Root.ForEach([this](const std::string& Key, const Json& Value) -> void
-		{
-			Parse(Key, Value);
-		});
+    Root.ForEach([this](const std::string& Key, const Json& Value) -> void
+        {
+            Parse(Key, Value);
+        });
 
-	InvalidateLayout();
+    InvalidateLayout();
 }
 
 void Properties::Parse(const std::string& Key, const Json& Value, int Indent)
 {
-	const std::string IndentStr(Indent, ' ');
-	m_KeyList->AddControl<Text>()->SetText((IndentStr + Key).c_str());
-	if (Value.IsObject())
-	{
-		m_ValueList->AddControl<Text>()->SetText(" ");
+    const std::string IndentStr(Indent, ' ');
+    m_KeyList->AddControl<Text>()->SetText((IndentStr + Key).c_str());
+    if (Value.IsObject())
+    {
+        m_ValueList->AddControl<Text>()->SetText(" ");
 
-		Value.ForEach([this, Indent](const std::string& Key, const Json& Value) -> void
-			{
-				Parse(Key, Value, Indent + 4);
-			});
-	}
-	else
-	{
-		m_ValueList->AddControl<Text>()->SetText(Value.ToString().c_str());
-	}
+        Value.ForEach([this, Indent](const std::string& Key, const Json& Value) -> void
+            {
+                Parse(Key, Value, Indent + 4);
+            });
+    }
+    else
+    {
+        m_ValueList->AddControl<Text>()->SetText(Value.ToString().c_str());
+    }
 }
 
 }

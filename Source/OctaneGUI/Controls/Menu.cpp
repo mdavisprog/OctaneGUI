@@ -38,236 +38,236 @@ namespace OctaneGUI
 {
 
 Menu::Menu(Window* InWindow)
-	: Container(InWindow)
+    : Container(InWindow)
 {
-	m_Panel = AddControl<Panel>();
-	m_Panel->SetExpand(Expand::Both);
+    m_Panel = AddControl<Panel>();
+    m_Panel->SetExpand(Expand::Both);
 
-	m_Container = AddControl<VerticalContainer>();
-	m_Container
-		->SetSpacing({ 0.0f, 0.0f })
-		->SetExpand(Expand::Width);
+    m_Container = AddControl<VerticalContainer>();
+    m_Container
+        ->SetSpacing({ 0.0f, 0.0f })
+        ->SetExpand(Expand::Width);
 }
 
 Menu& Menu::AddItem(const char* InText, OnEmptySignature Fn)
 {
-	std::shared_ptr<MenuItem> Item = std::make_shared<MenuItem>(GetWindow());
-	Item
-		->SetOnHovered([this](const TextSelectable& Item) -> void
-			{
-				OnHovered(static_cast<const MenuItem&>(Item));
-			})
-		.SetOnPressed([this](const TextSelectable& Item) -> void
-			{
-				OnSelected(static_cast<const MenuItem&>(Item));
-			})
-		.SetText(InText)
-		.SetExpand(Expand::Width);
+    std::shared_ptr<MenuItem> Item = std::make_shared<MenuItem>(GetWindow());
+    Item
+        ->SetOnHovered([this](const TextSelectable& Item) -> void
+            {
+                OnHovered(static_cast<const MenuItem&>(Item));
+            })
+        .SetOnPressed([this](const TextSelectable& Item) -> void
+            {
+                OnSelected(static_cast<const MenuItem&>(Item));
+            })
+        .SetText(InText)
+        .SetExpand(Expand::Width);
 
-	m_Container->InsertControl(Item);
+    m_Container->InsertControl(Item);
 
-	m_Items.push_back(Item);
-	m_Callbacks[Item.get()] = Fn;
+    m_Items.push_back(Item);
+    m_Callbacks[Item.get()] = Fn;
 
-	return *this;
+    return *this;
 }
 
 std::shared_ptr<MenuItem> Menu::GetItem(const char* InText) const
 {
-	std::shared_ptr<MenuItem> Result;
+    std::shared_ptr<MenuItem> Result;
 
-	const std::string Value = InText;
-	for (const std::shared_ptr<MenuItem>& Item : m_Items)
-	{
-		if (Value == String::ToMultiByte(Item->GetText()))
-		{
-			Result = Item;
-			break;
-		}
-	}
+    const std::string Value = InText;
+    for (const std::shared_ptr<MenuItem>& Item : m_Items)
+    {
+        if (Value == String::ToMultiByte(Item->GetText()))
+        {
+            Result = Item;
+            break;
+        }
+    }
 
-	return Result;
+    return Result;
 }
 
 Menu& Menu::AddSeparator()
 {
-	std::shared_ptr<Separator> Item = std::make_shared<Separator>(GetWindow());
-	Item->SetOnHover([this](const Control&) -> void
-		{
-			if (m_Menu)
-			{
-				SetSelected(m_Menu, false);
-				RemoveControl(m_Menu);
-				m_Menu = nullptr;
-			}
-		});
-	m_Container->InsertControl(Item);
-	return *this;
+    std::shared_ptr<Separator> Item = std::make_shared<Separator>(GetWindow());
+    Item->SetOnHover([this](const Control&) -> void
+        {
+            if (m_Menu)
+            {
+                SetSelected(m_Menu, false);
+                RemoveControl(m_Menu);
+                m_Menu = nullptr;
+            }
+        });
+    m_Container->InsertControl(Item);
+    return *this;
 }
 
 Menu& Menu::Close()
 {
-	if (m_Menu)
-	{
-		m_Menu->Close();
-		RemoveControl(m_Menu);
-	}
+    if (m_Menu)
+    {
+        m_Menu->Close();
+        RemoveControl(m_Menu);
+    }
 
-	for (const std::shared_ptr<MenuItem>& Item : m_Items)
-	{
-		Item->SetSelected(false);
-	}
+    for (const std::shared_ptr<MenuItem>& Item : m_Items)
+    {
+        Item->SetSelected(false);
+    }
 
-	m_Menu = nullptr;
-	return *this;
+    m_Menu = nullptr;
+    return *this;
 }
 
 Vector2 Menu::Margins() const
 {
-	return GetProperty(ThemeProperties::Menu_Margins).Vector();
+    return GetProperty(ThemeProperties::Menu_Margins).Vector();
 }
 
 void Menu::GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const
 {
-	Items.insert(Items.end(), m_Items.begin(), m_Items.end());
+    Items.insert(Items.end(), m_Items.begin(), m_Items.end());
 
-	for (const std::shared_ptr<MenuItem>& Item : m_Items)
-	{
-		const std::shared_ptr<Menu> ItemMenu = Item->GetMenu();
+    for (const std::shared_ptr<MenuItem>& Item : m_Items)
+    {
+        const std::shared_ptr<Menu> ItemMenu = Item->GetMenu();
 
-		if (ItemMenu)
-		{
-			ItemMenu->GetMenuItems(Items);
-		}
-	}
+        if (ItemMenu)
+        {
+            ItemMenu->GetMenuItems(Items);
+        }
+    }
 }
 
 void Menu::Resize()
 {
-	const Vector2 Margins = this->Margins();
-	const float RightPadding = GetProperty(ThemeProperties::Menu_RightPadding).Float();
+    const Vector2 Margins = this->Margins();
+    const float RightPadding = GetProperty(ThemeProperties::Menu_RightPadding).Float();
 
-	Vector2 Size = { GetSize().X + Margins.X, Margins.Y * 2.0f };
-	for (const std::shared_ptr<Control>& Item : m_Container->Controls())
-	{
-		Vector2 ItemSize = Item->GetSize();
+    Vector2 Size = { GetSize().X + Margins.X, Margins.Y * 2.0f };
+    for (const std::shared_ptr<Control>& Item : m_Container->Controls())
+    {
+        Vector2 ItemSize = Item->GetSize();
 
-		const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
-		if (ItemContainer)
-		{
-			ItemSize = ItemContainer->DesiredSize();
-		}
+        const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
+        if (ItemContainer)
+        {
+            ItemSize = ItemContainer->DesiredSize();
+        }
 
-		if (ItemSize.X > Size.X)
-		{
-			Size.X = ItemSize.X + RightPadding;
-		}
-		Size.Y += ItemSize.Y;
-	}
+        if (ItemSize.X > Size.X)
+        {
+            Size.X = ItemSize.X + RightPadding;
+        }
+        Size.Y += ItemSize.Y;
+    }
 
-	m_Container->SetPosition(Margins);
-	SetSize(Size);
+    m_Container->SetPosition(Margins);
+    SetSize(Size);
 }
 
 void Menu::GetControlList(ControlList& List) const
 {
-	Container::GetControlList(List);
+    Container::GetControlList(List);
 
-	for (const std::shared_ptr<MenuItem>& Item : m_Items)
-	{
-		if (Item->GetMenu())
-		{
-			Item->GetMenu()->GetControlList(List);
-		}
-	}
+    for (const std::shared_ptr<MenuItem>& Item : m_Items)
+    {
+        if (Item->GetMenu())
+        {
+            Item->GetMenu()->GetControlList(List);
+        }
+    }
 }
 
 void Menu::OnLoad(const Json& Root)
 {
-	Container::OnLoad(Root);
+    Container::OnLoad(Root);
 
-	const Json& Items = Root["Items"];
-	for (int I = 0; I < Items.Count(); I++)
-	{
-		const Json& Item = Items[I];
-		const Json& Type = Item["Type"];
+    const Json& Items = Root["Items"];
+    for (int I = 0; I < Items.Count(); I++)
+    {
+        const Json& Item = Items[I];
+        const Json& Type = Item["Type"];
 
-		if (Type.IsNull())
-		{
-			AddItem(Item["Text"].String());
+        if (Type.IsNull())
+        {
+            AddItem(Item["Text"].String());
 
-			const std::shared_ptr<MenuItem>& MI = m_Items.back();
-			MI->OnLoad(Item);
-			MI->SetExpand(Expand::Width);
-		}
-		else
-		{
-			std::shared_ptr<Control> Added = m_Container->CreateControl(Type.String());
-			if (Added)
-			{
-				Added->OnLoad(Item);
-			}
-		}
-	}
+            const std::shared_ptr<MenuItem>& MI = m_Items.back();
+            MI->OnLoad(Item);
+            MI->SetExpand(Expand::Width);
+        }
+        else
+        {
+            std::shared_ptr<Control> Added = m_Container->CreateControl(Type.String());
+            if (Added)
+            {
+                Added->OnLoad(Item);
+            }
+        }
+    }
 }
 
 void Menu::OnHovered(const MenuItem& Item)
 {
-	if (m_Menu && Item.GetMenu() == m_Menu)
-	{
-		return;
-	}
+    if (m_Menu && Item.GetMenu() == m_Menu)
+    {
+        return;
+    }
 
-	SetSelected(m_Menu, false);
-	RemoveControl(m_Menu);
+    SetSelected(m_Menu, false);
+    RemoveControl(m_Menu);
 
-	m_Menu = Item.GetMenu();
-	if (!m_Menu)
-	{
-		return;
-	}
+    m_Menu = Item.GetMenu();
+    if (!m_Menu)
+    {
+        return;
+    }
 
-	SetSelected(m_Menu, true);
+    SetSelected(m_Menu, true);
 
-	Item.OpenMenu({ GetSize().X, Item.GetPosition().Y });
-	InsertControl(m_Menu);
+    Item.OpenMenu({ GetSize().X, Item.GetPosition().Y });
+    InsertControl(m_Menu);
 }
 
 void Menu::OnSelected(const MenuItem& Item)
 {
-	if (Item.GetMenu())
-	{
-		return;
-	}
+    if (Item.GetMenu())
+    {
+        return;
+    }
 
-	if (m_Callbacks.find(&Item) == m_Callbacks.end())
-	{
-		return;
-	}
+    if (m_Callbacks.find(&Item) == m_Callbacks.end())
+    {
+        return;
+    }
 
-	OnEmptySignature Fn = m_Callbacks[&Item];
+    OnEmptySignature Fn = m_Callbacks[&Item];
 
-	if (Fn != nullptr)
-	{
-		Fn();
-	}
+    if (Fn != nullptr)
+    {
+        Fn();
+    }
 }
 
 void Menu::SetSelected(const std::shared_ptr<Menu>& InMenu, bool Selected) const
 {
-	if (!InMenu)
-	{
-		return;
-	}
+    if (!InMenu)
+    {
+        return;
+    }
 
-	for (const std::shared_ptr<MenuItem>& Item : m_Items)
-	{
-		if (Item->GetMenu() == InMenu)
-		{
-			Item->SetSelected(Selected);
-			break;
-		}
-	}
+    for (const std::shared_ptr<MenuItem>& Item : m_Items)
+    {
+        if (Item->GetMenu() == InMenu)
+        {
+            Item->SetSelected(Selected);
+            break;
+        }
+    }
 }
 
 }

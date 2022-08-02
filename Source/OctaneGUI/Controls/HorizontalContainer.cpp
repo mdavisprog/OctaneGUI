@@ -30,7 +30,7 @@ namespace OctaneGUI
 {
 
 HorizontalContainer::HorizontalContainer(Window* InWindow)
-	: BoxContainer(Orientation::Horizontal, InWindow)
+    : BoxContainer(Orientation::Horizontal, InWindow)
 {
 }
 

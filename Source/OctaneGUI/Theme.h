@@ -42,27 +42,27 @@ class Json;
 class Theme
 {
 public:
-	Theme();
-	~Theme();
+    Theme();
+    ~Theme();
 
-	std::shared_ptr<Font> GetOrAddFont(const char* Path, float Size);
-	std::shared_ptr<Font> GetFont() const;
+    std::shared_ptr<Font> GetOrAddFont(const char* Path, float Size);
+    std::shared_ptr<Font> GetFont() const;
 
-	Theme& SetOnThemeLoaded(OnEmptySignature Fn);
+    Theme& SetOnThemeLoaded(OnEmptySignature Fn);
 
-	const Variant& Get(ThemeProperties::Property Index) const;
-	void Load(const char* Path);
-	void Load(const Json& Root);
+    const Variant& Get(ThemeProperties::Property Index) const;
+    void Load(const char* Path);
+    void Load(const Json& Root);
 
-	const std::vector<std::shared_ptr<Font>>& Fonts() const;
+    const std::vector<std::shared_ptr<Font>>& Fonts() const;
 
 private:
-	void InitializeDefault();
-	void Set(ThemeProperties::Property Property, const Variant& Value);
+    void InitializeDefault();
+    void Set(ThemeProperties::Property Property, const Variant& Value);
 
-	std::vector<std::shared_ptr<Font>> m_Fonts;
-	ThemeProperties m_Properties {};
-	OnEmptySignature m_OnThemeLoaded { nullptr };
+    std::vector<std::shared_ptr<Font>> m_Fonts;
+    ThemeProperties m_Properties {};
+    OnEmptySignature m_OnThemeLoaded { nullptr };
 };
 
 }

@@ -42,9 +42,9 @@ class Tree;
 
 enum class InvalidateType : unsigned char
 {
-	Layout,
-	Paint,
-	Both
+    Layout,
+    Paint,
+    Both
 };
 
 typedef std::function<void()> OnEmptySignature;

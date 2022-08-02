@@ -45,19 +45,19 @@ class ImagePreview;
 class TextureViewer
 {
 public:
-	static TextureViewer& Get();
+    static TextureViewer& Get();
 
-	void Show(Application& App);
+    void Show(Application& App);
 
 private:
-	TextureViewer();
+    TextureViewer();
 
-	void UpdateList();
+    void UpdateList();
 
-	std::weak_ptr<Window> m_Window {};
-	std::weak_ptr<ListBox> m_Names {};
-	std::weak_ptr<ImagePreview> m_Preview {};
-	std::vector<std::weak_ptr<Texture>> m_Textures {};
+    std::weak_ptr<Window> m_Window {};
+    std::weak_ptr<ListBox> m_Names {};
+    std::weak_ptr<ImagePreview> m_Preview {};
+    std::vector<std::weak_ptr<Texture>> m_Textures {};
 };
 
 }

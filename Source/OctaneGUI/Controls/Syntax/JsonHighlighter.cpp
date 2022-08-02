@@ -35,56 +35,56 @@ namespace Syntax
 {
 
 JsonHighlighter::JsonHighlighter()
-	: Highlighter()
+    : Highlighter()
 {
 }
 
 std::vector<TextSpan> JsonHighlighter::Update(const std::u32string_view& Span) const
 {
-	std::vector<TextSpan> Result;
+    std::vector<TextSpan> Result;
 
-	size_t Pos = 0;
-	LexerUTF32 Lex {};
-	Lex
-		.SetOnEmitToken([&](const LexerUTF32::Token& Token) -> void
-			{
-			})
-		.SetOnEmitSymbol([&](const char32_t Symbol) -> void
-			{
-				if (Symbol == U'"')
-				{
-					Result.push_back({ Pos, Lex.Index(), DefaultColor() });
-					Pos = Lex.Index();
-					Lex.Next();
-					LexerUTF32::Token Token = Lex.ParseUntil(U'"');
+    size_t Pos = 0;
+    LexerUTF32 Lex {};
+    Lex
+        .SetOnEmitToken([&](const LexerUTF32::Token& Token) -> void
+            {
+            })
+        .SetOnEmitSymbol([&](const char32_t Symbol) -> void
+            {
+                if (Symbol == U'"')
+                {
+                    Result.push_back({ Pos, Lex.Index(), DefaultColor() });
+                    Pos = Lex.Index();
+                    Lex.Next();
+                    LexerUTF32::Token Token = Lex.ParseUntil(U'"');
 
-					const char32_t Next = Lex.PeekNextValid();
-					Color Tint { 255, 255, 255, 255 };
-					if (Next == U':')
-					{
-						Tint = { 120, 250, 254, 255 };
-					}
-					else if (Next == U',' || Next == U'}' || Next == U']')
-					{
-						Tint = { 206, 145, 120, 255 };
-					}
-					Lex.Next();
-					Result.push_back({ Pos, Lex.Index(), Tint });
+                    const char32_t Next = Lex.PeekNextValid();
+                    Color Tint { 255, 255, 255, 255 };
+                    if (Next == U':')
+                    {
+                        Tint = { 120, 250, 254, 255 };
+                    }
+                    else if (Next == U',' || Next == U'}' || Next == U']')
+                    {
+                        Tint = { 206, 145, 120, 255 };
+                    }
+                    Lex.Next();
+                    Result.push_back({ Pos, Lex.Index(), Tint });
 
-					Pos = Lex.Index();
-					Lex.Next();
-				}
-			})
-		.RegisterSymbols({ U'"' })
-		.Begin(Span.data(), Span.length());
+                    Pos = Lex.Index();
+                    Lex.Next();
+                }
+            })
+        .RegisterSymbols({ U'"' })
+        .Begin(Span.data(), Span.length());
 
-	// TODO: Should move this to EmitToken callback. That should be fired for any remaining characters left.
-	if (Pos < Span.length())
-	{
-		Result.push_back({ Pos, Span.length(), DefaultColor() });
-	}
+    // TODO: Should move this to EmitToken callback. That should be fired for any remaining characters left.
+    if (Pos < Span.length())
+    {
+        Result.push_back({ Pos, Span.length(), DefaultColor() });
+    }
 
-	return Result;
+    return Result;
 }
 
 }

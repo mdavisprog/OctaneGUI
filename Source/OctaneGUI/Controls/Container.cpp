@@ -60,425 +60,425 @@ namespace OctaneGUI
 {
 
 Container::Container(Window* InWindow)
-	: Control(InWindow)
+    : Control(InWindow)
 {
-	SetForwardKeyEvents(true);
+    SetForwardKeyEvents(true);
 }
 
 Container::~Container()
 {
-	m_Controls.clear();
+    m_Controls.clear();
 }
 
 std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 {
-	std::shared_ptr<Control> Result;
+    std::shared_ptr<Control> Result;
 
-	if (Type == CheckBox::TypeName())
-	{
-		Result = AddControl<CheckBox>();
-	}
-	else if (Type == ComboBox::TypeName())
-	{
-		Result = AddControl<ComboBox>();
-	}
-	else if (Type == Container::TypeName())
-	{
-		Result = AddControl<Container>();
-	}
-	else if (Type == GroupBox::TypeName())
-	{
-		Result = AddControl<GroupBox>();
-	}
-	else if (Type == HorizontalContainer::TypeName())
-	{
-		Result = AddControl<HorizontalContainer>();
-	}
-	else if (Type == Image::TypeName())
-	{
-		Result = AddControl<Image>();
-	}
-	else if (Type == ImageButton::TypeName())
-	{
-		Result = AddControl<ImageButton>();
-	}
-	else if (Type == ListBox::TypeName())
-	{
-		Result = AddControl<ListBox>();
-	}
-	else if (Type == MarginContainer::TypeName())
-	{
-		Result = AddControl<MarginContainer>();
-	}
-	else if (Type == Panel::TypeName())
-	{
-		Result = AddControl<Panel>();
-	}
-	else if (Type == RadioButton::TypeName())
-	{
-		Result = AddControl<RadioButton>();
-	}
-	else if (Type == ScrollableContainer::TypeName())
-	{
-		Result = AddControl<ScrollableContainer>();
-	}
-	else if (Type == ScrollableViewControl::TypeName())
-	{
-		Result = AddControl<ScrollableViewControl>();
-	}
-	else if (Type == Separator::TypeName())
-	{
-		Result = AddControl<Separator>();
-	}
-	else if (Type == Splitter::TypeName())
-	{
-		Result = AddControl<Splitter>();
-	}
-	else if (Type == Table::TypeName())
-	{
-		Result = AddControl<Table>();
-	}
-	else if (Type == Text::TypeName())
-	{
-		Result = AddControl<Text>();
-	}
-	else if (Type == TextButton::TypeName())
-	{
-		Result = AddControl<TextButton>();
-	}
-	else if (Type == TextEditor::TypeName())
-	{
-		Result = AddControl<TextEditor>();
-	}
-	else if (Type == TextInput::TypeName())
-	{
-		Result = AddControl<TextInput>();
-	}
-	else if (Type == TextSelectable::TypeName())
-	{
-		Result = AddControl<TextSelectable>();
-	}
-	else if (Type == Tree::TypeName())
-	{
-		Result = AddControl<Tree>();
-	}
-	else if (Type == VerticalContainer::TypeName())
-	{
-		Result = AddControl<VerticalContainer>();
-	}
-	else if (Type == WindowContainer::TypeName())
-	{
-		Result = AddControl<WindowContainer>();
-	}
+    if (Type == CheckBox::TypeName())
+    {
+        Result = AddControl<CheckBox>();
+    }
+    else if (Type == ComboBox::TypeName())
+    {
+        Result = AddControl<ComboBox>();
+    }
+    else if (Type == Container::TypeName())
+    {
+        Result = AddControl<Container>();
+    }
+    else if (Type == GroupBox::TypeName())
+    {
+        Result = AddControl<GroupBox>();
+    }
+    else if (Type == HorizontalContainer::TypeName())
+    {
+        Result = AddControl<HorizontalContainer>();
+    }
+    else if (Type == Image::TypeName())
+    {
+        Result = AddControl<Image>();
+    }
+    else if (Type == ImageButton::TypeName())
+    {
+        Result = AddControl<ImageButton>();
+    }
+    else if (Type == ListBox::TypeName())
+    {
+        Result = AddControl<ListBox>();
+    }
+    else if (Type == MarginContainer::TypeName())
+    {
+        Result = AddControl<MarginContainer>();
+    }
+    else if (Type == Panel::TypeName())
+    {
+        Result = AddControl<Panel>();
+    }
+    else if (Type == RadioButton::TypeName())
+    {
+        Result = AddControl<RadioButton>();
+    }
+    else if (Type == ScrollableContainer::TypeName())
+    {
+        Result = AddControl<ScrollableContainer>();
+    }
+    else if (Type == ScrollableViewControl::TypeName())
+    {
+        Result = AddControl<ScrollableViewControl>();
+    }
+    else if (Type == Separator::TypeName())
+    {
+        Result = AddControl<Separator>();
+    }
+    else if (Type == Splitter::TypeName())
+    {
+        Result = AddControl<Splitter>();
+    }
+    else if (Type == Table::TypeName())
+    {
+        Result = AddControl<Table>();
+    }
+    else if (Type == Text::TypeName())
+    {
+        Result = AddControl<Text>();
+    }
+    else if (Type == TextButton::TypeName())
+    {
+        Result = AddControl<TextButton>();
+    }
+    else if (Type == TextEditor::TypeName())
+    {
+        Result = AddControl<TextEditor>();
+    }
+    else if (Type == TextInput::TypeName())
+    {
+        Result = AddControl<TextInput>();
+    }
+    else if (Type == TextSelectable::TypeName())
+    {
+        Result = AddControl<TextSelectable>();
+    }
+    else if (Type == Tree::TypeName())
+    {
+        Result = AddControl<Tree>();
+    }
+    else if (Type == VerticalContainer::TypeName())
+    {
+        Result = AddControl<VerticalContainer>();
+    }
+    else if (Type == WindowContainer::TypeName())
+    {
+        Result = AddControl<WindowContainer>();
+    }
 
-	return Result;
+    return Result;
 }
 
 Container* Container::InsertControl(const std::shared_ptr<Control>& Item, int Position)
 {
-	if (HasControl(Item))
-	{
-		return this;
-	}
+    if (HasControl(Item))
+    {
+        return this;
+    }
 
-	Item->SetParent(this);
-	Item->SetOnInvalidate([this](std::shared_ptr<Control> Focus, InvalidateType Type)
-		{
-			HandleInvalidate(Focus, Type);
-		});
+    Item->SetParent(this);
+    Item->SetOnInvalidate([this](std::shared_ptr<Control> Focus, InvalidateType Type)
+        {
+            HandleInvalidate(Focus, Type);
+        });
 
-	if (Position >= 0)
-	{
-		m_Controls.insert(m_Controls.begin() + Position, Item);
-	}
-	else
-	{
-		m_Controls.push_back(Item);
-	}
+    if (Position >= 0)
+    {
+        m_Controls.insert(m_Controls.begin() + Position, Item);
+    }
+    else
+    {
+        m_Controls.push_back(Item);
+    }
 
-	Invalidate(Item, InvalidateType::Paint);
-	Invalidate(InvalidateType::Layout);
-	OnInsertControl(Item);
+    Invalidate(Item, InvalidateType::Paint);
+    Invalidate(InvalidateType::Layout);
+    OnInsertControl(Item);
 
-	return this;
+    return this;
 }
 
 Container* Container::RemoveControl(const std::shared_ptr<Control>& Item)
 {
-	auto Iter = std::find(m_Controls.begin(), m_Controls.end(), Item);
-	if (Iter != m_Controls.end())
-	{
-		m_Controls.erase(Iter);
-		Invalidate(InvalidateType::Both);
-		OnRemoveControl(Item);
-	}
+    auto Iter = std::find(m_Controls.begin(), m_Controls.end(), Item);
+    if (Iter != m_Controls.end())
+    {
+        m_Controls.erase(Iter);
+        Invalidate(InvalidateType::Both);
+        OnRemoveControl(Item);
+    }
 
-	return this;
+    return this;
 }
 
 bool Container::HasControl(const std::shared_ptr<Control>& Item) const
 {
-	return std::find(m_Controls.begin(), m_Controls.end(), Item) != m_Controls.end();
+    return std::find(m_Controls.begin(), m_Controls.end(), Item) != m_Controls.end();
 }
 
 bool Container::HasControlRecurse(const std::shared_ptr<Control>& Item) const
 {
-	std::vector<std::shared_ptr<Control>> AllControls;
-	GetControls(AllControls);
-	auto Iter = std::find(AllControls.begin(), AllControls.end(), Item);
-	return Iter != AllControls.end();
+    std::vector<std::shared_ptr<Control>> AllControls;
+    GetControls(AllControls);
+    auto Iter = std::find(AllControls.begin(), AllControls.end(), Item);
+    return Iter != AllControls.end();
 }
 
 void Container::ClearControls()
 {
-	m_Controls.clear();
-	Invalidate(InvalidateType::Both);
+    m_Controls.clear();
+    Invalidate(InvalidateType::Both);
 }
 
 size_t Container::NumControls() const
 {
-	return m_Controls.size();
+    return m_Controls.size();
 }
 
 const std::shared_ptr<Control>& Container::Get(size_t Index) const
 {
-	assert(Index >= 0 && Index < m_Controls.size());
-	return m_Controls[Index];
+    assert(Index >= 0 && Index < m_Controls.size());
+    return m_Controls[Index];
 }
 
 Container& Container::SetClip(bool Clip)
 {
-	m_Clip = Clip;
-	return *this;
+    m_Clip = Clip;
+    return *this;
 }
 
 bool Container::ShouldClip() const
 {
-	return m_Clip;
+    return m_Clip;
 }
 
 Container* Container::Layout()
 {
-	PROFILER_SAMPLE_GROUP((std::string(GetType()) + "::Layout").c_str());
+    PROFILER_SAMPLE_GROUP((std::string(GetType()) + "::Layout").c_str());
 
-	m_InLayout = true;
+    m_InLayout = true;
 
-	{
-		PROFILER_SAMPLE("PlaceControls");
-		PlaceControls(m_Controls);
-	}
+    {
+        PROFILER_SAMPLE("PlaceControls");
+        PlaceControls(m_Controls);
+    }
 
-	for (const std::shared_ptr<Control>& Item : m_Controls)
-	{
-		const std::shared_ptr<Container> Child = std::dynamic_pointer_cast<Container>(Item);
-		if (Child)
-		{
-			Child->Layout();
-		}
-	}
+    for (const std::shared_ptr<Control>& Item : m_Controls)
+    {
+        const std::shared_ptr<Container> Child = std::dynamic_pointer_cast<Container>(Item);
+        if (Child)
+        {
+            Child->Layout();
+        }
+    }
 
-	{
-		PROFILER_SAMPLE("Update");
-		for (const std::shared_ptr<Control>& Item : m_Controls)
-		{
-			Item->Update();
-		}
-	}
+    {
+        PROFILER_SAMPLE("Update");
+        for (const std::shared_ptr<Control>& Item : m_Controls)
+        {
+            Item->Update();
+        }
+    }
 
-	m_InLayout = false;
+    m_InLayout = false;
 
-	return this;
+    return this;
 }
 
 void Container::InvalidateLayout()
 {
-	Invalidate(InvalidateType::Layout);
+    Invalidate(InvalidateType::Layout);
 }
 
 std::weak_ptr<Control> Container::GetControl(const Vector2& Point) const
 {
-	std::weak_ptr<Control> Result;
+    std::weak_ptr<Control> Result;
 
-	for (int I = (int)m_Controls.size() - 1; I >= 0; I--)
-	{
-		const std::shared_ptr<Control>& Item = m_Controls[I];
+    for (int I = (int)m_Controls.size() - 1; I >= 0; I--)
+    {
+        const std::shared_ptr<Control>& Item = m_Controls[I];
 
-		const std::shared_ptr<Container> ItemContainer = std::dynamic_pointer_cast<Container>(Item);
-		if (ItemContainer)
-		{
-			Result = ItemContainer->GetControl(Point);
-		}
-		else if (Item->Contains(Point))
-		{
-			Result = Item;
-		}
+        const std::shared_ptr<Container> ItemContainer = std::dynamic_pointer_cast<Container>(Item);
+        if (ItemContainer)
+        {
+            Result = ItemContainer->GetControl(Point);
+        }
+        else if (Item->Contains(Point))
+        {
+            Result = Item;
+        }
 
-		if (!Result.expired())
-		{
-			break;
-		}
-	}
+        if (!Result.expired())
+        {
+            break;
+        }
+    }
 
-	return Result;
+    return Result;
 }
 
 void Container::GetControls(std::vector<std::shared_ptr<Control>>& Controls) const
 {
-	for (const std::shared_ptr<Control>& Item : m_Controls)
-	{
-		Controls.push_back(Item);
+    for (const std::shared_ptr<Control>& Item : m_Controls)
+    {
+        Controls.push_back(Item);
 
-		const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
-		if (ItemContainer)
-		{
-			ItemContainer->GetControls(Controls);
-		}
-	}
+        const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
+        if (ItemContainer)
+        {
+            ItemContainer->GetControls(Controls);
+        }
+    }
 }
 
 Vector2 Container::ChildrenSize() const
 {
-	Vector2 Result;
+    Vector2 Result;
 
-	for (const std::shared_ptr<Control>& Item : m_Controls)
-	{
-		Vector2 Size = Item->GetSize();
+    for (const std::shared_ptr<Control>& Item : m_Controls)
+    {
+        Vector2 Size = Item->GetSize();
 
-		const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
-		if (ItemContainer)
-		{
-			Size = ItemContainer->DesiredSize();
-		}
+        const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
+        if (ItemContainer)
+        {
+            Size = ItemContainer->DesiredSize();
+        }
 
-		Result.X = std::max<float>(Result.X, Item->GetBounds().Max.X);
-		Result.Y = std::max<float>(Result.Y, Item->GetBounds().Max.Y);
-	}
+        Result.X = std::max<float>(Result.X, Item->GetBounds().Max.X);
+        Result.Y = std::max<float>(Result.Y, Item->GetBounds().Max.Y);
+    }
 
-	return Result;
+    return Result;
 }
 
 void Container::GetControlList(ControlList& List) const
 {
-	List.AddControls(Controls());
+    List.AddControls(Controls());
 
-	for (const std::shared_ptr<Control>& Item : Controls())
-	{
-		const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
-		if (ItemContainer)
-		{
-			ItemContainer->GetControlList(List);
-		}
-	}
+    for (const std::shared_ptr<Control>& Item : Controls())
+    {
+        const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
+        if (ItemContainer)
+        {
+            ItemContainer->GetControlList(List);
+        }
+    }
 }
 
 const std::vector<std::shared_ptr<Control>>& Container::Controls() const
 {
-	return m_Controls;
+    return m_Controls;
 }
 
 Vector2 Container::DesiredSize() const
 {
-	return GetSize();
+    return GetSize();
 }
 
 void Container::SetWindow(Window* InWindow)
 {
-	Control::SetWindow(InWindow);
+    Control::SetWindow(InWindow);
 
-	for (const std::shared_ptr<Control>& Item : m_Controls)
-	{
-		Item->SetWindow(InWindow);
-	}
+    for (const std::shared_ptr<Control>& Item : m_Controls)
+    {
+        Item->SetWindow(InWindow);
+    }
 }
 
 void Container::OnPaint(Paint& Brush) const
 {
-	PROFILER_SAMPLE_GROUP((std::string(GetType()) + "::OnPaint").c_str());
+    PROFILER_SAMPLE_GROUP((std::string(GetType()) + "::OnPaint").c_str());
 
-	if (ShouldClip())
-	{
-		Brush.PushClip(GetAbsoluteBounds());
-	}
+    if (ShouldClip())
+    {
+        Brush.PushClip(GetAbsoluteBounds());
+    }
 
-	for (const std::shared_ptr<Control>& Item : m_Controls)
-	{
-		if (!Brush.IsClipped(Item->GetAbsoluteBounds()))
-		{
-			Item->OnPaint(Brush);
-		}
-	}
+    for (const std::shared_ptr<Control>& Item : m_Controls)
+    {
+        if (!Brush.IsClipped(Item->GetAbsoluteBounds()))
+        {
+            Item->OnPaint(Brush);
+        }
+    }
 
-	if (ShouldClip())
-	{
-		Brush.PopClip();
-	}
+    if (ShouldClip())
+    {
+        Brush.PopClip();
+    }
 }
 
 void Container::OnLoad(const Json& Root)
 {
-	Control::OnLoad(Root);
+    Control::OnLoad(Root);
 
-	const Json& Controls = Root["Controls"];
+    const Json& Controls = Root["Controls"];
 
-	for (int I = 0; I < Controls.Count(); I++)
-	{
-		const Json& Item = Controls[I];
+    for (int I = 0; I < Controls.Count(); I++)
+    {
+        const Json& Item = Controls[I];
 
-		std::string Type = Item["Type"].String();
-		std::shared_ptr<Control> NewControl = CreateControl(Type);
-		if (NewControl)
-		{
-			NewControl->OnLoad(Item);
-		}
-	}
+        std::string Type = Item["Type"].String();
+        std::shared_ptr<Control> NewControl = CreateControl(Type);
+        if (NewControl)
+        {
+            NewControl->OnLoad(Item);
+        }
+    }
 }
 
 void Container::OnThemeLoaded()
 {
-	for (const std::shared_ptr<Control>& Item : m_Controls)
-	{
-		Item->OnThemeLoaded();
-	}
+    for (const std::shared_ptr<Control>& Item : m_Controls)
+    {
+        Item->OnThemeLoaded();
+    }
 }
 
 bool Container::IsInLayout() const
 {
-	return m_InLayout;
+    return m_InLayout;
 }
 
 void Container::HandleInvalidate(std::shared_ptr<Control> Focus, InvalidateType Type)
 {
-	if (m_InLayout && Type != InvalidateType::Paint)
-	{
-		return;
-	}
+    if (m_InLayout && Type != InvalidateType::Paint)
+    {
+        return;
+    }
 
-	Invalidate(Focus, Type);
+    Invalidate(Focus, Type);
 }
 
 void Container::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
 {
-	for (const std::shared_ptr<Control>& Item : Controls)
-	{
-		Vector2 ItemSize = Item->GetSize();
-		const std::shared_ptr<Container> ItemContainer = std::dynamic_pointer_cast<Container>(Item);
-		if (ItemContainer)
-		{
-			ItemSize = ItemContainer->DesiredSize();
-		}
-		Expand Direction = Item->GetExpand();
+    for (const std::shared_ptr<Control>& Item : Controls)
+    {
+        Vector2 ItemSize = Item->GetSize();
+        const std::shared_ptr<Container> ItemContainer = std::dynamic_pointer_cast<Container>(Item);
+        if (ItemContainer)
+        {
+            ItemSize = ItemContainer->DesiredSize();
+        }
+        Expand Direction = Item->GetExpand();
 
-		switch (Direction)
-		{
-		case Expand::Both: ItemSize = GetSize(); break;
-		case Expand::Width: ItemSize.X = GetSize().X; break;
-		case Expand::Height: ItemSize.Y = GetSize().Y; break;
-		case Expand::None:
-		default: break;
-		}
+        switch (Direction)
+        {
+        case Expand::Both: ItemSize = GetSize(); break;
+        case Expand::Width: ItemSize.X = GetSize().X; break;
+        case Expand::Height: ItemSize.Y = GetSize().Y; break;
+        case Expand::None:
+        default: break;
+        }
 
-		Item->SetSize(ItemSize);
-	}
+        Item->SetSize(ItemSize);
+    }
 }
 
 void Container::OnInsertControl(const std::shared_ptr<Control>& Item)

@@ -39,72 +39,72 @@ namespace OctaneGUI
 //
 
 Table::Table(Window* InWindow)
-	: Container(InWindow)
+    : Container(InWindow)
 {
-	m_Row = AddControl<HorizontalContainer>();
-	m_Row->SetSpacing({ 0.0f, 0.0f });
+    m_Row = AddControl<HorizontalContainer>();
+    m_Row->SetSpacing({ 0.0f, 0.0f });
 }
 
 Table& Table::SetColumns(int Columns)
 {
-	if (m_Row->Controls().size() == Columns)
-	{
-		return *this;
-	}
+    if (m_Row->Controls().size() == Columns)
+    {
+        return *this;
+    }
 
-	// TODO: Look into only remove/adding necessary controls.
-	m_Row->ClearControls();
-	for (int I = 0; I < Columns; I++)
-	{
-		m_Row->AddControl<TableColumn>()->SetOnInvalidate([this](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
-			{
-				if (Type != InvalidateType::Paint)
-				{
-					Invalidate(Type);
-				}
-				else
-				{
-					HandleInvalidate(Focus, Type);
-				}
-			});
-	}
+    // TODO: Look into only remove/adding necessary controls.
+    m_Row->ClearControls();
+    for (int I = 0; I < Columns; I++)
+    {
+        m_Row->AddControl<TableColumn>()->SetOnInvalidate([this](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
+            {
+                if (Type != InvalidateType::Paint)
+                {
+                    Invalidate(Type);
+                }
+                else
+                {
+                    HandleInvalidate(Focus, Type);
+                }
+            });
+    }
 
-	return *this;
+    return *this;
 }
 
 int Table::Columns() const
 {
-	return m_Row->Controls().size();
+    return m_Row->Controls().size();
 }
 
 const std::shared_ptr<Container>& Table::Column(int Index) const
 {
-	assert(Columns() > 0);
-	assert(Index >= 0 && Index < Columns());
+    assert(Columns() > 0);
+    assert(Index >= 0 && Index < Columns());
 
-	std::shared_ptr<TableColumn> Column = std::static_pointer_cast<TableColumn>(m_Row->Controls()[Index]);
-	return Column->Body();
+    std::shared_ptr<TableColumn> Column = std::static_pointer_cast<TableColumn>(m_Row->Controls()[Index]);
+    return Column->Body();
 }
 
 Table& Table::SetColumnSpacing(float Spacing)
 {
-	m_Row->SetSpacing({ Spacing, 0.0f });
-	return *this;
+    m_Row->SetSpacing({ Spacing, 0.0f });
+    return *this;
 }
 
 Table& Table::SetHeader(int Index, const char* Text)
 {
-	assert(Columns() > 0);
-	assert(Index >= 0 && Index < Columns());
+    assert(Columns() > 0);
+    assert(Index >= 0 && Index < Columns());
 
-	std::shared_ptr<TableColumn> Column = std::static_pointer_cast<TableColumn>(m_Row->Controls()[Index]);
-	Column->SetHeader(Text);
-	return *this;
+    std::shared_ptr<TableColumn> Column = std::static_pointer_cast<TableColumn>(m_Row->Controls()[Index]);
+    Column->SetHeader(Text);
+    return *this;
 }
 
 Vector2 Table::DesiredSize() const
 {
-	return m_Row->DesiredSize();
+    return m_Row->DesiredSize();
 }
 
 //
@@ -112,46 +112,46 @@ Vector2 Table::DesiredSize() const
 //
 
 Table::TableColumn::TableColumn(Window* InWindow)
-	: Container(InWindow)
+    : Container(InWindow)
 {
-	std::shared_ptr<BoxContainer> m_Outer = AddControl<VerticalContainer>();
-	m_Outer->SetSpacing({ 0.0f, 0.0f });
+    std::shared_ptr<BoxContainer> m_Outer = AddControl<VerticalContainer>();
+    m_Outer->SetSpacing({ 0.0f, 0.0f });
 
-	std::shared_ptr<BoxContainer> HeaderOuter = m_Outer->AddControl<HorizontalContainer>();
-	HeaderOuter
-		->SetGrow(Grow::Center)
-		->SetExpand(Expand::Width);
-	m_Header = HeaderOuter->AddControl<Text>();
+    std::shared_ptr<BoxContainer> HeaderOuter = m_Outer->AddControl<HorizontalContainer>();
+    HeaderOuter
+        ->SetGrow(Grow::Center)
+        ->SetExpand(Expand::Width);
+    m_Header = HeaderOuter->AddControl<Text>();
 
-	m_Body = m_Outer->AddControl<VerticalContainer>();
-	m_Body->SetExpand(Expand::Width);
+    m_Body = m_Outer->AddControl<VerticalContainer>();
+    m_Body->SetExpand(Expand::Width);
 }
 
 Table::TableColumn& Table::TableColumn::SetHeader(const char* Header)
 {
-	m_Header->SetText(Header);
-	return *this;
+    m_Header->SetText(Header);
+    return *this;
 }
 
 const std::shared_ptr<Container>& Table::TableColumn::Body() const
 {
-	return m_Body;
+    return m_Body;
 }
 
 Vector2 Table::TableColumn::DesiredSize() const
 {
-	Vector2 Result = m_Header->GetSize();
+    Vector2 Result = m_Header->GetSize();
 
-	if (m_Body->Controls().size() == 0)
-	{
-		return Result;
-	}
+    if (m_Body->Controls().size() == 0)
+    {
+        return Result;
+    }
 
-	Vector2 BodySize = m_Body->DesiredSize();
-	Result.X = std::max<float>(Result.X, BodySize.X);
-	Result.Y += BodySize.Y;
+    Vector2 BodySize = m_Body->DesiredSize();
+    Result.X = std::max<float>(Result.X, BodySize.X);
+    Result.Y += BodySize.Y;
 
-	return Result;
+    return Result;
 }
 
 }

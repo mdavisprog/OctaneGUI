@@ -27,20 +27,20 @@ SOFTWARE.
 #pragma once
 
 #if TOOLS
-	#include "Tools/Profiler.h"
+    #include "Tools/Profiler.h"
 #endif
 
 namespace OctaneGUI
 {
 
 #if TOOLS
-	#define PROFILER_SAMPLE(Name) Tools::Profiler::Sample Sample(Name, false)
-	#define PROFILER_SAMPLE_GROUP(Name) Tools::Profiler::Sample Sample(Name, true)
-	#define PROFILER_FRAME() Tools::Profiler::Frame Frame(true)
+    #define PROFILER_SAMPLE(Name) Tools::Profiler::Sample Sample(Name, false)
+    #define PROFILER_SAMPLE_GROUP(Name) Tools::Profiler::Sample Sample(Name, true)
+    #define PROFILER_FRAME() Tools::Profiler::Frame Frame(true)
 #else
-	#define PROFILER_SAMPLE(Name)
-	#define PROFILER_SAMPLE_GROUP(Name)
-	#define PROFILER_FRAME()
+    #define PROFILER_SAMPLE(Name)
+    #define PROFILER_SAMPLE_GROUP(Name)
+    #define PROFILER_FRAME()
 #endif
 
 }

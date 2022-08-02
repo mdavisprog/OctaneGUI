@@ -36,10 +36,10 @@ namespace Syntax
 class JsonHighlighter : public Highlighter
 {
 public:
-	JsonHighlighter();
+    JsonHighlighter();
 
 protected:
-	virtual std::vector<TextSpan> Update(const std::u32string_view& Span) const override;
+    virtual std::vector<TextSpan> Update(const std::u32string_view& Span) const override;
 };
 
 }

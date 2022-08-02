@@ -46,46 +46,46 @@ class Theme;
 class Paint
 {
 public:
-	Paint();
-	Paint(const std::shared_ptr<Theme>& InTheme);
-	~Paint();
+    Paint();
+    Paint(const std::shared_ptr<Theme>& InTheme);
+    ~Paint();
 
-	void Line(const Vector2& Start, const Vector2& End, const Color& Col, float Thickness = 1.0f);
-	void Rectangle(const Rect& Bounds, const Color& Col);
-	void Rectangle3D(const Rect& Bounds, const Color& Base, const Color& Highlight, const Color& Shadow, bool Sunken = false);
-	void Rectangle3DRounded(const Rect& Bounds, const Rect& Radius, const Color& Base, const Color& Highlight, const Color& Shadow, bool Sunken = false);
-	void RectangleOutline(const Rect& Bounds, const Color& Col, float Thickness = 1.0f);
-	void RectangleRounded(const Rect& Bounds, const Color& Col, const Rect& Radius);
-	void Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const Color& Col);
-	void Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const std::vector<TextSpan>& Spans);
-	void TextWrapped(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const std::vector<TextSpan>& Spans, float Width);
-	void Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_ptr<Texture>& InTexture, const Color& Col);
-	void Circle(const Vector2& Center, float Radius, const Color& Tint, int Steps = 64);
-	void CircleOutline(const Vector2& Center, float Radius, const Color& Tint, float Thickness = 1.0f, int Steps = 64);
-	void Arc(const Vector2& Center, float Radius, float StartAngle, float EndAngle, const Color& Tint, int Steps = 32);
-	void ArcOutline(const Vector2& Center, float Radius, float StartAngle, float EndAngle, const Color& Tint, float Thickness = 1.0f, int Steps = 32);
+    void Line(const Vector2& Start, const Vector2& End, const Color& Col, float Thickness = 1.0f);
+    void Rectangle(const Rect& Bounds, const Color& Col);
+    void Rectangle3D(const Rect& Bounds, const Color& Base, const Color& Highlight, const Color& Shadow, bool Sunken = false);
+    void Rectangle3DRounded(const Rect& Bounds, const Rect& Radius, const Color& Base, const Color& Highlight, const Color& Shadow, bool Sunken = false);
+    void RectangleOutline(const Rect& Bounds, const Color& Col, float Thickness = 1.0f);
+    void RectangleRounded(const Rect& Bounds, const Color& Col, const Rect& Radius);
+    void Text(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const Color& Col);
+    void Textf(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const std::vector<TextSpan>& Spans);
+    void TextWrapped(const std::shared_ptr<Font>& InFont, const Vector2& Position, const std::u32string_view& Contents, const std::vector<TextSpan>& Spans, float Width);
+    void Image(const Rect& Bounds, const Rect& TexCoords, const std::shared_ptr<Texture>& InTexture, const Color& Col);
+    void Circle(const Vector2& Center, float Radius, const Color& Tint, int Steps = 64);
+    void CircleOutline(const Vector2& Center, float Radius, const Color& Tint, float Thickness = 1.0f, int Steps = 64);
+    void Arc(const Vector2& Center, float Radius, float StartAngle, float EndAngle, const Color& Tint, int Steps = 32);
+    void ArcOutline(const Vector2& Center, float Radius, float StartAngle, float EndAngle, const Color& Tint, float Thickness = 1.0f, int Steps = 32);
 
-	void PushClip(const Rect& Bounds);
-	void PopClip();
-	bool IsClipped(const Rect& Bounds) const;
+    void PushClip(const Rect& Bounds);
+    void PopClip();
+    bool IsClipped(const Rect& Bounds) const;
 
-	const VertexBuffer& GetBuffer() const;
-	std::shared_ptr<Theme> GetTheme() const;
+    const VertexBuffer& GetBuffer() const;
+    std::shared_ptr<Theme> GetTheme() const;
 
 private:
-	void AddLine(const Vector2& Start, const Vector2& End, const Color& Col, float Thickness, uint32_t IndexOffset = 0);
-	void AddTriangles(const Rect& Vertices, const Color& Col, uint32_t IndexOffset = 0);
-	void AddTriangles(const Rect& Vertices, const Rect& TexCoords, const Color& Col, uint32_t IndexOffset = 0);
-	void AddTriangles(const std::vector<Rect>& Rects, const std::vector<Rect>& UVs, const std::vector<Color>& Colors, uint32_t TextureID);
-	void AddTrianglesCircle(const Vector2& Center, const std::vector<Vector2>& Vertices, const Color& Tint, uint32_t Offset = 0);
-	void AddTriangleIndices(uint32_t Offset);
-	DrawCommand& PushCommand(uint32_t IndexCount, uint32_t TextureID);
+    void AddLine(const Vector2& Start, const Vector2& End, const Color& Col, float Thickness, uint32_t IndexOffset = 0);
+    void AddTriangles(const Rect& Vertices, const Color& Col, uint32_t IndexOffset = 0);
+    void AddTriangles(const Rect& Vertices, const Rect& TexCoords, const Color& Col, uint32_t IndexOffset = 0);
+    void AddTriangles(const std::vector<Rect>& Rects, const std::vector<Rect>& UVs, const std::vector<Color>& Colors, uint32_t TextureID);
+    void AddTrianglesCircle(const Vector2& Center, const std::vector<Vector2>& Vertices, const Color& Tint, uint32_t Offset = 0);
+    void AddTriangleIndices(uint32_t Offset);
+    DrawCommand& PushCommand(uint32_t IndexCount, uint32_t TextureID);
 
-	int GatherGlyphs(const std::shared_ptr<Font>& InFont, Vector2& Position, const Vector2& Origin, const std::u32string_view& Contents, std::vector<Rect>& Rects, std::vector<Rect>& UVs, bool ShouldClip = true);
+    int GatherGlyphs(const std::shared_ptr<Font>& InFont, Vector2& Position, const Vector2& Origin, const std::u32string_view& Contents, std::vector<Rect>& Rects, std::vector<Rect>& UVs, bool ShouldClip = true);
 
-	std::shared_ptr<Theme> m_Theme;
-	std::vector<Rect> m_ClipStack;
-	VertexBuffer m_Buffer;
+    std::shared_ptr<Theme> m_Theme;
+    std::vector<Rect> m_ClipStack;
+    VertexBuffer m_Buffer;
 };
 
 }

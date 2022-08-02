@@ -35,46 +35,46 @@ class Text;
 
 class TextSelectable : public Control
 {
-	CLASS(TextSelectable)
+    CLASS(TextSelectable)
 
 public:
-	TextSelectable(Window* InWindow);
-	virtual ~TextSelectable();
+    TextSelectable(Window* InWindow);
+    virtual ~TextSelectable();
 
-	TextSelectable& SetSelected(bool Selected);
-	bool IsSelected() const;
+    TextSelectable& SetSelected(bool Selected);
+    bool IsSelected() const;
 
-	TextSelectable& SetText(const char* Contents);
-	const char32_t* GetText() const;
+    TextSelectable& SetText(const char* Contents);
+    const char32_t* GetText() const;
 
-	TextSelectable& SetAlignment(HorizontalAlignment Align);
-	HorizontalAlignment GetAlignment() const;
+    TextSelectable& SetAlignment(HorizontalAlignment Align);
+    HorizontalAlignment GetAlignment() const;
 
-	TextSelectable& SetOnHovered(OnTextSelectableSignature&& Fn);
-	TextSelectable& SetOnPressed(OnTextSelectableSignature&& Fn);
+    TextSelectable& SetOnHovered(OnTextSelectableSignature&& Fn);
+    TextSelectable& SetOnPressed(OnTextSelectableSignature&& Fn);
 
-	virtual void SetWindow(Window* InWindow) override;
-	virtual void OnPaint(Paint& Brush) const override;
-	virtual void Update() override;
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnSave(Json& Root) const override;
-	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;
-	virtual void OnMouseEnter() override;
-	virtual void OnMouseLeave() override;
-	virtual void OnThemeLoaded() override;
+    virtual void SetWindow(Window* InWindow) override;
+    virtual void OnPaint(Paint& Brush) const override;
+    virtual void Update() override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnSave(Json& Root) const override;
+    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;
+    virtual void OnMouseEnter() override;
+    virtual void OnMouseLeave() override;
+    virtual void OnThemeLoaded() override;
 
 protected:
-	std::shared_ptr<Text> GetTextControl() const;
+    std::shared_ptr<Text> GetTextControl() const;
 
 private:
-	void UpdateSize();
+    void UpdateSize();
 
-	bool m_Hovered { false };
-	bool m_Selected { false };
-	std::shared_ptr<Text> m_Text { nullptr };
-	OnTextSelectableSignature m_OnHovered { nullptr };
-	OnTextSelectableSignature m_OnPressed { nullptr };
-	HorizontalAlignment m_Align { HorizontalAlignment::Left };
+    bool m_Hovered { false };
+    bool m_Selected { false };
+    std::shared_ptr<Text> m_Text { nullptr };
+    OnTextSelectableSignature m_OnHovered { nullptr };
+    OnTextSelectableSignature m_OnPressed { nullptr };
+    HorizontalAlignment m_Align { HorizontalAlignment::Left };
 };
 
 }

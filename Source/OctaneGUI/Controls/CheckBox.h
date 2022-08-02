@@ -35,45 +35,45 @@ class Text;
 
 class CheckBox : public Button
 {
-	CLASS(CheckBox)
+    CLASS(CheckBox)
 
 public:
-	enum class State : uint8_t
-	{
-		None,
-		Intermediate,
-		Checked
-	};
+    enum class State : uint8_t
+    {
+        None,
+        Intermediate,
+        Checked
+    };
 
-	CheckBox(Window* InWindow);
-	virtual ~CheckBox();
+    CheckBox(Window* InWindow);
+    virtual ~CheckBox();
 
-	CheckBox& SetText(const char* InText);
-	const char32_t* GetText() const;
+    CheckBox& SetText(const char* InText);
+    const char32_t* GetText() const;
 
-	CheckBox& SetState(State InState);
-	State GetState() const;
+    CheckBox& SetState(State InState);
+    State GetState() const;
 
-	CheckBox& SetTriState(bool IsTriState);
-	bool IsTriState() const;
+    CheckBox& SetTriState(bool IsTriState);
+    bool IsTriState() const;
 
-	virtual void SetWindow(Window* InWindow) override;
-	virtual void OnPaint(Paint& Brush) const override;
-	virtual void Update() override;
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnSave(Json& Root) const override;
-	virtual void OnThemeLoaded() override;
+    virtual void SetWindow(Window* InWindow) override;
+    virtual void OnPaint(Paint& Brush) const override;
+    virtual void Update() override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnSave(Json& Root) const override;
+    virtual void OnThemeLoaded() override;
 
 protected:
-	virtual void OnClicked() override;
+    virtual void OnClicked() override;
 
 private:
-	Vector2 BoxSize() const;
-	void UpdateSize();
+    Vector2 BoxSize() const;
+    void UpdateSize();
 
-	std::shared_ptr<Text> m_Text { nullptr };
-	State m_State { State::None };
-	bool m_TriState { false };
+    std::shared_ptr<Text> m_Text { nullptr };
+    State m_State { State::None };
+    bool m_TriState { false };
 };
 
 }

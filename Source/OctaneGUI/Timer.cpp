@@ -31,11 +31,11 @@ namespace OctaneGUI
 {
 
 Timer::Timer(int Interval, bool Repeat, Window* InWindow, OnEmptySignature&& Fn)
-	: std::enable_shared_from_this<Timer>()
-	, m_Interval(Interval)
-	, m_Repeat(Repeat)
-	, m_Window(InWindow)
-	, m_OnTimeout(std::move(Fn))
+    : std::enable_shared_from_this<Timer>()
+    , m_Interval(Interval)
+    , m_Repeat(Repeat)
+    , m_Window(InWindow)
+    , m_OnTimeout(std::move(Fn))
 {
 }
 
@@ -45,58 +45,58 @@ Timer::~Timer()
 
 Timer& Timer::SetOnTimeout(OnEmptySignature&& Fn)
 {
-	m_OnTimeout = std::move(Fn);
-	return *this;
+    m_OnTimeout = std::move(Fn);
+    return *this;
 }
 
 void Timer::Invoke() const
 {
-	if (m_OnTimeout)
-	{
-		m_OnTimeout();
-	}
+    if (m_OnTimeout)
+    {
+        m_OnTimeout();
+    }
 }
 
 Timer& Timer::SetInterval(int Interval)
 {
-	m_Interval = Interval;
-	return *this;
+    m_Interval = Interval;
+    return *this;
 }
 
 int Timer::Interval() const
 {
-	return m_Interval;
+    return m_Interval;
 }
 
 Timer& Timer::SetRepeat(bool Repeat)
 {
-	m_Repeat = Repeat;
-	return *this;
+    m_Repeat = Repeat;
+    return *this;
 }
 
 bool Timer::Repeat() const
 {
-	return m_Repeat;
+    return m_Repeat;
 }
 
 void Timer::Start()
 {
-	if (m_Window == nullptr)
-	{
-		return;
-	}
+    if (m_Window == nullptr)
+    {
+        return;
+    }
 
-	m_Window->StartTimer(shared_from_this());
+    m_Window->StartTimer(shared_from_this());
 }
 
 void Timer::Stop()
 {
-	if (m_Window == nullptr)
-	{
-		return;
-	}
+    if (m_Window == nullptr)
+    {
+        return;
+    }
 
-	m_Window->ClearTimer(shared_from_this());
+    m_Window->ClearTimer(shared_from_this());
 }
 
 Timer::Timer()

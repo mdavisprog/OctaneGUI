@@ -35,31 +35,31 @@ namespace OctaneGUI
 
 class TextEditor : public TextInput
 {
-	CLASS(TextEditor)
+    CLASS(TextEditor)
 
 public:
-	TextEditor(Window* InWindow);
+    TextEditor(Window* InWindow);
 
-	TextEditor& SetMatchIndent(bool MatchIndent);
-	bool MatchIndent() const;
+    TextEditor& SetMatchIndent(bool MatchIndent);
+    bool MatchIndent() const;
 
-	TextEditor& SetLineColor(const size_t Line, const Color& _Color);
-	TextEditor& ClearLineColor(const size_t Line);
-	TextEditor& ClearLineColors();
+    TextEditor& SetLineColor(const size_t Line, const Color& _Color);
+    TextEditor& ClearLineColor(const size_t Line);
+    TextEditor& ClearLineColors();
 
-	virtual void OnLoad(const Json& Root) override;
+    virtual void OnLoad(const Json& Root) override;
 
 protected:
-	virtual void TextAdded(const std::u32string& Contents) override;
+    virtual void TextAdded(const std::u32string& Contents) override;
 
 private:
-	std::u32string ModifyText(const std::u32string& Pending);
-	std::u32string MatchIndent(const std::u32string& Pending) const;
-	std::u32string MatchCharacter(const std::u32string& Pending, char32_t Character) const;
-	void PaintLineColors(std::shared_ptr<TextInput const>& Input, Paint& Brush) const;
+    std::u32string ModifyText(const std::u32string& Pending);
+    std::u32string MatchIndent(const std::u32string& Pending) const;
+    std::u32string MatchCharacter(const std::u32string& Pending, char32_t Character) const;
+    void PaintLineColors(std::shared_ptr<TextInput const>& Input, Paint& Brush) const;
 
-	bool m_MatchIndent { true };
-	std::unordered_map<size_t, Color> m_LineColors {};
+    bool m_MatchIndent { true };
+    std::unordered_map<size_t, Color> m_LineColors {};
 };
 
 }

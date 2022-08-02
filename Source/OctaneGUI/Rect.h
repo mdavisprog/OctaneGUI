@@ -34,41 +34,41 @@ namespace OctaneGUI
 struct Rect
 {
 public:
-	static Rect FromJson(const Json& Root, const Rect& Default = {});
-	static Json ToJson(const Rect& Value);
+    static Rect FromJson(const Json& Root, const Rect& Default = {});
+    static Json ToJson(const Rect& Value);
 
-	Vector2 Min, Max;
+    Vector2 Min, Max;
 
-	Rect();
-	Rect(float MinX, float MinY, float MaxX, float MaxY);
-	Rect(const Vector2& InMin, const Vector2& InMax);
+    Rect();
+    Rect(float MinX, float MinY, float MaxX, float MaxY);
+    Rect(const Vector2& InMin, const Vector2& InMax);
 
-	float Width() const;
-	float Height() const;
-	Vector2 GetSize() const;
-	Vector2 GetCenter() const;
+    float Width() const;
+    float Height() const;
+    Vector2 GetSize() const;
+    Vector2 GetCenter() const;
 
-	bool IsZero() const;
+    bool IsZero() const;
 
-	bool Contains(float X, float Y) const;
-	bool Contains(const Vector2& Point) const;
+    bool Contains(float X, float Y) const;
+    bool Contains(const Vector2& Point) const;
 
-	Rect& Move(float X, float Y);
-	Rect& Move(const Vector2& Delta);
+    Rect& Move(float X, float Y);
+    Rect& Move(const Vector2& Delta);
 
-	Rect& SetPosition(float X, float Y);
-	Rect& SetPosition(const Vector2& Position);
+    Rect& SetPosition(float X, float Y);
+    Rect& SetPosition(const Vector2& Position);
 
-	Rect& SetSize(const Vector2& Size);
+    Rect& SetSize(const Vector2& Size);
 
-	Rect& Expand(float Width, float Height);
-	Rect& Expand(const Vector2& Size);
+    Rect& Expand(float Width, float Height);
+    Rect& Expand(const Vector2& Size);
 
-	Rect& Shrink(float Width, float Height);
-	Rect& Shrink(const Vector2& Size);
+    Rect& Shrink(float Width, float Height);
+    Rect& Shrink(const Vector2& Size);
 
-	bool Intersects(const Rect& Other) const;
-	bool Encompasses(const Rect& Other) const;
+    bool Intersects(const Rect& Other) const;
+    bool Encompasses(const Rect& Other) const;
 };
 
 }

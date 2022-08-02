@@ -41,208 +41,208 @@ namespace OctaneGUI
 {
 
 MenuBar::MenuBar(Window* InWindow)
-	: Container(InWindow)
+    : Container(InWindow)
 {
-	SetExpand(Expand::Width);
+    SetExpand(Expand::Width);
 
-	m_Panel = AddControl<Panel>();
-	m_Panel->SetExpand(Expand::Both);
+    m_Panel = AddControl<Panel>();
+    m_Panel->SetExpand(Expand::Both);
 
-	m_Container = AddControl<HorizontalContainer>();
-	m_Container->SetExpand(Expand::Both);
+    m_Container = AddControl<HorizontalContainer>();
+    m_Container->SetExpand(Expand::Both);
 }
 
 std::shared_ptr<Menu> MenuBar::AddItem(const char* InText)
 {
-	std::shared_ptr<MenuItem> Item = std::make_shared<MenuItem>(GetWindow());
-	Item->SetIsMenuBar(true)
-		.SetOnHovered([this](TextSelectable& Item) -> void
-			{
-				OnHover(static_cast<MenuItem&>(Item));
-			})
-		.SetOnPressed([this](TextSelectable& Item) -> void
-			{
-				OnSelected(static_cast<MenuItem&>(Item));
-			})
-		.SetAlignment(HorizontalAlignment::Center)
-		.SetText(InText)
-		.SetExpand(Expand::Height);
-	m_Container->InsertControl(Item);
+    std::shared_ptr<MenuItem> Item = std::make_shared<MenuItem>(GetWindow());
+    Item->SetIsMenuBar(true)
+        .SetOnHovered([this](TextSelectable& Item) -> void
+            {
+                OnHover(static_cast<MenuItem&>(Item));
+            })
+        .SetOnPressed([this](TextSelectable& Item) -> void
+            {
+                OnSelected(static_cast<MenuItem&>(Item));
+            })
+        .SetAlignment(HorizontalAlignment::Center)
+        .SetText(InText)
+        .SetExpand(Expand::Height);
+    m_Container->InsertControl(Item);
 
-	if (m_MenuItems.size() == 0)
-	{
-		const Vector2 Padding = GetProperty(ThemeProperties::MenuBar_Padding).Vector();
-		SetSize(Vector2(0.0f, Item->GetSize().Y));
-	}
+    if (m_MenuItems.size() == 0)
+    {
+        const Vector2 Padding = GetProperty(ThemeProperties::MenuBar_Padding).Vector();
+        SetSize(Vector2(0.0f, Item->GetSize().Y));
+    }
 
-	m_MenuItems.push_back(Item);
-	Invalidate();
+    m_MenuItems.push_back(Item);
+    Invalidate();
 
-	return Item->CreateMenu();
+    return Item->CreateMenu();
 }
 
 std::shared_ptr<Menu> MenuBar::Item(const char* Name) const
 {
-	for (const std::shared_ptr<MenuItem>& Item_ : m_MenuItems)
-	{
-		if (String::ToMultiByte(Item_->GetText()) == Name)
-		{
-			return Item_->GetMenu();
-		}
-	}
+    for (const std::shared_ptr<MenuItem>& Item_ : m_MenuItems)
+    {
+        if (String::ToMultiByte(Item_->GetText()) == Name)
+        {
+            return Item_->GetMenu();
+        }
+    }
 
-	return nullptr;
+    return nullptr;
 }
 
 void MenuBar::GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const
 {
-	Items.insert(Items.end(), m_MenuItems.begin(), m_MenuItems.end());
+    Items.insert(Items.end(), m_MenuItems.begin(), m_MenuItems.end());
 
-	for (const std::shared_ptr<MenuItem>& Item : m_MenuItems)
-	{
-		const std::shared_ptr<Menu> ItemMenu = Item->GetMenu();
+    for (const std::shared_ptr<MenuItem>& Item : m_MenuItems)
+    {
+        const std::shared_ptr<Menu> ItemMenu = Item->GetMenu();
 
-		if (ItemMenu)
-		{
-			ItemMenu->GetMenuItems(Items);
-		}
-	}
+        if (ItemMenu)
+        {
+            ItemMenu->GetMenuItems(Items);
+        }
+    }
 }
 
 MenuBar& MenuBar::ClearMenuItems()
 {
-	m_Container->ClearControls();
-	m_MenuItems.clear();
-	SetSize({});
-	Invalidate(InvalidateType::Both);
-	return *this;
+    m_Container->ClearControls();
+    m_MenuItems.clear();
+    SetSize({});
+    Invalidate(InvalidateType::Both);
+    return *this;
 }
 
 void MenuBar::Close()
 {
-	if (!m_Opened.expired())
-	{
-		Close(*m_Opened.lock().get());
-		m_Opened.reset();
-	}
+    if (!m_Opened.expired())
+    {
+        Close(*m_Opened.lock().get());
+        m_Opened.reset();
+    }
 
-	m_Open = false;
+    m_Open = false;
 }
 
 void MenuBar::GetControlList(ControlList& List) const
 {
-	for (const std::shared_ptr<MenuItem>& Item : m_MenuItems)
-	{
-		List.AddControl(Item);
-		if (Item->GetMenu())
-		{
-			Item->GetMenu()->GetControlList(List);
-		}
-	}
+    for (const std::shared_ptr<MenuItem>& Item : m_MenuItems)
+    {
+        List.AddControl(Item);
+        if (Item->GetMenu())
+        {
+            Item->GetMenu()->GetControlList(List);
+        }
+    }
 }
 
 void MenuBar::OnLoad(const Json& Root)
 {
-	Container::OnLoad(Root);
+    Container::OnLoad(Root);
 
-	const Json& Menus = Root["Items"];
-	for (int I = 0; I < Menus.Count(); I++)
-	{
-		const Json& Item = Menus[I];
+    const Json& Menus = Root["Items"];
+    for (int I = 0; I < Menus.Count(); I++)
+    {
+        const Json& Item = Menus[I];
 
-		AddItem(Item["Text"].String());
-		m_MenuItems.back()->OnLoad(Item);
-	}
+        AddItem(Item["Text"].String());
+        m_MenuItems.back()->OnLoad(Item);
+    }
 
-	SetExpand(Expand::Width);
+    SetExpand(Expand::Width);
 }
 
 void MenuBar::OnThemeLoaded()
 {
-	Container::OnThemeLoaded();
+    Container::OnThemeLoaded();
 
-	for (const std::shared_ptr<MenuItem>& Item : m_MenuItems)
-	{
-		if (Item->GetMenu())
-		{
-			Item->GetMenu()->OnThemeLoaded();
-		}
-	}
+    for (const std::shared_ptr<MenuItem>& Item : m_MenuItems)
+    {
+        if (Item->GetMenu())
+        {
+            Item->GetMenu()->OnThemeLoaded();
+        }
+    }
 }
 
 void MenuBar::OnHover(MenuItem& Hovered)
 {
-	if (m_Open)
-	{
-		Open(Hovered);
-	}
+    if (m_Open)
+    {
+        Open(Hovered);
+    }
 }
 
 void MenuBar::OnSelected(MenuItem& Selected)
 {
-	if (GetWindow()->GetPopup() == Selected.GetMenu())
-	{
-		GetWindow()->ClosePopup();
-		m_Open = false;
-	}
-	else
-	{
-		Open(Selected);
-	}
+    if (GetWindow()->GetPopup() == Selected.GetMenu())
+    {
+        GetWindow()->ClosePopup();
+        m_Open = false;
+    }
+    else
+    {
+        Open(Selected);
+    }
 }
 
 void MenuBar::Open(MenuItem& Item)
 {
-	if (!m_Opened.expired())
-	{
-		if (m_Opened.lock().get() == &Item)
-		{
-			return;
-		}
+    if (!m_Opened.expired())
+    {
+        if (m_Opened.lock().get() == &Item)
+        {
+            return;
+        }
 
-		Close(*m_Opened.lock().get());
-		m_Opened.reset();
-	}
+        Close(*m_Opened.lock().get());
+        m_Opened.reset();
+    }
 
-	if (!Item.GetMenu())
-	{
-		return;
-	}
+    if (!Item.GetMenu())
+    {
+        return;
+    }
 
-	Item.OpenMenu({ 0.0f, GetSize().Y });
-	GetWindow()->SetPopup(Item.GetMenu());
-	Item.SetSelected(true);
-	m_Open = true;
+    Item.OpenMenu({ 0.0f, GetSize().Y });
+    GetWindow()->SetPopup(Item.GetMenu());
+    Item.SetSelected(true);
+    m_Open = true;
 
-	// This needs to be called after SetPopup. The SetPopup function will attempt
-	// to close any existing popups, which will close this MenuBar, which will close the
-	// selected menu item's menu.
-	m_Opened = WeakPtr(Item);
+    // This needs to be called after SetPopup. The SetPopup function will attempt
+    // to close any existing popups, which will close this MenuBar, which will close the
+    // selected menu item's menu.
+    m_Opened = WeakPtr(Item);
 
-	Invalidate();
+    Invalidate();
 }
 
 void MenuBar::Close(MenuItem& Item) const
 {
-	Item.SetSelected(false);
+    Item.SetSelected(false);
 
-	if (Item.GetMenu())
-	{
-		Item.GetMenu()->Close();
-	}
+    if (Item.GetMenu())
+    {
+        Item.GetMenu()->Close();
+    }
 }
 
 std::weak_ptr<MenuItem> MenuBar::WeakPtr(const MenuItem& Item) const
 {
-	for (const std::shared_ptr<MenuItem>& Item_ : m_MenuItems)
-	{
-		if (Item_.get() == &Item)
-		{
-			return Item_;
-		}
-	}
+    for (const std::shared_ptr<MenuItem>& Item_ : m_MenuItems)
+    {
+        if (Item_.get() == &Item)
+        {
+            return Item_;
+        }
+    }
 
-	return std::weak_ptr<MenuItem>();
+    return std::weak_ptr<MenuItem>();
 }
 
 }

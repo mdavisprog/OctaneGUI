@@ -36,52 +36,52 @@ class ScrollableViewControl;
 
 class ScrollableViewInteraction : public Control
 {
-	CLASS(ScrollableViewInteraction)
+    CLASS(ScrollableViewInteraction)
 
 public:
-	ScrollableViewInteraction(Window* InWindow);
+    ScrollableViewInteraction(Window* InWindow);
 
-	ScrollableViewControl& ScrollableView() const;
+    ScrollableViewControl& ScrollableView() const;
 
-	ScrollableViewInteraction& SetAlwaysFocus(bool AlwaysFocus);
-	bool AlwaysFocus() const;
+    ScrollableViewInteraction& SetAlwaysFocus(bool AlwaysFocus);
+    bool AlwaysFocus() const;
 
-	virtual void OnMouseMove(const Vector2& Position) override;
-	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;
-	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
-	virtual void OnMouseWheel(const Vector2& Delta) override;
+    virtual void OnMouseMove(const Vector2& Position) override;
+    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;
+    virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
+    virtual void OnMouseWheel(const Vector2& Delta) override;
 
 private:
-	bool m_AlwaysFocus { false };
+    bool m_AlwaysFocus { false };
 };
 
 class ScrollableViewControl : public Container
 {
-	CLASS(ScrollableViewControl)
+    CLASS(ScrollableViewControl)
 
 public:
-	ScrollableViewControl(Window* InWindow);
+    ScrollableViewControl(Window* InWindow);
 
-	ScrollableViewControl& SetInteraction(const std::shared_ptr<ScrollableViewInteraction>& Interaction);
-	const std::shared_ptr<ScrollableViewInteraction>& Interaction() const;
+    ScrollableViewControl& SetInteraction(const std::shared_ptr<ScrollableViewInteraction>& Interaction);
+    const std::shared_ptr<ScrollableViewInteraction>& Interaction() const;
 
-	const std::shared_ptr<ScrollableContainer>& Scrollable() const;
+    const std::shared_ptr<ScrollableContainer>& Scrollable() const;
 
-	ScrollableViewControl& SetIgnoreOwnedControls(bool IgnoreOwnedControls);
+    ScrollableViewControl& SetIgnoreOwnedControls(bool IgnoreOwnedControls);
 
-	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
+    virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnMouseMove(const Vector2& Position) override;
-	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;
-	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnMouseMove(const Vector2& Position) override;
+    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;
+    virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
 
 private:
-	bool AlwaysFocusInteraction() const;
+    bool AlwaysFocusInteraction() const;
 
-	std::shared_ptr<ScrollableContainer> m_Scrollable { nullptr };
-	std::shared_ptr<ScrollableViewInteraction> m_Interaction { nullptr };
-	bool m_IgnoreOwnedControls { false };
+    std::shared_ptr<ScrollableContainer> m_Scrollable { nullptr };
+    std::shared_ptr<ScrollableViewInteraction> m_Interaction { nullptr };
+    bool m_IgnoreOwnedControls { false };
 };
 
 }

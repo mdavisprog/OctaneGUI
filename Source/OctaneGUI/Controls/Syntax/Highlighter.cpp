@@ -40,23 +40,23 @@ Highlighter::Highlighter()
 
 Highlighter& Highlighter::SetInput(const std::weak_ptr<TextInput>& Input)
 {
-	m_Input = Input;
-	return *this;
+    m_Input = Input;
+    return *this;
 }
 
 Color Highlighter::DefaultColor() const
 {
-	if (m_Input.expired())
-	{
-		return Color::Black;
-	}
+    if (m_Input.expired())
+    {
+        return Color::Black;
+    }
 
-	return m_Input.lock()->TextColor();
+    return m_Input.lock()->TextColor();
 }
 
 std::vector<TextSpan> Highlighter::GetSpans(const std::u32string_view& Span) const
 {
-	return Update(Span);
+    return Update(Span);
 }
 
 }

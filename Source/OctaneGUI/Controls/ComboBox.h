@@ -38,36 +38,36 @@ class TextInput;
 
 class ComboBox : public HorizontalContainer
 {
-	CLASS(ComboBox)
+    CLASS(ComboBox)
 
 public:
-	typedef std::function<void(const std::u32string&)> OnSelectedSignature;
+    typedef std::function<void(const std::u32string&)> OnSelectedSignature;
 
-	ComboBox(Window* InWindow);
+    ComboBox(Window* InWindow);
 
-	ComboBox& SetExpand(Expand InExpand);
-	ComboBox& SetSelected(const char32_t* InText);
+    ComboBox& SetExpand(Expand InExpand);
+    ComboBox& SetSelected(const char32_t* InText);
 
-	std::shared_ptr<Text> AddItem(const char* Item);
+    std::shared_ptr<Text> AddItem(const char* Item);
 
-	void Close();
-	bool IsOpen() const;
+    void Close();
+    bool IsOpen() const;
 
-	ComboBox& SetOnSelected(OnSelectedSignature&& Fn);
+    ComboBox& SetOnSelected(OnSelectedSignature&& Fn);
 
-	virtual void Update() override;
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnThemeLoaded() override;
+    virtual void Update() override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnThemeLoaded() override;
 
 private:
-	using Container::AddControl;
-	using Container::InsertControl;
-	using Control::SetExpand;
+    using Container::AddControl;
+    using Container::InsertControl;
+    using Control::SetExpand;
 
-	std::shared_ptr<TextInput> m_Input { nullptr };
-	std::shared_ptr<ImageButton> m_Button { nullptr };
-	std::shared_ptr<ListBox> m_List { nullptr };
-	OnSelectedSignature m_OnSelected { nullptr };
+    std::shared_ptr<TextInput> m_Input { nullptr };
+    std::shared_ptr<ImageButton> m_Button { nullptr };
+    std::shared_ptr<ListBox> m_List { nullptr };
+    OnSelectedSignature m_OnSelected { nullptr };
 };
 
 }

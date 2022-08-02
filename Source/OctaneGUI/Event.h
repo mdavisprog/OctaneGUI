@@ -38,130 +38,130 @@ namespace OctaneGUI
 class Event
 {
 public:
-	enum class Type : uint32_t
-	{
-		None,
-		KeyPressed,
-		KeyReleased,
-		MouseMoved,
-		MousePressed,
-		MouseReleased,
-		MouseWheel,
-		Text,
-		WindowClosed,
-		WindowResized,
-		WindowEnter,
-		WindowLeave,
-	};
+    enum class Type : uint32_t
+    {
+        None,
+        KeyPressed,
+        KeyReleased,
+        MouseMoved,
+        MousePressed,
+        MouseReleased,
+        MouseWheel,
+        Text,
+        WindowClosed,
+        WindowResized,
+        WindowEnter,
+        WindowLeave,
+    };
 
-	struct Key
-	{
-	public:
-		Key(Keyboard::Key InCode)
-			: m_Code(InCode)
-		{
-		}
+    struct Key
+    {
+    public:
+        Key(Keyboard::Key InCode)
+            : m_Code(InCode)
+        {
+        }
 
-		Keyboard::Key m_Code;
-	};
+        Keyboard::Key m_Code;
+    };
 
-	struct MouseMove
-	{
-	public:
-		MouseMove()
-			: m_Position()
-		{
-		}
+    struct MouseMove
+    {
+    public:
+        MouseMove()
+            : m_Position()
+        {
+        }
 
-		MouseMove(float X, float Y)
-			: m_Position(X, Y)
-		{
-		}
+        MouseMove(float X, float Y)
+            : m_Position(X, Y)
+        {
+        }
 
-		Vector2 m_Position;
-	};
+        Vector2 m_Position;
+    };
 
-	struct MouseButton
-	{
-	public:
-		MouseButton()
-		{
-		}
+    struct MouseButton
+    {
+    public:
+        MouseButton()
+        {
+        }
 
-		MouseButton(Mouse::Button InButton, float X, float Y, Mouse::Count Count)
-			: m_Button(InButton)
-			, m_Position(X, Y)
-			, m_Count(Count)
-		{
-		}
+        MouseButton(Mouse::Button InButton, float X, float Y, Mouse::Count Count)
+            : m_Button(InButton)
+            , m_Position(X, Y)
+            , m_Count(Count)
+        {
+        }
 
-		Mouse::Button m_Button { Mouse::Button::Left };
-		Vector2 m_Position {};
-		Mouse::Count m_Count { Mouse::Count::Single };
-	};
+        Mouse::Button m_Button { Mouse::Button::Left };
+        Vector2 m_Position {};
+        Mouse::Count m_Count { Mouse::Count::Single };
+    };
 
-	struct MouseWheel
-	{
-	public:
-		MouseWheel(int X, int Y)
-			: Delta((float)X, (float)Y)
-		{
-		}
+    struct MouseWheel
+    {
+    public:
+        MouseWheel(int X, int Y)
+            : Delta((float)X, (float)Y)
+        {
+        }
 
-		Vector2 Delta {};
-	};
+        Vector2 Delta {};
+    };
 
-	struct Text
-	{
-	public:
-		Text(uint32_t InCode)
-			: Code(InCode)
-		{
-		}
+    struct Text
+    {
+    public:
+        Text(uint32_t InCode)
+            : Code(InCode)
+        {
+        }
 
-		uint32_t Code;
-	};
+        uint32_t Code;
+    };
 
-	struct WindowResized
-	{
-	public:
-		WindowResized(float Width, float Height)
-			: m_Size(Width, Height)
-		{
-		}
+    struct WindowResized
+    {
+    public:
+        WindowResized(float Width, float Height)
+            : m_Size(Width, Height)
+        {
+        }
 
-		Vector2 m_Size;
-	};
+        Vector2 m_Size;
+    };
 
-	union Data
-	{
-		Data();
+    union Data
+    {
+        Data();
 
-		Key m_Key;
-		MouseMove m_MouseMove;
-		MouseButton m_MouseButton;
-		MouseWheel m_MouseWheel;
-		Text m_Text;
-		WindowResized m_Resized;
-	};
+        Key m_Key;
+        MouseMove m_MouseMove;
+        MouseButton m_MouseButton;
+        MouseWheel m_MouseWheel;
+        Text m_Text;
+        WindowResized m_Resized;
+    };
 
-	Event(Type InType);
-	Event(Type InType, const Key& InKey);
-	Event(const MouseMove& InMouseMove);
-	Event(Type InType, const MouseButton& InMouseButton);
-	Event(const MouseWheel& InMouseWheel);
-	Event(const WindowResized& InResized);
-	Event(const Text& InText);
-	~Event();
+    Event(Type InType);
+    Event(Type InType, const Key& InKey);
+    Event(const MouseMove& InMouseMove);
+    Event(Type InType, const MouseButton& InMouseButton);
+    Event(const MouseWheel& InMouseWheel);
+    Event(const WindowResized& InResized);
+    Event(const Text& InText);
+    ~Event();
 
-	Type GetType() const;
-	const Data& GetData() const;
+    Type GetType() const;
+    const Data& GetData() const;
 
 private:
-	Event();
+    Event();
 
-	Type m_Type;
-	Data m_Data;
+    Type m_Type;
+    Data m_Data;
 };
 
 }

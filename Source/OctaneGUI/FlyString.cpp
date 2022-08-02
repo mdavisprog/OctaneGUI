@@ -36,12 +36,12 @@ std::unordered_map<size_t, std::string> g_Table {};
 
 std::string_view Get(const char* Value)
 {
-	size_t Hash = std::hash<std::string_view> {}(Value);
-	if (g_Table.find(Hash) == g_Table.end())
-	{
-		g_Table[Hash] = Value;
-	}
-	return g_Table[Hash];
+    size_t Hash = std::hash<std::string_view> {}(Value);
+    if (g_Table.find(Hash) == g_Table.end())
+    {
+        g_Table[Hash] = Value;
+    }
+    return g_Table[Hash];
 }
 
 FlyString::FlyString()
@@ -50,34 +50,34 @@ FlyString::FlyString()
 
 FlyString::FlyString(const char* Value)
 {
-	m_String = Get(Value);
+    m_String = Get(Value);
 }
 
 FlyString::FlyString(const FlyString& Value)
-	: m_String(Value.m_String)
+    : m_String(Value.m_String)
 {
 }
 
 FlyString& FlyString::operator=(const char* Value)
 {
-	m_String = Get(Value);
-	return *this;
+    m_String = Get(Value);
+    return *this;
 }
 
 FlyString& FlyString::operator=(const FlyString& Value)
 {
-	m_String = Value.m_String;
-	return *this;
+    m_String = Value.m_String;
+    return *this;
 }
 
 bool FlyString::operator==(const FlyString& Value) const
 {
-	return m_String == Value.m_String;
+    return m_String == Value.m_String;
 }
 
 const char* FlyString::Data() const
 {
-	return m_String.data();
+    return m_String.data();
 }
 
 }

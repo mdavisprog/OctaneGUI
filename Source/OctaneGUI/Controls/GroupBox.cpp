@@ -38,61 +38,61 @@ namespace OctaneGUI
 #define MARGIN 12.0f
 
 GroupBox::GroupBox(Window* InWindow)
-	: Container(InWindow)
+    : Container(InWindow)
 {
-	m_Text = AddControl<Text>();
-	m_Text->SetPosition({ 8.0f, 0.0f });
+    m_Text = AddControl<Text>();
+    m_Text->SetPosition({ 8.0f, 0.0f });
 
-	m_Margins = AddControl<MarginContainer>();
-	m_Margins->SetMargins({ MARGIN, TopMargin(), MARGIN, MARGIN });
+    m_Margins = AddControl<MarginContainer>();
+    m_Margins->SetMargins({ MARGIN, TopMargin(), MARGIN, MARGIN });
 }
 
 Vector2 GroupBox::DesiredSize() const
 {
-	Vector2 Result = m_Margins->DesiredSize();
-	const float LeftOffset = m_Text->GetPosition().X;
-	const float TextWidth = m_Text->GetSize().X + LeftOffset;
-	if (Result.X < TextWidth)
-	{
-		Result.X = TextWidth + (LeftOffset * 2.0f);
-	}
-	return Result;
+    Vector2 Result = m_Margins->DesiredSize();
+    const float LeftOffset = m_Text->GetPosition().X;
+    const float TextWidth = m_Text->GetSize().X + LeftOffset;
+    if (Result.X < TextWidth)
+    {
+        Result.X = TextWidth + (LeftOffset * 2.0f);
+    }
+    return Result;
 }
 
 void GroupBox::OnPaint(Paint& Brush) const
 {
-	const float Offset = m_Text->GetSize().Y * 0.5f;
-	Rect OutlineBounds = GetAbsoluteBounds();
-	OutlineBounds.Min.Y += Offset;
-	const Color Outline = GetProperty(ThemeProperties::PanelOutline).ToColor();
-	Brush.RectangleOutline(OutlineBounds, Outline);
-	Brush.Rectangle(m_Text->GetAbsoluteBounds(), GetProperty(ThemeProperties::Panel).ToColor());
-	Container::OnPaint(Brush);
+    const float Offset = m_Text->GetSize().Y * 0.5f;
+    Rect OutlineBounds = GetAbsoluteBounds();
+    OutlineBounds.Min.Y += Offset;
+    const Color Outline = GetProperty(ThemeProperties::PanelOutline).ToColor();
+    Brush.RectangleOutline(OutlineBounds, Outline);
+    Brush.Rectangle(m_Text->GetAbsoluteBounds(), GetProperty(ThemeProperties::Panel).ToColor());
+    Container::OnPaint(Brush);
 }
 
 void GroupBox::OnLoad(const Json& Root)
 {
-	Json Copy = Root;
-	Copy["Controls"] = Json();
+    Json Copy = Root;
+    Copy["Controls"] = Json();
 
-	Container::OnLoad(Copy);
+    Container::OnLoad(Copy);
 
-	m_Text->SetText(Root["Text"].String());
+    m_Text->SetText(Root["Text"].String());
 
-	Copy["ID"] = Json();
-	Copy["Controls"] = std::move(Root["Controls"]);
+    Copy["ID"] = Json();
+    Copy["Controls"] = std::move(Root["Controls"]);
 
-	Rect Margins = Rect::FromJson(Root["Margins"], m_Margins->Margins());
-	Margins.Min.Y = TopMargin();
-	Copy["Margins"] = std::move(Rect::ToJson(Margins));
+    Rect Margins = Rect::FromJson(Root["Margins"], m_Margins->Margins());
+    Margins.Min.Y = TopMargin();
+    Copy["Margins"] = std::move(Rect::ToJson(Margins));
 
-	m_Margins->OnLoad(Copy);
-	m_Margins->SetExpand(Expand::Both);
+    m_Margins->OnLoad(Copy);
+    m_Margins->SetExpand(Expand::Both);
 }
 
 float GroupBox::TopMargin() const
 {
-	return m_Text->GetFont()->Size() * 1.4f;
+    return m_Text->GetFont()->Size() * 1.4f;
 }
 
 }

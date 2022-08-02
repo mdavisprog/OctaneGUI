@@ -39,7 +39,7 @@ Class::~Class()
 
 const char* Class::GetType() const
 {
-	return "Class";
+    return "Class";
 }
 
 }

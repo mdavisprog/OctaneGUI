@@ -39,83 +39,83 @@ class Json;
 class Variant
 {
 public:
-	enum class Type : unsigned char
-	{
-		Null,
-		Bool,
-		Byte,
-		Int,
-		Float,
-		String,
-		Vector,
-		Color
-	};
+    enum class Type : unsigned char
+    {
+        Null,
+        Bool,
+        Byte,
+        Int,
+        Float,
+        String,
+        Vector,
+        Color
+    };
 
-	Variant();
-	Variant(bool);
-	Variant(unsigned char);
-	Variant(int);
-	Variant(float);
-	Variant(const char*);
-	Variant(const std::string&);
-	Variant(const Vector2&);
-	Variant(const Color&);
-	Variant(const Json&);
-	Variant(const Variant&);
-	Variant(Variant&&);
-	~Variant();
+    Variant();
+    Variant(bool);
+    Variant(unsigned char);
+    Variant(int);
+    Variant(float);
+    Variant(const char*);
+    Variant(const std::string&);
+    Variant(const Vector2&);
+    Variant(const Color&);
+    Variant(const Json&);
+    Variant(const Variant&);
+    Variant(Variant&&);
+    ~Variant();
 
-	Variant& operator=(bool Value);
-	Variant& operator=(unsigned char Value);
-	Variant& operator=(int Value);
-	Variant& operator=(float Value);
-	Variant& operator=(const char* Value);
-	Variant& operator=(const std::string& Value);
-	Variant& operator=(const Vector2& Value);
-	Variant& operator=(const Color& Value);
-	Variant& operator=(const Json& Value);
-	Variant& operator=(const Variant& Value);
-	Variant& operator=(Variant&& Value);
+    Variant& operator=(bool Value);
+    Variant& operator=(unsigned char Value);
+    Variant& operator=(int Value);
+    Variant& operator=(float Value);
+    Variant& operator=(const char* Value);
+    Variant& operator=(const std::string& Value);
+    Variant& operator=(const Vector2& Value);
+    Variant& operator=(const Color& Value);
+    Variant& operator=(const Json& Value);
+    Variant& operator=(const Variant& Value);
+    Variant& operator=(Variant&& Value);
 
-	bool Bool(bool Or = false) const;
-	unsigned char Byte(unsigned char Or = 0) const;
-	int Int(int Or = 0) const;
-	float Float(float Or = 0.0f) const;
-	const char* String(const char* Or = "") const;
-	Vector2 Vector(const Vector2& Or = {}) const;
-	Color ToColor(const Color& Or = {}) const;
+    bool Bool(bool Or = false) const;
+    unsigned char Byte(unsigned char Or = 0) const;
+    int Int(int Or = 0) const;
+    float Float(float Or = 0.0f) const;
+    const char* String(const char* Or = "") const;
+    Vector2 Vector(const Vector2& Or = {}) const;
+    Color ToColor(const Color& Or = {}) const;
 
-	bool IsNull() const;
-	bool IsBool() const;
-	bool IsByte() const;
-	bool IsInt() const;
-	bool IsFloat() const;
-	bool IsString() const;
-	bool IsVector() const;
-	bool IsColor() const;
+    bool IsNull() const;
+    bool IsBool() const;
+    bool IsByte() const;
+    bool IsInt() const;
+    bool IsFloat() const;
+    bool IsString() const;
+    bool IsVector() const;
+    bool IsColor() const;
 
-	Type GetType() const;
-	std::string ToString() const;
+    Type GetType() const;
+    std::string ToString() const;
 
 private:
-	union Data
-	{
-		bool Bool;
-		unsigned char Byte;
-		int Int;
-		float Float;
-		std::string* String;
-		Vector2 Vector;
-		Color Col;
-	};
+    union Data
+    {
+        bool Bool;
+        unsigned char Byte;
+        int Int;
+        float Float;
+        std::string* String;
+        Vector2 Vector;
+        Color Col;
+    };
 
-	void Copy(const Json&);
-	void Copy(const Variant&);
-	void Move(Variant&&);
-	void Clear();
+    void Copy(const Json&);
+    void Copy(const Variant&);
+    void Move(Variant&&);
+    void Clear();
 
-	Type m_Type { Type::Null };
-	Data m_Data {};
+    Type m_Type { Type::Null };
+    Data m_Data {};
 };
 
 }

@@ -35,29 +35,29 @@ class Text;
 
 class TextButton : public Button
 {
-	CLASS(TextButton)
+    CLASS(TextButton)
 
 public:
-	TextButton(Window* InWindow);
+    TextButton(Window* InWindow);
 
-	Button* SetText(const char* InText);
-	const char32_t* GetText() const;
+    Button* SetText(const char* InText);
+    const char32_t* GetText() const;
 
-	virtual void SetWindow(Window* InWindow) override;
-	virtual void OnPaint(Paint& Brush) const override;
-	virtual void Update() override;
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnSave(Json& Root) const override;
+    virtual void SetWindow(Window* InWindow) override;
+    virtual void OnPaint(Paint& Brush) const override;
+    virtual void Update() override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnSave(Json& Root) const override;
 
 protected:
-	virtual void OnPressed() override;
-	virtual void OnReleased() override;
+    virtual void OnPressed() override;
+    virtual void OnReleased() override;
 
 private:
-	void UpdateTextPosition(bool Pressed);
-	void UpdateSize();
+    void UpdateTextPosition(bool Pressed);
+    void UpdateSize();
 
-	std::shared_ptr<Text> m_Text;
+    std::shared_ptr<Text> m_Text;
 };
 
 }

@@ -27,11 +27,11 @@ SOFTWARE.
 #pragma once
 
 #ifdef __APPLE__
-	#define APPLE
+    #define APPLE
 #elif _WIN32 || _WIN64
-	#define WINDOWS
+    #define WINDOWS
 #elif __linux__
-	#define LINUX
+    #define LINUX
 #else
-	#error "Platform is not supported. Please add the platform to this list."
+    #error "Platform is not supported. Please add the platform to this list."
 #endif

@@ -30,7 +30,7 @@ namespace OctaneGUI
 {
 
 VerticalContainer::VerticalContainer(Window* InWindow)
-	: BoxContainer(Orientation::Vertical, InWindow)
+    : BoxContainer(Orientation::Vertical, InWindow)
 {
 }
 

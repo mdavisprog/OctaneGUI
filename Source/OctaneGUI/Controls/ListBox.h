@@ -37,44 +37,44 @@ class VerticalContainer;
 
 class ListBox : public ScrollableViewControl
 {
-	CLASS(ListBox)
+    CLASS(ListBox)
 
 public:
-	typedef std::function<void(int, std::weak_ptr<Control>)> OnSelectSignature;
+    typedef std::function<void(int, std::weak_ptr<Control>)> OnSelectSignature;
 
-	ListBox(Window* InWindow);
+    ListBox(Window* InWindow);
 
-	template <typename T, typename... TArgs>
-	std::shared_ptr<T> AddItem(TArgs... Args)
-	{
-		std::shared_ptr<T> Result = std::make_shared<T>(GetWindow(), Args...);
-		InsertItem(Result);
-		return Result;
-	}
+    template <typename T, typename... TArgs>
+    std::shared_ptr<T> AddItem(TArgs... Args)
+    {
+        std::shared_ptr<T> Result = std::make_shared<T>(GetWindow(), Args...);
+        InsertItem(Result);
+        return Result;
+    }
 
-	ListBox& ClearItems();
+    ListBox& ClearItems();
 
-	int Index() const;
-	int Count() const;
-	ListBox& Deselect();
-	ListBox& SetOnSelect(OnSelectSignature Fn);
-	Vector2 ListSize() const;
-	const std::shared_ptr<Control>& Item(size_t Index) const;
+    int Index() const;
+    int Count() const;
+    ListBox& Deselect();
+    ListBox& SetOnSelect(OnSelectSignature Fn);
+    Vector2 ListSize() const;
+    const std::shared_ptr<Control>& Item(size_t Index) const;
 
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnPaint(Paint& Brush) const override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnPaint(Paint& Brush) const override;
 
 private:
-	using Container::AddControl;
-	using Container::ClearControls;
-	using Container::InsertControl;
+    using Container::AddControl;
+    using Container::ClearControls;
+    using Container::InsertControl;
 
-	void InsertItem(const std::shared_ptr<Control>& Item);
-	void PaintItem(Paint& Brush, const std::shared_ptr<Control>& Item) const;
+    void InsertItem(const std::shared_ptr<Control>& Item);
+    void PaintItem(Paint& Brush, const std::shared_ptr<Control>& Item) const;
 
-	std::shared_ptr<Panel> m_Panel { nullptr };
-	std::shared_ptr<VerticalContainer> m_List { nullptr };
-	OnSelectSignature m_OnSelect { nullptr };
+    std::shared_ptr<Panel> m_Panel { nullptr };
+    std::shared_ptr<VerticalContainer> m_List { nullptr };
+    OnSelectSignature m_OnSelect { nullptr };
 };
 
 }

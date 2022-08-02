@@ -38,35 +38,35 @@ class Panel;
 
 class MenuBar : public Container
 {
-	CLASS(MenuBar)
+    CLASS(MenuBar)
 
 public:
-	MenuBar(Window* InWindow);
+    MenuBar(Window* InWindow);
 
-	std::shared_ptr<Menu> AddItem(const char* InText);
-	std::shared_ptr<Menu> Item(const char* Name) const;
-	void GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const;
-	MenuBar& ClearMenuItems();
-	void Close();
+    std::shared_ptr<Menu> AddItem(const char* InText);
+    std::shared_ptr<Menu> Item(const char* Name) const;
+    void GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const;
+    MenuBar& ClearMenuItems();
+    void Close();
 
-	virtual void GetControlList(ControlList& List) const override;
+    virtual void GetControlList(ControlList& List) const override;
 
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnThemeLoaded() override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnThemeLoaded() override;
 
 private:
-	void OnHover(MenuItem& Hovered);
-	void OnSelected(MenuItem& Selected);
-	void Open(MenuItem& Item);
-	void Close(MenuItem& Item) const;
+    void OnHover(MenuItem& Hovered);
+    void OnSelected(MenuItem& Selected);
+    void Open(MenuItem& Item);
+    void Close(MenuItem& Item) const;
 
-	std::weak_ptr<MenuItem> WeakPtr(const MenuItem& Item) const;
+    std::weak_ptr<MenuItem> WeakPtr(const MenuItem& Item) const;
 
-	std::shared_ptr<Panel> m_Panel { nullptr };
-	std::shared_ptr<HorizontalContainer> m_Container { nullptr };
-	std::vector<std::shared_ptr<MenuItem>> m_MenuItems;
-	bool m_Open { false };
-	std::weak_ptr<MenuItem> m_Opened {};
+    std::shared_ptr<Panel> m_Panel { nullptr };
+    std::shared_ptr<HorizontalContainer> m_Container { nullptr };
+    std::vector<std::shared_ptr<MenuItem>> m_MenuItems;
+    bool m_Open { false };
+    std::weak_ptr<MenuItem> m_Opened {};
 };
 
 }

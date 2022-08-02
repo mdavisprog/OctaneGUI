@@ -33,25 +33,25 @@ namespace OctaneGUI
 
 class Separator : public Control
 {
-	CLASS(Separator)
+    CLASS(Separator)
 
 public:
-	Separator(Window* InWindow);
+    Separator(Window* InWindow);
 
-	Separator& SetOnHover(OnControlSignature&& Fn);
+    Separator& SetOnHover(OnControlSignature&& Fn);
 
-	Separator& SetOrientation(Orientation InOrientation);
-	Orientation GetOrientation() const;
+    Separator& SetOrientation(Orientation InOrientation);
+    Orientation GetOrientation() const;
 
-	virtual void OnPaint(Paint& Brush) const override;
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnMouseEnter() override;
+    virtual void OnPaint(Paint& Brush) const override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnMouseEnter() override;
 
 private:
-	void UpdateLayout();
+    void UpdateLayout();
 
-	OnControlSignature m_OnHover { nullptr };
-	Orientation m_Orientation { Orientation::Horizontal };
+    OnControlSignature m_OnHover { nullptr };
+    Orientation m_Orientation { Orientation::Horizontal };
 };
 
 }

@@ -35,18 +35,18 @@ namespace Tools
 
 class Properties : public HorizontalContainer
 {
-	CLASS(Properties)
+    CLASS(Properties)
 
 public:
-	Properties(Window* InWindow);
+    Properties(Window* InWindow);
 
-	void Parse(const Json& Root);
+    void Parse(const Json& Root);
 
 private:
-	void Parse(const std::string& Key, const Json& Value, int Indent = 0);
+    void Parse(const std::string& Key, const Json& Value, int Indent = 0);
 
-	std::shared_ptr<Container> m_KeyList { nullptr };
-	std::shared_ptr<Container> m_ValueList { nullptr };
+    std::shared_ptr<Container> m_KeyList { nullptr };
+    std::shared_ptr<Container> m_ValueList { nullptr };
 };
 
 }

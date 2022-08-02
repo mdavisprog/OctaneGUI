@@ -33,184 +33,184 @@ namespace OctaneGUI
 
 size_t String::FindFirstOfReverse(const std::u32string& Ref, const std::u32string& Search, size_t Pos)
 {
-	if (Pos == 0)
-	{
-		return std::string::npos;
-	}
+    if (Pos == 0)
+    {
+        return std::string::npos;
+    }
 
-	size_t Start = Pos - 1;
-	size_t Result = Ref.find_first_of(Search, Start);
-	while (Result != 0 && Result > Start)
-	{
-		Start = Start - 1;
-		Result = Ref.find_first_of(Search, Start);
-	}
+    size_t Start = Pos - 1;
+    size_t Result = Ref.find_first_of(Search, Start);
+    while (Result != 0 && Result > Start)
+    {
+        Start = Start - 1;
+        Result = Ref.find_first_of(Search, Start);
+    }
 
-	if (Result == 0)
-	{
-		Result = std::string::npos;
-	}
-	else
-	{
-		Result++;
-	}
+    if (Result == 0)
+    {
+        Result = std::string::npos;
+    }
+    else
+    {
+        Result++;
+    }
 
-	return Result;
+    return Result;
 }
 
 size_t String::FirdFirstNotOfReverse(const std::u32string& Ref, const std::u32string& Search, size_t Pos)
 {
-	if (Pos == 0)
-	{
-		return std::string::npos;
-	}
+    if (Pos == 0)
+    {
+        return std::string::npos;
+    }
 
-	size_t Start = Pos - 1;
-	size_t Result = Ref.find_first_not_of(Search, Start);
-	while (Result != 0 && Result > Start)
-	{
-		Start = Start - 1;
-		Result = Ref.find_first_not_of(Search, Start);
-	}
+    size_t Start = Pos - 1;
+    size_t Result = Ref.find_first_not_of(Search, Start);
+    while (Result != 0 && Result > Start)
+    {
+        Start = Start - 1;
+        Result = Ref.find_first_not_of(Search, Start);
+    }
 
-	if (Result == 0)
-	{
-		Result = std::string::npos;
-	}
-	else
-	{
-		Result++;
-	}
+    if (Result == 0)
+    {
+        Result = std::string::npos;
+    }
+    else
+    {
+        Result++;
+    }
 
-	return Result;
+    return Result;
 }
 
 size_t String::Count(const std::u32string_view& Ref, char32_t Character)
 {
-	size_t Result = 0;
+    size_t Result = 0;
 
-	size_t Start = 0;
-	size_t Pos = Ref.find(Character, Start);
-	while (Pos != std::string::npos)
-	{
-		Result++;
-		Start = Pos + 1;
-		Pos = Ref.find(Character, Start);
-	}
+    size_t Start = 0;
+    size_t Pos = Ref.find(Character, Start);
+    while (Pos != std::string::npos)
+    {
+        Result++;
+        Start = Pos + 1;
+        Pos = Ref.find(Character, Start);
+    }
 
-	return Result;
+    return Result;
 }
 
 std::string String::ToLower(const std::string& Value)
 {
-	std::string Result;
+    std::string Result;
 
-	for (const char Ch : Value)
-	{
-		Result += std::tolower(Ch);
-	}
+    for (const char Ch : Value)
+    {
+        Result += std::tolower(Ch);
+    }
 
-	return Result;
+    return Result;
 }
 
 std::u32string String::ToLower(const std::u32string& Value)
 {
-	std::u32string Result;
+    std::u32string Result;
 
-	for (const char32_t Ch : Value)
-	{
-		Result += std::tolower(Ch);
-	}
+    for (const char32_t Ch : Value)
+    {
+        Result += std::tolower(Ch);
+    }
 
-	return Result;
+    return Result;
 }
 
 class Converter : public std::codecvt<char32_t, char, std::mbstate_t>
 {
 public:
-	Converter()
-		: std::codecvt<char32_t, char, std::mbstate_t>()
-	{
-	}
+    Converter()
+        : std::codecvt<char32_t, char, std::mbstate_t>()
+    {
+    }
 
-	~Converter()
-	{
-	}
+    ~Converter()
+    {
+    }
 };
 
 std::string String::ToMultiByte(const std::u32string& Value)
 {
-	std::string Result;
+    std::string Result;
 
-	std::mbstate_t State {};
-	Converter Convert;
+    std::mbstate_t State {};
+    Converter Convert;
 
-	Result.resize(Value.length() * sizeof(char32_t));
+    Result.resize(Value.length() * sizeof(char32_t));
 
-	const char32_t* From = nullptr;
-	char* To = nullptr;
-	Convert.out(State, Value.data(), &Value[Value.size()], From, Result.data(), &Result[Result.size()], To);
+    const char32_t* From = nullptr;
+    char* To = nullptr;
+    Convert.out(State, Value.data(), &Value[Value.size()], From, Result.data(), &Result[Result.size()], To);
 
-	// TODO: Should probably do some error checking here.
-	Result.resize(To - Result.data());
+    // TODO: Should probably do some error checking here.
+    Result.resize(To - Result.data());
 
-	return Result;
+    return Result;
 }
 
 std::string String::ToMultiByte(const char32_t* Value)
 {
-	return ToMultiByte(std::u32string { Value });
+    return ToMultiByte(std::u32string { Value });
 }
 
 std::string String::ToMultiByte(const std::u32string_view& Value)
 {
-	return ToMultiByte(std::u32string { Value });
+    return ToMultiByte(std::u32string { Value });
 }
 
 std::u32string String::ToUTF32(const std::string& Value)
 {
-	std::u32string Result;
+    std::u32string Result;
 
-	std::mbstate_t State {};
-	Converter Convert;
+    std::mbstate_t State {};
+    Converter Convert;
 
-	Result.resize(Value.length());
+    Result.resize(Value.length());
 
-	const char* From = nullptr;
-	char32_t* To = nullptr;
-	Convert.in(State, Value.data(), &Value[Value.size()], From, Result.data(), &Result[Result.size()], To);
+    const char* From = nullptr;
+    char32_t* To = nullptr;
+    Convert.in(State, Value.data(), &Value[Value.size()], From, Result.data(), &Result[Result.size()], To);
 
-	return Result;
+    return Result;
 }
 
 std::u32string String::ToUTF32(const char* Value)
 {
-	return ToUTF32(std::string { Value });
+    return ToUTF32(std::string { Value });
 }
 
 std::u32string String::ToUTF32(const std::string_view& Value)
 {
-	return ToUTF32(std::string { Value });
+    return ToUTF32(std::string { Value });
 }
 
 float String::ToFloat(const std::string& Value)
 {
-	return std::stof(Value);
+    return std::stof(Value);
 }
 
 float String::ToFloat(const std::u32string& Value)
 {
-	return ToFloat(ToMultiByte(Value));
+    return ToFloat(ToMultiByte(Value));
 }
 
 std::string String::ToMultiByte(float Value)
 {
-	return std::to_string(Value);
+    return std::to_string(Value);
 }
 
 std::u32string String::ToUTF32(float Value)
 {
-	return ToUTF32(ToMultiByte(Value));
+    return ToUTF32(ToMultiByte(Value));
 }
 
 }

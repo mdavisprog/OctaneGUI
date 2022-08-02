@@ -37,22 +37,22 @@ namespace OctaneGUI
 
 const char* ToString(CheckBox::State Type)
 {
-	switch (Type)
-	{
-	case CheckBox::State::Intermediate: return "Intermediate";
-	case CheckBox::State::Checked: return "Checked";
-	case CheckBox::State::None:
-	default: break;
-	}
+    switch (Type)
+    {
+    case CheckBox::State::Intermediate: return "Intermediate";
+    case CheckBox::State::Checked: return "Checked";
+    case CheckBox::State::None:
+    default: break;
+    }
 
-	return "None";
+    return "None";
 }
 
 CheckBox::CheckBox(Window* InWindow)
-	: Button(InWindow)
+    : Button(InWindow)
 {
-	m_Text = std::make_shared<Text>(InWindow);
-	m_Text->SetParent(this);
+    m_Text = std::make_shared<Text>(InWindow);
+    m_Text->SetParent(this);
 }
 
 CheckBox::~CheckBox()
@@ -61,172 +61,172 @@ CheckBox::~CheckBox()
 
 CheckBox& CheckBox::SetText(const char* InText)
 {
-	m_Text->SetText(InText);
-	Update();
-	UpdateSize();
-	return *this;
+    m_Text->SetText(InText);
+    Update();
+    UpdateSize();
+    return *this;
 }
 
 const char32_t* CheckBox::GetText() const
 {
-	return m_Text->GetText();
+    return m_Text->GetText();
 }
 
 CheckBox& CheckBox::SetState(State InState)
 {
-	m_State = InState;
-	return *this;
+    m_State = InState;
+    return *this;
 }
 
 CheckBox::State CheckBox::GetState() const
 {
-	return m_State;
+    return m_State;
 }
 
 CheckBox& CheckBox::SetTriState(bool IsTriState)
 {
-	m_TriState = IsTriState;
+    m_TriState = IsTriState;
 
-	if (m_TriState)
-	{
-		if (m_State == State::Intermediate)
-		{
-			m_State = State::Checked;
-			Invalidate();
-		}
-	}
+    if (m_TriState)
+    {
+        if (m_State == State::Intermediate)
+        {
+            m_State = State::Checked;
+            Invalidate();
+        }
+    }
 
-	return *this;
+    return *this;
 }
 
 bool CheckBox::IsTriState() const
 {
-	return m_TriState;
+    return m_TriState;
 }
 
 void CheckBox::SetWindow(Window* InWindow)
 {
-	Control::SetWindow(InWindow);
-	m_Text->SetWindow(InWindow);
+    Control::SetWindow(InWindow);
+    m_Text->SetWindow(InWindow);
 }
 
 void CheckBox::OnPaint(Paint& Brush) const
 {
-	PROFILER_SAMPLE_GROUP("CheckBox::OnPaint");
+    PROFILER_SAMPLE_GROUP("CheckBox::OnPaint");
 
-	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
-	const Vector2 Size = BoxSize();
-	const Vector2 BoxPosition = GetAbsolutePosition() + Vector2(0.0f, GetSize().Y * 0.5f - Size.Y * 0.5f);
-	const Rect Bounds(BoxPosition, BoxPosition + Size);
-	const bool Is3D = GetProperty(ThemeProperties::Button_3D).Bool();
+    const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
+    const Vector2 Size = BoxSize();
+    const Vector2 BoxPosition = GetAbsolutePosition() + Vector2(0.0f, GetSize().Y * 0.5f - Size.Y * 0.5f);
+    const Rect Bounds(BoxPosition, BoxPosition + Size);
+    const bool Is3D = GetProperty(ThemeProperties::Button_3D).Bool();
 
-	if (Is3D)
-	{
-		Brush.Rectangle3D(
-			Bounds,
-			GetProperty(ThemeProperties::Button_Pressed).ToColor(),
-			GetProperty(ThemeProperties::Button_Highlight_3D).ToColor(),
-			GetProperty(ThemeProperties::Button_Shadow_3D).ToColor(),
-			true);
-	}
-	else
-	{
-		Color Background = GetProperty(ThemeProperties::Button).ToColor();
-		if (IsHovered())
-		{
-			Background = GetProperty(ThemeProperties::Button_Hovered).ToColor();
-		}
-		else if (IsPressed())
-		{
-			Background = GetProperty(ThemeProperties::Button_Pressed).ToColor();
-		}
+    if (Is3D)
+    {
+        Brush.Rectangle3D(
+            Bounds,
+            GetProperty(ThemeProperties::Button_Pressed).ToColor(),
+            GetProperty(ThemeProperties::Button_Highlight_3D).ToColor(),
+            GetProperty(ThemeProperties::Button_Shadow_3D).ToColor(),
+            true);
+    }
+    else
+    {
+        Color Background = GetProperty(ThemeProperties::Button).ToColor();
+        if (IsHovered())
+        {
+            Background = GetProperty(ThemeProperties::Button_Hovered).ToColor();
+        }
+        else if (IsPressed())
+        {
+            Background = GetProperty(ThemeProperties::Button_Pressed).ToColor();
+        }
 
-		Brush.Rectangle(Rect(BoxPosition, BoxPosition + Size), Background);
-	}
+        Brush.Rectangle(Rect(BoxPosition, BoxPosition + Size), Background);
+    }
 
-	if (m_State == State::Checked)
-	{
-		const Vector2 Position = BoxPosition + Size * 0.5f - TexCoords.GetSize() * 0.5f;
-		Brush.Image(
-			Rect(Position, Position + TexCoords.GetSize()),
-			GetWindow()->GetIcons()->GetUVsNormalized(Icons::Type::Check),
-			GetWindow()->GetIcons()->GetTexture(),
-			GetProperty(ThemeProperties::Check).ToColor());
-	}
-	else if (m_State == State::Intermediate)
-	{
-		const Vector2 Shrink = { 3.0f, 3.0f };
-		Rect Inner = Rect(
-			BoxPosition + Shrink,
-			BoxPosition + Size - Shrink);
-		Brush.Rectangle(Inner, GetProperty(ThemeProperties::Check).ToColor());
-	}
+    if (m_State == State::Checked)
+    {
+        const Vector2 Position = BoxPosition + Size * 0.5f - TexCoords.GetSize() * 0.5f;
+        Brush.Image(
+            Rect(Position, Position + TexCoords.GetSize()),
+            GetWindow()->GetIcons()->GetUVsNormalized(Icons::Type::Check),
+            GetWindow()->GetIcons()->GetTexture(),
+            GetProperty(ThemeProperties::Check).ToColor());
+    }
+    else if (m_State == State::Intermediate)
+    {
+        const Vector2 Shrink = { 3.0f, 3.0f };
+        Rect Inner = Rect(
+            BoxPosition + Shrink,
+            BoxPosition + Size - Shrink);
+        Brush.Rectangle(Inner, GetProperty(ThemeProperties::Check).ToColor());
+    }
 
-	m_Text->OnPaint(Brush);
+    m_Text->OnPaint(Brush);
 }
 
 void CheckBox::Update()
 {
-	m_Text->SetPosition({ BoxSize().X + 12.0f, GetSize().Y * 0.5f - m_Text->GetSize().Y * 0.5f });
+    m_Text->SetPosition({ BoxSize().X + 12.0f, GetSize().Y * 0.5f - m_Text->GetSize().Y * 0.5f });
 }
 
 void CheckBox::OnLoad(const Json& Root)
 {
-	Button::OnLoad(Root);
+    Button::OnLoad(Root);
 
-	m_Text->OnLoad(Root["Text"]);
-	SetTriState(Root["TriState"].Boolean(false));
+    m_Text->OnLoad(Root["Text"]);
+    SetTriState(Root["TriState"].Boolean(false));
 
-	Update();
-	UpdateSize();
+    Update();
+    UpdateSize();
 }
 
 void CheckBox::OnSave(Json& Root) const
 {
-	Button::OnSave(Root);
+    Button::OnSave(Root);
 
-	Root["Check"] = ::OctaneGUI::ToString(m_State);
-	Root["TriState"] = m_TriState;
+    Root["Check"] = ::OctaneGUI::ToString(m_State);
+    Root["TriState"] = m_TriState;
 
-	Json TextRoot(Json::Type::Object);
-	m_Text->OnSave(TextRoot);
-	Root["Text"] = std::move(TextRoot);
+    Json TextRoot(Json::Type::Object);
+    m_Text->OnSave(TextRoot);
+    Root["Text"] = std::move(TextRoot);
 }
 
 void CheckBox::OnThemeLoaded()
 {
-	Control::OnThemeLoaded();
+    Control::OnThemeLoaded();
 
-	m_Text->OnThemeLoaded();
-	Update();
-	UpdateSize();
+    m_Text->OnThemeLoaded();
+    Update();
+    UpdateSize();
 }
 
 void CheckBox::OnClicked()
 {
-	switch (m_State)
-	{
-	case State::None: m_State = m_TriState ? State::Intermediate : State::Checked; break;
-	case State::Intermediate: m_State = State::Checked; break;
-	case State::Checked:
-	default: m_State = State::None;
-	}
+    switch (m_State)
+    {
+    case State::None: m_State = m_TriState ? State::Intermediate : State::Checked; break;
+    case State::Intermediate: m_State = State::Checked; break;
+    case State::Checked:
+    default: m_State = State::None;
+    }
 
-	Invalidate();
+    Invalidate();
 }
 
 Vector2 CheckBox::BoxSize() const
 {
-	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
-	return TexCoords.GetSize() + Vector2(3.0f, 3.0f);
+    const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
+    return TexCoords.GetSize() + Vector2(3.0f, 3.0f);
 }
 
 void CheckBox::UpdateSize()
 {
-	const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
-	const Vector2 Padding = GetProperty(ThemeProperties::TextSelectable_Padding).Vector();
-	Vector2 Size(m_Text->GetPosition().X + m_Text->GetSize().X, m_Text->GetSize().Y + Padding.Y * 2.0f);
-	SetSize(Size);
+    const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
+    const Vector2 Padding = GetProperty(ThemeProperties::TextSelectable_Padding).Vector();
+    Vector2 Size(m_Text->GetPosition().X + m_Text->GetSize().X, m_Text->GetSize().Y + Padding.Y * 2.0f);
+    SetSize(Size);
 }
 
 }

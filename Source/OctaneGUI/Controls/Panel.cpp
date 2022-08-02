@@ -32,7 +32,7 @@ namespace OctaneGUI
 {
 
 Panel::Panel(Window* InWindow)
-	: Control(InWindow)
+    : Control(InWindow)
 {
 }
 
@@ -42,12 +42,12 @@ Panel::~Panel()
 
 void Panel::OnPaint(Paint& Brush) const
 {
-	PROFILER_SAMPLE_GROUP("Panel::OnPaint");
+    PROFILER_SAMPLE_GROUP("Panel::OnPaint");
 
-	const Color Background = GetProperty(ThemeProperties::Panel).ToColor();
-	const Color Outline = GetProperty(ThemeProperties::PanelOutline).ToColor();
-	Brush.Rectangle(GetAbsoluteBounds(), Background);
-	Brush.RectangleOutline(GetAbsoluteBounds(), Outline);
+    const Color Background = GetProperty(ThemeProperties::Panel).ToColor();
+    const Color Outline = GetProperty(ThemeProperties::PanelOutline).ToColor();
+    Brush.Rectangle(GetAbsoluteBounds(), Background);
+    Brush.RectangleOutline(GetAbsoluteBounds(), Outline);
 }
 
 }

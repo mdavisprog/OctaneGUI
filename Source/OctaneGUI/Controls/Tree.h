@@ -36,76 +36,76 @@ class VerticalContainer;
 
 class Tree : public Container
 {
-	CLASS(Tree)
+    CLASS(Tree)
 
 public:
-	Tree(Window* InWindow);
+    Tree(Window* InWindow);
 
-	std::shared_ptr<Tree> AddChild(const char* Text);
+    std::shared_ptr<Tree> AddChild(const char* Text);
 
-	Tree& SetText(const char* Text);
-	const char32_t* GetText() const;
+    Tree& SetText(const char* Text);
+    const char32_t* GetText() const;
 
-	Tree& SetExpanded(bool Expand);
-	Tree& SetExpandedAll(bool Expand);
-	bool IsExpanded() const;
+    Tree& SetExpanded(bool Expand);
+    Tree& SetExpandedAll(bool Expand);
+    bool IsExpanded() const;
 
-	Tree& SetSelected(bool Selected);
+    Tree& SetSelected(bool Selected);
 
-	Tree& SetRowSelect(bool RowSelect);
-	bool ShouldRowSelect() const;
+    Tree& SetRowSelect(bool RowSelect);
+    bool ShouldRowSelect() const;
 
-	Tree& SetMetaData(void* MetaData);
-	void* MetaData() const;
+    Tree& SetMetaData(void* MetaData);
+    void* MetaData() const;
 
-	Tree& SetOnSelected(OnTreeSignature&& Fn);
-	Tree& SetOnHovered(OnTreeSignature&& Fn);
-	Tree& SetOnToggled(OnTreeSignature&& Fn);
+    Tree& SetOnSelected(OnTreeSignature&& Fn);
+    Tree& SetOnHovered(OnTreeSignature&& Fn);
+    Tree& SetOnToggled(OnTreeSignature&& Fn);
 
-	void Clear();
-	bool HasChildren() const;
-	std::vector<std::shared_ptr<Tree>> Children() const;
-	const Tree& ForEachChild(OnTreeSignature Callback) const;
+    void Clear();
+    bool HasChildren() const;
+    std::vector<std::shared_ptr<Tree>> Children() const;
+    const Tree& ForEachChild(OnTreeSignature Callback) const;
 
-	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
-	virtual Vector2 DesiredSize() const override;
+    virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
+    virtual Vector2 DesiredSize() const override;
 
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnSave(Json& Root) const override;
-	virtual void OnPaint(Paint& Brush) const override;
-	virtual void OnThemeLoaded() override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnSave(Json& Root) const override;
+    virtual void OnPaint(Paint& Brush) const override;
+    virtual void OnThemeLoaded() override;
 
 private:
-	typedef std::function<void(bool, const std::shared_ptr<TreeItem>&)> OnHoveredTreeItemSignature;
-	typedef std::function<void(const std::shared_ptr<TreeItem>&)> OnTreeItemSignature;
+    typedef std::function<void(bool, const std::shared_ptr<TreeItem>&)> OnHoveredTreeItemSignature;
+    typedef std::function<void(const std::shared_ptr<TreeItem>&)> OnTreeItemSignature;
 
-	Tree& SetOnHovered(OnHoveredTreeItemSignature&& Fn);
-	Tree& SetOnSelected(OnTreeItemSignature&& Fn);
+    Tree& SetOnHovered(OnHoveredTreeItemSignature&& Fn);
+    Tree& SetOnSelected(OnTreeItemSignature&& Fn);
 
-	std::weak_ptr<Control> GetControl(const Vector2& Point, const Rect& RootBounds) const;
-	void SetHovered(bool Hovered, const std::shared_ptr<TreeItem>& Item);
-	void SetSelected(const std::shared_ptr<TreeItem>& Item);
-	void PaintSelection(Paint& Brush, const std::shared_ptr<TreeItem>& Item) const;
-	bool IsHidden(const std::shared_ptr<TreeItem>& Item) const;
-	void RowSelect(const std::shared_ptr<TreeItem>& Item) const;
+    std::weak_ptr<Control> GetControl(const Vector2& Point, const Rect& RootBounds) const;
+    void SetHovered(bool Hovered, const std::shared_ptr<TreeItem>& Item);
+    void SetSelected(const std::shared_ptr<TreeItem>& Item);
+    void PaintSelection(Paint& Brush, const std::shared_ptr<TreeItem>& Item) const;
+    bool IsHidden(const std::shared_ptr<TreeItem>& Item) const;
+    void RowSelect(const std::shared_ptr<TreeItem>& Item) const;
 
-	std::shared_ptr<TreeItem> m_Item { nullptr };
-	std::shared_ptr<VerticalContainer> m_List { nullptr };
+    std::shared_ptr<TreeItem> m_Item { nullptr };
+    std::shared_ptr<VerticalContainer> m_List { nullptr };
 
-	std::weak_ptr<TreeItem> m_Hovered {};
-	OnHoveredTreeItemSignature m_OnHoveredItem { nullptr };
+    std::weak_ptr<TreeItem> m_Hovered {};
+    OnHoveredTreeItemSignature m_OnHoveredItem { nullptr };
 
-	std::weak_ptr<TreeItem> m_Selected {};
-	OnTreeItemSignature m_OnItemSelected { nullptr };
+    std::weak_ptr<TreeItem> m_Selected {};
+    OnTreeItemSignature m_OnItemSelected { nullptr };
 
-	OnTreeSignature m_OnSelected { nullptr };
-	OnTreeSignature m_OnHovered { nullptr };
-	OnTreeSignature m_OnToggled { nullptr };
+    OnTreeSignature m_OnSelected { nullptr };
+    OnTreeSignature m_OnHovered { nullptr };
+    OnTreeSignature m_OnToggled { nullptr };
 
-	bool m_Expand { false };
-	bool m_RowSelect { false };
+    bool m_Expand { false };
+    bool m_RowSelect { false };
 
-	void* m_MetaData { nullptr };
+    void* m_MetaData { nullptr };
 };
 
 }

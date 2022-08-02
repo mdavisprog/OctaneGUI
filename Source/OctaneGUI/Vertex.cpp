@@ -30,30 +30,30 @@ namespace OctaneGUI
 {
 
 Vertex::Vertex()
-	: Position()
-	, TexCoords()
-	, Col()
+    : Position()
+    , TexCoords()
+    , Col()
 {
 }
 
 Vertex::Vertex(const Vector2& InPosition)
-	: Position(InPosition)
-	, TexCoords()
-	, Col()
+    : Position(InPosition)
+    , TexCoords()
+    , Col()
 {
 }
 
 Vertex::Vertex(const Vector2& InPosition, const Color& InCol)
-	: Position(InPosition)
-	, TexCoords()
-	, Col(InCol)
+    : Position(InPosition)
+    , TexCoords()
+    , Col(InCol)
 {
 }
 
 Vertex::Vertex(const Vector2& InPosition, const Vector2& InTexCoords, const Color& InCol)
-	: Position(InPosition)
-	, TexCoords(InTexCoords)
-	, Col(InCol)
+    : Position(InPosition)
+    , TexCoords(InTexCoords)
+    , Col(InCol)
 {
 }
 

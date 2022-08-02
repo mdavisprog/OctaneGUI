@@ -37,27 +37,27 @@ namespace OctaneGUI
 class VertexBuffer
 {
 public:
-	VertexBuffer();
-	~VertexBuffer();
+    VertexBuffer();
+    ~VertexBuffer();
 
-	void AddVertex(const Vector2& Point, const Color& Col);
-	void AddVertex(const Vector2& Point, const Vector2& TexCoords, const Color& Col);
-	void AddVertices(const std::vector<Vector2>& Points, const Color& Tint);
-	void AddIndex(uint32_t Index);
+    void AddVertex(const Vector2& Point, const Color& Col);
+    void AddVertex(const Vector2& Point, const Vector2& TexCoords, const Color& Col);
+    void AddVertices(const std::vector<Vector2>& Points, const Color& Tint);
+    void AddIndex(uint32_t Index);
 
-	const std::vector<Vertex>& GetVertices() const;
-	const std::vector<uint32_t>& GetIndices() const;
+    const std::vector<Vertex>& GetVertices() const;
+    const std::vector<uint32_t>& GetIndices() const;
 
-	uint32_t GetVertexCount() const;
-	uint32_t GetIndexCount() const;
+    uint32_t GetVertexCount() const;
+    uint32_t GetIndexCount() const;
 
-	DrawCommand& PushCommand(uint32_t IndexCount, uint32_t TextureID, Rect Clip);
-	const std::vector<DrawCommand>& Commands() const;
+    DrawCommand& PushCommand(uint32_t IndexCount, uint32_t TextureID, Rect Clip);
+    const std::vector<DrawCommand>& Commands() const;
 
 private:
-	std::vector<Vertex> m_Vertices;
-	std::vector<uint32_t> m_Indices;
-	std::vector<DrawCommand> m_Commands;
+    std::vector<Vertex> m_Vertices;
+    std::vector<uint32_t> m_Indices;
+    std::vector<DrawCommand> m_Commands;
 };
 
 }

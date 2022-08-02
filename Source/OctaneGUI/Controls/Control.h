@@ -47,164 +47,164 @@ class Window;
 
 enum class Expand : uint8_t
 {
-	None,
-	Width,
-	Height,
-	Both
+    None,
+    Width,
+    Height,
+    Both
 };
 
 enum class HorizontalAlignment : uint8_t
 {
-	Left,
-	Center,
-	Right
+    Left,
+    Center,
+    Right
 };
 
 enum class VerticalAlignment : uint8_t
 {
-	Top,
-	Center,
-	Bottom
+    Top,
+    Center,
+    Bottom
 };
 
 enum class Orientation : uint8_t
 {
-	Horizontal,
-	Vertical
+    Horizontal,
+    Vertical
 };
 
 static const char* ToString(Orientation Type)
 {
-	if (Type == Orientation::Vertical)
-	{
-		return "Vertical";
-	}
+    if (Type == Orientation::Vertical)
+    {
+        return "Vertical";
+    }
 
-	return "Horizontal";
+    return "Horizontal";
 }
 
 static Orientation ToOrientation(const std::string& Type)
 {
-	if (Type == "Vertical")
-	{
-		return Orientation::Vertical;
-	}
+    if (Type == "Vertical")
+    {
+        return Orientation::Vertical;
+    }
 
-	return Orientation::Horizontal;
+    return Orientation::Horizontal;
 }
 
 static const char* ToString(HorizontalAlignment Type)
 {
-	switch (Type)
-	{
-	case HorizontalAlignment::Center: return "Center";
-	case HorizontalAlignment::Right: return "Right";
-	case HorizontalAlignment::Left:
-	default: break;
-	}
+    switch (Type)
+    {
+    case HorizontalAlignment::Center: return "Center";
+    case HorizontalAlignment::Right: return "Right";
+    case HorizontalAlignment::Left:
+    default: break;
+    }
 
-	return "Left";
+    return "Left";
 }
 
 class Control
-	: public Class
-	, public std::enable_shared_from_this<Control>
+    : public Class
+    , public std::enable_shared_from_this<Control>
 {
-	CLASS(Control)
+    CLASS(Control)
 
 public:
-	Control(Window* InWindow);
-	virtual ~Control();
+    Control(Window* InWindow);
+    virtual ~Control();
 
-	Control* SetPosition(const Vector2& Position);
-	Vector2 GetPosition() const;
-	Vector2 GetAbsolutePosition() const;
+    Control* SetPosition(const Vector2& Position);
+    Vector2 GetPosition() const;
+    Vector2 GetAbsolutePosition() const;
 
-	Control* SetSize(const Vector2& Size);
-	Vector2 GetSize() const;
+    Control* SetSize(const Vector2& Size);
+    Vector2 GetSize() const;
 
-	Control* SetParent(Control* Parent);
-	Control* GetParent() const;
+    Control* SetParent(Control* Parent);
+    Control* GetParent() const;
 
-	Control* SetExpand(Expand InExpand);
-	Expand GetExpand() const;
+    Control* SetExpand(Expand InExpand);
+    Expand GetExpand() const;
 
-	Control& SetForwardKeyEvents(bool Forward);
-	bool ShouldForwardKeyEvents() const;
+    Control& SetForwardKeyEvents(bool Forward);
+    bool ShouldForwardKeyEvents() const;
 
-	Control* SetID(const char* ID);
-	const char* GetID() const;
-	std::string GetFullID() const;
-	bool HasID() const;
+    Control* SetID(const char* ID);
+    const char* GetID() const;
+    std::string GetFullID() const;
+    bool HasID() const;
 
-	bool Contains(const Vector2& Position) const;
-	Rect GetBounds() const;
-	Rect GetAbsoluteBounds() const;
+    bool Contains(const Vector2& Position) const;
+    Rect GetBounds() const;
+    Rect GetAbsoluteBounds() const;
 
-	virtual void SetWindow(Window* InWindow);
-	Window* GetWindow() const;
+    virtual void SetWindow(Window* InWindow);
+    Window* GetWindow() const;
 
-	Vector2 GetMousePosition() const;
-	std::shared_ptr<Theme> GetTheme() const;
-	bool IsKeyPressed(Keyboard::Key Key) const;
+    Vector2 GetMousePosition() const;
+    std::shared_ptr<Theme> GetTheme() const;
+    bool IsKeyPressed(Keyboard::Key Key) const;
 
-	Control* SetOnInvalidate(OnInvalidateSignature Fn);
-	void Invalidate(InvalidateType Type = InvalidateType::Paint);
+    Control* SetOnInvalidate(OnInvalidateSignature Fn);
+    void Invalidate(InvalidateType Type = InvalidateType::Paint);
 
-	Control& SetProperty(ThemeProperties::Property Property, const Variant& Value);
-	const Variant& GetProperty(ThemeProperties::Property Property) const;
-	void ClearProperty(ThemeProperties::Property Property);
+    Control& SetProperty(ThemeProperties::Property Property, const Variant& Value);
+    const Variant& GetProperty(ThemeProperties::Property Property) const;
+    void ClearProperty(ThemeProperties::Property Property);
 
-	std::shared_ptr<Control> Share();
-	std::shared_ptr<Control const> Share() const;
+    std::shared_ptr<Control> Share();
+    std::shared_ptr<Control const> Share() const;
 
-	template <class T>
-	std::shared_ptr<T> TShare()
-	{
-		return std::dynamic_pointer_cast<T>(Share());
-	}
+    template <class T>
+    std::shared_ptr<T> TShare()
+    {
+        return std::dynamic_pointer_cast<T>(Share());
+    }
 
-	template <class T>
-	std::shared_ptr<T const> TShare() const
-	{
-		return std::dynamic_pointer_cast<T const>(Share());
-	}
+    template <class T>
+    std::shared_ptr<T const> TShare() const
+    {
+        return std::dynamic_pointer_cast<T const>(Share());
+    }
 
-	virtual void OnPaint(Paint& Brush) const;
-	virtual void Update();
-	virtual void OnFocused();
-	virtual void OnUnfocused();
-	virtual void OnLoad(const Json& Root);
-	virtual void OnSave(Json& Root) const;
-	virtual bool OnKeyPressed(Keyboard::Key Key);
-	virtual void OnKeyReleased(Keyboard::Key Key);
-	virtual void OnMouseMove(const Vector2& Position);
-	virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count);
-	virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button);
-	virtual void OnMouseWheel(const Vector2& Delta);
-	virtual void OnMouseEnter();
-	virtual void OnMouseLeave();
-	virtual void OnResized();
-	virtual void OnText(uint32_t Code);
-	virtual void OnThemeLoaded();
+    virtual void OnPaint(Paint& Brush) const;
+    virtual void Update();
+    virtual void OnFocused();
+    virtual void OnUnfocused();
+    virtual void OnLoad(const Json& Root);
+    virtual void OnSave(Json& Root) const;
+    virtual bool OnKeyPressed(Keyboard::Key Key);
+    virtual void OnKeyReleased(Keyboard::Key Key);
+    virtual void OnMouseMove(const Vector2& Position);
+    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count);
+    virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button);
+    virtual void OnMouseWheel(const Vector2& Delta);
+    virtual void OnMouseEnter();
+    virtual void OnMouseLeave();
+    virtual void OnResized();
+    virtual void OnText(uint32_t Code);
+    virtual void OnThemeLoaded();
 
 protected:
-	void Invalidate(std::shared_ptr<Control> Focus, InvalidateType Type) const;
+    void Invalidate(std::shared_ptr<Control> Focus, InvalidateType Type) const;
 
-	virtual bool IsFixedSize() const;
+    virtual bool IsFixedSize() const;
 
 private:
-	Control();
+    Control();
 
-	Window* m_Window { nullptr };
-	Control* m_Parent { nullptr };
-	Rect m_Bounds {};
-	Expand m_Expand { Expand::None };
-	std::string m_ID {};
-	OnInvalidateSignature m_OnInvalidate { nullptr };
-	ThemeProperties m_ThemeProperties {};
+    Window* m_Window { nullptr };
+    Control* m_Parent { nullptr };
+    Rect m_Bounds {};
+    Expand m_Expand { Expand::None };
+    std::string m_ID {};
+    OnInvalidateSignature m_OnInvalidate { nullptr };
+    ThemeProperties m_ThemeProperties {};
 
-	bool m_ForwardKeyEvents { false };
+    bool m_ForwardKeyEvents { false };
 };
 
 }

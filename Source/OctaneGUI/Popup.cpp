@@ -32,11 +32,11 @@ namespace OctaneGUI
 {
 
 Popup::Popup()
-	: m_Container(nullptr)
-	, m_Modal(false)
-	, m_State(State::None)
-	, m_OnInvalidate(nullptr)
-	, m_OnClose(nullptr)
+    : m_Container(nullptr)
+    , m_Modal(false)
+    , m_State(State::None)
+    , m_OnInvalidate(nullptr)
+    , m_OnClose(nullptr)
 {
 }
 
@@ -46,117 +46,117 @@ Popup::~Popup()
 
 void Popup::Open(const std::shared_ptr<Container>& InContainer, bool Modal)
 {
-	if (m_Container != InContainer)
-	{
-		Close();
+    if (m_Container != InContainer)
+    {
+        Close();
 
-		m_Container = InContainer;
-		m_Modal = Modal;
+        m_Container = InContainer;
+        m_Modal = Modal;
 
-		if (m_Container)
-		{
-			m_Container->SetOnInvalidate([this](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
-				{
-					if (m_OnInvalidate)
-					{
-						m_OnInvalidate(Focus, Type);
-					}
-				});
+        if (m_Container)
+        {
+            m_Container->SetOnInvalidate([this](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
+                {
+                    if (m_OnInvalidate)
+                    {
+                        m_OnInvalidate(Focus, Type);
+                    }
+                });
 
-			m_State = State::Opening;
-		}
-	}
+            m_State = State::Opening;
+        }
+    }
 }
 
 void Popup::Close()
 {
-	if (m_State == State::Opening || !m_Container)
-	{
-		return;
-	}
+    if (m_State == State::Opening || !m_Container)
+    {
+        return;
+    }
 
-	if (m_Container)
-	{
-		m_Container->SetOnInvalidate(nullptr);
+    if (m_Container)
+    {
+        m_Container->SetOnInvalidate(nullptr);
 
-		if (m_OnClose)
-		{
-			m_OnClose(*m_Container.get());
-		}
-	}
+        if (m_OnClose)
+        {
+            m_OnClose(*m_Container.get());
+        }
+    }
 
-	m_Container = nullptr;
-	m_Modal = false;
-	m_State = State::None;
+    m_Container = nullptr;
+    m_Modal = false;
+    m_State = State::None;
 }
 
 void Popup::Update()
 {
-	if (m_Container)
-	{
-		if (m_State == State::Opening)
-		{
-			m_State = State::Opened;
-		}
-	}
+    if (m_Container)
+    {
+        if (m_State == State::Opening)
+        {
+            m_State = State::Opened;
+        }
+    }
 }
 
 bool Popup::IsModal() const
 {
-	return m_Modal;
+    return m_Modal;
 }
 
 const std::shared_ptr<Container>& Popup::GetContainer() const
 {
-	return m_Container;
+    return m_Container;
 }
 
 bool Popup::HasControl(const std::shared_ptr<Control>& Item) const
 {
-	if (!m_Container)
-	{
-		return false;
-	}
+    if (!m_Container)
+    {
+        return false;
+    }
 
-	return m_Container->HasControlRecurse(Item);
+    return m_Container->HasControlRecurse(Item);
 }
 
 void Popup::OnMouseMove(const Vector2& Position)
 {
-	if (m_Container)
-	{
-		m_Container->OnMouseMove(Position);
-	}
+    if (m_Container)
+    {
+        m_Container->OnMouseMove(Position);
+    }
 }
 
 std::weak_ptr<Control> Popup::GetControl(const Vector2& Position) const
 {
-	std::weak_ptr<Control> Result;
+    std::weak_ptr<Control> Result;
 
-	if (m_Container)
-	{
-		Result = m_Container->GetControl(Position);
-	}
+    if (m_Container)
+    {
+        Result = m_Container->GetControl(Position);
+    }
 
-	return Result;
+    return Result;
 }
 
 void Popup::OnPaint(Paint& Brush)
 {
-	if (m_Container)
-	{
-		m_Container->OnPaint(Brush);
-	}
+    if (m_Container)
+    {
+        m_Container->OnPaint(Brush);
+    }
 }
 
 void Popup::SetOnInvalidate(OnInvalidateSignature Fn)
 {
-	m_OnInvalidate = Fn;
+    m_OnInvalidate = Fn;
 }
 
 void Popup::SetOnClose(OnContainerSignature Fn)
 {
-	m_OnClose = Fn;
+    m_OnClose = Fn;
 }
 
 }

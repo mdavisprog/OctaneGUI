@@ -39,60 +39,60 @@ VertexBuffer::~VertexBuffer()
 
 void VertexBuffer::AddVertex(const Vector2& Point, const Color& Col)
 {
-	m_Vertices.emplace_back(Point, Col);
+    m_Vertices.emplace_back(Point, Col);
 }
 
 void VertexBuffer::AddVertex(const Vector2& Point, const Vector2& TexCoords, const Color& Col)
 {
-	m_Vertices.emplace_back(Point, TexCoords, Col);
+    m_Vertices.emplace_back(Point, TexCoords, Col);
 }
 
 void VertexBuffer::AddVertices(const std::vector<Vector2>& Points, const Color& Col)
 {
-	const size_t Index = m_Vertices.size();
-	m_Vertices.resize(m_Vertices.size() + Points.size());
+    const size_t Index = m_Vertices.size();
+    m_Vertices.resize(m_Vertices.size() + Points.size());
 
-	for (size_t I = 0; I < Points.size(); I++)
-	{
-		m_Vertices[Index + I].Position = Points[I];
-		m_Vertices[Index + I].Col = Col;
-	}
+    for (size_t I = 0; I < Points.size(); I++)
+    {
+        m_Vertices[Index + I].Position = Points[I];
+        m_Vertices[Index + I].Col = Col;
+    }
 }
 
 void VertexBuffer::AddIndex(uint32_t Index)
 {
-	m_Indices.push_back(Index);
+    m_Indices.push_back(Index);
 }
 
 const std::vector<Vertex>& VertexBuffer::GetVertices() const
 {
-	return m_Vertices;
+    return m_Vertices;
 }
 
 const std::vector<uint32_t>& VertexBuffer::GetIndices() const
 {
-	return m_Indices;
+    return m_Indices;
 }
 
 uint32_t VertexBuffer::GetVertexCount() const
 {
-	return m_Vertices.size();
+    return m_Vertices.size();
 }
 
 uint32_t VertexBuffer::GetIndexCount() const
 {
-	return m_Indices.size();
+    return m_Indices.size();
 }
 
 DrawCommand& VertexBuffer::PushCommand(uint32_t IndexCount, uint32_t TextureID, Rect Clip)
 {
-	m_Commands.emplace_back((uint32_t)m_Vertices.size(), (uint32_t)m_Indices.size(), IndexCount, TextureID, Clip);
-	return m_Commands.back();
+    m_Commands.emplace_back((uint32_t)m_Vertices.size(), (uint32_t)m_Indices.size(), IndexCount, TextureID, Clip);
+    return m_Commands.back();
 }
 
 const std::vector<DrawCommand>& VertexBuffer::Commands() const
 {
-	return m_Commands;
+    return m_Commands;
 }
 
 }

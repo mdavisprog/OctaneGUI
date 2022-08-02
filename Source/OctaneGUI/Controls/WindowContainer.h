@@ -41,24 +41,24 @@ class MenuBar;
 
 class WindowContainer : public VerticalContainer
 {
-	CLASS(WindowContainer)
+    CLASS(WindowContainer)
 
 public:
-	WindowContainer(Window* InWindow);
+    WindowContainer(Window* InWindow);
 
-	WindowContainer& Clear();
-	WindowContainer& CloseMenuBar();
+    WindowContainer& Clear();
+    WindowContainer& CloseMenuBar();
 
-	const std::shared_ptr<Container>& Body() const;
-	const std::shared_ptr<MenuBar>& GetMenuBar() const;
+    const std::shared_ptr<Container>& Body() const;
+    const std::shared_ptr<MenuBar>& GetMenuBar() const;
 
-	virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
+    virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 
-	virtual void OnLoad(const Json& Root) override;
+    virtual void OnLoad(const Json& Root) override;
 
 private:
-	std::shared_ptr<MenuBar> m_MenuBar { nullptr };
-	std::shared_ptr<Container> m_Body { nullptr };
+    std::shared_ptr<MenuBar> m_MenuBar { nullptr };
+    std::shared_ptr<Container> m_Body { nullptr };
 };
 
 }

@@ -33,114 +33,114 @@ namespace OctaneGUI
 {
 
 ImageButton::ImageButton(Window* InWindow)
-	: Button(InWindow)
+    : Button(InWindow)
 {
-	m_Image = std::make_shared<Image>(InWindow);
-	m_Image->SetParent(this);
+    m_Image = std::make_shared<Image>(InWindow);
+    m_Image->SetParent(this);
 }
 
 ImageButton& ImageButton::SetTexture(const char* Path)
 {
-	m_Image->SetTexture(Path);
-	UpdateSize();
-	return *this;
+    m_Image->SetTexture(Path);
+    UpdateSize();
+    return *this;
 }
 
 ImageButton& ImageButton::SetTexture(const std::shared_ptr<Texture>& InTexture)
 {
-	m_Image->SetTexture(InTexture);
-	UpdateSize();
-	return *this;
+    m_Image->SetTexture(InTexture);
+    UpdateSize();
+    return *this;
 }
 
 ImageButton& ImageButton::SetUVs(const Rect& UVs)
 {
-	m_Image->SetUVs(UVs);
-	UpdateSize();
-	return *this;
+    m_Image->SetUVs(UVs);
+    UpdateSize();
+    return *this;
 }
 
 ImageButton& ImageButton::SetTint(const Color& Tint)
 {
-	m_Image->SetTint(Tint);
-	Invalidate();
-	return *this;
+    m_Image->SetTint(Tint);
+    Invalidate();
+    return *this;
 }
 
 void ImageButton::SetWindow(Window* InWindow)
 {
-	Button::SetWindow(InWindow);
-	m_Image->SetWindow(InWindow);
+    Button::SetWindow(InWindow);
+    m_Image->SetWindow(InWindow);
 }
 
 void ImageButton::OnPaint(Paint& Brush) const
 {
-	Button::OnPaint(Brush);
+    Button::OnPaint(Brush);
 
-	m_Image->OnPaint(Brush);
+    m_Image->OnPaint(Brush);
 }
 
 void ImageButton::Update()
 {
-	OnThemeLoaded();
-	UpdateImagePosition(IsPressed());
+    OnThemeLoaded();
+    UpdateImagePosition(IsPressed());
 }
 
 void ImageButton::OnLoad(const Json& Root)
 {
-	Button::OnLoad(Root);
+    Button::OnLoad(Root);
 
-	m_Image->OnLoad(Root["Image"]);
-	UpdateSize();
+    m_Image->OnLoad(Root["Image"]);
+    UpdateSize();
 
-	if (GetProperty(ThemeProperties::ImageButton).ToColor() != m_Image->Tint())
-	{
-		SetProperty(ThemeProperties::ImageButton, m_Image->Tint());
-	}
+    if (GetProperty(ThemeProperties::ImageButton).ToColor() != m_Image->Tint())
+    {
+        SetProperty(ThemeProperties::ImageButton, m_Image->Tint());
+    }
 }
 
 void ImageButton::OnSave(Json& Root) const
 {
-	Button::OnSave(Root);
+    Button::OnSave(Root);
 
-	Json ImageRoot(Json::Type::Object);
-	m_Image->OnSave(ImageRoot);
-	Root["Image"] = std::move(ImageRoot);
+    Json ImageRoot(Json::Type::Object);
+    m_Image->OnSave(ImageRoot);
+    Root["Image"] = std::move(ImageRoot);
 }
 
 void ImageButton::OnThemeLoaded()
 {
-	m_Image->SetTint(IsDisabled()
-			? GetProperty(ThemeProperties::Text_Disabled).ToColor()
-			: GetProperty(ThemeProperties::ImageButton).ToColor());
+    m_Image->SetTint(IsDisabled()
+            ? GetProperty(ThemeProperties::Text_Disabled).ToColor()
+            : GetProperty(ThemeProperties::ImageButton).ToColor());
 }
 
 void ImageButton::OnPressed()
 {
-	UpdateImagePosition(true);
+    UpdateImagePosition(true);
 }
 
 void ImageButton::OnReleased()
 {
-	UpdateImagePosition(false);
+    UpdateImagePosition(false);
 }
 
 void ImageButton::UpdateImagePosition(bool Pressed)
 {
-	Vector2 Position = GetSize() * 0.5f - m_Image->GetSize() * 0.5f;
+    Vector2 Position = GetSize() * 0.5f - m_Image->GetSize() * 0.5f;
 
-	if (GetProperty(ThemeProperties::Button_3D).Bool() && Pressed)
-	{
-		Position += Vector2(1.0f, 1.0f);
-	}
+    if (GetProperty(ThemeProperties::Button_3D).Bool() && Pressed)
+    {
+        Position += Vector2(1.0f, 1.0f);
+    }
 
-	m_Image->SetPosition(Position);
+    m_Image->SetPosition(Position);
 }
 
 void ImageButton::UpdateSize()
 {
-	Vector2 Padding = GetProperty(ThemeProperties::Button_Padding).Vector();
-	SetSize(m_Image->GetSize() + Padding * 2.0f);
+    Vector2 Padding = GetProperty(ThemeProperties::Button_Padding).Vector();
+    SetSize(m_Image->GetSize() + Padding * 2.0f);
 }
 
 }

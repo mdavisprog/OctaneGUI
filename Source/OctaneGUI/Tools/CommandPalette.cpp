@@ -44,138 +44,138 @@ namespace Tools
 
 std::shared_ptr<CommandPalette> CommandPalette::Get(Window* InWindow)
 {
-	if (!s_Root)
-	{
-		s_Root = std::make_shared<CommandPalette>(InWindow);
-	}
-	else
-	{
-		s_Root->SetWindow(InWindow);
-	}
+    if (!s_Root)
+    {
+        s_Root = std::make_shared<CommandPalette>(InWindow);
+    }
+    else
+    {
+        s_Root->SetWindow(InWindow);
+    }
 
-	return s_Root;
+    return s_Root;
 }
 
 CommandPalette::CommandPalette(Window* InWindow)
-	: Container(InWindow)
+    : Container(InWindow)
 {
-	std::shared_ptr<Panel> Background = AddControl<Panel>();
-	Background->SetExpand(Expand::Both);
+    std::shared_ptr<Panel> Background = AddControl<Panel>();
+    Background->SetExpand(Expand::Both);
 
-	m_Container = AddControl<VerticalContainer>();
-	m_Container->SetExpand(Expand::Both);
+    m_Container = AddControl<VerticalContainer>();
+    m_Container->SetExpand(Expand::Both);
 
-	std::shared_ptr<MarginContainer> Margins = m_Container->AddControl<MarginContainer>();
-	Margins
-		->SetMargins({ 4.0f, 4.0f, 4.0f, 4.0f })
-		.SetExpand(Expand::Both);
+    std::shared_ptr<MarginContainer> Margins = m_Container->AddControl<MarginContainer>();
+    Margins
+        ->SetMargins({ 4.0f, 4.0f, 4.0f, 4.0f })
+        .SetExpand(Expand::Both);
 
-	m_Input = Margins->AddControl<TextInput>();
-	m_Input->SetExpand(Expand::Width);
+    m_Input = Margins->AddControl<TextInput>();
+    m_Input->SetExpand(Expand::Width);
 }
 
 void CommandPalette::Show()
 {
-	const Vector2 ContentSize = m_Container->DesiredSize();
-	const Vector2 WindowSize = GetWindow()->GetSize();
-	const Vector2 Size = { WindowSize.X * 0.6f, ContentSize.Y };
-	SetSize(Size);
-	SetPosition({ WindowSize.X * 0.5f - Size.X * 0.5f, 30.0f });
+    const Vector2 ContentSize = m_Container->DesiredSize();
+    const Vector2 WindowSize = GetWindow()->GetSize();
+    const Vector2 Size = { WindowSize.X * 0.6f, ContentSize.Y };
+    SetSize(Size);
+    SetPosition({ WindowSize.X * 0.5f - Size.X * 0.5f, 30.0f });
 }
 
 std::shared_ptr<Control> CommandPalette::Input() const
 {
-	return m_Input->Interaction();
+    return m_Input->Interaction();
 }
 
 bool CommandPalette::OnKeyPressed(Keyboard::Key Key)
 {
-	if (Key == Keyboard::Key::Enter)
-	{
-		std::vector<std::u32string> Tokens = Tokenize(m_Input->GetText());
-		m_Input->SetText(U"");
-		GetWindow()->ClosePopup();
+    if (Key == Keyboard::Key::Enter)
+    {
+        std::vector<std::u32string> Tokens = Tokenize(m_Input->GetText());
+        m_Input->SetText(U"");
+        GetWindow()->ClosePopup();
 
-		std::u32string Command;
-		if (!Tokens.empty())
-		{
-			Command = Tokens[0];
-			Tokens.erase(Tokens.begin());
-		}
-		return Process(Command, Tokens);
-	}
-	else if (Key == Keyboard::Key::Escape)
-	{
-		GetWindow()->ClosePopup();
-		return true;
-	}
+        std::u32string Command;
+        if (!Tokens.empty())
+        {
+            Command = Tokens[0];
+            Tokens.erase(Tokens.begin());
+        }
+        return Process(Command, Tokens);
+    }
+    else if (Key == Keyboard::Key::Escape)
+    {
+        GetWindow()->ClosePopup();
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 std::shared_ptr<CommandPalette> CommandPalette::s_Root { nullptr };
 
 std::vector<std::u32string> CommandPalette::Tokenize(const std::u32string& Value)
 {
-	std::vector<std::u32string> Result;
+    std::vector<std::u32string> Result;
 
-	if (Value.empty())
-	{
-		return std::move(Result);
-	}
+    if (Value.empty())
+    {
+        return std::move(Result);
+    }
 
-	size_t Start = 0;
-	size_t Pos = Value.find(' ');
-	while (Pos != std::string::npos)
-	{
-		Result.push_back(std::move(Value.substr(Start, Pos - Start)));
-		Start = Pos + 1;
-		Pos = Value.find(' ', Start);
-	}
+    size_t Start = 0;
+    size_t Pos = Value.find(' ');
+    while (Pos != std::string::npos)
+    {
+        Result.push_back(std::move(Value.substr(Start, Pos - Start)));
+        Start = Pos + 1;
+        Pos = Value.find(' ', Start);
+    }
 
-	Result.push_back(std::move(Value.substr(Start, Value.size() - Start)));
+    Result.push_back(std::move(Value.substr(Start, Value.size() - Start)));
 
-	return std::move(Result);
+    return std::move(Result);
 }
 
 bool CommandPalette::Process(const std::u32string& Command, const std::vector<std::u32string>& Arguments)
 {
-	std::u32string Lower = String::ToLower(Command);
-	if (Lower == U"inspector")
-	{
-		Inspector::Get().Inspect(GetWindow());
-		return true;
-	}
-	else if (Lower == U"profile")
-	{
-		if (!Arguments.empty())
-		{
-			Lower = String::ToLower(Arguments.front());
+    std::u32string Lower = String::ToLower(Command);
+    if (Lower == U"inspector")
+    {
+        Inspector::Get().Inspect(GetWindow());
+        return true;
+    }
+    else if (Lower == U"profile")
+    {
+        if (!Arguments.empty())
+        {
+            Lower = String::ToLower(Arguments.front());
 
-			if (Lower == U"enable" || Lower == U"e")
-			{
-				Profiler::Get().Enable();
-			}
-			else if (Lower == U"disable" || Lower == U"d")
-			{
-				if (Profiler::Get().IsEnabled())
-				{
-					Profiler::Get().Disable();
-					ProfileViewer::Get().View(GetWindow());
-				}
-			}
-			else
-			{
-				printf("No proifle command given. Must be 'enable' or 'disable'.\n");
-			}
-		}
-	}
-	else if (Lower == U"textureviewer" || Lower == U"tv")
-	{
-		TextureViewer::Get().Show(GetWindow()->App());
-	}
+            if (Lower == U"enable" || Lower == U"e")
+            {
+                Profiler::Get().Enable();
+            }
+            else if (Lower == U"disable" || Lower == U"d")
+            {
+                if (Profiler::Get().IsEnabled())
+                {
+                    Profiler::Get().Disable();
+                    ProfileViewer::Get().View(GetWindow());
+                }
+            }
+            else
+            {
+                printf("No proifle command given. Must be 'enable' or 'disable'.\n");
+            }
+        }
+    }
+    else if (Lower == U"textureviewer" || Lower == U"tv")
+    {
+        TextureViewer::Get().Show(GetWindow()->App());
+    }
 
-	return false;
+    return false;
 }
 
 }

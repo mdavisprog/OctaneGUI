@@ -33,40 +33,40 @@ namespace OctaneGUI
 
 enum class Grow : uint8_t
 {
-	Begin,
-	Center,
-	End
+    Begin,
+    Center,
+    End
 };
 
 class BoxContainer : public Container
 {
-	CLASS(BoxContainer)
+    CLASS(BoxContainer)
 
 public:
-	BoxContainer(Orientation Orient, Window* InWindow);
+    BoxContainer(Orientation Orient, Window* InWindow);
 
-	BoxContainer* SetGrow(Grow Direction);
-	Grow GrowDirection() const;
+    BoxContainer* SetGrow(Grow Direction);
+    Grow GrowDirection() const;
 
-	BoxContainer* SetSpacing(const Vector2& Spacing);
-	Vector2 Spacing() const;
+    BoxContainer* SetSpacing(const Vector2& Spacing);
+    Vector2 Spacing() const;
 
-	BoxContainer& SetIgnoreDesiredSize(bool IgnoreDesiredSize);
-	bool ShouldIgnoreDesiredSize() const;
+    BoxContainer& SetIgnoreDesiredSize(bool IgnoreDesiredSize);
+    bool ShouldIgnoreDesiredSize() const;
 
-	virtual Vector2 DesiredSize() const override;
+    virtual Vector2 DesiredSize() const override;
 
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnSave(Json& Root) const override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnSave(Json& Root) const override;
 
 protected:
-	virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const override;
+    virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const override;
 
 private:
-	Grow m_Grow { Grow::Begin };
-	Orientation m_Orient { Orientation::Horizontal };
-	Vector2 m_Spacing { 4.0f, 4.0f };
-	bool m_IgnoreDesiredSize { false };
+    Grow m_Grow { Grow::Begin };
+    Orientation m_Orient { Orientation::Horizontal };
+    Vector2 m_Spacing { 4.0f, 4.0f };
+    bool m_IgnoreDesiredSize { false };
 };
 
 }

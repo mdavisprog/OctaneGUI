@@ -37,47 +37,47 @@ Texture::OnLoadSignature Texture::s_OnLoad = nullptr;
 
 void Texture::SetOnLoad(OnLoadSignature Fn)
 {
-	s_OnLoad = Fn;
+    s_OnLoad = Fn;
 }
 
 std::shared_ptr<Texture> Texture::Load(const std::vector<uint8_t>& Data, uint32_t Width, uint32_t Height)
 {
-	std::shared_ptr<Texture> Result;
+    std::shared_ptr<Texture> Result;
 
-	if (s_OnLoad)
-	{
-		uint32_t ID = s_OnLoad(Data, Width, Height);
+    if (s_OnLoad)
+    {
+        uint32_t ID = s_OnLoad(Data, Width, Height);
 
-		if (ID > 0)
-		{
-			Result = std::make_shared<Texture>();
-			Result->m_ID = ID;
-			Result->m_Size.X = Width;
-			Result->m_Size.Y = Height;
-		}
-	}
+        if (ID > 0)
+        {
+            Result = std::make_shared<Texture>();
+            Result->m_ID = ID;
+            Result->m_Size.X = Width;
+            Result->m_Size.Y = Height;
+        }
+    }
 
-	return Result;
+    return Result;
 }
 
 std::shared_ptr<Texture> Texture::Load(const char* Path)
 {
-	std::shared_ptr<Texture> Result;
+    std::shared_ptr<Texture> Result;
 
-	int Width, Height, Channels;
-	uint8_t* Data = stbi_load(Path, &Width, &Height, &Channels, 0);
-	if (Data != nullptr)
-	{
-		std::vector<uint8_t> Buffer;
-		Buffer.resize(Width * Height * Channels);
-		std::memcpy(&Buffer[0], Data, Buffer.size());
-		stbi_image_free(Data);
+    int Width, Height, Channels;
+    uint8_t* Data = stbi_load(Path, &Width, &Height, &Channels, 0);
+    if (Data != nullptr)
+    {
+        std::vector<uint8_t> Buffer;
+        Buffer.resize(Width * Height * Channels);
+        std::memcpy(&Buffer[0], Data, Buffer.size());
+        stbi_image_free(Data);
 
-		Result = Load(Buffer, Width, Height);
-		Result->m_Path = Path;
-	}
+        Result = Load(Buffer, Width, Height);
+        Result->m_Path = Path;
+    }
 
-	return Result;
+    return Result;
 }
 
 Texture::Texture()
@@ -90,22 +90,22 @@ Texture::~Texture()
 
 bool Texture::IsValid() const
 {
-	return m_ID != 0;
+    return m_ID != 0;
 }
 
 uint32_t Texture::GetID() const
 {
-	return m_ID;
+    return m_ID;
 }
 
 Vector2 Texture::GetSize() const
 {
-	return m_Size;
+    return m_Size;
 }
 
 const char* Texture::Path() const
 {
-	return m_Path.c_str();
+    return m_Path.c_str();
 }
 
 }

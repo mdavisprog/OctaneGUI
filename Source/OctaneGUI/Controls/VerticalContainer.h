@@ -33,10 +33,10 @@ namespace OctaneGUI
 
 class VerticalContainer : public BoxContainer
 {
-	CLASS(VerticalContainer)
+    CLASS(VerticalContainer)
 
 public:
-	VerticalContainer(Window* InWindow);
+    VerticalContainer(Window* InWindow);
 };
 
 }

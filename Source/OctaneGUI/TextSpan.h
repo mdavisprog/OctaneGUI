@@ -35,9 +35,9 @@ namespace OctaneGUI
 
 struct TextSpan
 {
-	size_t Start { 0 };
-	size_t End { 0 };
-	Color TextColor {};
+    size_t Start { 0 };
+    size_t End { 0 };
+    Color TextColor {};
 };
 
 }

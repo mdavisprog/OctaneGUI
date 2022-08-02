@@ -36,32 +36,32 @@ class Texture;
 
 class ImageButton : public Button
 {
-	CLASS(ImageButton)
+    CLASS(ImageButton)
 
 public:
-	ImageButton(Window* InWindow);
+    ImageButton(Window* InWindow);
 
-	ImageButton& SetTexture(const char* Path);
-	ImageButton& SetTexture(const std::shared_ptr<Texture>& InTexture);
-	ImageButton& SetUVs(const Rect& UVs);
-	ImageButton& SetTint(const Color& Tint);
+    ImageButton& SetTexture(const char* Path);
+    ImageButton& SetTexture(const std::shared_ptr<Texture>& InTexture);
+    ImageButton& SetUVs(const Rect& UVs);
+    ImageButton& SetTint(const Color& Tint);
 
-	virtual void SetWindow(Window* InWindow) override;
-	virtual void OnPaint(Paint& Brush) const override;
-	virtual void Update() override;
-	virtual void OnLoad(const Json& Root) override;
-	virtual void OnSave(Json& Root) const override;
-	virtual void OnThemeLoaded() override;
+    virtual void SetWindow(Window* InWindow) override;
+    virtual void OnPaint(Paint& Brush) const override;
+    virtual void Update() override;
+    virtual void OnLoad(const Json& Root) override;
+    virtual void OnSave(Json& Root) const override;
+    virtual void OnThemeLoaded() override;
 
 protected:
-	virtual void OnPressed() override;
-	virtual void OnReleased() override;
+    virtual void OnPressed() override;
+    virtual void OnReleased() override;
 
 private:
-	void UpdateImagePosition(bool Pressed);
-	void UpdateSize();
+    void UpdateImagePosition(bool Pressed);
+    void UpdateSize();
 
-	std::shared_ptr<Image> m_Image { nullptr };
+    std::shared_ptr<Image> m_Image { nullptr };
 };
 
 }

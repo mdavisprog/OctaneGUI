@@ -36,22 +36,22 @@ class Json;
 struct Color
 {
 public:
-	static const Color White;
-	static const Color Black;
+    static const Color White;
+    static const Color Black;
 
-	static Color Parse(const Json& Root);
-	static Json ToJson(const Color& Value);
+    static Color Parse(const Json& Root);
+    static Json ToJson(const Color& Value);
 
-	uint8_t R { 0 };
-	uint8_t G { 0 };
-	uint8_t B { 0 };
-	uint8_t A { 0 };
+    uint8_t R { 0 };
+    uint8_t G { 0 };
+    uint8_t B { 0 };
+    uint8_t A { 0 };
 
-	Color();
-	Color(uint8_t InR, uint8_t InG, uint8_t InB, uint8_t InA);
+    Color();
+    Color(uint8_t InR, uint8_t InG, uint8_t InB, uint8_t InA);
 
-	bool operator==(const Color& Other) const;
-	bool operator!=(const Color& Other) const;
+    bool operator==(const Color& Other) const;
+    bool operator!=(const Color& Other) const;
 };
 
 }
