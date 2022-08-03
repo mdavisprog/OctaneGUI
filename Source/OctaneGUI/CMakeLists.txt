@@ -1,88 +1,88 @@
 set(TARGET OctaneGUI)
 
 set(SOURCE
-	Controls/Syntax/Highlighter.cpp
-	Controls/Syntax/JsonHighlighter.cpp
-	Controls/BoxContainer.cpp
-	Controls/Button.cpp
-	Controls/CheckBox.cpp
-	Controls/ComboBox.cpp
-	Controls/Container.cpp
-	Controls/Control.cpp
-	Controls/ControlList.cpp
-	Controls/GroupBox.cpp
-	Controls/HorizontalContainer.cpp
-	Controls/Image.cpp
-	Controls/ImageButton.cpp
-	Controls/ListBox.cpp
-	Controls/MarginContainer.cpp
-	Controls/Menu.cpp
-	Controls/MenuBar.cpp
-	Controls/MenuItem.cpp
-	Controls/Panel.cpp
-	Controls/RadioButton.cpp
-	Controls/ScrollableContainer.cpp
-	Controls/ScrollableViewControl.cpp
-	Controls/ScrollBar.cpp
-	Controls/Separator.cpp
-	Controls/Splitter.cpp
-	Controls/Table.cpp
-	Controls/Text.cpp
-	Controls/TextButton.cpp
-	Controls/TextEditor.cpp
-	Controls/TextInput.cpp
-	Controls/TextSelectable.cpp
-	Controls/Tree.cpp
-	Controls/VerticalContainer.cpp
-	Controls/WindowContainer.cpp
-	Application.cpp
-	Assert.cpp
-	Class.cpp
-	Clock.cpp
-	Color.cpp
-	DrawCommand.cpp
-	Event.cpp
-	FlyString.cpp
-	Font.cpp
-	Icons.cpp
-	Json.cpp
-	Paint.cpp
-	Popup.cpp
-	Rect.cpp
-	String.cpp
-	Texture.cpp
-	TextureCache.cpp
-	Theme.cpp
-	ThemeProperties.cpp
-	Timer.cpp
-	Variant.cpp
-	Vector2.cpp
-	Vertex.cpp
-	VertexBuffer.cpp
-	Window.cpp
+    Controls/Syntax/Highlighter.cpp
+    Controls/Syntax/JsonHighlighter.cpp
+    Controls/BoxContainer.cpp
+    Controls/Button.cpp
+    Controls/CheckBox.cpp
+    Controls/ComboBox.cpp
+    Controls/Container.cpp
+    Controls/Control.cpp
+    Controls/ControlList.cpp
+    Controls/GroupBox.cpp
+    Controls/HorizontalContainer.cpp
+    Controls/Image.cpp
+    Controls/ImageButton.cpp
+    Controls/ListBox.cpp
+    Controls/MarginContainer.cpp
+    Controls/Menu.cpp
+    Controls/MenuBar.cpp
+    Controls/MenuItem.cpp
+    Controls/Panel.cpp
+    Controls/RadioButton.cpp
+    Controls/ScrollableContainer.cpp
+    Controls/ScrollableViewControl.cpp
+    Controls/ScrollBar.cpp
+    Controls/Separator.cpp
+    Controls/Splitter.cpp
+    Controls/Table.cpp
+    Controls/Text.cpp
+    Controls/TextButton.cpp
+    Controls/TextEditor.cpp
+    Controls/TextInput.cpp
+    Controls/TextSelectable.cpp
+    Controls/Tree.cpp
+    Controls/VerticalContainer.cpp
+    Controls/WindowContainer.cpp
+    Application.cpp
+    Assert.cpp
+    Class.cpp
+    Clock.cpp
+    Color.cpp
+    DrawCommand.cpp
+    Event.cpp
+    FlyString.cpp
+    Font.cpp
+    Icons.cpp
+    Json.cpp
+    Paint.cpp
+    Popup.cpp
+    Rect.cpp
+    String.cpp
+    Texture.cpp
+    TextureCache.cpp
+    Theme.cpp
+    ThemeProperties.cpp
+    Timer.cpp
+    Variant.cpp
+    Vector2.cpp
+    Vertex.cpp
+    VertexBuffer.cpp
+    Window.cpp
 )
 
 if(TOOLS)
-	message("Building Tools...")
-	add_compile_definitions(TOOLS=1)
-	set(SOURCE
-		${SOURCE}
-		Tools/CommandPalette.cpp
-		Tools/Inspector.cpp
-		Tools/Profiler.cpp
-		Tools/ProfileViewer.cpp
-		Tools/Properties.cpp
-		Tools/TextureViewer.cpp
-	)
+    message("Building Tools...")
+    add_compile_definitions(TOOLS=1)
+    set(SOURCE
+        ${SOURCE}
+        Tools/CommandPalette.cpp
+        Tools/Inspector.cpp
+        Tools/Profiler.cpp
+        Tools/ProfileViewer.cpp
+        Tools/Properties.cpp
+        Tools/TextureViewer.cpp
+    )
 endif()
 
 add_library(
-	${TARGET}
-	STATIC
-	${SOURCE}
+    ${TARGET}
+    STATIC
+    ${SOURCE}
 )
 
 target_include_directories(
-	${TARGET}
-	PUBLIC ${STB_INCLUDE}
+    ${TARGET}
+    PUBLIC ${STB_INCLUDE}
 )
