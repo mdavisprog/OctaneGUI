@@ -121,6 +121,62 @@ TEST_CASE(MoveCursorLeftPrevLine,
     return true;
 })
 
+TEST_CASE(HomeEnd_SingleLine,
+{
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Text\": {\"Text\": \"Hello World\"}}", List);
+
+    const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+    Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
+    Application.Update();
+
+    VERIFYF(TextInput->Column() == 0, "TextInput cursor (%zu) is not at 0!", TextInput->Column());
+
+    Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::End);
+    VERIFYF(TextInput->Column() == 11, "TextInput cursor (%zu) is not at 11!", TextInput->Column());
+
+    Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Home);
+    VERIFYF(TextInput->Column() == 0, "TextInput cursor (%zu) is not at 0!", TextInput->Column());
+
+    return true;
+})
+
+TEST_CASE(HomeEnd_MultiLine,
+{
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Text\": {\"Text\": \"Hello\nFriends\"}}", List);
+
+    const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+    Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
+    Application.Update();
+
+    VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line number (%zu) is not 0!", TextInput->LineNumber());
+    VERIFYF(TextInput->Column() == 0, "TextInput cursor column (%zu) is not 0!", TextInput->Column());
+    VERIFYF(TextInput->Index() == 0, "TextInput index (%zu) is not 0!", TextInput->Index());
+
+    Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::End);
+    VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line number (%zu) is not 0!", TextInput->LineNumber());
+    VERIFYF(TextInput->Column() == 5, "TextInput cursor column (%zu) is not 5!", TextInput->Column());
+    VERIFYF(TextInput->Index() == 5, "TextInput index (%zu) is not 5!", TextInput->Index());
+
+    Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Down);
+    VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line number (%zu) is not 1!", TextInput->LineNumber());
+    VERIFYF(TextInput->Column() == 5, "TextInput cursor column (%zu) is not 5!", TextInput->Column());
+    VERIFYF(TextInput->Index() == 11, "TextInput index (%zu) is not 11!", TextInput->Index());
+
+    Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::End);
+    VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line number (%zu) is not 1!", TextInput->LineNumber());
+    VERIFYF(TextInput->Column() == 7, "TextInput cursor column (%zu) is not 7!", TextInput->Column());
+    VERIFYF(TextInput->Index() == 13, "TextInput index (%zu) is not 13!", TextInput->Index());
+
+    Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Home);
+    VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line number (%zu) is not 1!", TextInput->LineNumber());
+    VERIFYF(TextInput->Column() == 0, "TextInput cursor column (%zu) is not 0!", TextInput->Column());
+    VERIFYF(TextInput->Index() == 6, "TextInput index (%zu) is not 6!", TextInput->Index());
+
+    return true;
+})
+
 )
 
 }
