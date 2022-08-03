@@ -6,13 +6,13 @@ PUSHD "%~dp0"
 CALL Defines.bat
 
 IF EXIST %BUILD_PATH% (
-	ECHO Cleaning %BUILD_PATH%
-	RMDIR /S /Q %BUILD_PATH%
+    ECHO Cleaning %BUILD_PATH%
+    RMDIR /S /Q %BUILD_PATH%
 )
 
 IF EXIST %BIN_PATH% (
-	ECHO Cleaning %BIN_PATH%
-	RMDIR /S /Q %BIN_PATH%
+    ECHO Cleaning %BIN_PATH%
+    RMDIR /S /Q %BIN_PATH%
 )
 
 POPD
