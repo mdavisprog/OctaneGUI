@@ -34,68 +34,68 @@ TEST_SUITE(Variant,
 
 TEST_CASE(Null,
 {
-	OctaneGUI::Variant Variant;
-	return Variant.IsNull();
+    OctaneGUI::Variant Variant;
+    return Variant.IsNull();
 })
 
 TEST_CASE(Bool,
 {
-	OctaneGUI::Variant Variant = true;
-	return Variant.IsBool() && Variant.Bool() == true;
+    OctaneGUI::Variant Variant = true;
+    return Variant.IsBool() && Variant.Bool() == true;
 })
 
 TEST_CASE(Byte,
 {
-	OctaneGUI::Variant Variant = (unsigned char)255;
-	return Variant.IsByte() && Variant.Byte() == 255;
+    OctaneGUI::Variant Variant = (unsigned char)255;
+    return Variant.IsByte() && Variant.Byte() == 255;
 })
 
 TEST_CASE(Int,
 {
-	OctaneGUI::Variant Variant = 42;
-	return Variant.IsInt() && Variant.Int() == 42;
+    OctaneGUI::Variant Variant = 42;
+    return Variant.IsInt() && Variant.Int() == 42;
 })
 
 TEST_CASE(Float,
 {
-	OctaneGUI::Variant Variant = 3.14f;
-	return Variant.IsFloat() && Variant.Float() == 3.14f;
+    OctaneGUI::Variant Variant = 3.14f;
+    return Variant.IsFloat() && Variant.Float() == 3.14f;
 })
 
 TEST_CASE(String,
 {
-	OctaneGUI::Variant Variant = "Hello";
-	return Variant.IsString() && std::string(Variant.String()) == "Hello";
+    OctaneGUI::Variant Variant = "Hello";
+    return Variant.IsString() && std::string(Variant.String()) == "Hello";
 })
 
 TEST_CASE(Vector,
 {
-	const OctaneGUI::Vector2 Vector = OctaneGUI::Vector2(3.14f, 42.0f);
-	OctaneGUI::Variant Variant = Vector;
-	return Variant.IsVector() && Variant.Vector() == Vector;
+    const OctaneGUI::Vector2 Vector = OctaneGUI::Vector2(3.14f, 42.0f);
+    OctaneGUI::Variant Variant = Vector;
+    return Variant.IsVector() && Variant.Vector() == Vector;
 })
 
 TEST_CASE(Color,
 {
-	const OctaneGUI::Color Color(255, 0, 255, 255);
-	OctaneGUI::Variant Variant = Color;
-	return Variant.IsColor() && Variant.ToColor() == Color;
+    const OctaneGUI::Color Color(255, 0, 255, 255);
+    OctaneGUI::Variant Variant = Color;
+    return Variant.IsColor() && Variant.ToColor() == Color;
 })
 
 TEST_CASE(Copy,
 {
-	OctaneGUI::Variant Variant = "Hello";
-	OctaneGUI::Variant Copy = 0;
-	Copy = Variant;
-	return Variant.IsString() && Copy.IsString() && std::string(Variant.String()) == Copy.String();
+    OctaneGUI::Variant Variant = "Hello";
+    OctaneGUI::Variant Copy = 0;
+    Copy = Variant;
+    return Variant.IsString() && Copy.IsString() && std::string(Variant.String()) == Copy.String();
 })
 
 TEST_CASE(Move,
 {
-	OctaneGUI::Variant Variant = "Hello";
-	OctaneGUI::Variant Move = "World";
-	Move = std::move(Variant);
-	return Variant.IsNull() && Move.IsString() && std::string(Move.String()) == "Hello";
+    OctaneGUI::Variant Variant = "Hello";
+    OctaneGUI::Variant Move = "World";
+    Move = std::move(Variant);
+    return Variant.IsNull() && Move.IsString() && std::string(Move.String()) == "Hello";
 })
 
 )

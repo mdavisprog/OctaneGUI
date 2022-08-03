@@ -6,28 +6,28 @@
 
 std::string GetContents(const char* Filename)
 {
-	std::string Result;
-	std::ifstream File;
-	File.open(Filename);
-	if (File.is_open())
-	{
-		File.seekg(0, std::ios::end);
-		Result.resize(File.tellg());
-		File.seekg(0, std::ios::beg);
+    std::string Result;
+    std::ifstream File;
+    File.open(Filename);
+    if (File.is_open())
+    {
+        File.seekg(0, std::ios::end);
+        Result.resize(File.tellg());
+        File.seekg(0, std::ios::beg);
 
-		File.read(&Result[0], Result.size());
-		File.close();
-	}
-	return Result;
+        File.read(&Result[0], Result.size());
+        File.close();
+    }
+    return Result;
 }
 
 int main(int argc, char **argv)
 {
-	OctaneGUI::Application Application;
-	Frontend::Initialize(Application);
+    OctaneGUI::Application Application;
+    Frontend::Initialize(Application);
 
-	std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
-	Application.Initialize(GetContents("Blank.json").c_str(), WindowControls);
+    std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
+    Application.Initialize(GetContents("Blank.json").c_str(), WindowControls);
 
-	return Application.Run();
+    return Application.Run();
 }

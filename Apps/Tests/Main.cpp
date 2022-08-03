@@ -39,7 +39,7 @@ void OnDestroyWindow(OctaneGUI::Window* Window)
 
 OctaneGUI::Event OnEvent(OctaneGUI::Window* Window)
 {
-	return OctaneGUI::Event(OctaneGUI::Event::Type::WindowClosed);
+    return OctaneGUI::Event(OctaneGUI::Event::Type::WindowClosed);
 }
 
 void OnPaint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& Buffers)
@@ -48,7 +48,7 @@ void OnPaint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& Buffers)
 
 uint32_t OnLoadTexture(const std::vector<uint8_t>& Data, uint32_t Width, uint32_t Height)
 {
-	return ++TextureID;
+    return ++TextureID;
 }
 
 void OnExit()
@@ -57,30 +57,30 @@ void OnExit()
 
 int main(int argc, char** argv)
 {
-	OctaneGUI::Application Application;
-	Application
-		.SetOnCreateWindow(OnCreateWindow)
-		.SetOnDestroyWindow(OnDestroyWindow)
-		.SetOnEvent(OnEvent)
-		.SetOnPaint(OnPaint)
-		.SetOnLoadTexture(OnLoadTexture)
-		.SetOnExit(OnExit);
-	
-	const char* Json = 
-	"{"
-		"\"Theme\": {\"FontPath\": \"Roboto-Regular.ttf\", \"FontSize\": 18},"
-		"\"Windows\": {\"Main\": {\"Title\": \"Unit Tests\", \"Width\": 1280, \"Height\": 720}}"
-	"}";
-	
-	std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
-	if (!Application.Initialize(Json, WindowControls))
-	{
-		printf("Failed to initialize application.\n");
-		return -1;
-	}
+    OctaneGUI::Application Application;
+    Application
+        .SetOnCreateWindow(OnCreateWindow)
+        .SetOnDestroyWindow(OnDestroyWindow)
+        .SetOnEvent(OnEvent)
+        .SetOnPaint(OnPaint)
+        .SetOnLoadTexture(OnLoadTexture)
+        .SetOnExit(OnExit);
+    
+    const char* Json = 
+    "{"
+        "\"Theme\": {\"FontPath\": \"Roboto-Regular.ttf\", \"FontSize\": 18},"
+        "\"Windows\": {\"Main\": {\"Title\": \"Unit Tests\", \"Width\": 1280, \"Height\": 720}}"
+    "}";
+    
+    std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
+    if (!Application.Initialize(Json, WindowControls))
+    {
+        printf("Failed to initialize application.\n");
+        return -1;
+    }
 
-	Tests::TestSuite::Run(Application, argc, argv);
+    Tests::TestSuite::Run(Application, argc, argv);
 
-	// This should return immediately with stubbed functions.
-	return Application.Run();
+    // This should return immediately with stubbed functions.
+    return Application.Run();
 }

@@ -35,35 +35,35 @@ TEST_SUITE(Text,
 
 TEST_CASE(SingleLine,
 {
-	OctaneGUI::ControlList List;
-	Utility::Load(Application, "{\"Type\": \"Text\", \"ID\": \"Text\", \"Text\": \"Well Hello Friends!\"}", List);
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, "{\"Type\": \"Text\", \"ID\": \"Text\", \"Text\": \"Well Hello Friends!\"}", List);
 
-	const std::shared_ptr<OctaneGUI::Text> Text = List.To<OctaneGUI::Text>("Text");
-	const std::shared_ptr<OctaneGUI::Font> Font = Application.GetTheme()->GetFont();
+    const std::shared_ptr<OctaneGUI::Text> Text = List.To<OctaneGUI::Text>("Text");
+    const std::shared_ptr<OctaneGUI::Font> Font = Application.GetTheme()->GetFont();
 
-	return Text->GetSize().Y == Font->Size();
+    return Text->GetSize().Y == Font->Size();
 })
 
 TEST_CASE(MultiLine,
 {
-	OctaneGUI::ControlList List;
-	Utility::Load(Application, "{\"Type\": \"Text\", \"ID\": \"Text\", \"Text\": \"Well\n Hello\n Friends!\"}", List);
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, "{\"Type\": \"Text\", \"ID\": \"Text\", \"Text\": \"Well\n Hello\n Friends!\"}", List);
 
-	const std::shared_ptr<OctaneGUI::Text> Text = List.To<OctaneGUI::Text>("Text");
-	const std::shared_ptr<OctaneGUI::Font> Font = Application.GetTheme()->GetFont();
+    const std::shared_ptr<OctaneGUI::Text> Text = List.To<OctaneGUI::Text>("Text");
+    const std::shared_ptr<OctaneGUI::Font> Font = Application.GetTheme()->GetFont();
 
-	return Text->GetSize().Y == Font->Size() * 3.0f;
+    return Text->GetSize().Y == Font->Size() * 3.0f;
 })
 
 TEST_CASE(Wrap,
 {
-	OctaneGUI::ControlList List;
-	Utility::Load(Application, "{\"Type\": \"Container\", \"Size\": [80, 200], \"Controls\": [{\"Type\": \"Text\", \"ID\": \"Text\", \"Wrap\": true, \"Text\": \"Well Hello Friends\"}]}", List);
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, "{\"Type\": \"Container\", \"Size\": [80, 200], \"Controls\": [{\"Type\": \"Text\", \"ID\": \"Text\", \"Wrap\": true, \"Text\": \"Well Hello Friends\"}]}", List);
 
-	const std::shared_ptr<OctaneGUI::Text> Text = List.To<OctaneGUI::Text>("Text");
-	const std::shared_ptr<OctaneGUI::Font> Font = Application.GetTheme()->GetFont();
+    const std::shared_ptr<OctaneGUI::Text> Text = List.To<OctaneGUI::Text>("Text");
+    const std::shared_ptr<OctaneGUI::Font> Font = Application.GetTheme()->GetFont();
 
-	return Text->GetSize().Y > Font->Size();
+    return Text->GetSize().Y > Font->Size();
 })
 
 )

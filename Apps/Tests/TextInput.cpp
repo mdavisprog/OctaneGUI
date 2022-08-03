@@ -35,90 +35,90 @@ TEST_SUITE(TextInput,
 
 TEST_CASE(SingleLine_NoScrollBars,
 {
-	OctaneGUI::ControlList List;
-	Utility::Load(
-		Application,
-		"{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Text\": {\"Text\": \"Well Hello Friends! Welcome to the program!\"}}",
-		List);
-	
-	const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+    OctaneGUI::ControlList List;
+    Utility::Load(
+        Application,
+        "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Text\": {\"Text\": \"Well Hello Friends! Welcome to the program!\"}}",
+        List);
+    
+    const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
 
-	return !TextInput->Scrollable()->HorizontalScrollBar()->ShouldPaint() && !TextInput->Scrollable()->VerticalScrollBar()->ShouldPaint();
+    return !TextInput->Scrollable()->HorizontalScrollBar()->ShouldPaint() && !TextInput->Scrollable()->VerticalScrollBar()->ShouldPaint();
 })
 
 TEST_CASE(MultiLine_ScrollBars,
 {
-	OctaneGUI::ControlList List;
-	Utility::Load(
-		Application,
-		"{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Multiline\": true, \"Size\": [80, 30], \"Text\": {\"Text\": \"Well Hello Friends!\n Welcome to the program!\"}}",
-		List);
-	
-	const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+    OctaneGUI::ControlList List;
+    Utility::Load(
+        Application,
+        "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Multiline\": true, \"Size\": [80, 30], \"Text\": {\"Text\": \"Well Hello Friends!\n Welcome to the program!\"}}",
+        List);
+    
+    const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
 
-	return TextInput->Scrollable()->HorizontalScrollBar()->ShouldPaint() && TextInput->Scrollable()->VerticalScrollBar()->ShouldPaint();
+    return TextInput->Scrollable()->HorizontalScrollBar()->ShouldPaint() && TextInput->Scrollable()->VerticalScrollBar()->ShouldPaint();
 })
 
 TEST_CASE(TextEvent,
 {
-	OctaneGUI::ControlList List;
-	Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\"}", List);
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\"}", List);
 
-	const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
-	Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
-	Application.Update();
+    const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+    Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
+    Application.Update();
 
-	Utility::TextEvent(Application, U"Well Hello Friends");
+    Utility::TextEvent(Application, U"Well Hello Friends");
 
-	return TextInput->GetString() == U"Well Hello Friends";
+    return TextInput->GetString() == U"Well Hello Friends";
 })
 
 TEST_CASE(MoveCursorRightNextLine,
 {
-	OctaneGUI::ControlList List;
-	Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Multiline\": true, \"Text\": {\"Text\": \"Hello\nFriends\"}}", List);
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Multiline\": true, \"Text\": {\"Text\": \"Hello\nFriends\"}}", List);
 
-	const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
-	Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
-	Application.Update();
+    const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+    Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
+    Application.Update();
 
-	for (int I = 0; I < 5; I++)
-	{
-		Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Right);
+    for (int I = 0; I < 5; I++)
+    {
+        Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Right);
 
-		VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line (%zu) is not 0!\n", TextInput->LineNumber());
-		VERIFYF(TextInput->Column() == I + 1, "TextInput cursor column (%zu) is not %d\n", TextInput->Column(), I + 1);
-	}
+        VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line (%zu) is not 0!\n", TextInput->LineNumber());
+        VERIFYF(TextInput->Column() == I + 1, "TextInput cursor column (%zu) is not %d\n", TextInput->Column(), I + 1);
+    }
 
-	Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Right);
-	VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line (%zu) is not 1!\n", TextInput->LineNumber());
-	VERIFYF(TextInput->Column() == 0, "TextInput cursor line (%zu) is not 0\n", TextInput->Column());
+    Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Right);
+    VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line (%zu) is not 1!\n", TextInput->LineNumber());
+    VERIFYF(TextInput->Column() == 0, "TextInput cursor line (%zu) is not 0\n", TextInput->Column());
 
-	return true;
+    return true;
 })
 
 TEST_CASE(MoveCursorLeftPrevLine,
 {
-	OctaneGUI::ControlList List;
-	Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Multiline\": true, \"Text\": {\"Text\": \"Hello\nFriends\"}}", List);
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Multiline\": true, \"Text\": {\"Text\": \"Hello\nFriends\"}}", List);
 
-	const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
-	Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
-	Application.Update();
+    const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+    Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
+    Application.Update();
 
-	for (int I = 0; I < 6; I++)
-	{
-		Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Right);
-	}
+    for (int I = 0; I < 6; I++)
+    {
+        Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Right);
+    }
 
-	VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line (%zu) is not 1!\n", TextInput->LineNumber());
-	VERIFYF(TextInput->Column() == 0, "TextInput cursor line (%zu) is not 0\n", TextInput->Column());
+    VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line (%zu) is not 1!\n", TextInput->LineNumber());
+    VERIFYF(TextInput->Column() == 0, "TextInput cursor line (%zu) is not 0\n", TextInput->Column());
 
-	Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Left);
-	VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line (%zu) is not 0!\n", TextInput->LineNumber());
-	VERIFYF(TextInput->Column() == 5, "TextInput cursor line (%zu) is not 5\n", TextInput->Column());
+    Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Left);
+    VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line (%zu) is not 0!\n", TextInput->LineNumber());
+    VERIFYF(TextInput->Column() == 5, "TextInput cursor line (%zu) is not 5\n", TextInput->Column());
 
-	return true;
+    return true;
 })
 
 )

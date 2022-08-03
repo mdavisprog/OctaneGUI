@@ -34,18 +34,18 @@ TEST_SUITE(FlyString,
 
 TEST_CASE(SingleEntry,
 {
-	const char* Literal = "Well Hello Friends";
-	OctaneGUI::FlyString Value1 { Literal };
-	OctaneGUI::FlyString Value2 { Value1 };
-	OctaneGUI::FlyString Value3 = Literal;
-	return Literal != Value1.Data() && Value1.Data() == Value2.Data() && Value1.Data() == Value3.Data() && Value2.Data() == Value3.Data();
+    const char* Literal = "Well Hello Friends";
+    OctaneGUI::FlyString Value1 { Literal };
+    OctaneGUI::FlyString Value2 { Value1 };
+    OctaneGUI::FlyString Value3 = Literal;
+    return Literal != Value1.Data() && Value1.Data() == Value2.Data() && Value1.Data() == Value3.Data() && Value2.Data() == Value3.Data();
 })
 
 TEST_CASE(SameLiteral,
 {
-	OctaneGUI::FlyString Value1 { "Well Hello Friends" };
-	OctaneGUI::FlyString Value2 { "Well Hello Friends" };
-	return Value1.Data() == Value2.Data();
+    OctaneGUI::FlyString Value1 { "Well Hello Friends" };
+    OctaneGUI::FlyString Value2 { "Well Hello Friends" };
+    return Value1.Data() == Value2.Data();
 })
 
 )

@@ -37,60 +37,60 @@ TEST_SUITE(ComboBox,
 
 TEST_CASE(Select,
 {
-	OctaneGUI::ControlList List;
-	Application.GetMainWindow()->Load(Json, List);
-	Application.GetMainWindow()->Update();
+    OctaneGUI::ControlList List;
+    Application.GetMainWindow()->Load(Json, List);
+    Application.GetMainWindow()->Update();
 
-	VERIFY(List.Contains("ComboBox"))
-	std::shared_ptr<OctaneGUI::ComboBox> ComboBox = List.To<OctaneGUI::ComboBox>("ComboBox");
+    VERIFY(List.Contains("ComboBox"))
+    std::shared_ptr<OctaneGUI::ComboBox> ComboBox = List.To<OctaneGUI::ComboBox>("ComboBox");
 
-	std::u32string Selected;
-	ComboBox->SetOnSelected([&Selected](const std::u32string& Item) -> void
-		{
-			Selected = Item;
-		});
+    std::u32string Selected;
+    ComboBox->SetOnSelected([&Selected](const std::u32string& Item) -> void
+        {
+            Selected = Item;
+        });
 
-	OctaneGUI::Json Items(OctaneGUI::Json::Type::Array);
-	Items.Push("Red");
-	Items.Push("Green");
-	Items.Push("Blue");
+    OctaneGUI::Json Items(OctaneGUI::Json::Type::Array);
+    Items.Push("Red");
+    Items.Push("Green");
+    Items.Push("Blue");
 
-	OctaneGUI::Json Root(OctaneGUI::Json::Type::Object);
-	Root["Items"] = std::move(Items);
-	ComboBox->OnLoad(Root);
-	Application.GetMainWindow()->Update();
+    OctaneGUI::Json Root(OctaneGUI::Json::Type::Object);
+    Root["Items"] = std::move(Items);
+    ComboBox->OnLoad(Root);
+    Application.GetMainWindow()->Update();
 
-	OctaneGUI::Vector2 Position = ComboBox->GetAbsolutePosition() + OctaneGUI::Vector2(2.0f, 2.0f);
-	Utility::MouseClick(Application, Position);
-	VERIFY(!ComboBox->IsOpen())
+    OctaneGUI::Vector2 Position = ComboBox->GetAbsolutePosition() + OctaneGUI::Vector2(2.0f, 2.0f);
+    Utility::MouseClick(Application, Position);
+    VERIFY(!ComboBox->IsOpen())
 
-	Position = ComboBox->GetAbsoluteBounds().Max - OctaneGUI::Vector2(2.0f, 2.0f);
-	Utility::MouseClick(Application, Position);
-	Application.GetMainWindow()->Update();
-	VERIFY(ComboBox->IsOpen())
+    Position = ComboBox->GetAbsoluteBounds().Max - OctaneGUI::Vector2(2.0f, 2.0f);
+    Utility::MouseClick(Application, Position);
+    Application.GetMainWindow()->Update();
+    VERIFY(ComboBox->IsOpen())
 
-	Position = ComboBox->GetAbsolutePosition() + OctaneGUI::Vector2(2.0f, ComboBox->GetSize().Y + 15.0f);
-	Utility::MouseClick(Application, Position);
-	Application.GetMainWindow()->Update();
+    Position = ComboBox->GetAbsolutePosition() + OctaneGUI::Vector2(2.0f, ComboBox->GetSize().Y + 15.0f);
+    Utility::MouseClick(Application, Position);
+    Application.GetMainWindow()->Update();
 
-	VERIFYF(Selected == U"Red", "Selected item does not match the expected result: %s != Red\n", OctaneGUI::String::ToMultiByte(Selected).c_str());
-	VERIFY(!ComboBox->IsOpen());
+    VERIFYF(Selected == U"Red", "Selected item does not match the expected result: %s != Red\n", OctaneGUI::String::ToMultiByte(Selected).c_str());
+    VERIFY(!ComboBox->IsOpen());
 
-	Selected = U"";
-	Position = ComboBox->GetAbsoluteBounds().Max - OctaneGUI::Vector2(2.0f, 2.0f);
-	Utility::MouseClick(Application, Position);
-	Application.GetMainWindow()->Update();
-	VERIFY(ComboBox->IsOpen())
+    Selected = U"";
+    Position = ComboBox->GetAbsoluteBounds().Max - OctaneGUI::Vector2(2.0f, 2.0f);
+    Utility::MouseClick(Application, Position);
+    Application.GetMainWindow()->Update();
+    VERIFY(ComboBox->IsOpen())
 
-	const float Height = Application.GetTheme()->GetFont()->Size();
-	Position = ComboBox->GetAbsoluteBounds().Max + OctaneGUI::Vector2(-2.0f, ComboBox->GetSize().Y + Height - 2.0f);
-	Utility::MouseClick(Application, Position);
-	Application.GetMainWindow()->Update();
+    const float Height = Application.GetTheme()->GetFont()->Size();
+    Position = ComboBox->GetAbsoluteBounds().Max + OctaneGUI::Vector2(-2.0f, ComboBox->GetSize().Y + Height - 2.0f);
+    Utility::MouseClick(Application, Position);
+    Application.GetMainWindow()->Update();
 
-	VERIFYF(Selected == U"Green", "Selected item does not match the expected result: %s != Green\n", OctaneGUI::String::ToMultiByte(Selected).c_str());
-	VERIFY(!ComboBox->IsOpen());
+    VERIFYF(Selected == U"Green", "Selected item does not match the expected result: %s != Green\n", OctaneGUI::String::ToMultiByte(Selected).c_str());
+    VERIFY(!ComboBox->IsOpen());
 
-	return true;
+    return true;
 })
 
 )

@@ -1,122 +1,122 @@
 {
-	"Theme": "./Themes/Dark.json",
-	"Windows": {
-		"Main": {
-			"Title": "Overview",
-			"Width": 800,
-			"Height": 400,
-			"MenuBar": {"Items": [
-				{"ID": "File", "Text": "File", "Items": [
-					{"ID": "Quit", "Text": "Quit"}
-				]},
-				{"ID": "Help", "Text": "Help", "Items": [
-					{"ID": "About", "Text": "About"}
-				]}
-			]},
-			"Body": {"Controls": [
-				{"Type": "Panel", "Expand": "Both"},
-				{"Type": "ScrollableViewControl", "Expand": "Both", "Controls": [
-					{"Type": "MarginContainer", "Margins": [8, 8, 8, 8], "Controls": [
-						{"Type": "VerticalContainer", "Spacing": [0, 12], "Controls": [
-							{"Type": "HorizontalContainer", "Controls": [
-								{"Type": "GroupBox", "Text": "Text Buttons", "Controls": [
-									{"Type": "HorizontalContainer", "Expand": "Width", "Controls": [
-										{"Type": "TextButton", "Expand": "Width", "Text": {"Text": "Enabled"}},
-										{"Type": "TextButton", "Expand": "Width", "Disabled": true, "Text": {"Text": "Disabled"}},
-										{"Type": "TextButton", "Expand": "Width", "Radius": 4.0, "Text": {"Text": "Rounded"}}
-									]}
-								]},
-								{"Type": "Separator", "Orientation": "Vertical"},
-								{"Type": "GroupBox", "Text": "Image Buttons", "Controls": [
-									{"Type": "HorizontalContainer", "Expand": "Width", "Controls": [
-										{"Type": "ImageButton", "Image": {"Texture": "thumbs_up.png"}},
-										{"Type": "ImageButton", "Disabled": true, "Image": {"Texture": "thumbs_up.png"}}
-									]}
-								]},
-								{"Type": "Separator", "Orientation": "Vertical"},
-								{"Type": "GroupBox", "Text": "Combo Box", "Controls": [
-									{"Type": "HorizontalContainer", "Spacing": [8, 0], "Controls": [
-										{"Type": "Text", "Text": "Themes"},
-										{"Type": "ComboBox", "ID": "ThemesComboBox"}
-									]}
-								]}
-							]},
-							{"Type": "HorizontalContainer", "Expand": "Width", "Controls": [
-								{"Type": "GroupBox", "Text": "Single line text input", "Controls": [
-									{"Type": "TextInput", "Expand": "Width"}
-								]},
-								{"Type": "Separator", "Orientation": "Vertical"},
-								{"Type": "GroupBox", "Text": "Numbers Only Input", "Controls": [
-									{"Type": "TextInput", "Expand": "Width", "NumbersOnly": true, "Text": {"Text": "3.1415926"}}
-								]},
-								{"Type": "Separator", "Orientation": "Vertical"},
-								{"Type": "GroupBox", "Text": "Multi line text input", "Controls": [
-									{"Type": "TextInput", "Multiline": true}
-								]}
-							]},
-							{"Type": "HorizontalContainer", "Spacing": [8, 0], "Controls": [
-								{"Type": "GroupBox", "Text": "Check Box", "Controls": [
-									{"Type": "HorizontalContainer", "Spacing": [12, 0], "Controls": [
-										{"Type": "CheckBox", "Text": {"Text": "Two-State"}},
-										{"Type": "CheckBox", "Text": {"Text": "Tri-State"}, "TriState": true}
-									]}
-								]},
-								{"Type": "Separator", "Orientation": "Vertical"},
-								{"Type": "GroupBox", "Text": "Radio Buttons", "Controls": [
-									{"Type": "HorizontalContainer", "Controls": [
-										{"Type": "RadioButton", "Text": {"Text": "One"}},
-										{"Type": "RadioButton", "Text": {"Text": "Two"}},
-										{"Type": "RadioButton", "Text": {"Text": "Three"}}
-									]}
-								]}
-							]},
-							{"Type": "HorizontalContainer", "Controls": [
-								{"Type": "GroupBox", "Text": "Wrapped Text", "Controls": [
-									{"Type": "Container", "Size": [90, 50], "Controls": [
-										{"Type": "Text", "Text": "This is a very long string!", "Wrap": true}
-									]}
-								]},
-								{"Type": "Separator", "Orientation": "Vertical"},
-								{"Type": "GroupBox", "Text": "Tree", "Controls": [
-									{"Type": "VerticalContainer", "Controls": [
-										{"Type": "Tree", "Text": "Root 1", "Items": [
-											{"Type": "Tree", "Text": "Child 1", "Items": [
-												{"Type": "Tree", "Text": "Sub-Child 1"}
-											]},
-											{"Type": "Tree", "Text": "Child 2"}
-										]},
-										{"Type": "Tree", "Text": "Root 2", "Items": [
-											{"Type": "Tree", "Text": "Child 2"}
-										]}
-									]}
-								]}
-							]},
-							{"Type": "HorizontalContainer", "Controls": [
-								{"Type": "GroupBox", "Text": "List Box", "Controls": [
-									{"Type": "ListBox", "ID": "ListBox"}
-								]}
-							]}
-						]}
-					]}
-				]}
-			]}
-		},
-		"About": {"Title": "About", "Width": 400, "Height": 200, "Resizable": false, "Body": {"Controls": [
-				{"Type": "Panel", "Expand": "Both"},
-				{"Type": "MarginContainer", "Expand": "Both", "Margins": [8, 8, 8, 8], "Controls": [
-					{"Type": "VerticalContainer", "Expand": "Both", "Grow": "Center", "Controls": [
-						{"Type": "HorizontalContainer", "Expand": "Width", "Grow": "Center", "Controls": [
-							{"Type": "Text", "Text": "OctaneGUI"}
-						]},
-						{"Type": "HorizontalContainer", "Expand": "Width", "Grow": "Center", "Controls": [
-							{"Type": "Text", "Text": "Copyright (c) Mitchell Davis 2022"}
-						]},
-						{"Type": "HorizontalContainer", "Expand": "Width", "Grow": "Center", "Controls": [
-							{"ID": "OK", "Type": "TextButton", "Text": {"Text": "OK"}}
-						]}
-					]}
-				]}
-			]}
-		}
-	}
+    "Theme": "./Themes/Dark.json",
+    "Windows": {
+        "Main": {
+            "Title": "Overview",
+            "Width": 800,
+            "Height": 400,
+            "MenuBar": {"Items": [
+                {"ID": "File", "Text": "File", "Items": [
+                    {"ID": "Quit", "Text": "Quit"}
+                ]},
+                {"ID": "Help", "Text": "Help", "Items": [
+                    {"ID": "About", "Text": "About"}
+                ]}
+            ]},
+            "Body": {"Controls": [
+                {"Type": "Panel", "Expand": "Both"},
+                {"Type": "ScrollableViewControl", "Expand": "Both", "Controls": [
+                    {"Type": "MarginContainer", "Margins": [8, 8, 8, 8], "Controls": [
+                        {"Type": "VerticalContainer", "Spacing": [0, 12], "Controls": [
+                            {"Type": "HorizontalContainer", "Controls": [
+                                {"Type": "GroupBox", "Text": "Text Buttons", "Controls": [
+                                    {"Type": "HorizontalContainer", "Expand": "Width", "Controls": [
+                                        {"Type": "TextButton", "Expand": "Width", "Text": {"Text": "Enabled"}},
+                                        {"Type": "TextButton", "Expand": "Width", "Disabled": true, "Text": {"Text": "Disabled"}},
+                                        {"Type": "TextButton", "Expand": "Width", "Radius": 4.0, "Text": {"Text": "Rounded"}}
+                                    ]}
+                                ]},
+                                {"Type": "Separator", "Orientation": "Vertical"},
+                                {"Type": "GroupBox", "Text": "Image Buttons", "Controls": [
+                                    {"Type": "HorizontalContainer", "Expand": "Width", "Controls": [
+                                        {"Type": "ImageButton", "Image": {"Texture": "thumbs_up.png"}},
+                                        {"Type": "ImageButton", "Disabled": true, "Image": {"Texture": "thumbs_up.png"}}
+                                    ]}
+                                ]},
+                                {"Type": "Separator", "Orientation": "Vertical"},
+                                {"Type": "GroupBox", "Text": "Combo Box", "Controls": [
+                                    {"Type": "HorizontalContainer", "Spacing": [8, 0], "Controls": [
+                                        {"Type": "Text", "Text": "Themes"},
+                                        {"Type": "ComboBox", "ID": "ThemesComboBox"}
+                                    ]}
+                                ]}
+                            ]},
+                            {"Type": "HorizontalContainer", "Expand": "Width", "Controls": [
+                                {"Type": "GroupBox", "Text": "Single line text input", "Controls": [
+                                    {"Type": "TextInput", "Expand": "Width"}
+                                ]},
+                                {"Type": "Separator", "Orientation": "Vertical"},
+                                {"Type": "GroupBox", "Text": "Numbers Only Input", "Controls": [
+                                    {"Type": "TextInput", "Expand": "Width", "NumbersOnly": true, "Text": {"Text": "3.1415926"}}
+                                ]},
+                                {"Type": "Separator", "Orientation": "Vertical"},
+                                {"Type": "GroupBox", "Text": "Multi line text input", "Controls": [
+                                    {"Type": "TextInput", "Multiline": true}
+                                ]}
+                            ]},
+                            {"Type": "HorizontalContainer", "Spacing": [8, 0], "Controls": [
+                                {"Type": "GroupBox", "Text": "Check Box", "Controls": [
+                                    {"Type": "HorizontalContainer", "Spacing": [12, 0], "Controls": [
+                                        {"Type": "CheckBox", "Text": {"Text": "Two-State"}},
+                                        {"Type": "CheckBox", "Text": {"Text": "Tri-State"}, "TriState": true}
+                                    ]}
+                                ]},
+                                {"Type": "Separator", "Orientation": "Vertical"},
+                                {"Type": "GroupBox", "Text": "Radio Buttons", "Controls": [
+                                    {"Type": "HorizontalContainer", "Controls": [
+                                        {"Type": "RadioButton", "Text": {"Text": "One"}},
+                                        {"Type": "RadioButton", "Text": {"Text": "Two"}},
+                                        {"Type": "RadioButton", "Text": {"Text": "Three"}}
+                                    ]}
+                                ]}
+                            ]},
+                            {"Type": "HorizontalContainer", "Controls": [
+                                {"Type": "GroupBox", "Text": "Wrapped Text", "Controls": [
+                                    {"Type": "Container", "Size": [90, 50], "Controls": [
+                                        {"Type": "Text", "Text": "This is a very long string!", "Wrap": true}
+                                    ]}
+                                ]},
+                                {"Type": "Separator", "Orientation": "Vertical"},
+                                {"Type": "GroupBox", "Text": "Tree", "Controls": [
+                                    {"Type": "VerticalContainer", "Controls": [
+                                        {"Type": "Tree", "Text": "Root 1", "Items": [
+                                            {"Type": "Tree", "Text": "Child 1", "Items": [
+                                                {"Type": "Tree", "Text": "Sub-Child 1"}
+                                            ]},
+                                            {"Type": "Tree", "Text": "Child 2"}
+                                        ]},
+                                        {"Type": "Tree", "Text": "Root 2", "Items": [
+                                            {"Type": "Tree", "Text": "Child 2"}
+                                        ]}
+                                    ]}
+                                ]}
+                            ]},
+                            {"Type": "HorizontalContainer", "Controls": [
+                                {"Type": "GroupBox", "Text": "List Box", "Controls": [
+                                    {"Type": "ListBox", "ID": "ListBox"}
+                                ]}
+                            ]}
+                        ]}
+                    ]}
+                ]}
+            ]}
+        },
+        "About": {"Title": "About", "Width": 400, "Height": 200, "Resizable": false, "Body": {"Controls": [
+                {"Type": "Panel", "Expand": "Both"},
+                {"Type": "MarginContainer", "Expand": "Both", "Margins": [8, 8, 8, 8], "Controls": [
+                    {"Type": "VerticalContainer", "Expand": "Both", "Grow": "Center", "Controls": [
+                        {"Type": "HorizontalContainer", "Expand": "Width", "Grow": "Center", "Controls": [
+                            {"Type": "Text", "Text": "OctaneGUI"}
+                        ]},
+                        {"Type": "HorizontalContainer", "Expand": "Width", "Grow": "Center", "Controls": [
+                            {"Type": "Text", "Text": "Copyright (c) Mitchell Davis 2022"}
+                        ]},
+                        {"Type": "HorizontalContainer", "Expand": "Width", "Grow": "Center", "Controls": [
+                            {"ID": "OK", "Type": "TextButton", "Text": {"Text": "OK"}}
+                        ]}
+                    ]}
+                ]}
+            ]}
+        }
+    }
 }

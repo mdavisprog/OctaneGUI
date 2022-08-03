@@ -36,52 +36,52 @@ namespace Utility
 
 void Load(OctaneGUI::Application& Application, const char* MenuBarJson, const char* BodyJson, OctaneGUI::ControlList& List, int WindowWidth, int WindowHeight)
 {
-	std::stringstream Stream;
-	Stream << "{\"Width\": "
-		<< WindowWidth
-		<< ", \"Height\": "
-		<< WindowHeight
-		<< ", \"MenuBar\": {" << MenuBarJson << "}"
-		<< ", \"Body\": {\"Controls\": [" << BodyJson
-		<< "]}}";
-	Application.GetMainWindow()->Load(Stream.str().c_str(), List);
-	Application.GetMainWindow()->Update();
+    std::stringstream Stream;
+    Stream << "{\"Width\": "
+        << WindowWidth
+        << ", \"Height\": "
+        << WindowHeight
+        << ", \"MenuBar\": {" << MenuBarJson << "}"
+        << ", \"Body\": {\"Controls\": [" << BodyJson
+        << "]}}";
+    Application.GetMainWindow()->Load(Stream.str().c_str(), List);
+    Application.GetMainWindow()->Update();
 }
 
 void Load(OctaneGUI::Application& Application, const char* BodyJson, OctaneGUI::ControlList& List)
 {
-	Load(Application, "", BodyJson, List, 1280, 720);
+    Load(Application, "", BodyJson, List, 1280, 720);
 }
 
 void Load(OctaneGUI::Application& Application, const char* MenuBarJson, const char* BodyJson, OctaneGUI::ControlList& List)
 {
-	Load(Application, MenuBarJson, BodyJson, List, 1280, 720);
+    Load(Application, MenuBarJson, BodyJson, List, 1280, 720);
 }
 
 void KeyEvent(OctaneGUI::Application& Application, OctaneGUI::Keyboard::Key Key)
 {
-	Application.GetMainWindow()->OnKeyPressed(Key);
-	Application.GetMainWindow()->OnKeyReleased(Key);
+    Application.GetMainWindow()->OnKeyPressed(Key);
+    Application.GetMainWindow()->OnKeyReleased(Key);
 }
 
 void MouseMove(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Position)
 {
-	Application.GetMainWindow()->OnMouseMove(Position);
+    Application.GetMainWindow()->OnMouseMove(Position);
 }
 
 void MouseClick(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Position, OctaneGUI::Mouse::Button Button)
 {
-	MouseMove(Application, Position);
-	Application.GetMainWindow()->OnMousePressed(Position, Button);
-	Application.GetMainWindow()->OnMouseReleased(Position, Button);
+    MouseMove(Application, Position);
+    Application.GetMainWindow()->OnMousePressed(Position, Button);
+    Application.GetMainWindow()->OnMouseReleased(Position, Button);
 }
 
 void TextEvent(OctaneGUI::Application& Application, const std::u32string& Text)
 {
-	for (const char32_t Ch : Text)
-	{
-		Application.GetMainWindow()->OnText((uint32_t)Ch);
-	}
+    for (const char32_t Ch : Text)
+    {
+        Application.GetMainWindow()->OnText((uint32_t)Ch);
+    }
 }
 
 }

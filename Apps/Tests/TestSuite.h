@@ -44,25 +44,25 @@ namespace Tests
 class TestSuite
 {
 public:
-	typedef std::function<bool(OctaneGUI::Application&)> OnTestCaseSignature;
-	typedef std::map<std::string, OnTestCaseSignature> TestCasesMap;
+    typedef std::function<bool(OctaneGUI::Application&)> OnTestCaseSignature;
+    typedef std::map<std::string, OnTestCaseSignature> TestCasesMap;
 
-	static void Run(OctaneGUI::Application& Application, int Argc, char** Argv);
+    static void Run(OctaneGUI::Application& Application, int Argc, char** Argv);
 
-	TestSuite(const char* Name, const TestCasesMap& TestCases);
-	~TestSuite();
+    TestSuite(const char* Name, const TestCasesMap& TestCases);
+    ~TestSuite();
 
 private:
-	static bool Run(OctaneGUI::Application& Application, const TestSuite& Suite, uint32_t& Passed, uint32_t& Failed);
+    static bool Run(OctaneGUI::Application& Application, const TestSuite& Suite, uint32_t& Passed, uint32_t& Failed);
 
-	TestSuite();
+    TestSuite();
 
-	// Need to make this allocated on the heap due to static initialization order.
-	// Would like to register test suites differently but will be using this method for now.
-	static std::vector<TestSuite*>* s_Suites;
+    // Need to make this allocated on the heap due to static initialization order.
+    // Would like to register test suites differently but will be using this method for now.
+    static std::vector<TestSuite*>* s_Suites;
 
-	std::string m_Name {};
-	TestCasesMap m_TestCases;
+    std::string m_Name {};
+    TestCasesMap m_TestCases;
 };
 
 #define TEST_SUITE(Name, Cases) TestSuite Name(#Name, {Cases});
