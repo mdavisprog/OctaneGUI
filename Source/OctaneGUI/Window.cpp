@@ -444,14 +444,15 @@ void Window::Update()
 
     if (!m_LayoutRequests.empty())
     {
-        for (const std::weak_ptr<Container>& Item : m_LayoutRequests)
+        const std::vector<std::weak_ptr<Container>> Requests = m_LayoutRequests;
+        m_LayoutRequests.clear();
+        for (const std::weak_ptr<Container>& Item : Requests)
         {
             if (!Item.expired())
             {
                 Item.lock()->Layout();
             }
         }
-        m_LayoutRequests.clear();
 
         if (m_OnLayout)
         {
