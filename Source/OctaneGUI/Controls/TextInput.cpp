@@ -601,6 +601,7 @@ void TextInput::OnLoad(const Json& Root)
         }
     }
 
+    SetReadOnly(Root["ReadOnly"].Boolean(ReadOnly()));
     m_Text->OnLoad(Root["Text"]);
 }
 
