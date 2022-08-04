@@ -90,7 +90,7 @@ void TestSuite::Run(OctaneGUI::Application& Application, int Argc, char** Argv)
             TotalFailed += Failed;
         }
 
-        printf("\nAll tests completed in %f seconds. %d test(s) have failed.\n", Clock.Measure(), TotalFailed);
+        printf("\n%d tests completed in %f seconds. Pass/Fail: %d/%d.\n", TotalPassed + TotalFailed, Clock.Measure(), TotalPassed, TotalFailed);
     }
 
     delete s_Suites;
