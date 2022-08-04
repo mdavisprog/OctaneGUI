@@ -60,6 +60,7 @@ private:
     // Need to make this allocated on the heap due to static initialization order.
     // Would like to register test suites differently but will be using this method for now.
     static std::vector<TestSuite*>* s_Suites;
+    static bool s_Verbose;
 
     std::string m_Name {};
     TestCasesMap m_TestCases;

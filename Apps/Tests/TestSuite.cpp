@@ -40,9 +40,18 @@ void TestSuite::Run(OctaneGUI::Application& Application, int Argc, char** Argv)
     }
 
     std::string SuiteName;
-    if (Argc == 2)
+    if (Argc > 1)
     {
-        SuiteName = Argv[1];
+        for (int I = 1; I < Argc; I++)
+        {
+            if (std::string(Argv[I]) == "Verbose")
+            {
+                s_Verbose = true;
+            }
+        }
+
+        SuiteName = Argv[Argc - 1];
+        SuiteName = SuiteName == "Verbose" ? "" : SuiteName;
     }
 
     if (!SuiteName.empty())
@@ -115,6 +124,11 @@ bool TestSuite::Run(OctaneGUI::Application& Application, const TestSuite& Suite,
         Application.GetMainWindow()->Clear();
         bool Result = Item.second(Application);
 
+        if (s_Verbose)
+        {
+            printf("Running test case '%s'\n", Item.first.c_str());
+        }
+
         if (Result)
         {
             Passed++;
@@ -141,5 +155,6 @@ TestSuite::TestSuite()
 }
 
 std::vector<TestSuite*>* TestSuite::s_Suites = nullptr;
+bool TestSuite::s_Verbose { false };
 
 }
