@@ -177,6 +177,45 @@ TEST_CASE(HomeEnd_MultiLine,
     return true;
 })
 
+TEST_CASE(NumbersOnly,
+{
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"NumbersOnly\": true}", List);
+
+    const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+    Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
+    Application.Update();
+
+    Utility::TextEvent(Application, U"Hello");
+    VERIFYF(TextInput->GetString() == U"", "TextInput contents should be empty, but contains '%s'!", OctaneGUI::String::ToMultiByte(TextInput->GetText()).c_str());
+
+    Utility::TextEvent(Application, U"3-.14");
+    VERIFYF(TextInput->GetString() == U"3.14", "TextInput contents should be '3.14', but contains '%s'!", OctaneGUI::String::ToMultiByte(TextInput->GetText()).c_str());
+
+    TextInput->SetText(U"");
+    Utility::TextEvent(Application, U"-3.14");
+    VERIFYF(TextInput->GetString() == U"-3.14", "TextInput contents should be '-3.14', but contains '%s'!", OctaneGUI::String::ToMultiByte(TextInput->GetText()).c_str());
+
+    return true;
+})
+
+TEST_CASE(ReadOnly,
+{
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"ReadOnly\": true, \"Text\": {\"Text\": \"Well Hello Friends\"}}", List);
+
+    const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+    Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
+    Application.Update();
+
+    VERIFYF(TextInput->GetString() == U"Well Hello Friends", "TextInput contents should be 'Well Hello Friends', but contains '%s'!", OctaneGUI::String::ToMultiByte(TextInput->GetText()).c_str());
+
+    Utility::TextEvent(Application, U"Welcome to the program");
+    VERIFYF(TextInput->GetString() == U"Well Hello Friends", "TextInput contents should be 'Well Hello Friends', but contains '%s'!", OctaneGUI::String::ToMultiByte(TextInput->GetText()).c_str());
+
+    return true;
+})
+
 )
 
 }
