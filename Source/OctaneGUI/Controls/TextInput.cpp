@@ -591,6 +591,7 @@ void TextInput::OnLoad(const Json& Root)
 {
     Container::OnLoad(Root);
 
+    m_MaxCharacters = Root["MaxCharacters"].Number(m_MaxCharacters);
     m_NumbersOnly = Root["NumbersOnly"].Boolean(m_NumbersOnly);
     SetMulitline(Root["Multiline"].Boolean());
     if (m_Multiline)
@@ -600,7 +601,7 @@ void TextInput::OnLoad(const Json& Root)
             SetSize({ 200.0f, 200.0f });
         }
     }
-
+    
     SetReadOnly(Root["ReadOnly"].Boolean(ReadOnly()));
     m_Text->OnLoad(Root["Text"]);
 }
@@ -887,6 +888,11 @@ void Remove(std::u32string& Contents, char32_t Character)
 void TextInput::AddText(const std::u32string& Contents)
 {
     if (m_ReadOnly)
+    {
+        return;
+    }
+    
+    if (m_Text->Length() + Contents.length() > m_MaxCharacters)
     {
         return;
     }
