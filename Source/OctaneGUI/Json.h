@@ -104,6 +104,7 @@ public:
     const Json& operator[](unsigned int Index) const;
 
     bool Contains(const std::string& Key) const;
+    bool Erase(const std::string& Key);
 
     std::string ToString() const;
     std::string ToStringPretty() const;

@@ -432,6 +432,23 @@ bool Json::Contains(const std::string& Key) const
     return m_Data.Object->find(Key) != m_Data.Object->end();
 }
 
+bool Json::Erase(const std::string& Key)
+{
+    if (!IsObject())
+    {
+        return false;
+    }
+
+    if (!Contains(Key))
+    {
+        return false;
+    }
+
+    m_Data.Object->erase(Key);
+
+    return true;
+}
+
 std::string Json::ToString() const
 {
     return ToString(false, 0);
