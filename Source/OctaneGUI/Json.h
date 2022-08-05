@@ -106,6 +106,7 @@ public:
     bool Contains(const std::string& Key) const;
 
     std::string ToString() const;
+    std::string ToStringPretty() const;
 
 private:
     typedef std::map<std::string, Json> Map;
@@ -133,6 +134,7 @@ private:
     bool Equals(const Json& Other) const;
     void Copy(const Json& Other);
     void Move(Json&& Other);
+    std::string ToString(bool Pretty, int Depth) const;
 
     Type m_Type { Type::Null };
     Data m_Data {};
