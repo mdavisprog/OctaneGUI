@@ -290,6 +290,11 @@ void Exit()
     SDL_Quit();
 }
 
+void SetClipboardContents(const std::u32string& Contents)
+{
+    SDL_SetClipboardText(OctaneGUI::String::ToMultiByte(Contents).c_str());
+}
+
 std::u32string GetClipboardContents()
 {
     return OctaneGUI::String::ToUTF32(SDL_GetClipboardText());

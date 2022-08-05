@@ -55,6 +55,7 @@ public:
     typedef std::function<void(Window*, const VertexBuffer&)> OnWindowPaintSignature;
     typedef std::function<Event(Window*)> OnWindowEventSignature;
     typedef std::function<uint32_t(const std::vector<uint8_t>&, uint32_t, uint32_t)> OnLoadTextureSignature;
+    typedef std::function<void(const std::u32string&)> OnSetClipboardContentsSignature;
     typedef std::function<std::u32string(void)> OnGetClipboardContentsSignature;
     typedef std::function<void(Window*, const char*)> OnSetWindowTitleSignature;
     typedef std::function<void(Window*, Mouse::Cursor)> OnSetMouseCursorSignature;
@@ -79,6 +80,7 @@ public:
     std::shared_ptr<Icons> GetIcons() const;
     TextureCache& GetTextureCache();
     bool IsKeyPressed(Keyboard::Key Key) const;
+    void SetClipboardContents(const std::u32string& Contents);
     std::u32string ClipboardContents() const;
     Application& SetMouseCursor(Window* Target, Mouse::Cursor Cursor);
 
@@ -88,6 +90,7 @@ public:
     Application& SetOnEvent(OnWindowEventSignature&& Fn);
     Application& SetOnLoadTexture(OnLoadTextureSignature&& Fn);
     Application& SetOnExit(OnEmptySignature&& Fn);
+    Application& SetOnSetClipboardContents(OnSetClipboardContentsSignature&& Fn);
     Application& SetOnGetClipboardContents(OnGetClipboardContentsSignature&& Fn);
     Application& SetOnSetWindowTitle(OnSetWindowTitleSignature&& Fn);
     Application& SetOnSetMouseCursor(OnSetMouseCursorSignature&& Fn);
@@ -112,6 +115,7 @@ private:
     OnWindowEventSignature m_OnEvent { nullptr };
     OnLoadTextureSignature m_OnLoadTexture { nullptr };
     OnEmptySignature m_OnExit { nullptr };
+    OnSetClipboardContentsSignature m_OnSetClipboardContents { nullptr };
     OnGetClipboardContentsSignature m_OnGetClipboardContents { nullptr };
     OnSetWindowTitleSignature m_OnSetWindowTitle { nullptr };
     OnSetMouseCursorSignature m_OnSetMouseCursor { nullptr };

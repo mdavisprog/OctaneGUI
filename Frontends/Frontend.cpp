@@ -65,6 +65,11 @@ void OnExit()
     Windowing::Exit();
 }
 
+void OnSetClipboardContents(const std::u32string& Contents)
+{
+    Windowing::SetClipboardContents(Contents);
+}
+
 std::u32string OnGetClipboardContents()
 {
     return Windowing::GetClipboardContents();
@@ -92,6 +97,7 @@ void Initialize(OctaneGUI::Application& Application)
         .SetOnPaint(OnPaint)
         .SetOnLoadTexture(OnLoadTexture)
         .SetOnExit(OnExit)
+        .SetOnSetClipboardContents(OnSetClipboardContents)
         .SetOnGetClipboardContents(OnGetClipboardContents)
         .SetOnSetWindowTitle(OnSetWindowTitle)
         .SetOnSetMouseCursor(OnSetMouseCursor);

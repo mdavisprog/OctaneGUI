@@ -46,6 +46,7 @@ void CreateWindow(OctaneGUI::Window* Window);
 void DestroyWindow(OctaneGUI::Window* Window);
 OctaneGUI::Event Event(OctaneGUI::Window* Window);
 void Exit();
+void SetClipboardContents(const std::u32string& Contents);
 std::u32string GetClipboardContents();
 void SetWindowTitle(OctaneGUI::Window* Window, const char* Title);
 void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor);
