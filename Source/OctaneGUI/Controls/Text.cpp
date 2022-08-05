@@ -71,7 +71,7 @@ const std::u32string& Text::GetString() const
 
 uint32_t Text::Length() const
 {
-    return m_Contents.size();
+    return m_Contents.length();
 }
 
 const std::shared_ptr<Font>& Text::GetFont() const

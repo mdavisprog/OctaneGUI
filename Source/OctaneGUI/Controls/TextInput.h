@@ -112,6 +112,9 @@ public:
     TextInput& SetNumbersOnly(bool NumbersOnly);
     bool NumbersOnly() const;
 
+    TextInput& SetMaxCharacters(uint32_t MaxCharacters);
+    uint32_t MaxCharacters() const;
+
     template <class T>
     TextInput& CreateHighlighter()
     {
@@ -181,6 +184,7 @@ private:
     bool m_Multiline { false };
     bool m_ReadOnly { false };
     bool m_NumbersOnly { false };
+    uint32_t m_MaxCharacters { 0 };
 
     std::shared_ptr<Timer> m_BlinkTimer { nullptr };
     bool m_DrawCursor { false };

@@ -263,7 +263,14 @@ TextInput& TextInput::SetText(const char* InText)
 
 TextInput& TextInput::SetText(const char32_t* InText)
 {
-    InternalSetText(InText);
+    if (m_MaxCharacters > 0)
+    {
+        InternalSetText(std::u32string(InText, m_MaxCharacters).c_str());
+    }
+    else
+    {
+        InternalSetText(InText);
+    }
     m_Anchor.Invalidate();
     m_Position = { 0, 0, 0 };
     // TODO: Should the scroll offset be reset to zero?
@@ -416,6 +423,17 @@ TextInput& TextInput::SetNumbersOnly(bool NumbersOnly)
 bool TextInput::NumbersOnly() const
 {
     return m_NumbersOnly;
+}
+
+TextInput& TextInput::SetMaxCharacters(uint32_t MaxCharacters)
+{
+    m_MaxCharacters = MaxCharacters;
+    return *this;
+}
+
+uint32_t TextInput::MaxCharacters() const
+{
+    return m_MaxCharacters;
 }
 
 void TextInput::Focus()
@@ -591,6 +609,7 @@ void TextInput::OnLoad(const Json& Root)
 {
     Container::OnLoad(Root);
 
+    m_MaxCharacters = Root["MaxCharacters"].Number(m_MaxCharacters);
     m_NumbersOnly = Root["NumbersOnly"].Boolean(m_NumbersOnly);
     SetMulitline(Root["Multiline"].Boolean());
     if (m_Multiline)
@@ -603,6 +622,7 @@ void TextInput::OnLoad(const Json& Root)
 
     SetReadOnly(Root["ReadOnly"].Boolean(ReadOnly()));
     m_Text->OnLoad(Root["Text"]);
+    SetText(GetText());
 }
 
 void TextInput::OnSave(Json& Root) const
@@ -941,6 +961,18 @@ void TextInput::AddText(const std::u32string& Contents)
     if (!m_Multiline)
     {
         Remove(Stripped, '\n');
+    }
+
+    if ((m_MaxCharacters > 0) && (m_Text->Length() + Stripped.length() > m_MaxCharacters))
+    {
+        // Field already at capacity
+        if (m_Text->Length() >= m_MaxCharacters)
+        {
+            return;
+        }
+
+        // Resize to what we have remaining
+        Stripped.resize(m_MaxCharacters - m_Text->Length());
     }
 
     const uint32_t Length = (uint32_t)Stripped.length();
