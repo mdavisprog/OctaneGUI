@@ -324,7 +324,7 @@ void Control::OnSave(Json& Root) const
     Root["Expand"] = ToString(m_Expand);
     Root["Position"] = std::move(Vector2::ToJson(GetPosition()));
     Root["Size"] = std::move(Vector2::ToJson(GetSize()));
-    Root["Window"] = m_Window->GetTitle();
+    Root["Type"] = GetType();
 }
 
 bool Control::OnKeyPressed(Keyboard::Key Key)
