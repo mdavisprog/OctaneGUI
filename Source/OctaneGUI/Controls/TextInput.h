@@ -111,6 +111,9 @@ public:
 
     TextInput& SetNumbersOnly(bool NumbersOnly);
     bool NumbersOnly() const;
+    
+    TextInput& SetMaxCharacters(uint32_t MaxCharacters);
+    uint32_t MaxCharacters() const;
 
     template <class T>
     TextInput& CreateHighlighter()

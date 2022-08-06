@@ -418,6 +418,17 @@ bool TextInput::NumbersOnly() const
     return m_NumbersOnly;
 }
 
+TextInput& TextInput::SetMaxCharacters(uint32_t MaxCharacters)
+{
+    m_MaxCharacters = MaxCharacters;
+    return *this;
+}
+
+uint32_t TextInput::MaxCharacters() const
+{
+    return m_MaxCharacters;
+}
+
 void TextInput::Focus()
 {
     if (!m_Position.IsValid())
@@ -892,11 +903,6 @@ void TextInput::AddText(const std::u32string& Contents)
         return;
     }
     
-    if (m_Text->Length() + Contents.length() > m_MaxCharacters)
-    {
-        return;
-    }
-
     if (m_NumbersOnly)
     {
         if (Contents.find_first_not_of(U"0123456789.-") != std::string::npos)
@@ -947,6 +953,18 @@ void TextInput::AddText(const std::u32string& Contents)
     if (!m_Multiline)
     {
         Remove(Stripped, '\n');
+    }
+    
+    if ((m_MaxCharacters > 0) && (m_Text->Length() + Stripped.length() > m_MaxCharacters))
+    {
+        // Field already at capacity
+        if (m_Text->Length() >= m_MaxCharacters)
+        {
+            return;
+        }
+        
+        // Resize to what we have remaining
+        Stripped.resize(m_MaxCharacters - m_Text->Length());
     }
 
     const uint32_t Length = (uint32_t)Stripped.length();
