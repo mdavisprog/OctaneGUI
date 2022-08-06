@@ -48,8 +48,8 @@ SOFTWARE.
 #include <vector>
 
 #if SDL2
-    #include "SDL.h"
     #include "../../Windowing/SDL2/Interface.h"
+    #include "SDL.h"
 #endif
 
 namespace Rendering

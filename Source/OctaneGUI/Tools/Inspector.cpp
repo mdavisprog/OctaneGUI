@@ -224,8 +224,8 @@ void Inspector::Inspect(Window* Target)
 {
     if (m_Window.expired())
     {
-        const char* Stream = 
-R"({"Title": "Inspecting", "Width": 600, "Height": 300, "Body": {"Controls": [
+        const char* Stream =
+            R"({"Title": "Inspecting", "Width": 600, "Height": 300, "Body": {"Controls": [
     {"Type": "Panel", "Expand": "Both"},
     {"Type": "VerticalContainer", "Expand": "Both", "Controls": [
         {"Type": "CheckBox", "ID": "Picker", "Text": {"Text": "Picker"}},
@@ -507,7 +507,7 @@ void Inspector::OnToggled(Tree& Ref)
     {
         const std::shared_ptr<Tree> Child = Ref.AddChild(Item->GetType());
         Child->SetMetaData(Item.get());
-        
+
         const std::shared_ptr<Container> ItemContainer = std::dynamic_pointer_cast<Container>(Item);
         if (ItemContainer && ItemContainer->NumControls() > 0)
         {
