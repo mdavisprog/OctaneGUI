@@ -27,12 +27,14 @@ SOFTWARE.
 #pragma once
 
 #include <memory>
+#include <vector>
 
 namespace OctaneGUI
 {
 
 class Container;
 class Control;
+class ScrollableViewControl;
 class Splitter;
 class Tree;
 struct Vector2;
@@ -56,16 +58,20 @@ private:
 
     Inspector();
     void Populate();
-    bool ExpandTree(const std::shared_ptr<Tree>& Root, Control const* Target);
     void ParseProperty(Control const* Target);
     void Close();
 
     void SetEnabled(const std::shared_ptr<InspectorProxy>& Proxy, bool Enabled, const Vector2& Size);
+    void ExpandTree(const std::shared_ptr<Tree>& Root, std::vector<Control*>& Stack);
     void OnSelected(const std::weak_ptr<Control>& Selected);
+
+    void OnToggled(Tree& Ref);
+    void OnSelected(Tree& Ref);
+    void OnHovered(Tree& Ref);
 
     // TODO: Find a way to use a weak_ptr instead.
     Window* m_Target { nullptr };
-    std::weak_ptr<Splitter> m_Root {};
+    std::weak_ptr<ScrollableViewControl> m_TreeView {};
     std::weak_ptr<Tree> m_Tree {};
     std::weak_ptr<Properties> m_Properties {};
     std::weak_ptr<Window> m_Window {};

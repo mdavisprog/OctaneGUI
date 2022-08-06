@@ -438,7 +438,7 @@ void ProfileViewer::SetFrame(size_t Index)
 {
     std::shared_ptr<Tree> Tree_ = m_Tree.lock();
     bool Expanded = Tree_->IsExpanded();
-    Tree_->Clear();
+    Tree_->ClearChildren();
 
     const std::vector<Profiler::Frame>& Frames = Profiler::Get().Frames();
     if (Index < Frames.size())

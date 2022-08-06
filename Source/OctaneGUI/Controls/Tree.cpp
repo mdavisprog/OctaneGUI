@@ -280,8 +280,12 @@ std::shared_ptr<Tree> Tree::AddChild(const char* Text)
             ->SetSpacing({ 0.0f, 0.0f })
             ->SetPosition({ TOGGLE_SIZE + 4.0f, m_Item->GetSize().Y });
 
-        m_Item->SetToggle(false);
-        RemoveControl(m_List);
+        m_Item->SetToggle(m_Expand);
+
+        if (!m_Expand)
+        {
+            RemoveControl(m_List);
+        }
     }
 
     std::shared_ptr<Tree> Result = m_List->AddControl<Tree>();
@@ -444,12 +448,12 @@ Tree& Tree::SetOnToggled(OnTreeSignature&& Fn)
     return *this;
 }
 
-void Tree::Clear()
+Tree& Tree::ClearChildren()
 {
-    SetExpanded(false);
     RemoveControl(m_List);
     m_List = nullptr;
     Invalidate();
+    return *this;
 }
 
 bool Tree::HasChildren() const

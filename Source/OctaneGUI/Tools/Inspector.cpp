@@ -224,21 +224,24 @@ void Inspector::Inspect(Window* Target)
 {
     if (m_Window.expired())
     {
-        std::stringstream Stream;
-        Stream << "{\"Title\": \"Inspecting "
-               << Target->GetTitle()
-               << "\","
-               << "\"Width\": 600,"
-               << "\"Height\": 300,"
-               << "\"Body\": {\"Controls\": ["
-               << "{\"Type\": \"Panel\", \"Expand\": \"Both\"},"
-               << "{\"Type\": \"VerticalContainer\", \"Expand\": \"Both\", \"Controls\": ["
-               << "{\"ID\": \"Picker\", \"Type\": \"CheckBox\", \"Text\": {\"Text\": \"Picker\"}},"
-               << "{\"ID\": \"Root\", \"Type\": \"Splitter\", \"Orientation\": \"Vertical\", \"Expand\": \"Both\"}"
-               << "]}]}}";
+        const char* Stream = 
+R"({"Title": "Inspecting", "Width": 600, "Height": 300, "Body": {"Controls": [
+    {"Type": "Panel", "Expand": "Both"},
+    {"Type": "VerticalContainer", "Expand": "Both", "Controls": [
+        {"Type": "CheckBox", "ID": "Picker", "Text": {"Text": "Picker"}},
+        {"Type": "Splitter", "Orientation": "Vertical", "Expand": "Both",
+            "First": {"Controls": [
+                {"Type": "ScrollableViewControl", "ID": "TreeView", "Expand": "Both"}
+            ]},
+            "Second": {"Controls": [
+                {"Type": "ScrollableViewControl", "ID": "PropertiesView", "Expand": "Both"}
+            ]}
+        }
+    ]}
+]}})";
 
         ControlList List;
-        std::shared_ptr<Window> NewWindow = Target->App().NewWindow("Inspector", Stream.str().c_str(), List);
+        std::shared_ptr<Window> NewWindow = Target->App().NewWindow("Inspector", Stream, List);
         NewWindow
             ->SetOnClose([this](Window& InWindow) -> void
                 {
@@ -250,7 +253,7 @@ void Inspector::Inspect(Window* Target)
                     // next layout update.
                     if (!m_PendingFocus.expired())
                     {
-                        const std::shared_ptr<ScrollableViewControl>& TreeView = std::dynamic_pointer_cast<ScrollableViewControl>(m_Root.lock()->First()->Get(0));
+                        const std::shared_ptr<ScrollableViewControl> TreeView = m_TreeView.lock();
                         TreeView->Scrollable()->ScrollIntoView(m_PendingFocus.lock());
                         m_PendingFocus.reset();
                     }
@@ -267,7 +270,26 @@ void Inspector::Inspect(Window* Target)
                     SetEnabled(m_BodyProxy, Enabled, m_Target->GetContainer()->GetSize());
                 });
 
-        m_Root = List.To<Splitter>("Root");
+        const std::shared_ptr<ScrollableViewControl> TreeView = List.To<ScrollableViewControl>("TreeView");
+        const std::shared_ptr<Tree> TreeRoot = TreeView->Scrollable()->AddControl<Tree>();
+        TreeRoot
+            ->SetOnToggled([this, TreeView](Tree& Ref) -> void
+                {
+                    OnToggled(Ref);
+                })
+            .SetOnSelected([this](Tree& Ref) -> void
+                {
+                    OnSelected(Ref);
+                })
+            .SetOnHovered([this](Tree& Ref) -> void
+                {
+                    OnHovered(Ref);
+                });
+        m_Tree = TreeRoot;
+        m_TreeView = TreeView;
+
+        const std::shared_ptr<ScrollableViewControl> PropertiesView = List.To<ScrollableViewControl>("PropertiesView");
+        m_Properties = PropertiesView->Scrollable()->AddControl<Properties>();
 
         m_MenuBarProxy = std::make_shared<InspectorProxy>(NewWindow.get());
         m_MenuBarProxy->SetOnSelected([this](const std::weak_ptr<Control>& Selected) -> void
@@ -281,10 +303,8 @@ void Inspector::Inspect(Window* Target)
                 OnSelected(Selected);
             });
     }
-    else
-    {
-        m_Window.lock()->SetTitle((std::string("Inspecting ") + Target->GetTitle()).c_str());
-    }
+
+    m_Window.lock()->SetTitle((std::string("Inspecting ") + Target->GetTitle()).c_str());
 
     if (m_Window.lock()->IsVisible())
     {
@@ -331,123 +351,19 @@ Inspector::Inspector()
 {
 }
 
-static void PopulateTree(const std::shared_ptr<Tree>& Root, const std::shared_ptr<Container>& Target)
-{
-    Root->SetText(Target->GetType());
-    Root->SetMetaData(Target.get());
-
-    for (const std::shared_ptr<Control>& Item : Target->Controls())
-    {
-        const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
-        if (ItemContainer)
-        {
-            std::shared_ptr<Tree> Child = Root->AddChild(ItemContainer->GetType());
-            PopulateTree(Child, ItemContainer);
-        }
-        else
-        {
-            Root->AddChild(Item->GetType())->SetMetaData(Item.get());
-        }
-    }
-}
-
 void Inspector::Populate()
 {
-    std::shared_ptr<Splitter> Split = m_Root.lock();
-    Split->First()->ClearControls();
-    Split->Second()->ClearControls();
+    const std::shared_ptr<Tree> TreeView = m_Tree.lock();
 
-    std::shared_ptr<ScrollableViewControl> TreeView = Split->First()->AddControl<ScrollableViewControl>();
-    std::shared_ptr<ScrollableViewControl> PropertiesView = Split->Second()->AddControl<ScrollableViewControl>();
+    const std::shared_ptr<Container> RootContainer = m_Target->GetRootContainer();
+    TreeView->SetText(m_Target->GetRootContainer()->GetType());
+    TreeView->SetMetaData(RootContainer.get());
+    TreeView->ClearChildren();
 
-    TreeView->SetExpand(Expand::Both);
-    PropertiesView->SetExpand(Expand::Both);
-
-    std::shared_ptr<Properties> Props = PropertiesView->Scrollable()->AddControl<Properties>();
-    m_Properties = Props;
-
-    std::shared_ptr<Tree> Root = TreeView->Scrollable()->AddControl<Tree>();
-    Root
-        ->SetOnSelected([this](Tree& Item) -> void
-            {
-                if (!m_BodyProxy->Enabled())
-                {
-                    return;
-                }
-
-                Control* MetaData = static_cast<Control*>(Item.MetaData());
-                if (MetaData != nullptr)
-                {
-                    std::shared_ptr<Control> Ref = MetaData->Share();
-                    if (m_Target->GetMenuBar()->HasControlRecurse(Ref))
-                    {
-                        m_MenuBarProxy->SetSelected(Ref);
-                        m_BodyProxy->Clear();
-                    }
-                    else
-                    {
-                        m_BodyProxy->SetSelected(Ref);
-                        m_MenuBarProxy->Clear();
-                    }
-
-                    ParseProperty(MetaData);
-                }
-            })
-        .SetOnHovered([this](Tree& Item) -> void
-            {
-                if (!m_BodyProxy->Enabled())
-                {
-                    return;
-                }
-
-                Control* MetaData = static_cast<Control*>(Item.MetaData());
-                if (MetaData != nullptr)
-                {
-                    std::shared_ptr<Control> Ref = MetaData->Share();
-                    if (m_Target->GetMenuBar()->HasControlRecurse(Ref))
-                    {
-                        m_MenuBarProxy->SetHovered(Ref);
-                        m_BodyProxy->Clear();
-                    }
-                    else
-                    {
-                        m_BodyProxy->SetHovered(Ref);
-                        m_MenuBarProxy->Clear();
-                    }
-                }
-            });
-    PopulateTree(Root, m_Target->GetRootContainer());
-    m_Tree = Root;
-}
-
-bool Inspector::ExpandTree(const std::shared_ptr<Tree>& Root, Control const* Target)
-{
-    if (Target == nullptr || !Root)
+    if (RootContainer->NumControls() > 0)
     {
-        return false;
+        TreeView->AddChild("Pending");
     }
-
-    if (Root->MetaData() == Target)
-    {
-        Root->SetSelected(true);
-        Root->SetExpanded(true);
-        m_Root.lock()->InvalidateLayout();
-        m_PendingFocus = Root;
-        return true;
-    }
-    else
-    {
-        for (const std::shared_ptr<Tree>& Item : Root->Children())
-        {
-            if (ExpandTree(Item, Target))
-            {
-                Root->SetExpanded(true);
-                return true;
-            }
-        }
-    }
-
-    return false;
 }
 
 void Inspector::ParseProperty(Control const* Target)
@@ -459,6 +375,7 @@ void Inspector::ParseProperty(Control const* Target)
 
     Json Root(Json::Type::Object);
     Target->OnSave(Root);
+    Root.Erase("Controls");
     m_Properties.lock()->Parse(Root);
 }
 
@@ -499,6 +416,45 @@ void Inspector::SetEnabled(const std::shared_ptr<InspectorProxy>& Proxy, bool En
     m_Target->Update();
 }
 
+void Inspector::ExpandTree(const std::shared_ptr<Tree>& Root, std::vector<Control*>& Stack)
+{
+    Control const* MD = static_cast<Control const*>(Root->MetaData());
+    Container const* MDContainer = dynamic_cast<Container const*>(MD);
+
+    if (MDContainer == nullptr)
+    {
+        return;
+    }
+
+    for (const std::shared_ptr<Control>& Item : MDContainer->Controls())
+    {
+        if (Item.get() == Stack.back())
+        {
+            Root->SetExpanded(true);
+
+            for (const std::shared_ptr<Tree>& Child : Root->Children())
+            {
+                if (Child->MetaData() == Stack.back())
+                {
+                    Stack.pop_back();
+
+                    if (Stack.empty())
+                    {
+                        Child->SetSelected(true);
+                        m_PendingFocus = Child;
+                    }
+                    else
+                    {
+                        ExpandTree(Child, Stack);
+                    }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+}
+
 void Inspector::OnSelected(const std::weak_ptr<Control>& Selected)
 {
     if (Selected.expired() || m_Tree.expired())
@@ -510,7 +466,104 @@ void Inspector::OnSelected(const std::weak_ptr<Control>& Selected)
     ParseProperty(Selected_.get());
     std::shared_ptr<Tree> Tree_ = m_Tree.lock();
     Tree_->SetExpandedAll(false);
-    ExpandTree(m_Tree.lock(), Selected_.get());
+
+    std::vector<Control*> Stack;
+    Control* Anchor = Selected_.get();
+    while (Anchor != Tree_->MetaData())
+    {
+        Stack.push_back(Anchor);
+        Anchor = Anchor->GetParent();
+    }
+
+    ExpandTree(Tree_, Stack);
+}
+
+void Inspector::OnToggled(Tree& Ref)
+{
+    if (Ref.HasChildren())
+    {
+        const std::shared_ptr<Tree> First = Ref.Children()[0];
+
+        // Children that are added that may have their own child controls will initialize
+        // with a single child with no metadata. When that child is expanded, then the
+        // tree will be populated with its child controls on-demand.
+        if (First->MetaData() != nullptr)
+        {
+            return;
+        }
+    }
+
+    Control const* MetaData = static_cast<Control const*>(Ref.MetaData());
+    Container const* MetaDataContainer = dynamic_cast<Container const*>(MetaData);
+
+    if (MetaDataContainer == nullptr)
+    {
+        return;
+    }
+
+    Ref.ClearChildren();
+
+    for (const std::shared_ptr<Control>& Item : MetaDataContainer->Controls())
+    {
+        const std::shared_ptr<Tree> Child = Ref.AddChild(Item->GetType());
+        Child->SetMetaData(Item.get());
+        
+        const std::shared_ptr<Container> ItemContainer = std::dynamic_pointer_cast<Container>(Item);
+        if (ItemContainer && ItemContainer->NumControls() > 0)
+        {
+            Child->AddChild("Pending");
+        }
+    }
+}
+
+void Inspector::OnSelected(Tree& Ref)
+{
+    if (!m_BodyProxy->Enabled())
+    {
+        return;
+    }
+
+    Control* MetaData = static_cast<Control*>(Ref.MetaData());
+    if (MetaData != nullptr)
+    {
+        std::shared_ptr<Control> MD = MetaData->Share();
+        if (m_Target->GetMenuBar()->HasControlRecurse(MD))
+        {
+            m_MenuBarProxy->SetSelected(MD);
+            m_BodyProxy->Clear();
+        }
+        else
+        {
+            m_BodyProxy->SetSelected(MD);
+            m_MenuBarProxy->Clear();
+        }
+
+        ParseProperty(MetaData);
+    }
+}
+
+void Inspector::OnHovered(Tree& Ref)
+{
+    if (!m_BodyProxy->Enabled())
+    {
+        return;
+    }
+
+    Control* MetaData = static_cast<Control*>(Ref.MetaData());
+    if (MetaData != nullptr)
+    {
+        std::shared_ptr<Control> MD = MetaData->Share();
+        if (m_Target->GetMenuBar()->HasControlRecurse(MD))
+        {
+            m_MenuBarProxy->SetHovered(MD);
+            m_BodyProxy->Clear();
+        }
+        else
+        {
+            m_BodyProxy->SetHovered(MD);
+            m_MenuBarProxy->Clear();
+        }
+    }
 }
 
 }
