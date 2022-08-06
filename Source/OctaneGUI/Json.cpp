@@ -432,60 +432,31 @@ bool Json::Contains(const std::string& Key) const
     return m_Data.Object->find(Key) != m_Data.Object->end();
 }
 
+bool Json::Erase(const std::string& Key)
+{
+    if (!IsObject())
+    {
+        return false;
+    }
+
+    if (!Contains(Key))
+    {
+        return false;
+    }
+
+    m_Data.Object->erase(Key);
+
+    return true;
+}
+
 std::string Json::ToString() const
 {
-    std::string Result;
+    return ToString(false, 0);
+}
 
-    if (IsArray())
-    {
-        Result += "[";
-        for (const Json& Item : *m_Data.Array)
-        {
-            Result += Item.ToString();
-            Result += ", ";
-        }
-
-        if (m_Data.Array->size() > 0)
-        {
-            Result.erase(Result.length() - 2);
-        }
-
-        Result += "]";
-    }
-    else if (IsObject())
-    {
-        Result += "{";
-        for (const std::pair<std::string, Json>& Item : *m_Data.Object)
-        {
-            Result += Item.first;
-            Result += ": ";
-            Result += Item.second.ToString();
-            Result += ", ";
-        }
-
-        if (m_Data.Object->size() > 0)
-        {
-            Result.erase(Result.length() - 2);
-        }
-
-        Result += "}";
-    }
-    else if (IsBoolean())
-    {
-        Result = Boolean() ? "true" : "false";
-    }
-    else if (IsNumber())
-    {
-        Result = std::to_string(Number());
-    }
-    else
-    {
-        Result += "\"";
-        Result += String();
-        Result += "\"";
-    }
-
-    return Result;
+std::string Json::ToStringPretty() const
+{
+    return ToString(true, 0);
 }
 
 void Json::ParseKey(Lexer& InLexer, std::string& Key, bool& IsError)
@@ -899,6 +870,98 @@ void Json::Move(Json&& Other)
     case Type::Null:
     default: break;
     }
+}
+
+std::string Json::ToString(bool Pretty, int Depth) const
+{
+    std::string Result;
+
+    if (IsArray())
+    {
+        Result += "[";
+        if (Pretty)
+        {
+            Result += "\n";
+            Depth++;
+        }
+        for (int I = 0; I < Count(); I++)
+        {
+            const Json& Item = m_Data.Array->at((size_t)I);
+            Result += std::string(Depth * 4, ' ') + Item.ToString(Pretty, Depth);
+            if (I < Count() - 1)
+            {
+                Result += ",";
+            }
+
+            if (Pretty)
+            {
+                Result += "\n";
+            }
+            else
+            {
+                Result += " ";
+            }
+        }
+
+        if (Pretty)
+        {
+            Depth--;
+        }
+
+        Result += std::string(Depth * 4, ' ') + "]";
+    }
+    else if (IsObject())
+    {
+        Result += "{";
+        if (Pretty)
+        {
+            Result += "\n";
+            Depth++;
+        }
+        for (std::map<std::string, Json>::const_iterator It = m_Data.Object->begin(); It != m_Data.Object->end(); ++It)
+        {
+            Result += std::string(Depth * 4, ' ') + "\"" + It->first + "\"";
+            Result += ": ";
+            Result += It->second.ToString(Pretty, Depth);
+
+            if (It != m_Data.Object->end())
+            {
+                Result += ",";
+            }
+
+            if (Pretty)
+            {
+                Result += "\n";
+            }
+            else
+            {
+                Result += " ";
+            }
+        }
+
+        if (Pretty)
+        {
+            Depth--;
+        }
+
+        Result += std::string(Depth * 4, ' ') + "}";
+    }
+    else if (IsBoolean())
+    {
+        Result = Boolean() ? "true" : "false";
+    }
+    else if (IsNumber())
+    {
+        Result = std::to_string(Number());
+    }
+    else
+    {
+        Result += "\"";
+        Result += String();
+        Result += "\"";
+    }
+
+    return Result;
 }
 
 }

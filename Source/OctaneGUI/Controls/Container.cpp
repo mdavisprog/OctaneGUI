@@ -433,6 +433,26 @@ void Container::OnLoad(const Json& Root)
     }
 }
 
+void Container::OnSave(Json& Root) const
+{
+    Control::OnSave(Root);
+
+    if (NumControls() == 0)
+    {
+        return;
+    }
+
+    Json Controls { Json::Type::Array };
+    for (const std::shared_ptr<Control>& Item : m_Controls)
+    {
+        Json ItemJson { Json::Type::Object };
+        Item->OnSave(ItemJson);
+        Controls.Push(std::move(ItemJson));
+    }
+
+    Root["Controls"] = Controls;
+}
+
 void Container::OnThemeLoaded()
 {
     for (const std::shared_ptr<Control>& Item : m_Controls)

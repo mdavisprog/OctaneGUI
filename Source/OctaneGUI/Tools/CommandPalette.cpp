@@ -25,10 +25,12 @@ SOFTWARE.
 */
 
 #include "CommandPalette.h"
+#include "../Application.h"
 #include "../Controls/MarginContainer.h"
 #include "../Controls/Panel.h"
 #include "../Controls/TextInput.h"
 #include "../Controls/VerticalContainer.h"
+#include "../Json.h"
 #include "../String.h"
 #include "../Window.h"
 #include "Inspector.h"
@@ -173,6 +175,36 @@ bool CommandPalette::Process(const std::u32string& Command, const std::vector<st
     else if (Lower == U"textureviewer" || Lower == U"tv")
     {
         TextureViewer::Get().Show(GetWindow()->App());
+    }
+    else if (Lower == U"dumpjson")
+    {
+        const std::shared_ptr<Container> Root = GetWindow()->GetRootContainer();
+
+        Json Value { Json::Type::Object };
+        Root->OnSave(Value);
+
+        bool Pretty = false;
+        for (const std::u32string& Arg : Arguments)
+        {
+            if (String::ToLower(Arg) == U"pretty")
+            {
+                Pretty = true;
+            }
+        }
+
+        std::string JsonString;
+        if (Pretty)
+        {
+            JsonString = Value.ToStringPretty();
+        }
+        else
+        {
+            JsonString = Value.ToString();
+        }
+
+        printf("%s\n", JsonString.c_str());
+
+        GetWindow()->App().SetClipboardContents(String::ToUTF32(JsonString));
     }
 
     return false;

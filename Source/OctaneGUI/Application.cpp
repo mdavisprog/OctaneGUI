@@ -309,6 +309,14 @@ bool Application::IsKeyPressed(Keyboard::Key Key) const
     return std::find(m_PressedKeys.begin(), m_PressedKeys.end(), Key) != m_PressedKeys.end();
 }
 
+void Application::SetClipboardContents(const std::u32string& Contents)
+{
+    if (m_OnSetClipboardContents)
+    {
+        m_OnSetClipboardContents(Contents);
+    }
+}
+
 std::u32string Application::ClipboardContents() const
 {
     if (m_OnGetClipboardContents)
@@ -367,6 +375,12 @@ Application& Application::SetOnLoadTexture(OnLoadTextureSignature&& Fn)
 Application& Application::SetOnExit(OnEmptySignature&& Fn)
 {
     m_OnExit = std::move(Fn);
+    return *this;
+}
+
+Application& Application::SetOnSetClipboardContents(OnSetClipboardContentsSignature&& Fn)
+{
+    m_OnSetClipboardContents = std::move(Fn);
     return *this;
 }
 

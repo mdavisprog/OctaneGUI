@@ -334,6 +334,7 @@ void Window::OnMouseWheel(const Vector2& Delta)
 
 void Window::OnMouseEnter()
 {
+    m_Application->SetMouseCursor(this, Mouse::Cursor::Arrow);
 }
 
 void Window::OnMouseLeave()

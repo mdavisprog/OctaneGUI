@@ -247,6 +247,18 @@ void Exit()
     g_Windows.clear();
 }
 
+void SetClipboardContents(const std::u32string& Contents)
+{
+    sf::String String;
+
+    for (const char32_t Ch : Contents)
+    {
+        String += (sf::Uint32)Ch;
+    }
+
+    sf::Clipboard::setString(String);
+}
+
 std::u32string GetClipboardContents()
 {
     std::u32string Result;

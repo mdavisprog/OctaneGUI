@@ -62,7 +62,7 @@ public:
     Tree& SetOnHovered(OnTreeSignature&& Fn);
     Tree& SetOnToggled(OnTreeSignature&& Fn);
 
-    void Clear();
+    Tree& ClearChildren();
     bool HasChildren() const;
     std::vector<std::shared_ptr<Tree>> Children() const;
     const Tree& ForEachChild(OnTreeSignature Callback) const;
