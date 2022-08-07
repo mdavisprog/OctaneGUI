@@ -90,6 +90,8 @@ public:
     const std::u32string_view Line() const;
     const std::u32string_view VisibleText() const;
 
+    TextInput& SelectAll();
+
     char32_t Left() const;
     char32_t Right() const;
 

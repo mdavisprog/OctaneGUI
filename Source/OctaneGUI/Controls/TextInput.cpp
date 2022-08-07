@@ -317,6 +317,13 @@ const std::u32string_view TextInput::VisibleText() const
     return std::u32string_view(&m_Text->GetString()[Start], End - Start);
 }
 
+TextInput& TextInput::SelectAll()
+{
+    m_Anchor = { 0, 0, 0 };
+    SetPosition(0, LineEndIndex(m_Text->Length() - 1), m_Text->Length());
+    return *this;
+}
+
 char32_t TextInput::Left() const
 {
     const std::u32string& Contents = m_Text->GetString();
