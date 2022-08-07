@@ -28,6 +28,7 @@ SOFTWARE.
 #include "../Application.h"
 #include "../Controls/MarginContainer.h"
 #include "../Controls/Panel.h"
+#include "../Controls/Text.h"
 #include "../Controls/TextInput.h"
 #include "../Controls/VerticalContainer.h"
 #include "../Json.h"
@@ -72,7 +73,17 @@ CommandPalette::CommandPalette(Window* InWindow)
         ->SetMargins({ 4.0f, 4.0f, 4.0f, 4.0f })
         .SetExpand(Expand::Both);
 
-    m_Input = Margins->AddControl<TextInput>();
+    const std::shared_ptr<VerticalContainer> Items = Margins->AddControl<VerticalContainer>();
+    Items
+        ->SetSpacing({ })
+        ->SetExpand(Expand::Width);
+
+    const std::shared_ptr<Text> Label = Items->AddControl<Text>();
+    Label
+        ->SetText(U"Command Palette")
+        .SetFontSize(14);
+
+    m_Input = Items->AddControl<TextInput>();
     m_Input->SetExpand(Expand::Width);
 }
 
