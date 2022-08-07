@@ -172,7 +172,7 @@ bool TextInput::TextPosition::operator!=(const TextInput::TextPosition& Other) c
 
 bool TextInput::TextPosition::operator<(const TextInput::TextPosition& Other) const
 {
-    return m_Line < Other.m_Line || (m_Line == Other.m_Line && m_Column < Other.m_Column);
+    return m_Index < Other.m_Index;
 }
 
 void TextInput::TextPosition::Invalidate()
