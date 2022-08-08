@@ -1,10 +1,7 @@
 {
     "Theme": "./Themes/Dark.json",
     "Windows": {
-        "Main": {
-            "Title": "Overview",
-            "Width": 800,
-            "Height": 400,
+        "Main": { "Title": "Overview", "Width": 800, "Height": 400,
             "MenuBar": {"Items": [
                 {"ID": "File", "Text": "File", "Items": [
                     {"ID": "Quit", "Text": "Quit"}
