@@ -94,6 +94,8 @@ void CommandPalette::Show()
     const Vector2 Size = { WindowSize.X * 0.6f, ContentSize.Y };
     SetSize(Size);
     SetPosition({ WindowSize.X * 0.5f - Size.X * 0.5f, 30.0f });
+    // The proper index will be set when the up key is pressed for the first time after a 'Show'.
+    m_HistoryIndex = m_History.size();
 }
 
 std::shared_ptr<Control> CommandPalette::Input() const
@@ -105,7 +107,8 @@ bool CommandPalette::OnKeyPressed(Keyboard::Key Key)
 {
     if (Key == Keyboard::Key::Enter)
     {
-        std::vector<std::u32string> Tokens = Tokenize(m_Input->GetText());
+        const std::u32string Buffer = m_Input->GetText();
+        std::vector<std::u32string> Tokens = Tokenize(Buffer);
         m_Input->SetText(U"");
         GetWindow()->ClosePopup();
 
@@ -115,11 +118,47 @@ bool CommandPalette::OnKeyPressed(Keyboard::Key Key)
             Command = Tokens[0];
             Tokens.erase(Tokens.begin());
         }
-        return Process(Command, Tokens);
+
+        if (Process(Command, Tokens))
+        {
+            if (m_History.empty() || m_History.back() != Buffer)
+            {
+                m_History.push_back(Buffer);
+            }
+            return true;
+        }
     }
     else if (Key == Keyboard::Key::Escape)
     {
         GetWindow()->ClosePopup();
+        return true;
+    }
+    else if (Key == Keyboard::Key::Up)
+    {
+        if (m_HistoryIndex > 0)
+        {
+            m_HistoryIndex--;
+        }
+
+        m_Input
+            ->SetText(m_History[m_HistoryIndex].c_str())
+            .SelectAll();
+        return true;
+    }
+    else if (Key == Keyboard::Key::Down)
+    {
+        m_HistoryIndex = std::min<size_t>(m_HistoryIndex + 1, m_History.size());
+        if (m_HistoryIndex < m_History.size())
+        {
+            m_Input
+                ->SetText(m_History[m_HistoryIndex].c_str())
+                .SelectAll();
+        }
+        else
+        {
+            m_Input->SetText(U"");
+        }
+
         return true;
     }
 
@@ -153,11 +192,12 @@ std::vector<std::u32string> CommandPalette::Tokenize(const std::u32string& Value
 
 bool CommandPalette::Process(const std::u32string& Command, const std::vector<std::u32string>& Arguments)
 {
+    bool Result = true;
+
     std::u32string Lower = String::ToLower(Command);
     if (Lower == U"inspector")
     {
         Inspector::Get().Inspect(GetWindow());
-        return true;
     }
     else if (Lower == U"profile")
     {
@@ -217,8 +257,12 @@ bool CommandPalette::Process(const std::u32string& Command, const std::vector<st
 
         GetWindow()->App().SetClipboardContents(String::ToUTF32(JsonString));
     }
+    else
+    {
+        Result = false;
+    }
 
-    return false;
+    return Result;
 }
 
 }

@@ -62,6 +62,8 @@ private:
 
     std::shared_ptr<VerticalContainer> m_Container { nullptr };
     std::shared_ptr<TextInput> m_Input { nullptr };
+    std::vector<std::u32string> m_History {};
+    size_t m_HistoryIndex { 0 };
 };
 
 }
