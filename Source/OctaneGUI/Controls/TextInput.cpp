@@ -125,11 +125,6 @@ public:
         m_Input->MouseReleased(Position, Button);
     }
 
-    virtual void OnMouseEnter() override
-    {
-        GetWindow()->SetMouseCursor(Mouse::Cursor::IBeam);
-    }
-
     virtual void OnMouseLeave() override
     {
         GetWindow()->SetMouseCursor(Mouse::Cursor::Arrow);
@@ -852,6 +847,13 @@ void TextInput::MouseMove(const Vector2& Position)
         m_Position = GetPosition(Position);
         Invalidate();
         UpdateSpans();
+    }
+
+    if (Contains(Position))
+    {
+        const bool IsInScrollBar = Scrollable()->IsInScrollBar(Position);
+        const Mouse::Cursor Cursor = IsInScrollBar ? Mouse::Cursor::Arrow : Mouse::Cursor::IBeam;
+        GetWindow()->SetMouseCursor(Cursor);
     }
 }
 
