@@ -463,12 +463,23 @@ void Container::OnThemeLoaded()
 
 bool Container::IsInLayout() const
 {
-    return m_InLayout;
+    if (m_InLayout)
+    {
+        return true;
+    }
+
+    Container const* Parent = dynamic_cast<Container const*>(GetParent());
+    if (Parent != nullptr)
+    {
+        return Parent->IsInLayout();
+    }
+
+    return false;
 }
 
 void Container::HandleInvalidate(std::shared_ptr<Control> Focus, InvalidateType Type)
 {
-    if (m_InLayout && Type != InvalidateType::Paint)
+    if (IsInLayout() && Type != InvalidateType::Paint)
     {
         return;
     }
