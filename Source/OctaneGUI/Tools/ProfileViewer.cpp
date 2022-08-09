@@ -361,7 +361,7 @@ void ProfileViewer::View(Window* InWindow)
         FrameDesc
             ->SetColumns(4)
             .SetHeader(0, "Frame")
-            .SetHeader(1, "Time")
+            .SetHeader(1, "Time (ms)")
             .SetHeader(2, "Inclusive Count")
             .SetHeader(3, "Exclusive Count")
             .SetColumnSpacing(8.0f);
