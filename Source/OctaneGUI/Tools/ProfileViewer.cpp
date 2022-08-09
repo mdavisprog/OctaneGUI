@@ -294,24 +294,20 @@ void ProfileViewer::View(Window* InWindow)
 {
     if (m_Window.expired())
     {
-        std::stringstream Stream;
-        Stream << "{\"Title\": \"ProfileViewer\","
-               << "\"Width\": 800,"
-               << "\"Height\": 400,"
-               << "\"MenuBar\": {\"Items\": ["
-               << "{\"ID\": \"View\", \"Text\": \"View\", \"Items\": ["
-               << "{\"ID\": \"Elapsed\", \"Text\": \"Elapsed Time\"}, {\"ID\": \"Count\", \"Text\": \"Event Count\"}"
-               << "]}]},"
-               << "\"Body\": {\"Controls\": ["
-               << "{\"Type\": \"Panel\", \"Expand\": \"Both\"},"
-               << "{\"Type\": \"MarginContainer\", \"Margins\": [4, 4, 4, 4], \"Expand\": \"Both\", \"Controls\": ["
-               << "{\"ID\": \"Root\", \"Type\": \"VerticalContainer\", \"Expand\": \"Both\", \"Controls\": ["
-               << "]}"
-               << "]}"
-               << "]}}";
-
+        const char* Stream = R"({"Title": "ProfileViewer", "Width": 800, "Height": 400, "MenuBar": {"Items": [
+    {"ID": "View", "Text": "View", "Items": [
+        {"ID": "Elapsed", "Text": "Elapsed Time"},
+        {"ID": "Count", "Text": "Event Count"}
+    ]}]},
+    "Body": {"Controls": [
+        {"Type": "Panel", "Expand": "Both"},
+        {"Type": "MarginContainer", "Margins": [4, 4, 4, 4], "Expand": "Both", "Controls": [
+            {"ID": "Root", "Type": "VerticalContainer", "Expand": "Both"}
+        ]}
+    ]}
+})";
         ControlList List;
-        m_Window = InWindow->App().NewWindow("ProfileViewer", Stream.str().c_str(), List);
+        m_Window = InWindow->App().NewWindow("ProfileViewer", Stream, List);
 
         std::shared_ptr<MenuItem> ViewElapsed = List.To<MenuItem>("View.Elapsed");
         std::shared_ptr<MenuItem> ViewCount = List.To<MenuItem>("View.Count");
