@@ -180,6 +180,7 @@ void Profiler::Enable()
     m_Enabled = true;
     m_Clock.Reset();
     m_Frames.clear();
+    m_Groups.clear();
     printf("Profiler is enabled.\n");
 }
 
