@@ -90,6 +90,11 @@ public:
     virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override
     {
         m_Drag = false;
+
+        if (!m_Owner->m_Separator->Contains(Position))
+        {
+            GetWindow()->SetMouseCursor(Mouse::Cursor::Arrow);
+        }
     }
 
     virtual void OnMouseLeave() override
