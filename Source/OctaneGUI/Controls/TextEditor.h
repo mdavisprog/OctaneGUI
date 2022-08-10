@@ -56,7 +56,9 @@ private:
     std::u32string ModifyText(const std::u32string& Pending);
     std::u32string MatchIndent(const std::u32string& Pending) const;
     std::u32string MatchCharacter(const std::u32string& Pending, char32_t Character) const;
+    std::u32string ConvertTabs(const std::u32string& Pending) const;
     void PaintLineColors(std::shared_ptr<TextInput const>& Input, Paint& Brush) const;
+    bool InsertSpaces() const;
 
     bool m_MatchIndent { true };
     std::unordered_map<size_t, Color> m_LineColors {};

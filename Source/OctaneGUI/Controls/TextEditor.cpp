@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "TextEditor.h"
+#include "../Font.h"
 #include "../Json.h"
 #include "../Paint.h"
 #include "../String.h"
@@ -143,6 +144,11 @@ std::u32string TextEditor::ModifyText(const std::u32string& Pending)
         }
     }
 
+    if (InsertSpaces())
+    {
+        Result = ConvertTabs(Result);
+    }
+
     return Result;
 }
 
@@ -155,18 +161,35 @@ std::u32string TextEditor::MatchIndent(const std::u32string& Pending) const
 
     std::u32string Line { this->Line() };
 
+    size_t SpaceCount = 0;
     size_t TabCount = 0;
-    size_t Pos = Line.find_first_of('\t');
-    while (Pos == TabCount + 1)
+    size_t Pos = Line.find_first_not_of(U" \t\n");
+    if (Pos != std::string::npos && Pos > 0)
     {
-        TabCount++;
-        Pos = Line.find_first_of('\t', Pos + 1);
+        for (size_t I = 0; I < Pos; I++)
+        {
+            if (Line[I] == U' ')
+            {
+                SpaceCount++;
+            }
+            else if (Line[I] == U'\t')
+            {
+                TabCount++;
+            }
+        }
     }
+
+    TabCount += SpaceCount / Font::TabSize();
 
     std::u32string Result = Pending;
     if (TabCount > 0)
     {
-        Result += std::u32string(TabCount, '\t');
+        Result += std::u32string(TabCount, U'\t');
+    }
+
+    if (InsertSpaces())
+    {
+        Result = ConvertTabs(Result);
     }
 
     return Result;
@@ -187,6 +210,28 @@ std::u32string TextEditor::MatchCharacter(const std::u32string& Pending, char32_
     return Pending;
 }
 
+std::u32string TextEditor::ConvertTabs(const std::u32string& Pending) const
+{
+    std::u32string Result;
+
+    size_t Start = 0;
+    size_t Pos = Pending.find(U'\t');
+    while (Pos != std::string::npos)
+    {
+        Result += Pending.substr(Start, Pos - Start);
+        Result += std::u32string(Font::TabSize(), U' ');
+        Start = Pos + 1;
+        Pos = Pending.find(U'\t', Start);
+    }
+
+    if (Start < Pos)
+    {
+        Result += Pending.substr(Start, Pending.length() - Start);
+    }
+
+    return Result;
+}
+
 void TextEditor::PaintLineColors(std::shared_ptr<TextInput const>& Input, Paint& Brush) const
 {
     for (const std::pair<size_t, Color>& Line : m_LineColors)
@@ -197,6 +242,11 @@ void TextEditor::PaintLineColors(std::shared_ptr<TextInput const>& Input, Paint&
         Bounds.Max.Y = Bounds.Min.Y + LineHeight();
         Brush.Rectangle(Bounds, Line.second);
     }
+}
+
+bool TextEditor::InsertSpaces() const
+{
+    return GetProperty(ThemeProperties::TextEditor_InsertSpaces).Bool();
 }
 
 }
