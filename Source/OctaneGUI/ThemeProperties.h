@@ -91,6 +91,7 @@ public:
         ScrollBar_Buttons,
         Tree_Classic_Icons,
         Tree_Highlight_Row,
+        TextEditor_InsertSpaces,
 
         // Strings
         FontPath,

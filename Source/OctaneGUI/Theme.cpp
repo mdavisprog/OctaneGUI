@@ -165,6 +165,7 @@ void Theme::Load(const Json& Root)
     Set(ThemeProperties::ScrollBar_Buttons, Root["ScrollBar_Buttons"]);
     Set(ThemeProperties::Tree_Classic_Icons, Root["Tree_Classic_Icons"]);
     Set(ThemeProperties::Tree_Highlight_Row, Root["Tree_Highlight_Row"]);
+    Set(ThemeProperties::TextEditor_InsertSpaces, Root["TextEditor_InsertSpaces"]);
 
     Set(ThemeProperties::FontPath, Root["FontPath"]);
 
@@ -233,6 +234,7 @@ void Theme::InitializeDefault()
     m_Properties[ThemeProperties::ScrollBar_Buttons] = false;
     m_Properties[ThemeProperties::Tree_Classic_Icons] = false;
     m_Properties[ThemeProperties::Tree_Highlight_Row] = true;
+    m_Properties[ThemeProperties::TextEditor_InsertSpaces] = true;
 
     m_Properties[ThemeProperties::FontPath] = "";
 }

@@ -48,6 +48,7 @@
     "ScrollBar_Buttons": true,
     "Tree_Classic_Icons": true,
     "Tree_Highlight_Row": false,
+    "TextEditor_InsertSpaces": true,
 
     "FontPath": "Roboto-Regular.ttf"
 }
