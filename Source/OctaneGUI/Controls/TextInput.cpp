@@ -896,8 +896,7 @@ void TextInput::AddText(uint32_t Code)
         return;
     }
 
-    std::u32string Value;
-    Value += Code;
+    std::u32string Value{ Code };
     AddText(Value);
 }
 
