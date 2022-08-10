@@ -59,6 +59,16 @@ std::shared_ptr<Font> Font::Create(const char* Path, float Size, const std::vect
     return Result;
 }
 
+void Font::SetTabSize(int TabSize)
+{
+    s_TabSize = TabSize;
+}
+
+int Font::TabSize()
+{
+    return s_TabSize;
+}
+
 Font::Font()
 {
 }
@@ -244,8 +254,10 @@ bool Font::Draw(uint32_t Char, Vector2& Position, Rect& Vertices, Rect& TexCoord
 
     if (IsTab)
     {
-        Vertices.Max += DiffOffset * Vector2(3.0, 0.0);
-        Position.X += Item.Advance.X * 3.0f;
+        // Need to subtract one as a space offset has already been added above.
+        const float TabSize = (float)(s_TabSize - 1);
+        Vertices.Max += DiffOffset * Vector2(TabSize, 0.0);
+        Position.X += Item.Advance.X * TabSize;
     }
 
     return true;
@@ -407,5 +419,7 @@ const Font::Glyph& Font::GetGlyph(uint32_t CodePoint) const
 
     return m_Glyphs.at(CodePoint);
 }
+
+int Font::s_TabSize { 4 };
 
 }

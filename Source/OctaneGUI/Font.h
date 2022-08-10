@@ -69,6 +69,8 @@ public:
     };
 
     static std::shared_ptr<Font> Create(const char* Path, float Size, const std::vector<Range>& Ranges = { BasicLatin, Latin1Supplement });
+    static void SetTabSize(int TabSize);
+    static int TabSize();
 
     Font();
     ~Font();
@@ -93,6 +95,8 @@ private:
     typedef std::unordered_map<unsigned int, Glyph> GlyphMap;
 
     const Glyph& GetGlyph(uint32_t CodePoint) const;
+
+    static int s_TabSize;
 
     GlyphMap m_Glyphs;
     float m_Size { 0.0f };
