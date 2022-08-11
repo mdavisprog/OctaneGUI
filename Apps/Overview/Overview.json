@@ -96,6 +96,18 @@
                             {"Type": "HorizontalContainer", "Controls": [
                                 {"Type": "GroupBox", "Text": "List Box", "Controls": [
                                     {"Type": "ListBox", "ID": "ListBox"}
+                                ]},
+                                {"Type": "GroupBox", "Text": "Vertical Splitter", "Controls": [
+                                    {"Type": "Splitter", "Orientation": "Vertical",
+                                        "First": {"Size": [100, 50], "Controls": [{"Type": "Text", "Text": "First"}]},
+                                        "Second": {"Size": [100, 50], "Controls": [{"Type": "Text", "Text": "Second"}]}
+                                    }
+                                ]},
+                                {"Type": "GroupBox", "Text": "Horizontal Splitter", "Controls": [
+                                    {"Type": "Splitter", "Expand": "Width",
+                                        "First": {"Size": [50, 50], "Controls": [{"Type": "Text", "Text": "First"}]},
+                                        "Second": {"Size": [50, 50], "Controls": [{"Type": "Text", "Text": "Second"}]}
+                                    }
                                 ]}
                             ]}
                         ]}
