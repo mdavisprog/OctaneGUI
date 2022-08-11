@@ -159,6 +159,11 @@ bool Window::IsResizable() const
     return m_Resizable;
 }
 
+bool Window::Modal() const
+{
+    return m_Modal;
+}
+
 Application& Window::App() const
 {
     return *m_Application;
@@ -509,6 +514,7 @@ void Window::LoadRoot(const Json& Root)
     SetTitle(Title.c_str());
     SetSize({ Width, Height });
     SetResizable(Root["Resizable"].Boolean(IsResizable()));
+    m_Modal = Root["Modal"].Boolean(m_Modal);
 }
 
 void Window::LoadContents(const Json& Root)

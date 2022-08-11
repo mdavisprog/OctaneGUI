@@ -84,6 +84,8 @@ public:
     Window& SetResizable(bool Resizable);
     bool IsResizable() const;
 
+    bool Modal() const;
+
     Application& App() const;
 
     void SetPopup(const std::shared_ptr<Container>& Popup, OnContainerSignature Callback = nullptr, bool Modal = false);
@@ -170,6 +172,7 @@ private:
     bool m_Visible { false };
     bool m_RequestClose { false };
     bool m_Resizable { true };
+    bool m_Modal { false };
     std::vector<std::weak_ptr<Container>> m_LayoutRequests;
 
     std::vector<TimerHandle> m_Timers {};
