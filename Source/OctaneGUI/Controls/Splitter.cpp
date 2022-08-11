@@ -123,6 +123,9 @@ Splitter::Splitter(Window* InWindow)
     m_Second = std::make_shared<Container>(InWindow);
     m_Interaction = std::make_shared<SplitterInteraction>(InWindow, this);
 
+    m_First->SetClip(true);
+    m_Second->SetClip(true);
+
     UpdateLayout();
 }
 
