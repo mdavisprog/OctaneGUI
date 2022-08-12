@@ -109,7 +109,7 @@ bool Initialize()
     return true;
 }
 
-void CreateWindow(OctaneGUI::Window* Window)
+void NewWindow(OctaneGUI::Window* Window)
 {
     if (g_Windows.find(Window) == g_Windows.end())
     {

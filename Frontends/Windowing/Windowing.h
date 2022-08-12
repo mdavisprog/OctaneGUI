@@ -42,7 +42,7 @@ namespace Windowing
 {
 
 bool Initialize();
-void CreateWindow(OctaneGUI::Window* Window);
+void NewWindow(OctaneGUI::Window* Window);
 void DestroyWindow(OctaneGUI::Window* Window);
 void RaiseWindow(OctaneGUI::Window* Window);
 OctaneGUI::Event Event(OctaneGUI::Window* Window);

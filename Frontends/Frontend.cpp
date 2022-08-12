@@ -37,7 +37,7 @@ void OnWindowAction(OctaneGUI::Window* Window, OctaneGUI::WindowAction Action)
     {
     case OctaneGUI::WindowAction::Create:
     {
-        Windowing::CreateWindow(Window);
+        Windowing::NewWindow(Window);
         Rendering::CreateRenderer(Window);
     }
     break;
