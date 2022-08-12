@@ -49,7 +49,10 @@
                                     ]},
                                     {"Type": "GroupBox", "Text": "Max Characters", "Expand": "Width", "Controls": [
                                         {"Type": "TextInput", "MaxCharacters": 4, "Expand": "Width", "NumbersOnly": true, "Text": {"Text": "3.1415926"}}
-                                    ]}
+                                    ]},
+                                    {"Type": "GroupBox", "Text": "Spinner", "Expand": "Width", "Controls": [
+                                        {"Type": "Spinner", "Expand": "Width", "Value": 36, "Range": {"Min":-20, "Max": 20} }
+                                    ]},
                                 ]},
                                 {"Type": "Separator", "Orientation": "Vertical"},
                                 {"Type": "GroupBox", "Text": "Multi line text input", "Controls": [
