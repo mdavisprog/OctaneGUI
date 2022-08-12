@@ -42,6 +42,7 @@ SOFTWARE.
 #include "ScrollableContainer.h"
 #include "ScrollableViewControl.h"
 #include "Separator.h"
+#include "Spinner.h"
 #include "Splitter.h"
 #include "Table.h"
 #include "Text.h"
@@ -81,6 +82,10 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
     else if (Type == ComboBox::TypeName())
     {
         Result = AddControl<ComboBox>();
+    }
+    else if (Type == Spinner::TypeName())
+    {
+        Result = AddControl<Spinner>();
     }
     else if (Type == Container::TypeName())
     {

@@ -25,6 +25,7 @@ set(SOURCE
     Controls/ScrollableViewControl.cpp
     Controls/ScrollBar.cpp
     Controls/Separator.cpp
+    Controls/Spinner.cpp
     Controls/Splitter.cpp
     Controls/Table.cpp
     Controls/Text.cpp

@@ -50,6 +50,7 @@ SOFTWARE.
 #include "Controls/RadioButton.h"
 #include "Controls/ScrollBar.h"
 #include "Controls/ScrollableContainer.h"
+#include "Controls/Spinner.h"
 #include "Controls/Splitter.h"
 #include "Controls/Syntax/Highlighter.h"
 #include "Controls/Syntax/JsonHighlighter.h"
