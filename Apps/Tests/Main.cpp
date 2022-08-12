@@ -29,11 +29,7 @@ SOFTWARE.
 
 uint32_t TextureID = 0;
 
-void OnCreateWindow(OctaneGUI::Window* Window)
-{
-}
-
-void OnDestroyWindow(OctaneGUI::Window* Window)
+void OnWindowAction(OctaneGUI::Window* Window, OctaneGUI::WindowAction Action)
 {
 }
 
@@ -59,8 +55,7 @@ int main(int argc, char** argv)
 {
     OctaneGUI::Application Application;
     Application
-        .SetOnCreateWindow(OnCreateWindow)
-        .SetOnDestroyWindow(OnDestroyWindow)
+        .SetOnWindowAction(OnWindowAction)
         .SetOnEvent(OnEvent)
         .SetOnPaint(OnPaint)
         .SetOnLoadTexture(OnLoadTexture)

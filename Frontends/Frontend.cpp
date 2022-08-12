@@ -31,11 +31,26 @@ SOFTWARE.
 
 namespace Frontend
 {
-
-void OnCreateWindow(OctaneGUI::Window* Window)
+void OnWindowAction(OctaneGUI::Window* Window, OctaneGUI::WindowAction Action)
 {
-    Windowing::CreateWindow(Window);
-    Rendering::CreateRenderer(Window);
+    switch (Action)
+    {
+    case OctaneGUI::WindowAction::Create:
+    {
+        Windowing::CreateWindow(Window);
+        Rendering::CreateRenderer(Window);
+    }
+    break;
+
+    case OctaneGUI::WindowAction::Destroy:
+    {
+        Rendering::DestroyRenderer(Window);
+        Windowing::DestroyWindow(Window);
+    }
+    break;
+
+    default: break;
+    }
 }
 
 void OnDestroyWindow(OctaneGUI::Window* Window)
@@ -91,8 +106,7 @@ void Initialize(OctaneGUI::Application& Application)
     Rendering::Initialize();
 
     Application
-        .SetOnCreateWindow(OnCreateWindow)
-        .SetOnDestroyWindow(OnDestroyWindow)
+        .SetOnWindowAction(OnWindowAction)
         .SetOnEvent(OnEvent)
         .SetOnPaint(OnPaint)
         .SetOnLoadTexture(OnLoadTexture)

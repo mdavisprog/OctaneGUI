@@ -48,12 +48,19 @@ class Theme;
 class VertexBuffer;
 class Window;
 
+enum class WindowAction : uint8_t
+{
+    Create,
+    Destroy,
+};
+
 class Application
 {
 public:
     typedef std::function<void(Window*)> OnWindowSignature;
     typedef std::function<void(Window*, const VertexBuffer&)> OnWindowPaintSignature;
     typedef std::function<Event(Window*)> OnWindowEventSignature;
+    typedef std::function<void(Window*, WindowAction)> OnWindowActionSignature;
     typedef std::function<uint32_t(const std::vector<uint8_t>&, uint32_t, uint32_t)> OnLoadTextureSignature;
     typedef std::function<void(const std::u32string&)> OnSetClipboardContentsSignature;
     typedef std::function<std::u32string(void)> OnGetClipboardContentsSignature;
@@ -84,8 +91,7 @@ public:
     std::u32string ClipboardContents() const;
     Application& SetMouseCursor(Window* Target, Mouse::Cursor Cursor);
 
-    Application& SetOnCreateWindow(OnWindowSignature&& Fn);
-    Application& SetOnDestroyWindow(OnWindowSignature&& Fn);
+    Application& SetOnWindowAction(OnWindowActionSignature&& Fn);
     Application& SetOnPaint(OnWindowPaintSignature&& Fn);
     Application& SetOnEvent(OnWindowEventSignature&& Fn);
     Application& SetOnLoadTexture(OnLoadTextureSignature&& Fn);
@@ -101,6 +107,7 @@ private:
     void DestroyWindow(const std::shared_ptr<Window>& Item);
     int ProcessEvent(const std::shared_ptr<Window>& Item);
     bool Initialize();
+    void OnWindowAction(Window* InWindow, WindowAction Action);
 
     std::unordered_map<std::string, std::shared_ptr<Window>> m_Windows;
     std::shared_ptr<Theme> m_Theme { nullptr };
@@ -109,8 +116,7 @@ private:
     std::vector<Keyboard::Key> m_PressedKeys {};
     TextureCache m_TextureCache {};
 
-    OnWindowSignature m_OnCreateWindow { nullptr };
-    OnWindowSignature m_OnDestroyWindow { nullptr };
+    OnWindowActionSignature m_OnWindowAction { nullptr };
     OnWindowPaintSignature m_OnPaint { nullptr };
     OnWindowEventSignature m_OnEvent { nullptr };
     OnLoadTextureSignature m_OnLoadTexture { nullptr };

@@ -117,12 +117,9 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
 
 void Application::Shutdown()
 {
-    if (m_OnDestroyWindow)
+    for (auto& Item : m_Windows)
     {
-        for (auto& Item : m_Windows)
-        {
-            m_OnDestroyWindow(Item.second.get());
-        }
+        OnWindowAction(Item.second.get(), WindowAction::Destroy);
     }
 
     m_Windows.clear();
@@ -261,10 +258,7 @@ bool Application::DisplayWindow(const char* ID) const
         return true;
     }
 
-    if (m_OnCreateWindow != nullptr)
-    {
-        m_OnCreateWindow(It->second.get());
-    }
+    OnWindowAction(It->second.get(), WindowAction::Create);
 
     It->second
         ->SetVisible(true)
@@ -342,9 +336,9 @@ Application& Application::SetMouseCursor(Window* Target, Mouse::Cursor Cursor)
     return *this;
 }
 
-Application& Application::SetOnCreateWindow(OnWindowSignature&& Fn)
+Application& Application::SetOnWindowAction(OnWindowActionSignature&& Fn)
 {
-    m_OnCreateWindow = std::move(Fn);
+    m_OnWindowAction = std::move(Fn);
     return *this;
 }
 
@@ -427,10 +421,7 @@ void Application::DestroyWindow(const std::shared_ptr<Window>& Item)
         return;
     }
 
-    if (m_OnDestroyWindow)
-    {
-        m_OnDestroyWindow(Item.get());
-    }
+    OnWindowAction(Item.get(), WindowAction::Destroy);
 
     Item
         ->SetVisible(false)
@@ -546,6 +537,14 @@ bool Application::Initialize()
     m_IsRunning = true;
 
     return true;
+}
+
+void Application::OnWindowAction(Window* InWindow, WindowAction Action)
+{
+    if (m_OnWindowAction)
+    {
+        m_OnWindowAction(InWindow, Action);
+    }
 }
 
 }
