@@ -49,14 +49,14 @@ void OnWindowAction(OctaneGUI::Window* Window, OctaneGUI::WindowAction Action)
     }
     break;
 
+    case OctaneGUI::WindowAction::Raise:
+    {
+        Windowing::RaiseWindow(Window);
+    }
+    break;
+
     default: break;
     }
-}
-
-void OnDestroyWindow(OctaneGUI::Window* Window)
-{
-    Rendering::DestroyRenderer(Window);
-    Windowing::DestroyWindow(Window);
 }
 
 OctaneGUI::Event OnEvent(OctaneGUI::Window* Window)

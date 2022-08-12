@@ -52,6 +52,7 @@ enum class WindowAction : uint8_t
 {
     Create,
     Destroy,
+    Raise,
 };
 
 class Application
@@ -81,7 +82,7 @@ public:
     bool IsMainWindow(Window* InWindow) const;
     std::shared_ptr<Window> NewWindow(const char* ID, const char* JsonStream);
     std::shared_ptr<Window> NewWindow(const char* ID, const char* JsonStream, ControlList& List);
-    bool DisplayWindow(const char* ID) const;
+    bool DisplayWindow(const char* ID);
     void CloseWindow(const char* ID);
     std::shared_ptr<Theme> GetTheme() const;
     std::shared_ptr<Icons> GetIcons() const;
@@ -110,6 +111,7 @@ private:
     void OnWindowAction(Window* InWindow, WindowAction Action);
 
     std::unordered_map<std::string, std::shared_ptr<Window>> m_Windows;
+    std::vector<std::weak_ptr<Window>> m_Modals {};
     std::shared_ptr<Theme> m_Theme { nullptr };
     std::shared_ptr<Icons> m_Icons { nullptr };
     bool m_IsRunning { false };

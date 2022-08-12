@@ -44,6 +44,7 @@ namespace Windowing
 bool Initialize();
 void CreateWindow(OctaneGUI::Window* Window);
 void DestroyWindow(OctaneGUI::Window* Window);
+void RaiseWindow(OctaneGUI::Window* Window);
 OctaneGUI::Event Event(OctaneGUI::Window* Window);
 void Exit();
 void SetClipboardContents(const std::u32string& Contents);

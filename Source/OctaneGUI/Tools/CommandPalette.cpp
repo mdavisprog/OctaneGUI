@@ -75,7 +75,7 @@ CommandPalette::CommandPalette(Window* InWindow)
 
     const std::shared_ptr<VerticalContainer> Items = Margins->AddControl<VerticalContainer>();
     Items
-        ->SetSpacing({ })
+        ->SetSpacing({})
         ->SetExpand(Expand::Width);
 
     const std::shared_ptr<Text> Label = Items->AddControl<Text>();

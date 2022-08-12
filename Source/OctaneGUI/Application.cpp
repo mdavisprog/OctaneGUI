@@ -245,7 +245,7 @@ std::shared_ptr<Window> Application::NewWindow(const char* ID, const char* JsonS
     return Result;
 }
 
-bool Application::DisplayWindow(const char* ID) const
+bool Application::DisplayWindow(const char* ID)
 {
     auto It = m_Windows.find(ID);
     if (It == m_Windows.end())
@@ -269,6 +269,21 @@ bool Application::DisplayWindow(const char* ID) const
                     m_OnSetWindowTitle(&Target, Title);
                 }
             });
+
+    if (It->second->Modal())
+    {
+        // Notify all windows the mouse has left the window as they will not be receiving
+        // events and any focused control will need to be unfocused.
+        for (const std::pair<std::string, std::shared_ptr<Window>>& Item : m_Windows)
+        {
+            if (Item.second->IsVisible())
+            {
+                Item.second->OnMouseLeave();
+            }
+        }
+
+        m_Modals.push_back(It->second);
+    }
 
     return true;
 }
@@ -339,12 +354,6 @@ Application& Application::SetMouseCursor(Window* Target, Mouse::Cursor Cursor)
 Application& Application::SetOnWindowAction(OnWindowActionSignature&& Fn)
 {
     m_OnWindowAction = std::move(Fn);
-    return *this;
-}
-
-Application& Application::SetOnDestroyWindow(OnWindowSignature&& Fn)
-{
-    m_OnDestroyWindow = std::move(Fn);
     return *this;
 }
 
@@ -429,6 +438,25 @@ void Application::DestroyWindow(const std::shared_ptr<Window>& Item)
         .RequestClose(false)
         .Close();
 
+    for (std::vector<std::weak_ptr<Window>>::const_iterator It = m_Modals.begin(); It != m_Modals.end();)
+    {
+        if (It->expired())
+        {
+            It = m_Modals.erase(It);
+        }
+        else
+        {
+            if (It->lock() == Item)
+            {
+                It = m_Modals.erase(It);
+            }
+            else
+            {
+                ++It;
+            }
+        }
+    }
+
     if (std::string(Item->ID()) == "Main")
     {
         m_IsRunning = false;
@@ -444,6 +472,30 @@ int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
 
     int Processed = 0;
     Event E = m_OnEvent(Item.get());
+
+    if (!m_Modals.empty())
+    {
+        if (!m_Modals.back().expired())
+        {
+            const std::shared_ptr<Window> Top = m_Modals.back().lock();
+
+            if (Top != Item)
+            {
+                if (E.GetType() != Event::Type::WindowResized)
+                {
+                    return Processed;
+                }
+            }
+            else
+            {
+                OnWindowAction(Item.get(), WindowAction::Raise);
+            }
+        }
+        else
+        {
+            m_Modals.pop_back();
+        }
+    }
 
     Processed++;
     switch (E.GetType())
