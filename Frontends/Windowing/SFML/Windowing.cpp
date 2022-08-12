@@ -137,6 +137,16 @@ void DestroyWindow(OctaneGUI::Window* Window)
     g_Windows.erase(Window);
 }
 
+void RaiseWindow(OctaneGUI::Window* Window)
+{
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        return;
+    }
+
+    g_Windows[Window]->requestFocus();
+}
+
 OctaneGUI::Event Event(OctaneGUI::Window* Window)
 {
     if (g_Windows.find(Window) == g_Windows.end())
