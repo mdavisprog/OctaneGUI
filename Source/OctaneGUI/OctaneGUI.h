@@ -62,6 +62,7 @@ SOFTWARE.
 #include "Controls/TextSelectable.h"
 #include "Controls/VerticalContainer.h"
 #include "Controls/WindowContainer.h"
+#include "Defines.h"
 #include "DrawCommand.h"
 #include "Event.h"
 #include "FlyString.h"
