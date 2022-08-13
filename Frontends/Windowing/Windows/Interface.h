@@ -31,5 +31,6 @@ namespace Windowing
 
 void SetAlwaysOnTop(void* Handle);
 void Toggle(void* Handle, bool Enable);
+void Focus(void* Handle);
 
 }

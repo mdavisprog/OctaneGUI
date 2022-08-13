@@ -28,6 +28,10 @@ SOFTWARE.
 #include "OctaneGUI/OctaneGUI.h"
 #include "SFML/Graphics.hpp"
 
+#if defined(WINDOWS)
+    #include "../Windows/Interface.h"
+#endif
+
 #include <memory>
 #include <unordered_map>
 
@@ -108,7 +112,7 @@ bool Initialize()
     return true;
 }
 
-void CreateWindow(OctaneGUI::Window* Window)
+void NewWindow(OctaneGUI::Window* Window)
 {
     if (g_Windows.find(Window) == g_Windows.end())
     {
@@ -123,6 +127,13 @@ void CreateWindow(OctaneGUI::Window* Window)
         RenderWindow->setFramerateLimit(0);
         RenderWindow->setVerticalSyncEnabled(false);
         g_Windows[Window] = std::shared_ptr<sf::RenderWindow>(RenderWindow);
+
+        if (Window->Modal())
+        {
+#if defined(WINDOWS)
+            Windowing::SetAlwaysOnTop(RenderWindow->getSystemHandle());
+#endif
+        }
     }
 }
 
@@ -145,6 +156,24 @@ void RaiseWindow(OctaneGUI::Window* Window)
     }
 
     g_Windows[Window]->requestFocus();
+}
+
+void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
+{
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        return;
+    }
+
+    const std::shared_ptr<sf::RenderWindow>& RenderWindow = g_Windows[Window];
+#if defined(WINDOWS)
+    Windowing::Toggle(RenderWindow->getSystemHandle(), Enable);
+
+    if (Enable)
+    {
+        Windowing::Focus(RenderWindow->getSystemHandle());
+    }
+#endif
 }
 
 OctaneGUI::Event Event(OctaneGUI::Window* Window)

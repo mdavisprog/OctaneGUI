@@ -47,4 +47,10 @@ void Toggle(void* Handle, bool Enable)
     EnableWindow(WinHandle, Enable ? TRUE : FALSE);
 }
 
+void Focus(void* Handle)
+{
+    HWND WinHandle = (HWND)Handle;
+    SetFocus(WinHandle);
+}
+
 }
