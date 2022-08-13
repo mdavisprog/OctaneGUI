@@ -53,6 +53,8 @@ enum class WindowAction : uint8_t
     Create,
     Destroy,
     Raise,
+    Enable,
+    Disable,
 };
 
 class Application

@@ -280,6 +280,11 @@ bool Application::DisplayWindow(const char* ID)
             {
                 Item.second->OnMouseLeave();
             }
+
+            if (Item.second != It->second)
+            {
+                OnWindowAction(Item.second.get(), WindowAction::Disable);
+            }
         }
 
         m_Modals.push_back(It->second);
@@ -454,6 +459,18 @@ void Application::DestroyWindow(const std::shared_ptr<Window>& Item)
             {
                 ++It;
             }
+        }
+    }
+
+    if (!m_Modals.empty())
+    {
+        OnWindowAction(m_Modals.back().lock().get(), WindowAction::Enable);
+    }
+    else
+    {
+        for (const std::pair<std::string, std::shared_ptr<Window>>& Item : m_Windows)
+        {
+            OnWindowAction(Item.second.get(), WindowAction::Enable);
         }
     }
 
