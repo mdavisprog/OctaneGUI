@@ -29,8 +29,10 @@ SOFTWARE.
 #include "SDL.h"
 #include "SDL_syswm.h"
 
-#ifdef WINDOWS
+#if defined(WINDOWS)
     #include "../Windows/Interface.h"
+#elif defined(APPLE)
+    #include "../Mac/Interface.h"
 #endif
 
 #include <unordered_map>
@@ -142,7 +144,7 @@ void NewWindow(OctaneGUI::Window* Window)
             (int)Window->GetSize().Y,
             Flags);
         
-#ifdef WINDOWS
+#if defined(WINDOWS)
         if (Window->Modal())
         {
             SDL_SysWMinfo Info {};
@@ -187,13 +189,15 @@ void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
     SDL_SysWMinfo WM {};
     SDL_GetWindowWMInfo(g_Windows[Window], &WM);
 
-#ifdef WINDOWS
+#if defined(WINDOWS)
     Windowing::Toggle(WM.info.win.window, Enable);
 
     if (Enable)
     {
         RaiseWindow(Window);
     }
+#elif defined(APPLE)
+    Windowing::SetMovable(WM.info.cocoa.window, Enable);
 #endif
 }
 

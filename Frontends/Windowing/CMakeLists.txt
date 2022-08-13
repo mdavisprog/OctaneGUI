@@ -8,6 +8,8 @@ endif()
 
 if(WIN32)
     set(SOURCE ${SOURCE} ${CMAKE_CURRENT_LIST_DIR}/Windows/Windowing.cpp)
+elseif(APPLE)
+    set(SOURCE ${SOURCE} ${CMAKE_CURRENT_LIST_DIR}/Mac/Windowing.mm)
 endif()
 
 set(SOURCE ${SOURCE} PARENT_SCOPE)
