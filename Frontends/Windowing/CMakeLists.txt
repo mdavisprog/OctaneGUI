@@ -6,4 +6,8 @@ else()
     message(FATAL_ERROR "Windowing interface '${WINDOWING}' is not supported.")
 endif()
 
+if(WIN32)
+    set(SOURCE ${SOURCE} ${CMAKE_CURRENT_LIST_DIR}/Windows/Windowing.cpp)
+endif()
+
 set(SOURCE ${SOURCE} PARENT_SCOPE)

@@ -503,10 +503,6 @@ int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
                     return Processed;
                 }
             }
-            else
-            {
-                OnWindowAction(Item.get(), WindowAction::Raise);
-            }
         }
         else
         {

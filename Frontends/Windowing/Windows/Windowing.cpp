@@ -24,33 +24,27 @@ SOFTWARE.
 
 */
 
-#pragma once
+#include "Interface.h"
 
-#include "OctaneGUI/Mouse.h"
-
-#include <string>
-
-namespace OctaneGUI
-{
-
-class Event;
-class Window;
-
-}
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
 namespace Windowing
 {
 
-bool Initialize();
-void NewWindow(OctaneGUI::Window* Window);
-void DestroyWindow(OctaneGUI::Window* Window);
-void RaiseWindow(OctaneGUI::Window* Window);
-void ToggleWindow(OctaneGUI::Window* Window, bool Enable);
-OctaneGUI::Event Event(OctaneGUI::Window* Window);
-void Exit();
-void SetClipboardContents(const std::u32string& Contents);
-std::u32string GetClipboardContents();
-void SetWindowTitle(OctaneGUI::Window* Window, const char* Title);
-void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor);
+void SetAlwaysOnTop(void* Handle)
+{
+    HWND WinHandle = (HWND)Handle;
+
+    LONG_PTR Flags = GetWindowLongPtr(WinHandle, GWL_EXSTYLE);
+    Flags |= WS_EX_TOPMOST;
+    SetWindowLongPtr(WinHandle, GWL_EXSTYLE, Flags);
+}
+
+void Toggle(void* Handle, bool Enable)
+{
+    HWND WinHandle = (HWND)Handle;
+    EnableWindow(WinHandle, Enable ? TRUE : FALSE);
+}
 
 }

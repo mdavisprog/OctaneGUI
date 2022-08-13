@@ -55,6 +55,13 @@ void OnWindowAction(OctaneGUI::Window* Window, OctaneGUI::WindowAction Action)
     }
     break;
 
+    case OctaneGUI::WindowAction::Enable:
+    case OctaneGUI::WindowAction::Disable:
+    {
+        Windowing::ToggleWindow(Window, Action == OctaneGUI::WindowAction::Enable);
+    }
+    break;
+
     default: break;
     }
 }

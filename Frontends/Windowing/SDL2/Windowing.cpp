@@ -27,6 +27,11 @@ SOFTWARE.
 #include "../Windowing.h"
 #include "OctaneGUI/OctaneGUI.h"
 #include "SDL.h"
+#include "SDL_syswm.h"
+
+#ifdef WINDOWS
+    #include "../Windows/Interface.h"
+#endif
 
 #include <unordered_map>
 
@@ -115,6 +120,11 @@ void NewWindow(OctaneGUI::Window* Window)
     {
         int Flags = SDL_WINDOW_ALLOW_HIGHDPI;
 
+        if (Window->Modal())
+        {
+            Flags |= SDL_WINDOW_ALWAYS_ON_TOP;
+        }
+
         if (Window->IsResizable())
         {
             Flags |= SDL_WINDOW_RESIZABLE;
@@ -131,6 +141,16 @@ void NewWindow(OctaneGUI::Window* Window)
             (int)Window->GetSize().X,
             (int)Window->GetSize().Y,
             Flags);
+        
+#ifdef WINDOWS
+        if (Window->Modal())
+        {
+            SDL_SysWMinfo Info {};
+            SDL_GetWindowWMInfo(Instance, &Info);
+
+            Windowing::SetAlwaysOnTop(Info.info.win.window);
+        }
+#endif
 
         g_Windows[Window] = Instance;
     }
@@ -155,6 +175,26 @@ void RaiseWindow(OctaneGUI::Window* Window)
     }
 
     SDL_RaiseWindow(g_Windows[Window]);
+}
+
+void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
+{
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        return;
+    }
+
+    SDL_SysWMinfo WM {};
+    SDL_GetWindowWMInfo(g_Windows[Window], &WM);
+
+#ifdef WINDOWS
+    Windowing::Toggle(WM.info.win.window, Enable);
+
+    if (Enable)
+    {
+        RaiseWindow(Window);
+    }
+#endif
 }
 
 OctaneGUI::Event Event(OctaneGUI::Window* Window)

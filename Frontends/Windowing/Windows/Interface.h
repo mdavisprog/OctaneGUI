@@ -26,31 +26,10 @@ SOFTWARE.
 
 #pragma once
 
-#include "OctaneGUI/Mouse.h"
-
-#include <string>
-
-namespace OctaneGUI
-{
-
-class Event;
-class Window;
-
-}
-
 namespace Windowing
 {
 
-bool Initialize();
-void NewWindow(OctaneGUI::Window* Window);
-void DestroyWindow(OctaneGUI::Window* Window);
-void RaiseWindow(OctaneGUI::Window* Window);
-void ToggleWindow(OctaneGUI::Window* Window, bool Enable);
-OctaneGUI::Event Event(OctaneGUI::Window* Window);
-void Exit();
-void SetClipboardContents(const std::u32string& Contents);
-std::u32string GetClipboardContents();
-void SetWindowTitle(OctaneGUI::Window* Window, const char* Title);
-void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor);
+void SetAlwaysOnTop(void* Handle);
+void Toggle(void* Handle, bool Enable);
 
 }
