@@ -103,6 +103,20 @@ SDL_SystemCursor GetMouseCursor(OctaneGUI::Mouse::Cursor Cursor)
     return SDL_SYSTEM_CURSOR_ARROW;
 }
 
+OctaneGUI::Window* WindowID(const char* ID)
+{
+    for (const std::pair<OctaneGUI::Window*, SDL_Window*>& Item : g_Windows)
+    {
+        const std::string WinID { Item.first->ID() };
+        if (WinID == ID)
+        {
+            return Item.first;
+        }
+    }
+
+    return nullptr;
+}
+
 std::unordered_map<SDL_SystemCursor, SDL_Cursor*> g_SystemCursors {};
 
 bool Initialize()
@@ -153,15 +167,23 @@ void NewWindow(OctaneGUI::Window* Window)
             (int)Window->GetSize().Y,
             Flags);
         
-#if defined(WINDOWS)
         if (Window->Modal())
         {
+            // This doesn't seem to be affecting any behavior but will keep
+            // this around for further testing.
+            OctaneGUI::Window* Main = WindowID("Main");
+            if (Main != nullptr)
+            {
+                SDL_SetWindowModalFor(Instance, g_Windows[Main]);
+            }
+
+#if defined(WINDOWS)
             SDL_SysWMinfo Info {};
             SDL_GetWindowWMInfo(Instance, &Info);
 
             Windowing::SetAlwaysOnTop(Info.info.win.window);
-        }
 #endif
+        }
 
         g_Windows[Window] = Instance;
     }
