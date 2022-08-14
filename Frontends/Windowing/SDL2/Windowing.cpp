@@ -35,6 +35,11 @@ SOFTWARE.
     #include "../Mac/Interface.h"
 #endif
 
+// X11 defines 'None' as 0. Some OctaneGUI enums will have a 'None' entry
+// which will cause a conflict when attempting to compile any code that uses
+// these enum entries. 'None' define is not used in this file so ignore for now.
+#undef None
+
 #include <unordered_map>
 
 namespace Windowing
