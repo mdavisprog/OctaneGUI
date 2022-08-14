@@ -24,7 +24,7 @@ SOFTWARE.
 
 */
 
-#include "Interface.h"
+#include "../Windowing.h"
 
 #import <Cocoa/Cocoa.h>
 
@@ -35,6 +35,14 @@ void SetMovable(void* Handle, bool Movable)
 {
 	NSWindow* Window = (NSWindow*)Handle;
 	Window.movable = Movable ? YES : NO;
+}
+
+void SetEnabled(void* Handle, bool Enabled)
+{
+}
+
+void Focus(void* Handle)
+{
 }
 
 }

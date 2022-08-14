@@ -28,10 +28,6 @@ SOFTWARE.
 #include "OctaneGUI/OctaneGUI.h"
 #include "SFML/Graphics.hpp"
 
-#if defined(WINDOWS)
-    #include "../Windows/Interface.h"
-#endif
-
 #include <memory>
 #include <unordered_map>
 
@@ -127,13 +123,6 @@ void NewWindow(OctaneGUI::Window* Window)
         RenderWindow->setFramerateLimit(0);
         RenderWindow->setVerticalSyncEnabled(false);
         g_Windows[Window] = std::shared_ptr<sf::RenderWindow>(RenderWindow);
-
-        if (Window->Modal())
-        {
-#if defined(WINDOWS)
-            Windowing::SetAlwaysOnTop(RenderWindow->getSystemHandle());
-#endif
-        }
     }
 }
 
@@ -166,14 +155,12 @@ void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
     }
 
     const std::shared_ptr<sf::RenderWindow>& RenderWindow = g_Windows[Window];
-#if defined(WINDOWS)
-    Windowing::Toggle(RenderWindow->getSystemHandle(), Enable);
+    Windowing::SetEnabled(RenderWindow->getSystemHandle(), Enable);
 
     if (Enable)
     {
         Windowing::Focus(RenderWindow->getSystemHandle());
     }
-#endif
 }
 
 OctaneGUI::Event Event(OctaneGUI::Window* Window)

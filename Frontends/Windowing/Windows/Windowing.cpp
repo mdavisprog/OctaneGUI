@@ -24,7 +24,7 @@ SOFTWARE.
 
 */
 
-#include "Interface.h"
+#include "../Windowing.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -32,19 +32,14 @@ SOFTWARE.
 namespace Windowing
 {
 
-void SetAlwaysOnTop(void* Handle)
+void SetMovable(void* Handle, bool Movable)
 {
-    HWND WinHandle = (HWND)Handle;
-
-    LONG_PTR Flags = GetWindowLongPtr(WinHandle, GWL_EXSTYLE);
-    Flags |= WS_EX_TOPMOST;
-    SetWindowLongPtr(WinHandle, GWL_EXSTYLE, Flags);
 }
 
-void Toggle(void* Handle, bool Enable)
+void SetEnabled(void* Handle, bool Enabled)
 {
     HWND WinHandle = (HWND)Handle;
-    EnableWindow(WinHandle, Enable ? TRUE : FALSE);
+    EnableWindow(WinHandle, Enabled ? TRUE : FALSE);
 }
 
 void Focus(void* Handle)

@@ -29,12 +29,6 @@ SOFTWARE.
 #include "SDL.h"
 #include "SDL_syswm.h"
 
-#if defined(WINDOWS)
-    #include "../Windows/Interface.h"
-#elif defined(APPLE)
-    #include "../Mac/Interface.h"
-#endif
-
 // X11 defines 'None' as 0. Some OctaneGUI enums will have a 'None' entry
 // which will cause a conflict when attempting to compile any code that uses
 // these enum entries. 'None' define is not used in this file so ignore for now.
@@ -176,13 +170,6 @@ void NewWindow(OctaneGUI::Window* Window)
             {
                 SDL_SetWindowModalFor(Instance, g_Windows[Main]);
             }
-
-#if defined(WINDOWS)
-            SDL_SysWMinfo Info {};
-            SDL_GetWindowWMInfo(Instance, &Info);
-
-            Windowing::SetAlwaysOnTop(Info.info.win.window);
-#endif
         }
 
         g_Windows[Window] = Instance;
@@ -220,16 +207,23 @@ void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
     SDL_SysWMinfo WM {};
     SDL_GetWindowWMInfo(g_Windows[Window], &WM);
 
+    void* Handle = 
 #if defined(WINDOWS)
-    Windowing::Toggle(WM.info.win.window, Enable);
+        WM.info.win.window;
+#elif defined(APPLE)
+        WM.info.cocoa.window;
+#else
+        nullptr;
+#endif
+
+    Windowing::SetEnabled(Handle, Enable);
 
     if (Enable)
     {
         RaiseWindow(Window);
     }
-#elif defined(APPLE)
-    Windowing::SetMovable(WM.info.cocoa.window, Enable);
-#endif
+
+    Windowing::SetMovable(Handle, Enable);
 }
 
 OctaneGUI::Event Event(OctaneGUI::Window* Window)

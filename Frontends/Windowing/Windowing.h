@@ -53,4 +53,9 @@ std::u32string GetClipboardContents();
 void SetWindowTitle(OctaneGUI::Window* Window, const char* Title);
 void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor);
 
+// Platform specific functions.
+void SetMovable(void* Handle, bool Movable);
+void SetEnabled(void* Handle, bool Enabled);
+void Focus(void* Handle);
+
 }
