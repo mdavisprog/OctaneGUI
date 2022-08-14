@@ -113,6 +113,10 @@ bool Initialize()
         return false;
     }
 
+    SDL_version Version {};
+    SDL_GetVersion(&Version);
+    printf("Using SDL version %d.%d.%d\n", Version.major, Version.minor, Version.patch);
+
     g_SystemCursors[SDL_SYSTEM_CURSOR_ARROW] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
     g_SystemCursors[SDL_SYSTEM_CURSOR_IBEAM] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_IBEAM);
     g_SystemCursors[SDL_SYSTEM_CURSOR_SIZEWE] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEWE);
