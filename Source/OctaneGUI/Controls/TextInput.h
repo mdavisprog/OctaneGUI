@@ -105,7 +105,7 @@ public:
     TextInput& SetReadOnly(bool Value);
     bool ReadOnly() const;
 
-    TextInput& SetMulitline(bool Multiline);
+    TextInput& SetMultiline(bool Multiline);
     bool Multiline() const;
 
     TextInput& SetHighlighter(const std::shared_ptr<Syntax::Highlighter>& Value);

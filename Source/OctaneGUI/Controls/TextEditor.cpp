@@ -37,7 +37,7 @@ namespace OctaneGUI
 TextEditor::TextEditor(Window* InWindow)
     : TextInput(InWindow)
 {
-    SetMulitline(true);
+    SetMultiline(true);
 
     SetOnModifyText([this](std::shared_ptr<TextInput>, const std::u32string& Pending) -> std::u32string
         {
@@ -85,7 +85,7 @@ void TextEditor::OnLoad(const Json& Root)
 
     SetMatchIndent(Root["MatchIndent"].Boolean(m_MatchIndent));
 
-    SetMulitline(true);
+    SetMultiline(true);
 }
 
 void TextEditor::TextAdded(const std::u32string& Contents)

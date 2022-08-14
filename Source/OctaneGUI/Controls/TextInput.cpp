@@ -387,7 +387,7 @@ bool TextInput::ReadOnly() const
     return m_ReadOnly;
 }
 
-TextInput& TextInput::SetMulitline(bool Multiline)
+TextInput& TextInput::SetMultiline(bool Multiline)
 {
     m_Multiline = Multiline;
     Scrollable()->SetHorizontalSBEnabled(m_Multiline).SetVerticalSBEnabled(m_Multiline);
@@ -613,7 +613,7 @@ void TextInput::OnLoad(const Json& Root)
 
     m_MaxCharacters = Root["MaxCharacters"].Number(m_MaxCharacters);
     m_NumbersOnly = Root["NumbersOnly"].Boolean(m_NumbersOnly);
-    SetMulitline(Root["Multiline"].Boolean());
+    SetMultiline(Root["Multiline"].Boolean());
     if (m_Multiline)
     {
         if (Root["Size"].IsNull())
