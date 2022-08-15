@@ -138,6 +138,19 @@ public:
     }
 };
 
+class WConverter : public std::codecvt<wchar_t, char, std::mbstate_t>
+{
+public:
+    WConverter()
+        : std::codecvt<wchar_t, char, std::mbstate_t>()
+    {
+    }
+
+    ~WConverter()
+    {
+    }
+};
+
 std::string String::ToMultiByte(const std::u32string& Value)
 {
     std::string Result;
@@ -165,6 +178,25 @@ std::string String::ToMultiByte(const char32_t* Value)
 std::string String::ToMultiByte(const std::u32string_view& Value)
 {
     return ToMultiByte(std::u32string { Value });
+}
+
+std::string String::ToMultiByte(const std::wstring& Value)
+{
+    std::string Result;
+
+    std::mbstate_t State {};
+    WConverter Convert;
+
+    Result.resize(Value.length() * sizeof(wchar_t));
+
+    const wchar_t* From = nullptr;
+    char* To = nullptr;
+    Convert.out(State, Value.data(), &Value[Value.size()], From, Result.data(), &Result[Result.size()], To);
+
+    // TODO: Should probably do some error checking here.
+    Result.resize(To - Result.data());
+
+    return Result;
 }
 
 std::u32string String::ToUTF32(const std::string& Value)
