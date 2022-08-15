@@ -47,5 +47,29 @@ void Focus(void* Handle)
 {
 }
 
+std::string OpenFileDialog(void* Handle)
+{
+	NSWindow* KeyWindow = [NSApp keyWindow];
+	NSOpenPanel* Dialog = [NSOpenPanel openPanel];
+	[Dialog setLevel:CGShieldingWindowLevel()];
+	[Dialog setTitle:@"Open File"];
+	[Dialog setMessage:@"Open a file"];
+	[Dialog setCanChooseFiles:true];
+	[Dialog setCanChooseDirectories:false];
+	[Dialog setAllowsMultipleSelection:FALSE];
+	[Dialog setCanCreateDirectories:TRUE];
+
+	std::string Result;
+	if ([Dialog runModal] == NSModalResponseOK)
+	{
+		NSURL* URL = [Dialog URL];
+		Result = [[[URL path] precomposedStringWithCanonicalMapping] UTF8String];
+	}
+
+	[KeyWindow makeKeyWindow];
+
+	return Result;
+}
+
 }
 }
