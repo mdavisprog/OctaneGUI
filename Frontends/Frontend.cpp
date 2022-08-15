@@ -107,6 +107,11 @@ void OnSetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor
     Windowing::SetMouseCursor(Window, Cursor);
 }
 
+std::string OnFileDialog()
+{
+    return Windowing::OpenFileDialog(nullptr);
+}
+
 void Initialize(OctaneGUI::Application& Application)
 {
     Windowing::Initialize();
@@ -121,7 +126,8 @@ void Initialize(OctaneGUI::Application& Application)
         .SetOnSetClipboardContents(OnSetClipboardContents)
         .SetOnGetClipboardContents(OnGetClipboardContents)
         .SetOnSetWindowTitle(OnSetWindowTitle)
-        .SetOnSetMouseCursor(OnSetMouseCursor);
+        .SetOnSetMouseCursor(OnSetMouseCursor)
+        .SetOnFileDialog(OnFileDialog);
 }
 
 }

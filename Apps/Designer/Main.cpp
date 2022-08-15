@@ -147,7 +147,7 @@ int main(int argc, char **argv)
     
     MainList.To<OctaneGUI::MenuItem>("File.Open")->SetOnPressed([&](OctaneGUI::TextSelectable&) -> void
         {
-            std::string FileName = Frontend::Windowing::OpenFileDialog(nullptr);
+            std::string FileName = Application.OpenFileDialog();
             if (!FileName.empty())
             {
                 const std::string Contents = GetContents(FileName.c_str());

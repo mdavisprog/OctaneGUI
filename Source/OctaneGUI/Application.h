@@ -69,6 +69,7 @@ public:
     typedef std::function<std::u32string(void)> OnGetClipboardContentsSignature;
     typedef std::function<void(Window*, const char*)> OnSetWindowTitleSignature;
     typedef std::function<void(Window*, Mouse::Cursor)> OnSetMouseCursorSignature;
+    typedef std::function<std::string()> OnFileDialogSignature;
 
     Application();
     virtual ~Application();
@@ -95,6 +96,8 @@ public:
     std::u32string ClipboardContents() const;
     Application& SetMouseCursor(Window* Target, Mouse::Cursor Cursor);
 
+    std::string OpenFileDialog();
+
     Application& SetOnWindowAction(OnWindowActionSignature&& Fn);
     Application& SetOnPaint(OnWindowPaintSignature&& Fn);
     Application& SetOnEvent(OnWindowEventSignature&& Fn);
@@ -104,6 +107,7 @@ public:
     Application& SetOnGetClipboardContents(OnGetClipboardContentsSignature&& Fn);
     Application& SetOnSetWindowTitle(OnSetWindowTitleSignature&& Fn);
     Application& SetOnSetMouseCursor(OnSetMouseCursorSignature&& Fn);
+    Application& SetOnFileDialog(OnFileDialogSignature&& Fn);
 
 private:
     void OnPaint(Window* InWindow, const VertexBuffer& Buffer);
@@ -130,6 +134,7 @@ private:
     OnGetClipboardContentsSignature m_OnGetClipboardContents { nullptr };
     OnSetWindowTitleSignature m_OnSetWindowTitle { nullptr };
     OnSetMouseCursorSignature m_OnSetMouseCursor { nullptr };
+    OnFileDialogSignature m_OnFileDialog { nullptr };
 };
 
 }
