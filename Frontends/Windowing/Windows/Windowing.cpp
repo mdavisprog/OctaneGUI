@@ -29,6 +29,8 @@ SOFTWARE.
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+namespace Frontend
+{
 namespace Windowing
 {
 
@@ -48,4 +50,5 @@ void Focus(void* Handle)
     SetFocus(WinHandle);
 }
 
+}
 }

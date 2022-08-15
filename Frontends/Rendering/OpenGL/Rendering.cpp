@@ -52,6 +52,8 @@ SOFTWARE.
     #include "SDL.h"
 #endif
 
+namespace Frontend
+{
 namespace Rendering
 {
 
@@ -439,4 +441,5 @@ void Exit()
 #endif
 }
 
+}
 }

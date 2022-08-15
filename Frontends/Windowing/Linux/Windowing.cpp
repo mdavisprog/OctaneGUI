@@ -26,6 +26,8 @@ SOFTWARE.
 
 #include "../Windowing.h"
 
+namespace Frontend
+{
 namespace Windowing
 {
 
@@ -41,4 +43,5 @@ void Focus(void* Handle)
 {
 }
 
+}
 }

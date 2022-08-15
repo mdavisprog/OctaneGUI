@@ -42,9 +42,12 @@ class RenderWindow;
 
 }
 
+namespace Frontend
+{
 namespace Windowing
 {
 
 const std::shared_ptr<sf::RenderWindow>& Get(OctaneGUI::Window* Window);
 
+}
 }

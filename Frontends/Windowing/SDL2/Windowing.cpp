@@ -36,6 +36,8 @@ SOFTWARE.
 
 #include <unordered_map>
 
+namespace Frontend
+{
 namespace Windowing
 {
 
@@ -417,4 +419,5 @@ SDL_Window* Get(OctaneGUI::Window* Window)
     return g_Windows[Window];
 }
 
+}
 }

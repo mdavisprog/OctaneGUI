@@ -38,6 +38,8 @@ class Window;
 
 }
 
+namespace Frontend
+{
 namespace Windowing
 {
 
@@ -58,4 +60,5 @@ void SetMovable(void* Handle, bool Movable);
 void SetEnabled(void* Handle, bool Enabled);
 void Focus(void* Handle);
 
+}
 }

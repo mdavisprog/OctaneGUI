@@ -28,6 +28,8 @@ SOFTWARE.
 
 #import <Cocoa/Cocoa.h>
 
+namespace Frontend
+{
 namespace Windowing
 {
 
@@ -45,4 +47,5 @@ void Focus(void* Handle)
 {
 }
 
+}
 }

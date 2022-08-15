@@ -35,9 +35,12 @@ class Window;
 
 }
 
+namespace Frontend
+{
 namespace Windowing
 {
 
 SDL_Window* Get(OctaneGUI::Window* Window);
 
+}
 }

@@ -31,6 +31,8 @@ SOFTWARE.
 
 #include <vector>
 
+namespace Frontend
+{
 namespace Rendering
 {
 
@@ -131,4 +133,5 @@ void Exit()
     g_Textures.clear();
 }
 
+}
 }

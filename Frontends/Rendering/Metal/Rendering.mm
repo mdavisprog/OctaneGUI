@@ -37,6 +37,8 @@ SOFTWARE.
 #import <Metal/Metal.h>
 #import <QuartzCore/QuartzCore.h>
 
+namespace Frontend
+{
 namespace Rendering
 {
 
@@ -433,4 +435,5 @@ void Exit()
 	g_Textures.clear();
 }
 
+}
 }
