@@ -10,6 +10,8 @@
                     {"Text": "Preview Window", "ID": "PreviewWindow"},
                     {"Text": "Preview Pane", "ID": "PreviewPane"},
                     {"Type": "Separator"},
+                    {"Text": "Open", "ID": "Open"},
+                    {"Type": "Separator"},
                     {"Text": "Quit", "ID": "Quit"}
                 ]},
                 {"Text": "Font", "ID": "Font", "Items": [

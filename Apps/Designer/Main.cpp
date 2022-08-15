@@ -1,4 +1,5 @@
 #include "Frontend.h"
+#include "Windowing/Windowing.h"
 #include "OctaneGUI/OctaneGUI.h"
 
 #include <fstream>
@@ -142,6 +143,16 @@ int main(int argc, char **argv)
                 Document->SetFontSize(FontSize);
             }
             Input->GetWindow()->ClosePopup();
+        });
+    
+    MainList.To<OctaneGUI::MenuItem>("File.Open")->SetOnPressed([&](OctaneGUI::TextSelectable&) -> void
+        {
+            std::string FileName = Frontend::Windowing::OpenFileDialog(nullptr);
+            if (!FileName.empty())
+            {
+                const std::string Contents = GetContents(FileName.c_str());
+                Document->SetText(Contents.c_str());
+            }
         });
 
     std::shared_ptr<OctaneGUI::MenuItem> QuitMenu = MainList.To<OctaneGUI::MenuItem>("File.Quit");
