@@ -43,5 +43,10 @@ void Focus(void* Handle)
 {
 }
 
+std::string OpenFileDialog(void* Handle)
+{
+    return "";
+}
+
 }
 }
