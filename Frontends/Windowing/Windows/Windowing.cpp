@@ -25,9 +25,12 @@ SOFTWARE.
 */
 
 #include "../Windowing.h"
+#include "OctaneGUI/OctaneGUI.h"
 
+#include <climits>
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <commdlg.h>
 
 namespace Frontend
 {
@@ -48,6 +51,30 @@ void Focus(void* Handle)
 {
     HWND WinHandle = (HWND)Handle;
     SetFocus(WinHandle);
+}
+
+std::string OpenFileDialog(void* Handle)
+{
+    HWND WinHandle = (HWND)Handle;
+
+    std::wstring FileName;
+    FileName.resize(USHRT_MAX);
+    FileName[0] = '\0';
+
+    OPENFILENAMEW OpenFileName {};
+    ZeroMemory(&OpenFileName, sizeof(OPENFILENAMEW));
+    OpenFileName.lStructSize = sizeof(OPENFILENAMEW);
+    OpenFileName.hwndOwner = WinHandle;
+    OpenFileName.Flags = OFN_CREATEPROMPT | OFN_FILEMUSTEXIST;
+    OpenFileName.lpstrFile = FileName.data();
+    OpenFileName.nMaxFile = FileName.size();
+
+    if (GetOpenFileNameW(&OpenFileName) == TRUE);
+    {
+        return OctaneGUI::String::ToMultiByte(FileName.c_str());
+    }
+
+    return "";
 }
 
 }
