@@ -162,7 +162,7 @@ void NewWindow(OctaneGUI::Window* Window)
             (int)Window->GetSize().X,
             (int)Window->GetSize().Y,
             Flags);
-        
+
         if (Window->Modal())
         {
             // This doesn't seem to be affecting any behavior but will keep
@@ -209,7 +209,7 @@ void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
     SDL_SysWMinfo WM {};
     SDL_GetWindowWMInfo(g_Windows[Window], &WM);
 
-    void* Handle = 
+    void* Handle =
 #if defined(WINDOWS)
         WM.info.win.window;
 #elif defined(APPLE)
