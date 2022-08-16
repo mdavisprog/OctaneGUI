@@ -123,6 +123,8 @@ Splitter::Splitter(Window* InWindow)
     m_Second = std::make_shared<Container>(InWindow);
     m_Interaction = std::make_shared<SplitterInteraction>(InWindow, this);
 
+    m_Separator->SetProperty(ThemeProperties::Separator_Margins, 0.0f);
+
     m_First->SetClip(true);
     m_Second->SetClip(true);
 
