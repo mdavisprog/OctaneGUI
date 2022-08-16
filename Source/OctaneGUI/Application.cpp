@@ -231,6 +231,19 @@ bool Application::IsMainWindow(Window* InWindow) const
     return false;
 }
 
+bool Application::HasWindow(const char* ID) const
+{
+    for (std::unordered_map<std::string, std::shared_ptr<Window>>::const_iterator It = m_Windows.begin(); It != m_Windows.end(); ++It)
+    {
+        if (It->first == ID)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 std::shared_ptr<Window> Application::NewWindow(const char* ID, const char* JsonStream)
 {
     std::shared_ptr<Window> Result = CreateWindow(ID);
