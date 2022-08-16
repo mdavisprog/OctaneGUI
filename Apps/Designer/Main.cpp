@@ -145,14 +145,18 @@ int main(int argc, char **argv)
             Input->GetWindow()->ClosePopup();
         });
     
-    MainList.To<OctaneGUI::MenuItem>("File.Open")->SetOnPressed([&](OctaneGUI::TextSelectable&) -> void
+    Application.SetOnFileDialogResult([&](const std::string& FileName) -> void
         {
-            std::string FileName = Application.OpenFileDialog();
             if (!FileName.empty())
             {
                 const std::string Contents = GetContents(FileName.c_str());
                 Document->SetText(Contents.c_str());
             }
+        });
+    
+    MainList.To<OctaneGUI::MenuItem>("File.Open")->SetOnPressed([&](OctaneGUI::TextSelectable&) -> void
+        {
+            Application.OpenFileDialog();
         });
 
     std::shared_ptr<OctaneGUI::MenuItem> QuitMenu = MainList.To<OctaneGUI::MenuItem>("File.Quit");

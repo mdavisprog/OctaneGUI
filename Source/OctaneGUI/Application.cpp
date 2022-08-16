@@ -369,14 +369,18 @@ Application& Application::SetMouseCursor(Window* Target, Mouse::Cursor Cursor)
     return *this;
 }
 
-std::string Application::OpenFileDialog()
+void Application::OpenFileDialog()
 {
     if (m_OnFileDialog)
     {
-        return m_OnFileDialog();
+        std::string Result = m_OnFileDialog();
+
+        if (m_OnFileDialogResult)
+        {
+            m_OnFileDialogResult(Result);
+        }
     }
 
-    return "";
 }
 
 Application& Application::SetOnWindowAction(OnWindowActionSignature&& Fn)
@@ -436,6 +440,12 @@ Application& Application::SetOnSetMouseCursor(OnSetMouseCursorSignature&& Fn)
 Application& Application::SetOnFileDialog(OnFileDialogSignature&& Fn)
 {
     m_OnFileDialog = std::move(Fn);
+    return *this;
+}
+
+Application& Application::SetOnFileDialogResult(OnFileDialogResultSignature&& Fn)
+{
+    m_OnFileDialogResult = std::move(Fn);
     return *this;
 }
 
