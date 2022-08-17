@@ -26,46 +26,37 @@ SOFTWARE.
 
 #pragma once
 
-#include "HorizontalContainer.h"
+#include <functional>
+#include <string>
 
 namespace OctaneGUI
 {
 
-class ImageButton;
-class ListBox;
-class Text;
-class TextInput;
+class Application;
 
-class Spinner : public HorizontalContainer
+class FileSystem
 {
-    CLASS(Spinner)
-
 public:
-    Spinner(Window* InWindow);
+    typedef std::function<std::string()> OnGetStringSignature;
+    typedef std::function<void(const std::string&)> OnStringResultSignature;
 
-    Spinner& SetValue(const int32_t Value);
-    int32_t Value() const;
+    FileSystem(Application& App);
+    ~FileSystem();
 
-    virtual void OnLoad(const Json& Root) override;
-    virtual void OnThemeLoaded() override;
+    FileSystem& SetUseSystemFileDialog(bool UseSystemFileDialog);
+    bool UseSystemFileDialog() const;
+
+    void OpenFileDialog() const;
+
+    FileSystem& SetOnFileDialog(OnGetStringSignature&& Fn);
+    FileSystem& SetOnFileDialogResult(OnStringResultSignature&& Fn);
 
 private:
-    using Container::AddControl;
-    using Container::InsertControl;
+    Application& m_Application;
+    bool m_UseSystemFileDialog { false };
 
-    int32_t RangeValue(const int32_t InValue);
-    void InternalSetText(int32_t Value);
-
-    bool m_MinSet { false };
-    bool m_MaxSet { false };
-
-    int32_t m_Min { 0 };
-    int32_t m_Max { 0 };
-    int32_t m_Value { 0 };
-
-    std::shared_ptr<TextInput> m_Input { nullptr };
-    std::shared_ptr<ImageButton> m_DecrementButton { nullptr };
-    std::shared_ptr<ImageButton> m_IncrementButton { nullptr };
+    OnGetStringSignature m_OnFileDialog { nullptr };
+    OnStringResultSignature m_OnFileDialogResult { nullptr };
 };
 
 }

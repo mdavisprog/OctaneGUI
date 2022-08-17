@@ -27,6 +27,7 @@ SOFTWARE.
 #pragma once
 
 #include "CallbackDefs.h"
+#include "FileSystem.h"
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "TextureCache.h"
@@ -69,8 +70,6 @@ public:
     typedef std::function<std::u32string(void)> OnGetClipboardContentsSignature;
     typedef std::function<void(Window*, const char*)> OnSetWindowTitleSignature;
     typedef std::function<void(Window*, Mouse::Cursor)> OnSetMouseCursorSignature;
-    typedef std::function<std::string()> OnFileDialogSignature;
-    typedef std::function<void(const std::string&)> OnFileDialogResultSignature;
 
     Application();
     virtual ~Application();
@@ -97,7 +96,8 @@ public:
     std::u32string ClipboardContents() const;
     Application& SetMouseCursor(Window* Target, Mouse::Cursor Cursor);
 
-    void OpenFileDialog();
+    const FileSystem& FS() const;
+    FileSystem& FS();
 
     Application& SetOnWindowAction(OnWindowActionSignature&& Fn);
     Application& SetOnPaint(OnWindowPaintSignature&& Fn);
@@ -108,8 +108,6 @@ public:
     Application& SetOnGetClipboardContents(OnGetClipboardContentsSignature&& Fn);
     Application& SetOnSetWindowTitle(OnSetWindowTitleSignature&& Fn);
     Application& SetOnSetMouseCursor(OnSetMouseCursorSignature&& Fn);
-    Application& SetOnFileDialog(OnFileDialogSignature&& Fn);
-    Application& SetOnFileDialogResult(OnFileDialogResultSignature&& Fn);
 
 private:
     void OnPaint(Window* InWindow, const VertexBuffer& Buffer);
@@ -126,6 +124,7 @@ private:
     bool m_IsRunning { false };
     std::vector<Keyboard::Key> m_PressedKeys {};
     TextureCache m_TextureCache {};
+    FileSystem m_FileSystem { *this };
 
     OnWindowActionSignature m_OnWindowAction { nullptr };
     OnWindowPaintSignature m_OnPaint { nullptr };
@@ -136,8 +135,6 @@ private:
     OnGetClipboardContentsSignature m_OnGetClipboardContents { nullptr };
     OnSetWindowTitleSignature m_OnSetWindowTitle { nullptr };
     OnSetMouseCursorSignature m_OnSetMouseCursor { nullptr };
-    OnFileDialogSignature m_OnFileDialog { nullptr };
-    OnFileDialogResultSignature m_OnFileDialogResult { nullptr };
 };
 
 }

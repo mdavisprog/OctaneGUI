@@ -103,6 +103,8 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
 
     m_Theme->Load(Root["Theme"]);
 
+    m_FileSystem.SetUseSystemFileDialog(Root["UseSystemFileDialog"].Boolean());
+
     // Now load the contents for each window. Some of the controls may require
     // a valid font. The font is loaded with the theme.
     Windows.ForEach([&](const std::string& Key, const Json& Value) -> void
@@ -369,18 +371,14 @@ Application& Application::SetMouseCursor(Window* Target, Mouse::Cursor Cursor)
     return *this;
 }
 
-void Application::OpenFileDialog()
+const FileSystem& Application::FS() const
 {
-    if (m_OnFileDialog)
-    {
-        std::string Result = m_OnFileDialog();
+    return m_FileSystem;
+}
 
-        if (m_OnFileDialogResult)
-        {
-            m_OnFileDialogResult(Result);
-        }
-    }
-
+FileSystem& Application::FS()
+{
+    return m_FileSystem;
 }
 
 Application& Application::SetOnWindowAction(OnWindowActionSignature&& Fn)
@@ -434,18 +432,6 @@ Application& Application::SetOnSetWindowTitle(OnSetWindowTitleSignature&& Fn)
 Application& Application::SetOnSetMouseCursor(OnSetMouseCursorSignature&& Fn)
 {
     m_OnSetMouseCursor = std::move(Fn);
-    return *this;
-}
-
-Application& Application::SetOnFileDialog(OnFileDialogSignature&& Fn)
-{
-    m_OnFileDialog = std::move(Fn);
-    return *this;
-}
-
-Application& Application::SetOnFileDialogResult(OnFileDialogResultSignature&& Fn)
-{
-    m_OnFileDialogResult = std::move(Fn);
     return *this;
 }
 

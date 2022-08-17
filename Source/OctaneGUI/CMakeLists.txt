@@ -43,6 +43,7 @@ set(SOURCE
     Color.cpp
     DrawCommand.cpp
     Event.cpp
+    FileSystem.cpp
     FlyString.cpp
     Font.cpp
     Icons.cpp

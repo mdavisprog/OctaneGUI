@@ -126,7 +126,9 @@ void Initialize(OctaneGUI::Application& Application)
         .SetOnSetClipboardContents(OnSetClipboardContents)
         .SetOnGetClipboardContents(OnGetClipboardContents)
         .SetOnSetWindowTitle(OnSetWindowTitle)
-        .SetOnSetMouseCursor(OnSetMouseCursor)
+        .SetOnSetMouseCursor(OnSetMouseCursor);
+
+    Application.FS()
         .SetOnFileDialog(OnFileDialog);
 }
 

@@ -65,6 +65,7 @@ SOFTWARE.
 #include "Defines.h"
 #include "DrawCommand.h"
 #include "Event.h"
+#include "FileSystem.h"
 #include "FlyString.h"
 #include "Font.h"
 #include "Json.h"

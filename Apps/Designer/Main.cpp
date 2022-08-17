@@ -145,7 +145,7 @@ int main(int argc, char **argv)
             Input->GetWindow()->ClosePopup();
         });
     
-    Application.SetOnFileDialogResult([&](const std::string& FileName) -> void
+    Application.FS().SetOnFileDialogResult([&](const std::string& FileName) -> void
         {
             if (!FileName.empty())
             {
@@ -156,7 +156,7 @@ int main(int argc, char **argv)
     
     MainList.To<OctaneGUI::MenuItem>("File.Open")->SetOnPressed([&](OctaneGUI::TextSelectable&) -> void
         {
-            Application.OpenFileDialog();
+            Application.FS().OpenFileDialog();
         });
 
     std::shared_ptr<OctaneGUI::MenuItem> QuitMenu = MainList.To<OctaneGUI::MenuItem>("File.Quit");

@@ -24,48 +24,57 @@ SOFTWARE.
 
 */
 
-#pragma once
-
-#include "HorizontalContainer.h"
+#include "FileSystem.h"
 
 namespace OctaneGUI
 {
 
-class ImageButton;
-class ListBox;
-class Text;
-class TextInput;
-
-class Spinner : public HorizontalContainer
+FileSystem::FileSystem(Application& App)
+    : m_Application(App)
 {
-    CLASS(Spinner)
+}
 
-public:
-    Spinner(Window* InWindow);
+FileSystem::~FileSystem()
+{
+}
 
-    Spinner& SetValue(const int32_t Value);
-    int32_t Value() const;
+FileSystem& FileSystem::SetUseSystemFileDialog(bool UseSystemFileDialog)
+{
+    m_UseSystemFileDialog = UseSystemFileDialog;
+    return *this;
+}
 
-    virtual void OnLoad(const Json& Root) override;
-    virtual void OnThemeLoaded() override;
+bool FileSystem::UseSystemFileDialog() const
+{
+    return m_UseSystemFileDialog;
+}
 
-private:
-    using Container::AddControl;
-    using Container::InsertControl;
+void FileSystem::OpenFileDialog() const
+{
+    if (m_UseSystemFileDialog)
+    {
+        if (m_OnFileDialog)
+        {
+            std::string Result = m_OnFileDialog();
 
-    int32_t RangeValue(const int32_t InValue);
-    void InternalSetText(int32_t Value);
+            if (m_OnFileDialogResult)
+            {
+                m_OnFileDialogResult(Result);
+            }
+        }
+    }
+}
 
-    bool m_MinSet { false };
-    bool m_MaxSet { false };
+FileSystem& FileSystem::SetOnFileDialog(OnGetStringSignature&& Fn)
+{
+    m_OnFileDialog = std::move(Fn);
+    return *this;
+}
 
-    int32_t m_Min { 0 };
-    int32_t m_Max { 0 };
-    int32_t m_Value { 0 };
-
-    std::shared_ptr<TextInput> m_Input { nullptr };
-    std::shared_ptr<ImageButton> m_DecrementButton { nullptr };
-    std::shared_ptr<ImageButton> m_IncrementButton { nullptr };
-};
+FileSystem& FileSystem::SetOnFileDialogResult(OnStringResultSignature&& Fn)
+{
+    m_OnFileDialogResult = std::move(Fn);
+    return *this;
+}
 
 }
