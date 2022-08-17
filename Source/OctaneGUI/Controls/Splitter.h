@@ -47,6 +47,9 @@ public:
     Splitter& SetOrientation(Orientation InOrientation);
     Orientation GetOrientation() const;
 
+    Splitter& SetSplitterPosition(float Position);
+    float SplitterPosition() const;
+
     std::shared_ptr<Container> First() const;
     std::shared_ptr<Container> Second() const;
 
@@ -59,7 +62,9 @@ public:
 
 private:
     void UpdateLayout();
-    void SetSplitterPosition(float Position);
+    void UpdateSplitterPosition(float Position);
+    float ToAbsolute(float Normalized) const;
+    float ToNormalized(float Absolute) const;
 
     std::shared_ptr<Separator> m_Separator { nullptr };
     std::shared_ptr<Container> m_First { nullptr };
@@ -67,6 +72,7 @@ private:
     std::shared_ptr<SplitterInteraction> m_Interaction { nullptr };
     std::shared_ptr<BoxContainer> m_Split { nullptr };
     bool m_UpdateLayout { false };
+    float m_SplitterPosition { 0.5f };
 };
 
 }
