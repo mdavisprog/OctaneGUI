@@ -708,7 +708,7 @@ bool Tree::IsHidden(const std::shared_ptr<TreeItem>& Item) const
         return false;
     }
 
-    if (m_List->HasControl(Item))
+    if (m_List->HasControlRecurse(Item))
     {
         return !m_Expand;
     }
