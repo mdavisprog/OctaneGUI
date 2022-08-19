@@ -708,11 +708,13 @@ bool Tree::IsHidden(const std::shared_ptr<TreeItem>& Item) const
         return false;
     }
 
-    if (m_List->HasControl(Item))
+    if (m_List->HasControlRecurse(Item))
     {
         return !m_Expand;
     }
 
+    // TODO: Look into seeing if this can be optimized/removed since a recursive check
+    // is already done above.
     for (const std::shared_ptr<Control>& Child : m_List->Controls())
     {
         const std::shared_ptr<Tree>& ChildTree = std::static_pointer_cast<Tree>(Child);
