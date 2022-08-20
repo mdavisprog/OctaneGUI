@@ -46,7 +46,7 @@ endif()
 
 if(${RENDERING} MATCHES Metal)
     list(APPEND DEFINES METAL)
-    set(FRONTEND_LIBS ${FRONTEND_LIBS} "-framework Metal -framework Foundation")
+    set(FRONTEND_LIBS ${FRONTEND_LIBS} "-framework Metal -framework Cocoa -framework Foundation")
 endif()
 
 if(${RENDERING} MATCHES OpenGL)
