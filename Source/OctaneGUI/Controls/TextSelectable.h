@@ -45,6 +45,7 @@ public:
     bool IsSelected() const;
 
     TextSelectable& SetText(const char* Contents);
+    TextSelectable& SetText(const char32_t* Contents);
     const char32_t* GetText() const;
 
     TextSelectable& SetAlignment(HorizontalAlignment Align);

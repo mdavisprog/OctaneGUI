@@ -42,8 +42,10 @@ public:
     Tree(Window* InWindow);
 
     std::shared_ptr<Tree> AddChild(const char* Text);
+    std::shared_ptr<Tree> AddChild(const char32_t* Text);
 
     Tree& SetText(const char* Text);
+    Tree& SetText(const char32_t* Text);
     const char32_t* GetText() const;
 
     Tree& SetExpanded(bool Expand);

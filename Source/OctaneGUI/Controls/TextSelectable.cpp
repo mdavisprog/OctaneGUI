@@ -28,6 +28,7 @@ SOFTWARE.
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Profiler.h"
+#include "../String.h"
 #include "../ThemeProperties.h"
 #include "Text.h"
 
@@ -57,6 +58,12 @@ bool TextSelectable::IsSelected() const
 }
 
 TextSelectable& TextSelectable::SetText(const char* Contents)
+{
+    SetText(String::ToUTF32(Contents).c_str());
+    return *this;
+}
+
+TextSelectable& TextSelectable::SetText(const char32_t* Contents)
 {
     m_Text->SetText(Contents);
     UpdateSize();

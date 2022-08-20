@@ -28,6 +28,7 @@ SOFTWARE.
 #include "../Icons.h"
 #include "../Json.h"
 #include "../Paint.h"
+#include "../String.h"
 #include "../ThemeProperties.h"
 #include "../Window.h"
 #include "Image.h"
@@ -69,6 +70,12 @@ public:
     }
 
     TreeItem& SetText(const char* Text)
+    {
+        SetText(String::ToUTF32(Text).c_str());
+        return *this;
+    }
+
+    TreeItem& SetText(const char32_t* Text)
     {
         m_Text->SetText(Text);
         UpdateSize();
@@ -273,6 +280,11 @@ Tree::Tree(Window* InWindow)
 
 std::shared_ptr<Tree> Tree::AddChild(const char* Text)
 {
+    return AddChild(String::ToUTF32(Text).c_str());
+}
+
+std::shared_ptr<Tree> Tree::AddChild(const char32_t* Text)
+{
     if (!m_List)
     {
         m_List = AddControl<VerticalContainer>();
@@ -338,6 +350,12 @@ std::shared_ptr<Tree> Tree::AddChild(const char* Text)
 }
 
 Tree& Tree::SetText(const char* Text)
+{
+    m_Item->SetText(Text);
+    return *this;
+}
+
+Tree& Tree::SetText(const char32_t* Text)
 {
     m_Item->SetText(Text);
     return *this;
