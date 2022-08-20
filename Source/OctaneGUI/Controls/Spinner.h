@@ -27,6 +27,7 @@ SOFTWARE.
 #pragma once
 
 #include "HorizontalContainer.h"
+#include "VerticalContainer.h"
 
 namespace OctaneGUI
 {
@@ -62,10 +63,14 @@ private:
     int32_t m_Min { 0 };
     int32_t m_Max { 0 };
     int32_t m_Value { 0 };
+    
+    Orientation m_ButtonOrientation { Orientation::Horizontal };
 
     std::shared_ptr<TextInput> m_Input { nullptr };
     std::shared_ptr<ImageButton> m_DecrementButton { nullptr };
     std::shared_ptr<ImageButton> m_IncrementButton { nullptr };
+    
+    std::shared_ptr<Container> m_ButtonContainer { nullptr };
 
 };
 
