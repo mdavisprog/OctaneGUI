@@ -59,7 +59,7 @@ void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor);
 void SetMovable(void* Handle, bool Movable);
 void SetEnabled(void* Handle, bool Enabled);
 void Focus(void* Handle);
-std::string OpenFileDialog(void* Handle);
+std::u32string OpenFileDialog(void* Handle);
 
 }
 }

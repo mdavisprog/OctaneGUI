@@ -40,7 +40,7 @@ class FileDialog : public Container
     CLASS(FileDialog)
 
 public:
-    typedef std::function<void(const std::string&)> OnCloseSignature;
+    typedef std::function<void(const std::u32string&)> OnCloseSignature;
 
     static void Show(Application& App, OnCloseSignature&& OnClose);
 
@@ -50,16 +50,16 @@ public:
 
 private:
     void PopulateTree();
-    void PopulateChildren(const std::shared_ptr<Tree>& Parent, const std::string& Directory) const;
+    void PopulateChildren(const std::shared_ptr<Tree>& Parent, const std::u32string& Directory) const;
     void PopulateList();
     void Close(bool Success);
 
-    std::string Path(const std::shared_ptr<Tree>& Item) const;
+    std::u32string Path(const std::shared_ptr<Tree>& Item) const;
     bool IsEmpty(const std::shared_ptr<Tree>& Item) const;
-    bool HasDirectories(const std::string& Directory) const;
+    bool HasDirectories(const std::u32string& Directory) const;
 
-    std::string m_Directory {};
-    std::string m_Selected {};
+    std::u32string m_Directory {};
+    std::u32string m_Selected {};
 
     std::shared_ptr<Tree> m_DirectoryTree { nullptr };
     std::shared_ptr<ListBox> m_DirectoryList { nullptr };

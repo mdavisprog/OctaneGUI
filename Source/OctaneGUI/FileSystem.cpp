@@ -53,61 +53,61 @@ bool FileSystem::UseSystemFileDialog() const
     return m_UseSystemFileDialog;
 }
 
-std::string FileSystem::CurrentDirectory() const
+std::u32string FileSystem::CurrentDirectory() const
 {
-    return std::filesystem::current_path().u8string();
+    return std::filesystem::current_path().u32string();
 }
 
-std::string FileSystem::CurrentDirectory(const std::string& Location) const
-{
-    const std::filesystem::path Path { Location };
-    return Path.filename().u8string();
-}
-
-std::string FileSystem::ParentDirectory(const std::string& Location) const
+std::u32string FileSystem::CurrentDirectory(const std::u32string& Location) const
 {
     const std::filesystem::path Path { Location };
-    return Path.parent_path().u8string();
+    return Path.filename().u32string();
 }
 
-std::string FileSystem::RootDirectory(const std::string& Location) const
+std::u32string FileSystem::ParentDirectory(const std::u32string& Location) const
 {
     const std::filesystem::path Path { Location };
-    return Path.root_path().u8string();
+    return Path.parent_path().u32string();
 }
 
-std::string FileSystem::CombinePath(const std::string& Left, const std::string& Right) const
+std::u32string FileSystem::RootDirectory(const std::u32string& Location) const
+{
+    const std::filesystem::path Path { Location };
+    return Path.root_path().u32string();
+}
+
+std::u32string FileSystem::CombinePath(const std::u32string& Left, const std::u32string& Right) const
 {
     std::filesystem::path Path { Left };
     Path.append(Right);
-    return Path.u8string();
+    return Path.u32string();
 }
 
-std::vector<std::string> FileSystem::DirectoryItems(const char* Location) const
+std::vector<std::u32string> FileSystem::DirectoryItems(const std::u32string& Location) const
 {
-    std::vector<std::string> Result;
+    std::vector<std::u32string> Result;
 
     const std::filesystem::directory_options Options { std::filesystem::directory_options::skip_permission_denied };
     std::error_code Error;
     for (const std::filesystem::directory_entry& Entry : std::filesystem::directory_iterator(Location, Options, Error))
     {
-        Result.push_back(Entry.path().filename().u8string());
+        Result.push_back(Entry.path().filename().u32string());
     }
 
     return Result;
 }
 
-bool FileSystem::IsFile(const char* Location) const
+bool FileSystem::IsFile(const std::u32string& Location) const
 {
     return std::filesystem::is_regular_file(Location);
 }
 
-bool FileSystem::IsDirectory(const char* Location) const
+bool FileSystem::IsDirectory(const std::u32string& Location) const
 {
     return std::filesystem::is_directory(Location);
 }
 
-bool FileSystem::IsEmpty(const char* Location) const
+bool FileSystem::IsEmpty(const std::u32string& Location) const
 {
     std::error_code Error;
     bool Result = std::filesystem::is_empty(Location, Error);
@@ -120,7 +120,7 @@ void FileSystem::OpenFileDialog() const
     {
         if (m_OnFileDialog)
         {
-            std::string Result = m_OnFileDialog();
+            std::u32string Result = m_OnFileDialog();
 
             if (m_OnFileDialogResult)
             {
@@ -131,7 +131,7 @@ void FileSystem::OpenFileDialog() const
     else
     {
         // TODO: Look into not having the 'FileDialog' as a dependency for FileSystem.
-        FileDialog::Show(m_Application, [this](const std::string& FileName) -> void
+        FileDialog::Show(m_Application, [this](const std::u32string& FileName) -> void
             {
                 if (m_OnFileDialogResult)
                 {

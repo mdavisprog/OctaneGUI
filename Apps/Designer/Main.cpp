@@ -145,11 +145,11 @@ int main(int argc, char **argv)
             Input->GetWindow()->ClosePopup();
         });
     
-    Application.FS().SetOnFileDialogResult([&](const std::string& FileName) -> void
+    Application.FS().SetOnFileDialogResult([&](const std::u32string& FileName) -> void
         {
             if (!FileName.empty())
             {
-                const std::string Contents = GetContents(FileName.c_str());
+                const std::string Contents = GetContents(OctaneGUI::String::ToMultiByte(FileName).c_str());
                 Document->SetText(Contents.c_str());
             }
         });

@@ -117,7 +117,7 @@ FileDialog::FileDialog(Window* InWindow)
                 }
 
                 const std::shared_ptr<TextSelectable> Selected = std::static_pointer_cast<TextSelectable>(Item.lock());
-                m_Selected = String::ToMultiByte(Selected->GetText());
+                m_Selected = Selected->GetText();
             })
         .SetExpand(Expand::Both);
 
@@ -164,15 +164,15 @@ void FileDialog::PopulateTree()
 
     const FileSystem& FS = GetWindow()->App().FS();
 
-    std::vector<std::string> Stack;
-    const std::string RootDir = FS.RootDirectory(m_Directory);
-    std::string Current = m_Directory;
+    std::vector<std::u32string> Stack;
+    const std::u32string RootDir = FS.RootDirectory(m_Directory);
+    std::u32string Current = m_Directory;
     while (!Current.empty())
     {
-        const std::string Name = FS.CurrentDirectory(Current);
+        const std::u32string Name = FS.CurrentDirectory(Current);
         Stack.insert(Stack.begin(), Name);
 
-        const std::string Parent = FS.ParentDirectory(Current);
+        const std::u32string Parent = FS.ParentDirectory(Current);
         if (Parent == RootDir)
         {
             Stack.insert(Stack.begin(), Parent);
@@ -191,13 +191,13 @@ void FileDialog::PopulateTree()
 
     std::shared_ptr<Tree> Root = m_DirectoryTree;
     Root->SetText(Stack.front().c_str());
-    std::string Path = Stack.front();
+    std::u32string Path = Stack.front();
     for (size_t I = 1; I < Stack.size(); I++)
     {
         PopulateChildren(Root, Path);
 
-        const std::string& Name = Stack[I];
-        const std::shared_ptr<Tree> Child = Root->GetChild(String::ToUTF32(Name).c_str());
+        const std::u32string& Name = Stack[I];
+        const std::shared_ptr<Tree> Child = Root->GetChild(Name.c_str());
         if (Child)
         {
             Root->SetExpanded(true);
@@ -215,16 +215,16 @@ void FileDialog::PopulateTree()
     Root->SetSelected(true);
 }
 
-void FileDialog::PopulateChildren(const std::shared_ptr<Tree>& Parent, const std::string& Directory) const
+void FileDialog::PopulateChildren(const std::shared_ptr<Tree>& Parent, const std::u32string& Directory) const
 {
     const FileSystem& FS = GetWindow()->App().FS();
 
-    const std::vector<std::string> Items = FS.DirectoryItems(Directory.c_str());
-    for (const std::string& Item : Items)
+    const std::vector<std::u32string> Items = FS.DirectoryItems(Directory.c_str());
+    for (const std::u32string& Item : Items)
     {
-        const std::string Path = FS.CombinePath(Directory, Item);
+        const std::u32string Path = FS.CombinePath(Directory, Item);
 
-        if (FS.IsDirectory(Path.c_str()))
+        if (FS.IsDirectory(Path))
         {
             const std::shared_ptr<Tree> Child = Parent->AddChild(Item.c_str());
 
@@ -240,9 +240,9 @@ void FileDialog::PopulateList()
 {
     m_DirectoryList->ClearItems();
 
-    const std::vector<std::string> Items = GetWindow()->App().FS().DirectoryItems(m_Directory.c_str());
+    const std::vector<std::u32string> Items = GetWindow()->App().FS().DirectoryItems(m_Directory);
 
-    for (const std::string& Item : Items)
+    for (const std::u32string& Item : Items)
     {
         m_DirectoryList->AddItem<TextSelectable>()->SetText(Item.c_str());
     }
@@ -250,13 +250,13 @@ void FileDialog::PopulateList()
 
 void FileDialog::Close(bool Success)
 {
-    std::string Result;
+    std::u32string Result;
 
     if (!m_Selected.empty())
     {
         Result = Success
             ? GetWindow()->App().FS().CombinePath(m_Directory, m_Selected)
-            : "";
+            : U"";
     }
 
     if (m_OnClose)
@@ -267,20 +267,20 @@ void FileDialog::Close(bool Success)
     GetWindow()->App().CloseWindow(ID);
 }
 
-std::string FileDialog::Path(const std::shared_ptr<Tree>& Item) const
+std::u32string FileDialog::Path(const std::shared_ptr<Tree>& Item) const
 {
-    std::string Result;
+    std::u32string Result;
 
-    std::vector<std::string> Stack;
+    std::vector<std::u32string> Stack;
     std::shared_ptr<Tree> Parent = Item;
     while (Parent)
     {
-        const std::string Name = String::ToMultiByte(Parent->GetText());
+        const std::u32string Name = Parent->GetText();
         Stack.insert(Stack.begin(), Name);
         Parent = Parent->ParentTree().lock();
     }
 
-    for (const std::string& Sub : Stack)
+    for (const std::u32string& Sub : Stack)
     {
         if (Result.empty())
         {
@@ -317,15 +317,15 @@ bool FileDialog::IsEmpty(const std::shared_ptr<Tree>& Item) const
     return true;
 }
 
-bool FileDialog::HasDirectories(const std::string& Directory) const
+bool FileDialog::HasDirectories(const std::u32string& Directory) const
 {
     const FileSystem& FS = GetWindow()->App().FS();
-    const std::vector<std::string> Items = FS.DirectoryItems(Directory.c_str());
+    const std::vector<std::u32string> Items = FS.DirectoryItems(Directory.c_str());
 
-    for (const std::string& Item : Items)
+    for (const std::u32string& Item : Items)
     {
-        const std::string Path { FS.CombinePath(Directory, Item) };
-        if (FS.IsDirectory(Path.c_str()))
+        const std::u32string Path { FS.CombinePath(Directory, Item) };
+        if (FS.IsDirectory(Path))
         {
             return true;
         }

@@ -39,8 +39,8 @@ class Application;
 class FileSystem
 {
 public:
-    typedef std::function<std::string()> OnGetStringSignature;
-    typedef std::function<void(const std::string&)> OnStringResultSignature;
+    typedef std::function<std::u32string()> OnGetStringSignature;
+    typedef std::function<void(const std::u32string&)> OnStringResultSignature;
 
     FileSystem(Application& App);
     ~FileSystem();
@@ -48,16 +48,16 @@ public:
     FileSystem& SetUseSystemFileDialog(bool UseSystemFileDialog);
     bool UseSystemFileDialog() const;
 
-    std::string CurrentDirectory() const;
-    std::string CurrentDirectory(const std::string& Location) const;
-    std::string ParentDirectory(const std::string& Location) const;
-    std::string RootDirectory(const std::string& Location) const;
-    std::string CombinePath(const std::string& Left, const std::string& Right) const;
-    std::vector<std::string> DirectoryItems(const char* Location) const;
+    std::u32string CurrentDirectory() const;
+    std::u32string CurrentDirectory(const std::u32string& Location) const;
+    std::u32string ParentDirectory(const std::u32string& Location) const;
+    std::u32string RootDirectory(const std::u32string& Location) const;
+    std::u32string CombinePath(const std::u32string& Left, const std::u32string& Right) const;
+    std::vector<std::u32string> DirectoryItems(const std::u32string& Location) const;
 
-    bool IsFile(const char* Location) const;
-    bool IsDirectory(const char* Location) const;
-    bool IsEmpty(const char* Location) const;
+    bool IsFile(const std::u32string& Location) const;
+    bool IsDirectory(const std::u32string& Location) const;
+    bool IsEmpty(const std::u32string& Location) const;
 
     void OpenFileDialog() const;
 

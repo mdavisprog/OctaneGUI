@@ -53,7 +53,7 @@ void Focus(void* Handle)
     SetFocus(WinHandle);
 }
 
-std::string OpenFileDialog(void* Handle)
+std::u32string OpenFileDialog(void* Handle)
 {
     HWND WinHandle = (HWND)Handle;
 
@@ -71,10 +71,10 @@ std::string OpenFileDialog(void* Handle)
 
     if (GetOpenFileNameW(&OpenFileName) == TRUE);
     {
-        return OctaneGUI::String::ToMultiByte(FileName.c_str());
+        return OctaneGUI::String::ToUTF32(FileName.c_str());
     }
 
-    return "";
+    return U"";
 }
 
 }
