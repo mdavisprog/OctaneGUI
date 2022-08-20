@@ -291,6 +291,7 @@ std::shared_ptr<Tree> Tree::AddChild(const char* Text)
     std::shared_ptr<Tree> Result = m_List->AddControl<Tree>();
     Result
         ->SetText(Text)
+        .SetParentTree(TShare<Tree>())
         .SetOnHovered([this](bool Hovered, const std::shared_ptr<TreeItem>& Item) -> void
             {
                 if (m_OnHoveredItem)
@@ -514,6 +515,11 @@ std::shared_ptr<Tree> Tree::GetChild(const char32_t* Text) const
     }
 
     return Result;
+}
+
+const std::weak_ptr<Tree>& Tree::ParentTree() const
+{
+    return m_ParentTree;
 }
 
 std::weak_ptr<Control> Tree::GetControl(const Vector2& Point) const
@@ -762,6 +768,12 @@ void Tree::RowSelect(const std::shared_ptr<TreeItem>& Item) const
     {
         Parent->SetExpanded(!Parent->IsExpanded());
     }
+}
+
+Tree& Tree::SetParentTree(const std::weak_ptr<Tree> Parent)
+{
+    m_ParentTree = Parent;
+    return *this;
 }
 
 }

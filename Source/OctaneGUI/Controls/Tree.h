@@ -68,6 +68,8 @@ public:
     const Tree& ForEachChild(OnTreeSignature Callback) const;
     std::shared_ptr<Tree> GetChild(const char32_t* Text) const;
 
+    const std::weak_ptr<Tree>& ParentTree() const;
+
     virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
     virtual Vector2 DesiredSize() const override;
 
@@ -90,7 +92,10 @@ private:
     bool IsHidden(const std::shared_ptr<TreeItem>& Item) const;
     void RowSelect(const std::shared_ptr<TreeItem>& Item) const;
 
+    Tree& SetParentTree(const std::weak_ptr<Tree> Parent);
+
     std::shared_ptr<TreeItem> m_Item { nullptr };
+    std::weak_ptr<Tree> m_ParentTree {};
     std::shared_ptr<VerticalContainer> m_List { nullptr };
 
     std::weak_ptr<TreeItem> m_Hovered {};
