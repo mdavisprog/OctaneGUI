@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "FileSystem.h"
+#include "Dialogs/FileDialog.h"
 
 #include <filesystem>
 #include <system_error>
@@ -126,6 +127,17 @@ void FileSystem::OpenFileDialog() const
                 m_OnFileDialogResult(Result);
             }
         }
+    }
+    else
+    {
+        // TODO: Look into not having the 'FileDialog' as a dependency for FileSystem.
+        FileDialog::Show(m_Application, [this](const std::string& FileName) -> void
+            {
+                if (m_OnFileDialogResult)
+                {
+                    m_OnFileDialogResult(FileName);
+                }
+            });
     }
 }
 
