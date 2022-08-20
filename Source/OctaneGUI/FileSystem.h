@@ -26,8 +26,10 @@ SOFTWARE.
 
 #pragma once
 
+#include <cstdint>
 #include <functional>
 #include <string>
+#include <vector>
 
 namespace OctaneGUI
 {
@@ -45,6 +47,17 @@ public:
 
     FileSystem& SetUseSystemFileDialog(bool UseSystemFileDialog);
     bool UseSystemFileDialog() const;
+
+    std::string CurrentDirectory() const;
+    std::string CurrentDirectory(const std::string& Location) const;
+    std::string ParentDirectory(const std::string& Location) const;
+    std::string RootDirectory(const std::string& Location) const;
+    std::string CombinePath(const std::string& Left, const std::string& Right) const;
+    std::vector<std::string> DirectoryItems(const char* Location) const;
+
+    bool IsFile(const char* Location) const;
+    bool IsDirectory(const char* Location) const;
+    bool IsEmpty(const char* Location) const;
 
     void OpenFileDialog() const;
 

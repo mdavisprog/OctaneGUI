@@ -26,6 +26,9 @@ SOFTWARE.
 
 #include "FileSystem.h"
 
+#include <filesystem>
+#include <system_error>
+
 namespace OctaneGUI
 {
 
@@ -47,6 +50,67 @@ FileSystem& FileSystem::SetUseSystemFileDialog(bool UseSystemFileDialog)
 bool FileSystem::UseSystemFileDialog() const
 {
     return m_UseSystemFileDialog;
+}
+
+std::string FileSystem::CurrentDirectory() const
+{
+    return std::filesystem::current_path().u8string();
+}
+
+std::string FileSystem::CurrentDirectory(const std::string& Location) const
+{
+    const std::filesystem::path Path { Location };
+    return Path.filename().u8string();
+}
+
+std::string FileSystem::ParentDirectory(const std::string& Location) const
+{
+    const std::filesystem::path Path { Location };
+    return Path.parent_path().u8string();
+}
+
+std::string FileSystem::RootDirectory(const std::string& Location) const
+{
+    const std::filesystem::path Path { Location };
+    return Path.root_path().u8string();
+}
+
+std::string FileSystem::CombinePath(const std::string& Left, const std::string& Right) const
+{
+    std::filesystem::path Path { Left };
+    Path.append(Right);
+    return Path.u8string();
+}
+
+std::vector<std::string> FileSystem::DirectoryItems(const char* Location) const
+{
+    std::vector<std::string> Result;
+
+    const std::filesystem::directory_options Options { std::filesystem::directory_options::skip_permission_denied };
+    std::error_code Error;
+    for (const std::filesystem::directory_entry& Entry : std::filesystem::directory_iterator(Location, Options, Error))
+    {
+        Result.push_back(Entry.path().filename().u8string());
+    }
+
+    return Result;
+}
+
+bool FileSystem::IsFile(const char* Location) const
+{
+    return std::filesystem::is_regular_file(Location);
+}
+
+bool FileSystem::IsDirectory(const char* Location) const
+{
+    return std::filesystem::is_directory(Location);
+}
+
+bool FileSystem::IsEmpty(const char* Location) const
+{
+    std::error_code Error;
+    bool Result = std::filesystem::is_empty(Location, Error);
+    return Result && Error.value() == 0;
 }
 
 void FileSystem::OpenFileDialog() const
