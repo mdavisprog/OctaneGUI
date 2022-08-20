@@ -36,6 +36,7 @@ set(SOURCE
     Controls/Tree.cpp
     Controls/VerticalContainer.cpp
     Controls/WindowContainer.cpp
+    Dialogs/FileDialog.cpp
     Application.cpp
     Assert.cpp
     Class.cpp

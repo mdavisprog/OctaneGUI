@@ -63,6 +63,7 @@ SOFTWARE.
 #include "Controls/VerticalContainer.h"
 #include "Controls/WindowContainer.h"
 #include "Defines.h"
+#include "Dialogs/FileDialog.h"
 #include "DrawCommand.h"
 #include "Event.h"
 #include "FileSystem.h"

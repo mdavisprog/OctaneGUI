@@ -10,6 +10,8 @@ clang-format -i --verbose^
  ..\Source/OctaneGUI/Controls/*.h^
  ..\Source/OctaneGUI/Controls/Syntax/*.cpp^
  ..\Source/OctaneGUI/Controls/Syntax/*.h^
+ ..\Source/OctaneGUI/Dialogs/*.cpp^
+ ..\Source/OctaneGUI/Dialogs/*.h^
  ..\Source/OctaneGUI/Tools/*.h^
  ..\Source/OctaneGUI/Tools/*.cpp^
  ..\Frontends/*.h^
