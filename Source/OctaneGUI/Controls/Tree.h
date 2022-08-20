@@ -66,6 +66,7 @@ public:
     bool HasChildren() const;
     std::vector<std::shared_ptr<Tree>> Children() const;
     const Tree& ForEachChild(OnTreeSignature Callback) const;
+    std::shared_ptr<Tree> GetChild(const char32_t* Text) const;
 
     virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
     virtual Vector2 DesiredSize() const override;

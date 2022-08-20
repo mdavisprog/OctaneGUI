@@ -494,6 +494,28 @@ const Tree& Tree::ForEachChild(OnTreeSignature Callback) const
     return *this;
 }
 
+std::shared_ptr<Tree> Tree::GetChild(const char32_t* Text) const
+{
+    std::shared_ptr<Tree> Result { nullptr };
+
+    if (!m_List)
+    {
+        return Result;
+    }
+
+    for (const std::shared_ptr<Control>& Item : m_List->Controls())
+    {
+        const std::shared_ptr<Tree>& Child = std::static_pointer_cast<Tree>(Item);
+
+        if (std::u32string(Child->GetText()) == Text)
+        {
+            return Child;
+        }
+    }
+
+    return Result;
+}
+
 std::weak_ptr<Control> Tree::GetControl(const Vector2& Point) const
 {
     return GetControl(Point, GetAbsoluteBounds());
