@@ -225,6 +225,14 @@ std::u32string String::ToUTF32(const std::string_view& Value)
     return ToUTF32(std::string { Value });
 }
 
+std::u32string String::ToUTF32(const std::wstring& Value)
+{
+    // A codecvt<wchar_t, char32_t> does not exist on all platforms.
+    // This means two conversions are necessary unfortunately.
+    const std::string MBValue = ToMultiByte(Value);
+    return ToUTF32(MBValue);
+}
+
 float String::ToFloat(const std::string& Value)
 {
     return std::stof(Value);
