@@ -222,6 +222,8 @@ ListBox::ListBox(Window* InWindow)
 ListBox& ListBox::ClearItems()
 {
     m_List->ClearControls();
+    const std::shared_ptr<ListBoxInteraction>& Interaction = std::static_pointer_cast<ListBoxInteraction>(this->Interaction());
+    Interaction->Clear();
     return *this;
 }
 
