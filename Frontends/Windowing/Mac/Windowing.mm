@@ -50,14 +50,25 @@ void Focus(void* Handle)
 
 std::u32string FileDialog(OctaneGUI::FileDialogType Type, void* Handle)
 {
+	NSString* Title = Type == OctaneGUI::FileDialogType::Open
+		? @"Open File" : @"Save File";
+	
+	NSString* Message = Type == OctaneGUI::FileDialogType::Open
+		? @"Open a file" : @"Save to file";
+
 	NSWindow* KeyWindow = [NSApp keyWindow];
-	NSOpenPanel* Dialog = [NSOpenPanel openPanel];
+	NSSavePanel* Dialog = [NSSavePanel savePanel];
+	if (Type == OctaneGUI::FileDialogType::Open)
+	{
+		NSOpenPanel* OpenDialog = [NSOpenPanel openPanel];
+		[OpenDialog setCanChooseFiles:true];
+		[OpenDialog setAllowsMultipleSelection:FALSE];
+		[OpenDialog setCanChooseDirectories:false];
+		Dialog = OpenDialog;
+	}
 	[Dialog setLevel:CGShieldingWindowLevel()];
-	[Dialog setTitle:@"Open File"];
-	[Dialog setMessage:@"Open a file"];
-	[Dialog setCanChooseFiles:true];
-	[Dialog setCanChooseDirectories:false];
-	[Dialog setAllowsMultipleSelection:FALSE];
+	[Dialog setTitle:Title];
+	[Dialog setMessage:Message];
 	[Dialog setCanCreateDirectories:TRUE];
 
 	std::string Result;
