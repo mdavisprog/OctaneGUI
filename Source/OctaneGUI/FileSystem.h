@@ -26,6 +26,8 @@ SOFTWARE.
 
 #pragma once
 
+#include "Dialogs/FileDialogType.h"
+
 #include <cstdint>
 #include <functional>
 #include <string>
@@ -39,8 +41,8 @@ class Application;
 class FileSystem
 {
 public:
-    typedef std::function<std::u32string()> OnGetStringSignature;
-    typedef std::function<void(const std::u32string&)> OnStringResultSignature;
+    typedef std::function<std::u32string(FileDialogType)> OnFileDialogSignature;
+    typedef std::function<void(FileDialogType, const std::u32string&)> OnFileDialogResultSignature;
 
     FileSystem(Application& App);
     ~FileSystem();
@@ -59,17 +61,17 @@ public:
     bool IsDirectory(const std::u32string& Location) const;
     bool IsEmpty(const std::u32string& Location) const;
 
-    void OpenFileDialog() const;
+    void FileDialog(FileDialogType Type) const;
 
-    FileSystem& SetOnFileDialog(OnGetStringSignature&& Fn);
-    FileSystem& SetOnFileDialogResult(OnStringResultSignature&& Fn);
+    FileSystem& SetOnFileDialog(OnFileDialogSignature&& Fn);
+    FileSystem& SetOnFileDialogResult(OnFileDialogResultSignature&& Fn);
 
 private:
     Application& m_Application;
     bool m_UseSystemFileDialog { false };
 
-    OnGetStringSignature m_OnFileDialog { nullptr };
-    OnStringResultSignature m_OnFileDialogResult { nullptr };
+    OnFileDialogSignature m_OnFileDialog { nullptr };
+    OnFileDialogResultSignature m_OnFileDialogResult { nullptr };
 };
 
 }

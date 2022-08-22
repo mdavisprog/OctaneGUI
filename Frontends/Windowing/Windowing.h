@@ -27,6 +27,7 @@ SOFTWARE.
 #pragma once
 
 #include "OctaneGUI/Mouse.h"
+#include "OctaneGUI/Dialogs/FileDialogType.h"
 
 #include <string>
 
@@ -59,7 +60,7 @@ void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor);
 void SetMovable(void* Handle, bool Movable);
 void SetEnabled(void* Handle, bool Enabled);
 void Focus(void* Handle);
-std::u32string OpenFileDialog(void* Handle);
+std::u32string FileDialog(OctaneGUI::FileDialogType Type, void* Handle);
 
 }
 }

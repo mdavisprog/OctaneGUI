@@ -114,40 +114,40 @@ bool FileSystem::IsEmpty(const std::u32string& Location) const
     return Result && Error.value() == 0;
 }
 
-void FileSystem::OpenFileDialog() const
+void FileSystem::FileDialog(FileDialogType Type) const
 {
     if (m_UseSystemFileDialog)
     {
         if (m_OnFileDialog)
         {
-            std::u32string Result = m_OnFileDialog();
+            std::u32string Result = m_OnFileDialog(Type);
 
             if (m_OnFileDialogResult)
             {
-                m_OnFileDialogResult(Result);
+                m_OnFileDialogResult(Type, Result);
             }
         }
     }
     else
     {
         // TODO: Look into not having the 'FileDialog' as a dependency for FileSystem.
-        FileDialog::Show(m_Application, [this](const std::u32string& FileName) -> void
+        FileDialog::Show(m_Application, [this, Type](const std::u32string& FileName) -> void
             {
                 if (m_OnFileDialogResult)
                 {
-                    m_OnFileDialogResult(FileName);
+                    m_OnFileDialogResult(Type, FileName);
                 }
             });
     }
 }
 
-FileSystem& FileSystem::SetOnFileDialog(OnGetStringSignature&& Fn)
+FileSystem& FileSystem::SetOnFileDialog(OnFileDialogSignature&& Fn)
 {
     m_OnFileDialog = std::move(Fn);
     return *this;
 }
 
-FileSystem& FileSystem::SetOnFileDialogResult(OnStringResultSignature&& Fn)
+FileSystem& FileSystem::SetOnFileDialogResult(OnFileDialogResultSignature&& Fn)
 {
     m_OnFileDialogResult = std::move(Fn);
     return *this;

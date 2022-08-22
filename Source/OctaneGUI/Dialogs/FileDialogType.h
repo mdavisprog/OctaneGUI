@@ -24,29 +24,15 @@ SOFTWARE.
 
 */
 
-#include "../Windowing.h"
+#pragma once
 
-namespace Frontend
-{
-namespace Windowing
+namespace OctaneGUI
 {
 
-void SetMovable(void* Handle, bool Movable)
+enum class FileDialogType
 {
-}
+	Open,
+	Save,
+};
 
-void SetEnabled(void* Handle, bool Enabled)
-{
-}
-
-void Focus(void* Handle)
-{
-}
-
-std::u32string FileDialog(OctaneGUI::FileDialogType Type, void* Handle)
-{
-    return U"";
-}
-
-}
 }

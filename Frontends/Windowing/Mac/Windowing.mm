@@ -48,7 +48,7 @@ void Focus(void* Handle)
 {
 }
 
-std::u32string OpenFileDialog(void* Handle)
+std::u32string FileDialog(OctaneGUI::FileDialogType Type, void* Handle)
 {
 	NSWindow* KeyWindow = [NSApp keyWindow];
 	NSOpenPanel* Dialog = [NSOpenPanel openPanel];
