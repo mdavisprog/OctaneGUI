@@ -11,6 +11,7 @@
                     {"Text": "Preview Pane", "ID": "PreviewPane"},
                     {"Type": "Separator"},
                     {"Text": "Open", "ID": "Open"},
+                    {"Text": "Save", "ID": "Save"},
                     {"Type": "Separator"},
                     {"Text": "Quit", "ID": "Quit"}
                 ]},
