@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "../Windowing.h"
+#include "OctaneGUI/OctaneGUI.h"
 
 #import <Cocoa/Cocoa.h>
 
@@ -47,7 +48,7 @@ void Focus(void* Handle)
 {
 }
 
-std::string OpenFileDialog(void* Handle)
+std::u32string OpenFileDialog(void* Handle)
 {
 	NSWindow* KeyWindow = [NSApp keyWindow];
 	NSOpenPanel* Dialog = [NSOpenPanel openPanel];
@@ -63,12 +64,13 @@ std::string OpenFileDialog(void* Handle)
 	if ([Dialog runModal] == NSModalResponseOK)
 	{
 		NSURL* URL = [Dialog URL];
-		Result = [[[URL path] precomposedStringWithCanonicalMapping] UTF8String];
+		NSString* Path = [[URL path] precomposedStringWithCanonicalMapping];
+		Result = [Path UTF8String];
 	}
 
 	[KeyWindow makeKeyWindow];
 
-	return Result;
+	return OctaneGUI::String::ToUTF32(Result);
 }
 
 }
