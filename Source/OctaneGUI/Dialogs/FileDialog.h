@@ -27,12 +27,14 @@ SOFTWARE.
 #pragma once
 
 #include "../Controls/Container.h"
+#include "FileDialogType.h"
 
 namespace OctaneGUI
 {
 
 class Application;
 class ListBox;
+class TextButton;
 class Tree;
 
 class FileDialog : public Container
@@ -42,9 +44,11 @@ class FileDialog : public Container
 public:
     typedef std::function<void(const std::u32string&)> OnCloseSignature;
 
-    static void Show(Application& App, OnCloseSignature&& OnClose);
+    static void Show(Application& App, FileDialogType Type, OnCloseSignature&& OnClose);
 
     FileDialog(Window* InWindow);
+
+    FileDialog& SetType(FileDialogType Type);
 
     FileDialog& SetOnClose(OnCloseSignature&& Fn);
 
@@ -61,8 +65,11 @@ private:
     std::u32string m_Directory {};
     std::u32string m_Selected {};
 
+    FileDialogType m_Type { FileDialogType::Save };
+
     std::shared_ptr<Tree> m_DirectoryTree { nullptr };
     std::shared_ptr<ListBox> m_DirectoryList { nullptr };
+    std::shared_ptr<TextButton> m_ConfirmButton { nullptr };
 
     OnCloseSignature m_OnClose { nullptr };
 };

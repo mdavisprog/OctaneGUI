@@ -45,7 +45,13 @@ namespace OctaneGUI
 
 const char* ID = "OctaneGUI.FileDialog";
 
-void FileDialog::Show(Application& App, OnCloseSignature&& OnClose)
+void SetFileDialogType(const std::shared_ptr<Window>& Dialog, FileDialogType Type)
+{
+    const std::shared_ptr<FileDialog>& FD = std::static_pointer_cast<FileDialog>(Dialog->GetContainer()->Get(0));
+    FD->SetType(Type);
+}
+
+void FileDialog::Show(Application& App, FileDialogType Type, OnCloseSignature&& OnClose)
 {
     if (!App.HasWindow(ID))
     {
@@ -54,6 +60,9 @@ void FileDialog::Show(Application& App, OnCloseSignature&& OnClose)
         FD->SetOnClose(std::move(OnClose));
     }
 
+    const std::shared_ptr<Window>& Dialog = App.GetWindow(ID);
+    Dialog->SetTitle(Type == FileDialogType::Open ? "Open File" : "Save File");
+    SetFileDialogType(Dialog, Type);
     App.DisplayWindow(ID);
 }
 
@@ -129,11 +138,12 @@ FileDialog::FileDialog(Window* InWindow)
 
     const std::shared_ptr<HorizontalContainer> ButtonsLayout = Buttons->AddControl<HorizontalContainer>();
     ButtonsLayout
+        ->SetSpacing({ 8.0f, 4.0f })
         ->SetGrow(Grow::End)
         ->SetExpand(Expand::Width);
 
-    const std::shared_ptr<TextButton> OpenBtn = ButtonsLayout->AddControl<TextButton>();
-    OpenBtn
+    m_ConfirmButton = ButtonsLayout->AddControl<TextButton>();
+    m_ConfirmButton
         ->SetText("Open")
         ->SetOnClicked([this](const Button&) -> void
             {
@@ -150,6 +160,20 @@ FileDialog::FileDialog(Window* InWindow)
 
     m_Directory = GetWindow()->App().FS().CurrentDirectory();
     PopulateTree();
+}
+
+FileDialog& FileDialog::SetType(FileDialogType Type)
+{
+    m_Type = Type;
+    if (m_Type == FileDialogType::Open)
+    {
+        m_ConfirmButton->SetText("Open");
+    }
+    else
+    {
+        m_ConfirmButton->SetText("Save");
+    }
+    return *this;
 }
 
 FileDialog& FileDialog::SetOnClose(OnCloseSignature&& Fn)
