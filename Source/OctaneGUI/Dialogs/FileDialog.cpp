@@ -40,6 +40,8 @@ SOFTWARE.
 #include "../String.h"
 #include "../Window.h"
 
+#include <algorithm>
+
 namespace OctaneGUI
 {
 
@@ -243,7 +245,8 @@ void FileDialog::PopulateChildren(const std::shared_ptr<Tree>& Parent, const std
 {
     const FileSystem& FS = GetWindow()->App().FS();
 
-    const std::vector<std::u32string> Items = FS.DirectoryItems(Directory.c_str());
+    std::vector<std::u32string> Items = FS.DirectoryItems(Directory.c_str());
+    std::sort(Items.begin(), Items.end());
     for (const std::u32string& Item : Items)
     {
         const std::u32string Path = FS.CombinePath(Directory, Item);
@@ -264,8 +267,8 @@ void FileDialog::PopulateList()
 {
     m_DirectoryList->ClearItems();
 
-    const std::vector<std::u32string> Items = GetWindow()->App().FS().DirectoryItems(m_Directory);
-
+    std::vector<std::u32string> Items = GetWindow()->App().FS().DirectoryItems(m_Directory);
+    std::sort(Items.begin(), Items.end());
     for (const std::u32string& Item : Items)
     {
         m_DirectoryList->AddItem<TextSelectable>()->SetText(Item.c_str());
