@@ -381,6 +381,14 @@ FileSystem& Application::FS()
     return m_FileSystem;
 }
 
+#if TOOLS
+Application& Application::SetIgnoreModals(bool IgnoreModals)
+{
+    m_IgnoreModals = IgnoreModals;
+    return *this;
+}
+#endif
+
 Application& Application::SetOnWindowAction(OnWindowActionSignature&& Fn)
 {
     m_OnWindowAction = std::move(Fn);
@@ -515,7 +523,11 @@ int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
     int Processed = 0;
     Event E = m_OnEvent(Item.get());
 
+#if TOOLS
+    if (!m_Modals.empty() && !m_IgnoreModals)
+#else
     if (!m_Modals.empty())
+#endif
     {
         if (!m_Modals.back().expired())
         {

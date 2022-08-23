@@ -342,6 +342,8 @@ void Inspector::Inspect(Window* Target)
         ->SetWindow(Target);
     Target->GetContainer()->InsertControl(m_BodyProxy);
 
+    Target->App().SetIgnoreModals(true);
+
     Populate();
 }
 
@@ -390,6 +392,7 @@ void Inspector::Close()
         m_Target->SetOnLayout(nullptr);
         m_Target->GetMenuBar()->RemoveControl(m_MenuBarProxy);
         m_Target->GetContainer()->RemoveControl(m_BodyProxy);
+        m_Target->App().SetIgnoreModals(false);
         m_Target = nullptr;
     }
 }

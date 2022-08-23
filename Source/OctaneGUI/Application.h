@@ -99,6 +99,10 @@ public:
     const FileSystem& FS() const;
     FileSystem& FS();
 
+#if TOOLS
+    Application& SetIgnoreModals(bool IgnoreModals);
+#endif
+
     Application& SetOnWindowAction(OnWindowActionSignature&& Fn);
     Application& SetOnPaint(OnWindowPaintSignature&& Fn);
     Application& SetOnEvent(OnWindowEventSignature&& Fn);
@@ -125,6 +129,10 @@ private:
     std::vector<Keyboard::Key> m_PressedKeys {};
     TextureCache m_TextureCache {};
     FileSystem m_FileSystem { *this };
+
+#if TOOLS
+    bool m_IgnoreModals { false };
+#endif
 
     OnWindowActionSignature m_OnWindowAction { nullptr };
     OnWindowPaintSignature m_OnPaint { nullptr };
