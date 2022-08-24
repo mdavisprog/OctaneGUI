@@ -156,6 +156,7 @@ public:
 
     Type GetType() const;
     const Data& GetData() const;
+    const char* Name() const;
 
 private:
     Event();

@@ -29,6 +29,28 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+const char* ToString(Event::Type InType)
+{
+    switch (InType)
+    {
+    case Event::Type::KeyPressed: return "KeyPressed";
+    case Event::Type::KeyReleased: return "KeyReleased";
+    case Event::Type::MouseMoved: return "MouseMoved";
+    case Event::Type::MousePressed: return "MousePressed";
+    case Event::Type::MouseReleased: return "MouseReleased";
+    case Event::Type::MouseWheel: return "MouseWheel";
+    case Event::Type::Text: return "Text";
+    case Event::Type::WindowClosed: return "WindowClosed";
+    case Event::Type::WindowResized: return "WindowResized";
+    case Event::Type::WindowEnter: return "WindowEnter";
+    case Event::Type::WindowLeave: return "WindowLeave";
+    case Event::Type::None:
+    default: break;
+    }
+
+    return "None";
+}
+
 Event::Data::Data()
     : m_MouseMove()
 {
@@ -88,6 +110,11 @@ Event::Type Event::GetType() const
 const Event::Data& Event::GetData() const
 {
     return m_Data;
+}
+
+const char* Event::Name() const
+{
+    return ToString(m_Type);
 }
 
 Event::Event()
