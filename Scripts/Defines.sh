@@ -25,7 +25,7 @@ do
     case ${Var} in
         release) CONFIGURATION=Release ;;
         tools) TOOLS=ON ;;
-        sfml) SFML=true ;;
+        sfml) SFML=true && SDL2=false ;;
         sdl2) SDL2=true ;;
         ninja) NINJA=true ;;
         clean) CLEAN=true ;;
