@@ -290,6 +290,8 @@ Container* Container::Layout()
         }
     }
 
+    OnLayoutComplete();
+
     m_InLayout = false;
 
     return this;
@@ -522,6 +524,10 @@ void Container::OnInsertControl(const std::shared_ptr<Control>& Item)
 }
 
 void Container::OnRemoveControl(const std::shared_ptr<Control>& Item)
+{
+}
+
+void Container::OnLayoutComplete()
 {
 }
 
