@@ -104,9 +104,9 @@ FileDialog::FileDialog(Window* InWindow)
     BodySplitter->Second()->SetClip(false);
 
     // The left pane that contains the directory tree.
-    const std::shared_ptr<ScrollableViewControl> DirectoryTreeView = BodySplitter->First()->AddControl<ScrollableViewControl>();
-    DirectoryTreeView->SetExpand(Expand::Both);
-    m_DirectoryTree = DirectoryTreeView->Scrollable()->AddControl<Tree>();
+    m_DirectoryView = BodySplitter->First()->AddControl<ScrollableViewControl>();
+    m_DirectoryView->SetExpand(Expand::Both);
+    m_DirectoryTree = m_DirectoryView->Scrollable()->AddControl<Tree>();
     m_DirectoryTree
         ->SetOnSelected([this](Tree& Selected) -> void
             {
@@ -141,12 +141,12 @@ FileDialog::FileDialog(Window* InWindow)
     // The confirm and cancel button container which should be right-aligned.
     const std::shared_ptr<MarginContainer> Buttons = Root->AddControl<MarginContainer>();
     Buttons
-        ->SetMargins({ 4.0f, 4.0f, 4.0f, 4.0f })
+        ->SetMargins({ 4.0f, 4.0f, 16.0f, 12.0f })
         .SetExpand(Expand::Width);
 
     const std::shared_ptr<HorizontalContainer> ButtonsLayout = Buttons->AddControl<HorizontalContainer>();
     ButtonsLayout
-        ->SetSpacing({ 8.0f, 4.0f })
+        ->SetSpacing({ 12.0f, 4.0f })
         ->SetGrow(Grow::End)
         ->SetExpand(Expand::Width);
 
@@ -245,6 +245,7 @@ void FileDialog::PopulateTree()
 
     PopulateChildren(Root, Path);
     Root->SetSelected(true);
+    m_DirectoryView->SetPendingFocus(Root);
 }
 
 void FileDialog::PopulateChildren(const std::shared_ptr<Tree>& Parent, const std::u32string& Directory) const

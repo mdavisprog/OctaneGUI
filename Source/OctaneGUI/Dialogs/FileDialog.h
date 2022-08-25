@@ -34,6 +34,7 @@ namespace OctaneGUI
 
 class Application;
 class ListBox;
+class ScrollableViewControl;
 class TextButton;
 class Tree;
 
@@ -67,6 +68,7 @@ private:
 
     FileDialogType m_Type { FileDialogType::Save };
 
+    std::shared_ptr<ScrollableViewControl> m_DirectoryView { nullptr };
     std::shared_ptr<Tree> m_DirectoryTree { nullptr };
     std::shared_ptr<ListBox> m_DirectoryList { nullptr };
     std::shared_ptr<TextButton> m_ConfirmButton { nullptr };
