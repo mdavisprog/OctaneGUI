@@ -68,6 +68,7 @@ public:
     const std::shared_ptr<ScrollableContainer>& Scrollable() const;
 
     ScrollableViewControl& SetIgnoreOwnedControls(bool IgnoreOwnedControls);
+    ScrollableViewControl& SetPendingFocus(const std::weak_ptr<Control>& PendingFocus);
 
     virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 
@@ -81,12 +82,15 @@ protected:
     using Container::InsertControl;
     using Container::RemoveControl;
 
+    virtual void OnLayoutComplete() override;
+
 private:
     bool AlwaysFocusInteraction() const;
 
     std::shared_ptr<ScrollableContainer> m_Scrollable { nullptr };
     std::shared_ptr<ScrollableViewInteraction> m_Interaction { nullptr };
     bool m_IgnoreOwnedControls { false };
+    std::weak_ptr<Control> m_PendingFocus {};
 };
 
 }

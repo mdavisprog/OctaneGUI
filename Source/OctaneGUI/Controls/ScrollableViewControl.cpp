@@ -149,6 +149,13 @@ ScrollableViewControl& ScrollableViewControl::SetIgnoreOwnedControls(bool Ignore
     return *this;
 }
 
+ScrollableViewControl& ScrollableViewControl::SetPendingFocus(const std::weak_ptr<Control>& PendingFocus)
+{
+    m_PendingFocus = PendingFocus;
+    InvalidateLayout();
+    return *this;
+}
+
 std::weak_ptr<Control> ScrollableViewControl::GetControl(const Vector2& Point) const
 {
     if (m_Scrollable->IsInScrollBar(Point) && !AlwaysFocusInteraction())
@@ -199,6 +206,15 @@ bool ScrollableViewControl::OnMousePressed(const Vector2& Position, Mouse::Butto
 void ScrollableViewControl::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 {
     m_Scrollable->OnMouseReleased(Position, Button);
+}
+
+void ScrollableViewControl::OnLayoutComplete()
+{
+    if (!m_PendingFocus.expired())
+    {
+        Scrollable()->ScrollIntoView(m_PendingFocus.lock());
+        m_PendingFocus.reset();
+    }
 }
 
 bool ScrollableViewControl::AlwaysFocusInteraction() const
