@@ -149,8 +149,11 @@ int main(int argc, char **argv)
         {
             if (!FileName.empty())
             {
-                const std::string Contents = GetContents(OctaneGUI::String::ToMultiByte(FileName).c_str());
-                Document->SetText(Contents.c_str());
+                if (Type == OctaneGUI::FileDialogType::Open)
+                {
+                    const std::string Contents = GetContents(OctaneGUI::String::ToMultiByte(FileName).c_str());
+                    Document->SetText(Contents.c_str());
+                }
             }
         });
     
