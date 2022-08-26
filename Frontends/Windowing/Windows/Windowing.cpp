@@ -56,6 +56,7 @@ void Focus(void* Handle)
 std::u32string FileDialog(OctaneGUI::FileDialogType Type, void* Handle)
 {
     HWND WinHandle = (HWND)Handle;
+    const bool IsOpen = Type == OctaneGUI::FileDialogType::Open;
 
     std::wstring FileName;
     FileName.resize(USHRT_MAX);
@@ -66,15 +67,30 @@ std::u32string FileDialog(OctaneGUI::FileDialogType Type, void* Handle)
     OpenFileName.lStructSize = sizeof(OPENFILENAMEW);
     OpenFileName.hwndOwner = WinHandle;
     OpenFileName.Flags = OFN_CREATEPROMPT | OFN_FILEMUSTEXIST;
+    if (!IsOpen)
+    {
+        OpenFileName.Flags |= OFN_OVERWRITEPROMPT;
+    }
     OpenFileName.lpstrFile = FileName.data();
     OpenFileName.nMaxFile = FileName.size();
 
-    if (GetOpenFileNameW(&OpenFileName) == TRUE);
+    std::u32string Result;
+    BOOL FileNameResult = FALSE;
+    if (IsOpen)
     {
-        return OctaneGUI::String::ToUTF32(FileName.c_str());
+        FileNameResult = GetOpenFileNameW(&OpenFileName);
+    }
+    else
+    {
+        FileNameResult = GetSaveFileNameW(&OpenFileName);
     }
 
-    return U"";
+    if (FileNameResult == TRUE)
+    {
+        Result = OctaneGUI::String::ToUTF32(FileName.c_str());
+    }
+
+    return Result;
 }
 
 }
