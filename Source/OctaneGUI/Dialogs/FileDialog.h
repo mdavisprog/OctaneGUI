@@ -43,14 +43,13 @@ class FileDialog : public Container
     CLASS(FileDialog)
 
 public:
-    typedef std::function<void(const std::u32string&)> OnCloseSignature;
+    typedef std::function<void(FileDialogType, const std::u32string&)> OnCloseSignature;
 
     static void Show(Application& App, FileDialogType Type, OnCloseSignature&& OnClose);
 
     FileDialog(Window* InWindow);
 
     FileDialog& SetType(FileDialogType Type);
-
     FileDialog& SetOnClose(OnCloseSignature&& Fn);
 
 private:

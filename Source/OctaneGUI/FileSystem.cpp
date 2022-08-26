@@ -131,7 +131,7 @@ void FileSystem::FileDialog(FileDialogType Type) const
     else
     {
         // TODO: Look into not having the 'FileDialog' as a dependency for FileSystem.
-        FileDialog::Show(m_Application, Type, [this, Type](const std::u32string& FileName) -> void
+        FileDialog::Show(m_Application, Type, [this](FileDialogType Type, const std::u32string& FileName) -> void
             {
                 if (m_OnFileDialogResult)
                 {

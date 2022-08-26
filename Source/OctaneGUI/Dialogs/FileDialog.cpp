@@ -295,7 +295,7 @@ void FileDialog::Close(bool Success)
 
     if (m_OnClose)
     {
-        m_OnClose(Result);
+        m_OnClose(m_Type, Result);
     }
 
     GetWindow()->App().CloseWindow(ID);
