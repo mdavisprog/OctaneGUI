@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "ComboBox.h"
+#include "../Assert.h"
 #include "../Icons.h"
 #include "../Json.h"
 #include "../String.h"
@@ -126,11 +127,37 @@ ComboBox& ComboBox::SetSelected(const char32_t* InText)
     return *this;
 }
 
+ComboBox& ComboBox::SetSelectedIndex(int Index)
+{
+    Assert(Index >= 0 && Index < m_List->Count(), "Index out of range! Index: %d Count: %d", Index, m_List->Count());
+    m_SelectedIndex = Index;
+    const std::shared_ptr<Text>& Item = std::static_pointer_cast<Text>(m_List->Item((size_t)Index));
+    m_Input->SetText(Item->GetText());
+    return *this;
+}
+
+ComboBox& ComboBox::Clear()
+{
+    m_List->ClearItems();
+    m_SelectedIndex = -1;
+    return *this;
+}
+
 std::shared_ptr<Text> ComboBox::AddItem(const char* Item)
+{
+    return AddItem(String::ToUTF32(Item).c_str());
+}
+
+std::shared_ptr<Text> ComboBox::AddItem(const char32_t* Item)
 {
     std::shared_ptr<Text> Result = m_List->AddItem<Text>();
     Result->SetText(Item);
     return Result;
+}
+
+int ComboBox::SelectedIndex() const
+{
+    return m_SelectedIndex;
 }
 
 void ComboBox::Close()

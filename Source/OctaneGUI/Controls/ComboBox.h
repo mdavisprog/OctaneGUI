@@ -47,8 +47,13 @@ public:
 
     ComboBox& SetExpand(Expand InExpand);
     ComboBox& SetSelected(const char32_t* InText);
+    ComboBox& SetSelectedIndex(int Index);
+    ComboBox& Clear();
 
     std::shared_ptr<Text> AddItem(const char* Item);
+    std::shared_ptr<Text> AddItem(const char32_t* Item);
+
+    int SelectedIndex() const;
 
     void Close();
     bool IsOpen() const;
@@ -64,6 +69,7 @@ private:
     using Container::InsertControl;
     using Control::SetExpand;
 
+    int m_SelectedIndex { -1 };
     std::shared_ptr<TextInput> m_Input { nullptr };
     std::shared_ptr<ImageButton> m_Button { nullptr };
     std::shared_ptr<ListBox> m_List { nullptr };
