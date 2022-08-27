@@ -295,11 +295,6 @@ bool Application::DisplayWindow(const char* ID)
             {
                 Item.second->OnMouseLeave();
             }
-
-            if (Item.second != It->second)
-            {
-                OnWindowAction(Item.second.get(), WindowAction::Disable);
-            }
         }
 
         m_Modals.push_back(It->second);
