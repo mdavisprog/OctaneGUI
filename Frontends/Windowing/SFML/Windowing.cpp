@@ -41,6 +41,7 @@ namespace Windowing
 std::unordered_map<OctaneGUI::Window*, std::shared_ptr<sf::RenderWindow>> g_Windows {};
 OctaneGUI::Clock g_MouseButtonClock {};
 std::unordered_map<OctaneGUI::Mouse::Button, uint8_t> g_MouseClicks {};
+std::unordered_map<sf::Cursor::Type, sf::Cursor> g_Cursors;
 
 OctaneGUI::Keyboard::Key GetKeyCode(sf::Keyboard::Key Key)
 {
@@ -98,11 +99,19 @@ sf::Cursor::Type GetCursorType(OctaneGUI::Mouse::Cursor Cursor)
     return sf::Cursor::Arrow;
 }
 
+const sf::Cursor& GetCursor(sf::Cursor::Type Type)
+{
+    if (g_Cursors.find(Type) == g_Cursors.end())
+    {
+        g_Cursors[Type].loadFromSystem(Type);
+    }
+
+    return g_Cursors[Type];
+}
+
 void SetMouseCursor(const std::shared_ptr<sf::RenderWindow>& Window, sf::Cursor::Type Type)
 {
-    sf::Cursor Cursor;
-    Cursor.loadFromSystem(Type);
-    Window->setMouseCursor(Cursor);
+    Window->setMouseCursor(GetCursor(Type));
 }
 
 bool Initialize()
