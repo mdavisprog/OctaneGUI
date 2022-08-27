@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "FileDialog.h"
 #include "../Application.h"
+#include "../Controls/ComboBox.h"
 #include "../Controls/HorizontalContainer.h"
 #include "../Controls/ListBox.h"
 #include "../Controls/MarginContainer.h"
@@ -137,6 +138,18 @@ FileDialog::FileDialog(Window* InWindow)
                 m_Selected = Selected->GetText();
             })
         .SetExpand(Expand::Both);
+    
+    const std::shared_ptr<MarginContainer> FileInfo = Root->AddControl<MarginContainer>();
+    FileInfo
+        ->SetMargins({ 4.0f, 4.0f, 16.0f, 4.0f })
+        .SetExpand(Expand::Width);
+    
+    const std::shared_ptr<HorizontalContainer> FileInfoLayout = FileInfo->AddControl<HorizontalContainer>();
+    FileInfoLayout
+        ->SetGrow(Grow::End)
+        ->SetExpand(Expand::Width);
+    
+    m_FilterBox = FileInfoLayout->AddControl<ComboBox>();
 
     // The confirm and cancel button container which should be right-aligned.
     const std::shared_ptr<MarginContainer> Buttons = Root->AddControl<MarginContainer>();
