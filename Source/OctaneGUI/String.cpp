@@ -199,6 +199,31 @@ std::string String::ToMultiByte(const std::wstring& Value)
     return Result;
 }
 
+std::wstring String::ToWide(const std::string& Value)
+{
+    std::wstring Result;
+
+    std::mbstate_t State {};
+    WConverter Convert;
+
+    Result.resize(Value.length());
+
+    const char* From = nullptr;
+    wchar_t* To = nullptr;
+    Convert.in(State, Value.data(), &Value[Value.size()], From, Result.data(), &Result[Result.size()], To);
+
+    // TODO: Should probably do some error checking here.
+    Result.resize(To - Result.data());
+
+    return Result;
+}
+
+std::wstring String::ToWide(const std::u32string& Value)
+{
+    const std::string MultiByte = ToMultiByte(Value);
+    return ToWide(MultiByte);
+}
+
 std::u32string String::ToUTF32(const std::string& Value)
 {
     std::u32string Result;

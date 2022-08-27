@@ -46,6 +46,8 @@ public:
     static std::string ToMultiByte(const char32_t* Value);
     static std::string ToMultiByte(const std::u32string_view& Value);
     static std::string ToMultiByte(const std::wstring& Value);
+    static std::wstring ToWide(const std::string& Value);
+    static std::wstring ToWide(const std::u32string& Value);
     static std::u32string ToUTF32(const std::string& Value);
     static std::u32string ToUTF32(const char* Value);
     static std::u32string ToUTF32(const std::string_view& Value);
