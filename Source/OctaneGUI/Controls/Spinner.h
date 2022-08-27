@@ -36,6 +36,8 @@ class ListBox;
 class Text;
 class TextInput;
 
+class BoxContainer;
+
 class Spinner : public HorizontalContainer
 {
     CLASS(Spinner)
@@ -48,6 +50,10 @@ public:
 
     virtual void OnLoad(const Json& Root) override;
     virtual void OnThemeLoaded() override;
+    
+    Spinner& SetOrientation(Orientation InOrientation);
+    Orientation GetOrientation() const;
+    Orientation GetOppositeOrientation() const;
 
 private:
     using Container::AddControl;
@@ -62,10 +68,16 @@ private:
     int32_t m_Min { 0 };
     int32_t m_Max { 0 };
     int32_t m_Value { 0 };
+    
+    Orientation m_ButtonOrientation { Orientation::Horizontal };
 
     std::shared_ptr<TextInput> m_Input { nullptr };
     std::shared_ptr<ImageButton> m_DecrementButton { nullptr };
     std::shared_ptr<ImageButton> m_IncrementButton { nullptr };
+    
+    std::shared_ptr<BoxContainer> m_ButtonContainer { nullptr };
+    
+    void UpdateLayout();
 };
 
 }
