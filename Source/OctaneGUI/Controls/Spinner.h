@@ -31,6 +31,7 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+class BoxContainer;
 class ImageButton;
 class ListBox;
 class Text;
@@ -46,6 +47,10 @@ public:
     Spinner& SetValue(const int32_t Value);
     int32_t Value() const;
 
+    Spinner& SetOrientation(Orientation InOrientation);
+    Orientation GetOrientation() const;
+    Orientation GetOppositeOrientation() const;
+
     virtual void OnLoad(const Json& Root) override;
     virtual void OnThemeLoaded() override;
 
@@ -55,6 +60,7 @@ private:
 
     int32_t RangeValue(const int32_t InValue);
     void InternalSetText(int32_t Value);
+    void UpdateLayout();
 
     bool m_MinSet { false };
     bool m_MaxSet { false };
@@ -63,9 +69,12 @@ private:
     int32_t m_Max { 0 };
     int32_t m_Value { 0 };
 
+    Orientation m_ButtonOrientation { Orientation::Horizontal };
+
     std::shared_ptr<TextInput> m_Input { nullptr };
     std::shared_ptr<ImageButton> m_DecrementButton { nullptr };
     std::shared_ptr<ImageButton> m_IncrementButton { nullptr };
+    std::shared_ptr<BoxContainer> m_ButtonContainer { nullptr };
 };
 
 }
