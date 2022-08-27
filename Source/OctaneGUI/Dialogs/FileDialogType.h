@@ -31,8 +31,8 @@ namespace OctaneGUI
 
 enum class FileDialogType
 {
-	Open,
-	Save,
+    Open,
+    Save,
 };
 
 }

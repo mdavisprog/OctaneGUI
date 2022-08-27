@@ -26,8 +26,8 @@ SOFTWARE.
 
 #pragma once
 
-#include "OctaneGUI/Mouse.h"
 #include "OctaneGUI/Dialogs/FileDialogType.h"
+#include "OctaneGUI/Mouse.h"
 
 #include <string>
 
