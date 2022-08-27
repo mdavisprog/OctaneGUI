@@ -68,6 +68,7 @@ private:
     using Container::AddControl;
     using Container::ClearControls;
     using Container::InsertControl;
+    using Container::Get;
 
     void InsertItem(const std::shared_ptr<Control>& Item);
     void PaintItem(Paint& Brush, const std::shared_ptr<Control>& Item) const;
