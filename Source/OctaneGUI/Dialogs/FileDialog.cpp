@@ -48,13 +48,14 @@ namespace OctaneGUI
 
 const char* ID = "OctaneGUI.FileDialog";
 
-void SetFileDialogType(const std::shared_ptr<Window>& Dialog, FileDialogType Type)
+void SetFileDialogData(const std::shared_ptr<Window>& Dialog, FileDialogType Type, const std::vector<FileDialogFilter>& Filters)
 {
     const std::shared_ptr<FileDialog>& FD = std::static_pointer_cast<FileDialog>(Dialog->GetContainer()->Get(0));
     FD->SetType(Type);
+    FD->SetFilters(Filters);
 }
 
-void FileDialog::Show(Application& App, FileDialogType Type, OnCloseSignature&& OnClose)
+void FileDialog::Show(Application& App, FileDialogType Type, const std::vector<FileDialogFilter>& Filters, OnCloseSignature&& OnClose)
 {
     if (!App.HasWindow(ID))
     {
@@ -65,7 +66,7 @@ void FileDialog::Show(Application& App, FileDialogType Type, OnCloseSignature&& 
 
     const std::shared_ptr<Window>& Dialog = App.GetWindow(ID);
     Dialog->SetTitle(Type == FileDialogType::Open ? "Open File" : "Save File");
-    SetFileDialogType(Dialog, Type);
+    SetFileDialogData(Dialog, Type, Filters);
     App.DisplayWindow(ID);
 }
 
@@ -194,6 +195,25 @@ FileDialog& FileDialog::SetType(FileDialogType Type)
     {
         m_ConfirmButton->SetText("Save");
     }
+    return *this;
+}
+
+FileDialog& FileDialog::SetFilters(const std::vector<FileDialogFilter>& Filters)
+{
+    m_Filters = std::move(Filters);
+    if (m_Filters.empty())
+    {
+        m_Filters.push_back({ U"*.*", U"All Files" });
+    }
+
+    m_FilterBox->Clear();
+    for (const FileDialogFilter& Filter : m_Filters)
+    {
+        const std::u32string Display = Filter.Description + U" (" + Filter.Pattern + U")";
+        m_FilterBox->AddItem(Display.c_str());
+    }
+    m_FilterBox->SetSelectedIndex(0);
+
     return *this;
 }
 

@@ -39,6 +39,13 @@ class ScrollableViewControl;
 class TextButton;
 class Tree;
 
+struct FileDialogFilter
+{
+public:
+    std::u32string Pattern {};
+    std::u32string Description {};
+};
+
 class FileDialog : public Container
 {
     CLASS(FileDialog)
@@ -46,11 +53,12 @@ class FileDialog : public Container
 public:
     typedef std::function<void(FileDialogType, const std::u32string&)> OnCloseSignature;
 
-    static void Show(Application& App, FileDialogType Type, OnCloseSignature&& OnClose);
+    static void Show(Application& App, FileDialogType Type, const std::vector<FileDialogFilter>& Filters, OnCloseSignature&& OnClose);
 
     FileDialog(Window* InWindow);
 
     FileDialog& SetType(FileDialogType Type);
+    FileDialog& SetFilters(const std::vector<FileDialogFilter>& Filters);
     FileDialog& SetOnClose(OnCloseSignature&& Fn);
 
 private:
@@ -67,6 +75,7 @@ private:
     std::u32string m_Selected {};
 
     FileDialogType m_Type { FileDialogType::Save };
+    std::vector<FileDialogFilter> m_Filters {};
 
     std::shared_ptr<ScrollableViewControl> m_DirectoryView { nullptr };
     std::shared_ptr<Tree> m_DirectoryTree { nullptr };
