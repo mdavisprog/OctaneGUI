@@ -45,7 +45,9 @@ ComboBox::ComboBox(Window* InWindow)
     SetSpacing({ 0.0f, 0.0f });
 
     m_Input = AddControl<TextInput>();
-    m_Input->SetReadOnly(true);
+    m_Input
+        ->SetReadOnly(true)
+        .SetMultiline(false);
 
     m_Button = AddControl<ImageButton>();
     m_Button
