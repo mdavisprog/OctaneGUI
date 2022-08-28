@@ -157,14 +157,15 @@ int main(int argc, char **argv)
             }
         });
     
+    const std::vector<OctaneGUI::FileDialogFilter> Filters {{{U"json"}, U"Json Files"}};
     MainList.To<OctaneGUI::MenuItem>("File.Open")->SetOnPressed([&](OctaneGUI::TextSelectable&) -> void
         {
-            Application.FS().FileDialog(OctaneGUI::FileDialogType::Open);
+            Application.FS().FileDialog(OctaneGUI::FileDialogType::Open, Filters);
         });
     
     MainList.To<OctaneGUI::MenuItem>("File.Save")->SetOnPressed([&](OctaneGUI::TextSelectable&) -> void
         {
-            Application.FS().FileDialog(OctaneGUI::FileDialogType::Save);
+            Application.FS().FileDialog(OctaneGUI::FileDialogType::Save, Filters);
         });
 
     std::shared_ptr<OctaneGUI::MenuItem> QuitMenu = MainList.To<OctaneGUI::MenuItem>("File.Quit");
