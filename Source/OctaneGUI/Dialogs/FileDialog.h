@@ -42,7 +42,7 @@ class Tree;
 struct FileDialogFilter
 {
 public:
-    std::u32string Pattern {};
+    std::vector<std::u32string> Extensions {};
     std::u32string Description {};
 };
 

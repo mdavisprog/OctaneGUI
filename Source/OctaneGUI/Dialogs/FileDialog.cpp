@@ -139,17 +139,17 @@ FileDialog::FileDialog(Window* InWindow)
                 m_Selected = Selected->GetText();
             })
         .SetExpand(Expand::Both);
-    
+
     const std::shared_ptr<MarginContainer> FileInfo = Root->AddControl<MarginContainer>();
     FileInfo
         ->SetMargins({ 4.0f, 4.0f, 16.0f, 4.0f })
         .SetExpand(Expand::Width);
-    
+
     const std::shared_ptr<HorizontalContainer> FileInfoLayout = FileInfo->AddControl<HorizontalContainer>();
     FileInfoLayout
         ->SetGrow(Grow::End)
         ->SetExpand(Expand::Width);
-    
+
     m_FilterBox = FileInfoLayout->AddControl<ComboBox>();
 
     // The confirm and cancel button container which should be right-aligned.
@@ -203,16 +203,26 @@ FileDialog& FileDialog::SetFilters(const std::vector<FileDialogFilter>& Filters)
     m_Filters = std::move(Filters);
     if (m_Filters.empty())
     {
-        m_Filters.push_back({ U"*.*", U"All Files" });
+        m_Filters.push_back({ { U"*" }, U"All Files" });
     }
 
     m_FilterBox->Clear();
     for (const FileDialogFilter& Filter : m_Filters)
     {
-        const std::u32string Display = Filter.Description + U" (" + Filter.Pattern + U")";
+        std::u32string Display = Filter.Description + U" (";
+        for (size_t I = 0; I < Filter.Extensions.size(); I++)
+        {
+            Display += Filter.Extensions[I];
+            if (I < Filter.Extensions.size() - 1)
+            {
+                Display += U";";
+            }
+        }
+        Display += U")";
         m_FilterBox->AddItem(Display.c_str());
     }
     m_FilterBox->SetSelectedIndex(0);
+    PopulateList();
 
     return *this;
 }
@@ -307,11 +317,39 @@ void FileDialog::PopulateList()
 {
     m_DirectoryList->ClearItems();
 
-    std::vector<std::u32string> Items = GetWindow()->App().FS().DirectoryItems(m_Directory);
+    FileDialogFilter Filter {};
+    const int Index = m_FilterBox->SelectedIndex();
+    if (Index >= 0)
+    {
+        Filter = m_Filters[Index];
+    }
+
+    const FileSystem& FS = GetWindow()->App().FS();
+
+    std::vector<std::u32string> Items = FS.DirectoryItems(m_Directory);
     std::sort(Items.begin(), Items.end());
     for (const std::u32string& Item : Items)
     {
-        m_DirectoryList->AddItem<TextSelectable>()->SetText(Item.c_str());
+        std::u32string Extension = String::ToLower(FS.Extension(Item));
+        if (!Extension.empty())
+        {
+            Extension = Extension.substr(1);
+        }
+
+        bool IsValidExtension = false;
+        for (const std::u32string& Test : Filter.Extensions)
+        {
+            if (Test == U"*" || Extension == String::ToLower(Test))
+            {
+                IsValidExtension = true;
+                break;
+            }
+        }
+
+        if (IsValidExtension)
+        {
+            m_DirectoryList->AddItem<TextSelectable>()->SetText(Item.c_str());
+        }
     }
 }
 
