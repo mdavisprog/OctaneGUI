@@ -83,6 +83,12 @@ std::u32string FileSystem::CombinePath(const std::u32string& Left, const std::u3
     return Path.u32string();
 }
 
+std::u32string FileSystem::Extension(const std::u32string& Location) const
+{
+    std::filesystem::path Path { Location };
+    return Path.extension().u32string();
+}
+
 std::vector<std::u32string> FileSystem::DirectoryItems(const std::u32string& Location) const
 {
     std::vector<std::u32string> Result;

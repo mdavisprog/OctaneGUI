@@ -55,6 +55,7 @@ public:
     std::u32string ParentDirectory(const std::u32string& Location) const;
     std::u32string RootDirectory(const std::u32string& Location) const;
     std::u32string CombinePath(const std::u32string& Left, const std::u32string& Right) const;
+    std::u32string Extension(const std::u32string& Location) const;
     std::vector<std::u32string> DirectoryItems(const std::u32string& Location) const;
 
     bool IsFile(const std::u32string& Location) const;
