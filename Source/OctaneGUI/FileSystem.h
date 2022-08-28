@@ -37,6 +37,7 @@ namespace OctaneGUI
 {
 
 class Application;
+struct FileDialogFilter;
 
 class FileSystem
 {
@@ -62,7 +63,7 @@ public:
     bool IsDirectory(const std::u32string& Location) const;
     bool IsEmpty(const std::u32string& Location) const;
 
-    void FileDialog(FileDialogType Type) const;
+    void FileDialog(FileDialogType Type, const std::vector<FileDialogFilter>& Filters = {}) const;
 
     FileSystem& SetOnFileDialog(OnFileDialogSignature&& Fn);
     FileSystem& SetOnFileDialogResult(OnFileDialogResultSignature&& Fn);

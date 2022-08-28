@@ -120,7 +120,7 @@ bool FileSystem::IsEmpty(const std::u32string& Location) const
     return Result && Error.value() == 0;
 }
 
-void FileSystem::FileDialog(FileDialogType Type) const
+void FileSystem::FileDialog(FileDialogType Type, const std::vector<FileDialogFilter>& Filters) const
 {
     if (m_UseSystemFileDialog)
     {
@@ -137,7 +137,7 @@ void FileSystem::FileDialog(FileDialogType Type) const
     else
     {
         // TODO: Look into not having the 'FileDialog' as a dependency for FileSystem.
-        FileDialog::Show(m_Application, Type, {}, [this](FileDialogType Type, const std::u32string& FileName) -> void
+        FileDialog::Show(m_Application, Type, Filters, [this](FileDialogType Type, const std::u32string& FileName) -> void
             {
                 if (m_OnFileDialogResult)
                 {
