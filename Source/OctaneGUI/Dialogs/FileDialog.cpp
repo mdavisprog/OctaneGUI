@@ -35,6 +35,7 @@ SOFTWARE.
 #include "../Controls/ScrollableViewControl.h"
 #include "../Controls/Splitter.h"
 #include "../Controls/TextButton.h"
+#include "../Controls/TextInput.h"
 #include "../Controls/TextSelectable.h"
 #include "../Controls/Tree.h"
 #include "../Controls/VerticalContainer.h"
@@ -137,6 +138,7 @@ FileDialog::FileDialog(Window* InWindow)
 
                 const std::shared_ptr<TextSelectable> Selected = std::static_pointer_cast<TextSelectable>(Item.lock());
                 m_Selected = Selected->GetText();
+                m_FileName->SetText(GetWindow()->App().FS().CombinePath(m_Directory, m_Selected).c_str());
             })
         .SetExpand(Expand::Both);
 
@@ -149,6 +151,12 @@ FileDialog::FileDialog(Window* InWindow)
     FileInfoLayout
         ->SetGrow(Grow::End)
         ->SetExpand(Expand::Width);
+    
+    m_FileName = FileInfoLayout->AddControl<TextInput>();
+    m_FileName
+        ->SetReadOnly(true)
+        .SetMultiline(false)
+        .SetExpand(Expand::Width);
 
     m_FilterBox = FileInfoLayout->AddControl<ComboBox>();
     m_FilterBox->SetWidth(200.0f);
@@ -356,18 +364,9 @@ void FileDialog::PopulateList()
 
 void FileDialog::Close(bool Success)
 {
-    std::u32string Result;
-
-    if (!m_Selected.empty())
-    {
-        Result = Success
-            ? GetWindow()->App().FS().CombinePath(m_Directory, m_Selected)
-            : U"";
-    }
-
     if (m_OnClose)
     {
-        m_OnClose(m_Type, Result);
+        m_OnClose(m_Type, m_FileName->GetText());
     }
 
     GetWindow()->App().CloseWindow(ID);
