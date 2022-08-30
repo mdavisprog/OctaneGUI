@@ -3,6 +3,7 @@
 SDL2=true
 SFML=false
 NINJA=false
+XCODE=false
 CONFIGURATION=Debug
 TOOLS=OFF
 WINDOWING=SDL2
@@ -14,10 +15,6 @@ HELP=false
 BIN_PATH=../bin
 BUILD_PATH=../Build
 SOURCE_PATH=..
-
-if [[ $OSTYPE == "darwin"* ]]; then
-    RENDERING=Metal
-fi
 
 for Var in "$@"
 do
@@ -31,6 +28,7 @@ do
         clean) CLEAN=true ;;
         noapps) NO_APPS=ON ;;
         help) HELP=true ;;
+        xcode) XCODE=true ;;
         *) break
     esac
 done
@@ -40,6 +38,14 @@ if [ "$SDL2" = true ] ; then
 elif [ "$SFML" = true ] ; then
     WINDOWING=SFML
     RENDERING=SFML
+fi
+
+if [[ $OSTYPE == "darwin"* ]]; then
+    RENDERING=Metal
+
+    if [[ "$XCODE" = true ]] ; then
+        GENERATOR=Xcode
+    fi
 fi
 
 if [ "$NINJA" = true ] ; then
