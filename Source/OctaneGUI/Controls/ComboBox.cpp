@@ -123,6 +123,12 @@ ComboBox& ComboBox::SetExpand(Expand InExpand)
     return *this;
 }
 
+ComboBox& ComboBox::SetWidth(float Width)
+{
+    m_Input->SetSize({ Width, m_Input->GetSize().Y });
+    return *this;
+}
+
 ComboBox& ComboBox::SetSelected(const char32_t* InText)
 {
     m_Input->SetText(InText);

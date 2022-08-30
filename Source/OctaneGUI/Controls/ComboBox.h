@@ -46,6 +46,7 @@ public:
     ComboBox(Window* InWindow);
 
     ComboBox& SetExpand(Expand InExpand);
+    ComboBox& SetWidth(float Width);
     ComboBox& SetSelected(const char32_t* InText);
     ComboBox& SetSelectedIndex(int Index);
     ComboBox& Clear();
