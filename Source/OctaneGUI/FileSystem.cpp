@@ -126,7 +126,7 @@ void FileSystem::FileDialog(FileDialogType Type, const std::vector<FileDialogFil
     {
         if (m_OnFileDialog)
         {
-            std::u32string Result = m_OnFileDialog(Type);
+            std::u32string Result = m_OnFileDialog(Type, Filters);
 
             if (m_OnFileDialogResult)
             {

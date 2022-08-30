@@ -53,7 +53,7 @@ void Focus(void* Handle)
     SetFocus(WinHandle);
 }
 
-std::u32string FileDialog(OctaneGUI::FileDialogType Type, void* Handle)
+std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters, void* Handle)
 {
     HWND WinHandle = (HWND)Handle;
     const bool IsOpen = Type == OctaneGUI::FileDialogType::Open;
@@ -61,6 +61,35 @@ std::u32string FileDialog(OctaneGUI::FileDialogType Type, void* Handle)
     std::wstring FileName;
     FileName.resize(USHRT_MAX);
     FileName[0] = '\0';
+
+    std::wstring WFilters;
+    for (const OctaneGUI::FileDialogFilter& Filter : Filters)
+    {
+        WFilters += OctaneGUI::String::ToWide(Filter.Description);
+        WFilters.push_back(L'\0');
+
+        std::wstring Extensions;
+        for (size_t I = 0; I < Filter.Extensions.size(); I++)
+        {
+            const std::u32string& Extension = Filter.Extensions[I];
+            Extensions += L"*.";
+            Extensions += OctaneGUI::String::ToWide(Extension);
+            if (I < Filter.Extensions.size() - 1)
+            {
+                Extensions += L";";
+            }
+        }
+
+        if (!Extensions.empty())
+        {
+            WFilters += Extensions;
+        }
+
+        WFilters.push_back(L'\0');
+    }
+
+    WFilters.push_back(L'\0');
+    WFilters.push_back(L'\0');
 
     OPENFILENAMEW OpenFileName {};
     ZeroMemory(&OpenFileName, sizeof(OPENFILENAMEW));
@@ -73,6 +102,11 @@ std::u32string FileDialog(OctaneGUI::FileDialogType Type, void* Handle)
     }
     OpenFileName.lpstrFile = FileName.data();
     OpenFileName.nMaxFile = FileName.size();
+    if (!WFilters.empty())
+    {
+        OpenFileName.lpstrFilter = &WFilters[0];
+        OpenFileName.nFilterIndex = 1;
+    }
 
     std::u32string Result;
     BOOL FileNameResult = FALSE;

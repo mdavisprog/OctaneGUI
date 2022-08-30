@@ -30,11 +30,13 @@ SOFTWARE.
 #include "OctaneGUI/Mouse.h"
 
 #include <string>
+#include <vector>
 
 namespace OctaneGUI
 {
 
 class Event;
+struct FileDialogFilter;
 class Window;
 
 }
@@ -60,7 +62,7 @@ void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor);
 void SetMovable(void* Handle, bool Movable);
 void SetEnabled(void* Handle, bool Enabled);
 void Focus(void* Handle);
-std::u32string FileDialog(OctaneGUI::FileDialogType Type, void* Handle);
+std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters, void* Handle);
 
 }
 }

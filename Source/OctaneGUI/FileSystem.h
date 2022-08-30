@@ -42,7 +42,7 @@ struct FileDialogFilter;
 class FileSystem
 {
 public:
-    typedef std::function<std::u32string(FileDialogType)> OnFileDialogSignature;
+    typedef std::function<std::u32string(FileDialogType, const std::vector<FileDialogFilter>&)> OnFileDialogSignature;
     typedef std::function<void(FileDialogType, const std::u32string&)> OnFileDialogResultSignature;
 
     FileSystem(Application& App);

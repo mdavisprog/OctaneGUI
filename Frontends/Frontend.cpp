@@ -107,9 +107,9 @@ void OnSetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor
     Windowing::SetMouseCursor(Window, Cursor);
 }
 
-std::u32string OnFileDialog(OctaneGUI::FileDialogType Type)
+std::u32string OnFileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters)
 {
-    return Windowing::FileDialog(Type, nullptr);
+    return Windowing::FileDialog(Type, Filters, nullptr);
 }
 
 void Initialize(OctaneGUI::Application& Application)
