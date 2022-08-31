@@ -28,6 +28,7 @@ SOFTWARE.
 #include "OctaneGUI/OctaneGUI.h"
 
 #import <Cocoa/Cocoa.h>
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
 namespace Frontend
 {
@@ -48,13 +49,24 @@ void Focus(void* Handle)
 {
 }
 
-std::u32string FileDialog(OctaneGUI::FileDialogType Type, void* Handle)
+std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters, void* Handle)
 {
 	NSString* Title = Type == OctaneGUI::FileDialogType::Open
 		? @"Open File" : @"Save File";
 	
 	NSString* Message = Type == OctaneGUI::FileDialogType::Open
 		? @"Open a file" : @"Save to file";
+
+	NSMutableArray* FileTypes = [NSMutableArray arrayWithCapacity:0];
+	for (const OctaneGUI::FileDialogFilter& Filter : Filters)
+	{
+		for (const std::u32string& Extension : Filter.Extensions)
+		{
+			NSString* Ext = [NSString stringWithUTF8String:OctaneGUI::String::ToMultiByte(Extension).c_str()];
+			UTType* Type = [UTType typeWithFilenameExtension:Ext];
+			[FileTypes addObject:Type];
+		}
+	}
 
 	NSWindow* KeyWindow = [NSApp keyWindow];
 	NSSavePanel* Dialog = [NSSavePanel savePanel];
@@ -70,6 +82,7 @@ std::u32string FileDialog(OctaneGUI::FileDialogType Type, void* Handle)
 	[Dialog setTitle:Title];
 	[Dialog setMessage:Message];
 	[Dialog setCanCreateDirectories:TRUE];
+	[Dialog setAllowedContentTypes:FileTypes];
 
 	std::string Result;
 	if ([Dialog runModal] == NSModalResponseOK)
