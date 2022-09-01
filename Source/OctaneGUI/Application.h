@@ -105,6 +105,7 @@ public:
 
     Application& SetOnWindowAction(OnWindowActionSignature&& Fn);
     Application& SetOnPaint(OnWindowPaintSignature&& Fn);
+    Application& SetOnNewFrame(OnEmptySignature&& Fn);
     Application& SetOnEvent(OnWindowEventSignature&& Fn);
     Application& SetOnLoadTexture(OnLoadTextureSignature&& Fn);
     Application& SetOnExit(OnEmptySignature&& Fn);
@@ -136,6 +137,7 @@ private:
 
     OnWindowActionSignature m_OnWindowAction { nullptr };
     OnWindowPaintSignature m_OnPaint { nullptr };
+    OnEmptySignature m_OnNewFrame { nullptr };
     OnWindowEventSignature m_OnEvent { nullptr };
     OnLoadTextureSignature m_OnLoadTexture { nullptr };
     OnEmptySignature m_OnExit { nullptr };

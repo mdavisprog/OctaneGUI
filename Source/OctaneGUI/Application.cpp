@@ -171,6 +171,11 @@ int Application::Run()
         {
             PROFILER_FRAME();
 
+            if (m_OnNewFrame)
+            {
+                m_OnNewFrame();
+            }
+
             Update();
 
             int EventsProcessed = 0;
@@ -393,6 +398,12 @@ Application& Application::SetOnWindowAction(OnWindowActionSignature&& Fn)
 Application& Application::SetOnPaint(OnWindowPaintSignature&& Fn)
 {
     m_OnPaint = std::move(Fn);
+    return *this;
+}
+
+Application& Application::SetOnNewFrame(OnEmptySignature&& Fn)
+{
+    m_OnNewFrame = std::move(Fn);
     return *this;
 }
 
