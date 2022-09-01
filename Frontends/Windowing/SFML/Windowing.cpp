@@ -137,7 +137,7 @@ void NewWindow(OctaneGUI::Window* Window)
 
         if (Window->Modal())
         {
-            SetAlwaysOnTop(RenderWindow->getSystemHandle());
+            SetAlwaysOnTop((void*)RenderWindow->getSystemHandle());
         }
     }
 }
