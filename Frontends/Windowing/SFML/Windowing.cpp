@@ -179,6 +179,10 @@ void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
     }
 }
 
+void NewFrame()
+{
+}
+
 OctaneGUI::Event Event(OctaneGUI::Window* Window)
 {
     if (g_Windows.find(Window) == g_Windows.end())

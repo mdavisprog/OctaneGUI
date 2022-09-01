@@ -66,6 +66,11 @@ void OnWindowAction(OctaneGUI::Window* Window, OctaneGUI::WindowAction Action)
     }
 }
 
+void OnNewFrame()
+{
+    Windowing::NewFrame();
+}
+
 OctaneGUI::Event OnEvent(OctaneGUI::Window* Window)
 {
     return Windowing::Event(Window);
@@ -119,6 +124,7 @@ void Initialize(OctaneGUI::Application& Application)
 
     Application
         .SetOnWindowAction(OnWindowAction)
+        .SetOnNewFrame(OnNewFrame)
         .SetOnEvent(OnEvent)
         .SetOnPaint(OnPaint)
         .SetOnLoadTexture(OnLoadTexture)

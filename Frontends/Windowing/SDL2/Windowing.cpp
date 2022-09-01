@@ -127,6 +127,143 @@ void* NativeHandle(SDL_Window* Window)
 #endif
 }
 
+std::vector<SDL_Event> g_Events;
+
+OctaneGUI::Event HandleEvent(const SDL_Event& Event, const uint32_t WindowID)
+{
+    // If windowID for any event is 0, then that event should affect all windows.
+    switch (Event.type)
+    {
+    case SDL_QUIT: return OctaneGUI::Event(OctaneGUI::Event::Type::WindowClosed);
+
+    case SDL_KEYDOWN:
+    case SDL_KEYUP:
+    {
+        if (WindowID != Event.key.windowID)
+        {
+            g_Events.push_back(Event);
+
+            if (Event.key.windowID != 0)
+            {
+                break;
+            }
+        }
+
+        return OctaneGUI::Event(
+            Event.key.type == SDL_KEYDOWN ? OctaneGUI::Event::Type::KeyPressed : OctaneGUI::Event::Type::KeyReleased,
+            OctaneGUI::Event::Key(GetKey(Event.key.keysym.sym)));
+    }
+
+    case SDL_MOUSEMOTION:
+    {
+        if (WindowID != Event.motion.windowID)
+        {
+            g_Events.push_back(Event);
+
+            if (Event.motion.windowID != 0)
+            {
+                break;
+            }
+        }
+
+        return OctaneGUI::Event(
+            OctaneGUI::Event::MouseMove(Event.motion.x, Event.motion.y));
+    }
+
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+    {
+        if (WindowID != Event.button.windowID)
+        {
+            g_Events.push_back(Event);
+
+            if (Event.button.windowID != 0)
+            {
+                break;
+            }
+        }
+
+        OctaneGUI::Mouse::Count Count = OctaneGUI::Mouse::Count::Single;
+        if (Event.button.clicks == 2)
+        {
+            Count = OctaneGUI::Mouse::Count::Double;
+        }
+        else if (Event.button.clicks == 3)
+        {
+            Count = OctaneGUI::Mouse::Count::Triple;
+        }
+
+        return OctaneGUI::Event(
+            Event.button.type == SDL_MOUSEBUTTONDOWN ? OctaneGUI::Event::Type::MousePressed : OctaneGUI::Event::Type::MouseReleased,
+            OctaneGUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y, Count));
+    }
+
+    case SDL_MOUSEWHEEL:
+    {
+        if (WindowID != Event.wheel.windowID)
+        {
+            g_Events.push_back(Event);
+
+            if (Event.wheel.windowID != 0)
+            {
+                break;
+            }
+        }
+
+        return OctaneGUI::Event(
+            OctaneGUI::Event::MouseWheel(Event.wheel.x, Event.wheel.y));
+    }
+
+    case SDL_TEXTINPUT:
+    {
+        if (WindowID != Event.text.windowID)
+        {
+            g_Events.push_back(Event);
+
+            if (Event.text.windowID != 0)
+            {
+                break;
+            }
+        }
+
+        return OctaneGUI::Event(
+            OctaneGUI::Event::Text(*(uint32_t*)Event.text.text));
+    }
+
+    case SDL_WINDOWEVENT:
+    {
+        if (WindowID != Event.window.windowID)
+        {
+            g_Events.push_back(Event);
+
+            if (Event.window.windowID != 0)
+            {
+                break;
+            }
+        }
+
+        switch (Event.window.event)
+        {
+        case SDL_WINDOWEVENT_RESIZED: return OctaneGUI::Event(
+            OctaneGUI::Event::WindowResized((float)Event.window.data1, (float)Event.window.data2));
+
+        case SDL_WINDOWEVENT_CLOSE: return OctaneGUI::Event(
+            OctaneGUI::Event::Type::WindowClosed);
+
+        case SDL_WINDOWEVENT_ENTER: return OctaneGUI::Event(
+            OctaneGUI::Event::Type::WindowEnter);
+
+        case SDL_WINDOWEVENT_LEAVE: return OctaneGUI::Event(
+            OctaneGUI::Event::Type::WindowLeave);
+        }
+    }
+
+    default: break;
+    }
+
+    return OctaneGUI::Event(OctaneGUI::Event::Type::None);
+}
+
 std::unordered_map<SDL_SystemCursor, SDL_Cursor*> g_SystemCursors {};
 
 bool Initialize()
@@ -233,6 +370,11 @@ void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
     Windowing::SetMovable(Handle, Enable);
 }
 
+void NewFrame()
+{
+    g_Events.clear();
+}
+
 OctaneGUI::Event Event(OctaneGUI::Window* Window)
 {
     if (g_Windows.find(Window) == g_Windows.end())
@@ -240,121 +382,27 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
         return OctaneGUI::Event(OctaneGUI::Event::Type::WindowClosed);
     }
 
-    std::vector<SDL_Event> EventsToPush;
     SDL_Window* Instance = g_Windows[Window];
     const uint32_t WindowID = SDL_GetWindowID(Instance);
-    SDL_Event Event;
-    while (SDL_PollEvent(&Event))
+
+    for (std::vector<SDL_Event>::const_iterator It = g_Events.begin(); It != g_Events.end(); ++It)
     {
-        switch (Event.type)
+        OctaneGUI::Event Processed = HandleEvent(*It, WindowID);
+        if (Processed.GetType() != OctaneGUI::Event::Type::None)
         {
-        case SDL_QUIT: return OctaneGUI::Event(OctaneGUI::Event::Type::WindowClosed);
-
-        case SDL_KEYDOWN:
-        case SDL_KEYUP:
-        {
-            if (WindowID != Event.key.windowID)
-            {
-                EventsToPush.push_back(Event);
-                break;
-            }
-
-            return OctaneGUI::Event(
-                Event.key.type == SDL_KEYDOWN ? OctaneGUI::Event::Type::KeyPressed : OctaneGUI::Event::Type::KeyReleased,
-                OctaneGUI::Event::Key(GetKey(Event.key.keysym.sym)));
-        }
-
-        case SDL_MOUSEMOTION:
-        {
-            if (WindowID != Event.motion.windowID)
-            {
-                EventsToPush.push_back(Event);
-                break;
-            }
-
-            return OctaneGUI::Event(
-                OctaneGUI::Event::MouseMove(Event.motion.x, Event.motion.y));
-        }
-
-        case SDL_MOUSEBUTTONDOWN:
-        case SDL_MOUSEBUTTONUP:
-        {
-            if (WindowID != Event.button.windowID)
-            {
-                EventsToPush.push_back(Event);
-                break;
-            }
-
-            OctaneGUI::Mouse::Count Count = OctaneGUI::Mouse::Count::Single;
-            if (Event.button.clicks == 2)
-            {
-                Count = OctaneGUI::Mouse::Count::Double;
-            }
-            else if (Event.button.clicks == 3)
-            {
-                Count = OctaneGUI::Mouse::Count::Triple;
-            }
-
-            return OctaneGUI::Event(
-                Event.button.type == SDL_MOUSEBUTTONDOWN ? OctaneGUI::Event::Type::MousePressed : OctaneGUI::Event::Type::MouseReleased,
-                OctaneGUI::Event::MouseButton(GetMouseButton(Event.button.button), (float)Event.button.x, (float)Event.button.y, Count));
-        }
-
-        case SDL_MOUSEWHEEL:
-        {
-            if (WindowID != Event.wheel.windowID)
-            {
-                EventsToPush.push_back(Event);
-                break;
-            }
-
-            return OctaneGUI::Event(
-                OctaneGUI::Event::MouseWheel(Event.wheel.x, Event.wheel.y));
-        }
-
-        case SDL_TEXTINPUT:
-        {
-            if (WindowID != Event.text.windowID)
-            {
-                EventsToPush.push_back(Event);
-                break;
-            }
-
-            return OctaneGUI::Event(
-                OctaneGUI::Event::Text(*(uint32_t*)Event.text.text));
-        }
-
-        case SDL_WINDOWEVENT:
-        {
-            if (WindowID != Event.window.windowID)
-            {
-                EventsToPush.push_back(Event);
-                break;
-            }
-
-            switch (Event.window.event)
-            {
-            case SDL_WINDOWEVENT_RESIZED: return OctaneGUI::Event(
-                OctaneGUI::Event::WindowResized((float)Event.window.data1, (float)Event.window.data2));
-
-            case SDL_WINDOWEVENT_CLOSE: return OctaneGUI::Event(
-                OctaneGUI::Event::Type::WindowClosed);
-
-            case SDL_WINDOWEVENT_ENTER: return OctaneGUI::Event(
-                OctaneGUI::Event::Type::WindowEnter);
-
-            case SDL_WINDOWEVENT_LEAVE: return OctaneGUI::Event(
-                OctaneGUI::Event::Type::WindowLeave);
-            }
-        }
-
-        default: break;
+            g_Events.erase(It);
+            return Processed;
         }
     }
 
-    for (SDL_Event& Value : EventsToPush)
+    SDL_Event Event;
+    while (SDL_PollEvent(&Event))
     {
-        SDL_PushEvent(&Value);
+        OctaneGUI::Event Processed = HandleEvent(Event, WindowID);
+        if (Processed.GetType() != OctaneGUI::Event::Type::None)
+        {
+            return Processed;
+        }
     }
 
     return OctaneGUI::Event(OctaneGUI::Event::Type::None);
