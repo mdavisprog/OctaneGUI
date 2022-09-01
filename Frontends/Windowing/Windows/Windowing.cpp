@@ -47,6 +47,12 @@ void SetEnabled(void* Handle, bool Enabled)
     EnableWindow(WinHandle, Enabled ? TRUE : FALSE);
 }
 
+void SetAlwaysOnTop(void* Handle)
+{
+    HWND WinHandle = (HWND)Handle;
+    SetWindowPos(WinHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+}
+
 void Focus(void* Handle)
 {
     HWND WinHandle = (HWND)Handle;

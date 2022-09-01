@@ -39,6 +39,10 @@ void SetEnabled(void* Handle, bool Enabled)
 {
 }
 
+void SetAlwaysOnTop(void* Handle)
+{
+}
+
 void Focus(void* Handle)
 {
 }

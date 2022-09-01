@@ -61,6 +61,7 @@ void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor);
 // Platform specific functions.
 void SetMovable(void* Handle, bool Movable);
 void SetEnabled(void* Handle, bool Enabled);
+void SetAlwaysOnTop(void* Handle);
 void Focus(void* Handle);
 std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters, void* Handle);
 

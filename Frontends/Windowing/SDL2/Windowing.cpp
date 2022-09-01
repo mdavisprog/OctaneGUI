@@ -113,6 +113,20 @@ OctaneGUI::Window* WindowID(const char* ID)
     return nullptr;
 }
 
+void* NativeHandle(SDL_Window* Window)
+{
+    SDL_SysWMinfo WM {};
+    SDL_GetWindowWMInfo(Window, &WM);
+
+#if defined(WINDOWS)
+    return (void*)WM.info.win.window;
+#elif defined(APPLE)
+    return (void*)WM.info.cocoa.window;
+#else
+    return nullptr;
+#endif
+}
+
 std::unordered_map<SDL_SystemCursor, SDL_Cursor*> g_SystemCursors {};
 
 bool Initialize()
@@ -172,6 +186,8 @@ void NewWindow(OctaneGUI::Window* Window)
             {
                 SDL_SetWindowModalFor(Instance, g_Windows[Main]);
             }
+
+            SetAlwaysOnTop(NativeHandle(Instance));
         }
 
         g_Windows[Window] = Instance;
@@ -206,18 +222,7 @@ void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
         return;
     }
 
-    SDL_SysWMinfo WM {};
-    SDL_GetWindowWMInfo(g_Windows[Window], &WM);
-
-    void* Handle =
-#if defined(WINDOWS)
-        WM.info.win.window;
-#elif defined(APPLE)
-        WM.info.cocoa.window;
-#else
-        nullptr;
-#endif
-
+    void* Handle = NativeHandle(g_Windows[Window]);
     Windowing::SetEnabled(Handle, Enable);
 
     if (Enable)
