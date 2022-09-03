@@ -31,6 +31,7 @@ SOFTWARE.
 #include "../Controls/Text.h"
 #include "../Controls/TextInput.h"
 #include "../Controls/VerticalContainer.h"
+#include "../Dialogs/MessageBox.h"
 #include "../Json.h"
 #include "../String.h"
 #include "../Window.h"
@@ -233,6 +234,44 @@ bool CommandPalette::Process(const std::u32string& Command, const std::vector<st
         printf("%s\n", JsonString.c_str());
 
         GetWindow()->App().SetClipboardContents(String::ToUTF32(JsonString));
+    }
+    else if (Lower == U"messagebox" || Lower == U"mb")
+    {
+        // Need the title and message to display.
+        if (Arguments.size() >= 2)
+        {
+            const std::u32string Title = Arguments[0];
+            const std::u32string Message = Arguments[1];
+
+            MessageBox::Buttons::Type Buttons = MessageBox::Buttons::Type::OKCancel;
+            if (Arguments.size() >= 3)
+            {
+                const std::u32string ButtonTypes = String::ToLower(Arguments[2]);
+                if (ButtonTypes == U"ok")
+                {
+                    Buttons = MessageBox::Buttons::Type::OK;
+                }
+                else if (ButtonTypes == U"yesno")
+                {
+                    Buttons = MessageBox::Buttons::Type::YesNo;
+                }
+                else if (ButtonTypes == U"yesnocancel")
+                {
+                    Buttons = MessageBox::Buttons::Type::YesNoCancel;
+                }
+            }
+
+            MessageBox::Show(
+                GetWindow()->App(), Title.c_str(), Message.c_str(), [this](MessageBox::Response Response) -> void
+                {
+                    printf("Response: %d\n", (int)Response);
+                },
+                Buttons);
+        }
+        else
+        {
+            printf("Not enough arguments given for displaying message box.");
+        }
     }
     else
     {
