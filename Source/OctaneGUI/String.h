@@ -27,6 +27,7 @@ SOFTWARE.
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace OctaneGUI
 {
@@ -58,6 +59,9 @@ public:
 
     static std::string ToMultiByte(float Value);
     static std::u32string ToUTF32(float Value);
+
+    static std::vector<std::u32string> Tokenize(const std::u32string& Stream, const std::u32string& Delim);
+    static std::vector<std::u32string> ParseArguments(const std::u32string& Stream);
 };
 
 }

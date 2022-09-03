@@ -278,4 +278,84 @@ std::u32string String::ToUTF32(float Value)
     return ToUTF32(ToMultiByte(Value));
 }
 
+std::vector<std::u32string> String::Tokenize(const std::u32string& Stream, const std::u32string& Delim)
+{
+    std::vector<std::u32string> Result;
+
+    if (Stream.empty())
+    {
+        return Result;
+    }
+
+    size_t Start = 0;
+    size_t Pos = Stream.find(Delim);
+    while (Pos != std::string::npos)
+    {
+        Result.push_back(Stream.substr(Start, Pos - Start));
+        Start = Pos + 1;
+        Pos = Stream.find(Delim, Start);
+    }
+
+    if (Start < Stream.size())
+    {
+        Result.push_back(Stream.substr(Start, Stream.size() - Start));
+    }
+
+    return Result;
+}
+
+std::vector<std::u32string> String::ParseArguments(const std::u32string& Stream)
+{
+    std::vector<std::u32string> Result;
+
+    const std::vector<std::u32string> Tokens = Tokenize(Stream, U" ");
+    std::u32string Arg;
+    bool IsParsing = false;
+    for (const std::u32string& Token : Tokens)
+    {
+        if (!Arg.empty())
+        {
+            Arg += U" ";
+        }
+
+        Arg += Token;
+
+        if (IsParsing)
+        {
+            if (Token.back() == U'"')
+            {
+                IsParsing = false;
+            }
+        }
+        else
+        {
+            if (Token.front() == U'"')
+            {
+                IsParsing = true;
+            }
+        }
+
+        if (!IsParsing)
+        {
+            if (Arg.front() == U'"' && Arg.back() == U'"')
+            {
+                Result.push_back(Arg.substr(1, Arg.size() - 2));
+            }
+            else
+            {
+                Result.push_back(Arg);
+            }
+
+            Arg.clear();
+        }
+    }
+
+    if (!Arg.empty())
+    {
+        Result.push_back(Arg);
+    }
+
+    return Result;
+}
+
 }
