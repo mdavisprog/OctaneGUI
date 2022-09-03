@@ -55,9 +55,6 @@ public:
 private:
     static std::shared_ptr<CommandPalette> s_Root;
 
-    // TODO: Maybe create an args parser class that can be used in multiple places.
-    static std::vector<std::u32string> Tokenize(const std::u32string& Value);
-
     bool Process(const std::u32string& Command, const std::vector<std::u32string>& Arguments);
 
     std::shared_ptr<VerticalContainer> m_Container { nullptr };

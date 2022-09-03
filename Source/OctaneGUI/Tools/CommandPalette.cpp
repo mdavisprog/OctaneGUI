@@ -108,7 +108,7 @@ bool CommandPalette::OnKeyPressed(Keyboard::Key Key)
     if (Key == Keyboard::Key::Enter)
     {
         const std::u32string Buffer = m_Input->GetText();
-        std::vector<std::u32string> Tokens = Tokenize(Buffer);
+        std::vector<std::u32string> Tokens = String::ParseArguments(Buffer);
         m_Input->SetText(U"");
         GetWindow()->ClosePopup();
 
@@ -166,29 +166,6 @@ bool CommandPalette::OnKeyPressed(Keyboard::Key Key)
 }
 
 std::shared_ptr<CommandPalette> CommandPalette::s_Root { nullptr };
-
-std::vector<std::u32string> CommandPalette::Tokenize(const std::u32string& Value)
-{
-    std::vector<std::u32string> Result;
-
-    if (Value.empty())
-    {
-        return std::move(Result);
-    }
-
-    size_t Start = 0;
-    size_t Pos = Value.find(' ');
-    while (Pos != std::string::npos)
-    {
-        Result.push_back(std::move(Value.substr(Start, Pos - Start)));
-        Start = Pos + 1;
-        Pos = Value.find(' ', Start);
-    }
-
-    Result.push_back(std::move(Value.substr(Start, Value.size() - Start)));
-
-    return std::move(Result);
-}
 
 bool CommandPalette::Process(const std::u32string& Command, const std::vector<std::u32string>& Arguments)
 {
