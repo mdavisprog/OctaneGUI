@@ -151,7 +151,7 @@ FileDialog::FileDialog(Window* InWindow)
     FileInfoLayout
         ->SetGrow(Grow::End)
         ->SetExpand(Expand::Width);
-    
+
     m_FileName = FileInfoLayout->AddControl<TextInput>();
     m_FileName
         ->SetReadOnly(true)

@@ -9,6 +9,8 @@ Source/OctaneGUI/Controls/*.h \
 Source/OctaneGUI/Controls/*.cpp \
 Source/OctaneGUI/Controls/Syntax/*.h \
 Source/OctaneGUI/Controls/Syntax/*.cpp \
+Source/OctaneGUI/Dialogs/*.h \
+Source/OctaneGUI/Dialogs/*.cpp \
 Source/OctaneGUI/Tools/*.h \
 Source/OctaneGUI/Tools/*.cpp \
 Frontends/*.h \
