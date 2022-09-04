@@ -85,7 +85,9 @@ CommandPalette::CommandPalette(Window* InWindow)
         .SetFontSize(14);
 
     m_Input = Items->AddControl<TextInput>();
-    m_Input->SetExpand(Expand::Width);
+    m_Input
+        ->SetMultiline(false)
+        .SetExpand(Expand::Width);
 }
 
 void CommandPalette::Show()
