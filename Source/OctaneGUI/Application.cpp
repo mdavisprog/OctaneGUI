@@ -225,6 +225,16 @@ std::shared_ptr<Window> Application::GetWindow(const char* ID) const
     return m_Windows.at(ID);
 }
 
+std::shared_ptr<Window> Application::EventFocus() const
+{
+    if (m_EventFocus.expired())
+    {
+        return nullptr;
+    }
+
+    return m_EventFocus.lock();
+}
+
 bool Application::IsMainWindow(Window* InWindow) const
 {
     for (std::unordered_map<std::string, std::shared_ptr<Window>>::const_iterator It = m_Windows.begin(); It != m_Windows.end(); ++It)
@@ -553,6 +563,8 @@ int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
         }
     }
 
+    m_EventFocus = Item;
+
     Processed++;
     switch (E.GetType())
     {
@@ -618,6 +630,8 @@ int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
     case Event::Type::None:
     default: Processed--; break;
     }
+
+    m_EventFocus.reset();
 
     return Processed;
 }

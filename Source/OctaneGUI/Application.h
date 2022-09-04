@@ -82,6 +82,7 @@ public:
 
     std::shared_ptr<Window> GetMainWindow() const;
     std::shared_ptr<Window> GetWindow(const char* ID) const;
+    std::shared_ptr<Window> EventFocus() const;
     bool IsMainWindow(Window* InWindow) const;
     bool HasWindow(const char* ID) const;
     std::shared_ptr<Window> NewWindow(const char* ID, const char* JsonStream);
@@ -124,6 +125,7 @@ private:
 
     std::unordered_map<std::string, std::shared_ptr<Window>> m_Windows;
     std::vector<std::weak_ptr<Window>> m_Modals {};
+    std::weak_ptr<Window> m_EventFocus {};
     std::shared_ptr<Theme> m_Theme { nullptr };
     std::shared_ptr<Icons> m_Icons { nullptr };
     bool m_IsRunning { false };
