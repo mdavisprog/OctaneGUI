@@ -70,6 +70,9 @@ public:
     void SetSize(Vector2 Size);
     Vector2 GetSize() const;
 
+    Window& SetDeviceSize(Vector2 Size);
+    Vector2 DeviceSize() const;
+
     void SetID(const char* ID);
     const char* ID() const;
     bool HasID() const;
@@ -164,6 +167,7 @@ private:
     Vector2 m_MousePosition {};
     Mouse::Cursor m_MouseCursor { Mouse::Cursor::Arrow };
     Rect m_Bounds {};
+    Vector2 m_DeviceSize {};
     std::shared_ptr<WindowContainer> m_Container { nullptr };
     bool m_Repaint { false };
     std::weak_ptr<Control> m_Focus {};

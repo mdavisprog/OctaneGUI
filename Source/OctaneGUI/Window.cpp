@@ -102,6 +102,17 @@ Vector2 Window::GetSize() const
     return m_Bounds.Max - m_Bounds.Min;
 }
 
+Window& Window::SetDeviceSize(Vector2 Size)
+{
+    m_DeviceSize = Size;
+    return *this;
+}
+
+Vector2 Window::DeviceSize() const
+{
+    return m_DeviceSize;
+}
+
 void Window::SetID(const char* ID)
 {
     m_ID = ID;
