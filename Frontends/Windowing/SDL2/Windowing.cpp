@@ -42,6 +42,8 @@ namespace Windowing
 {
 
 std::unordered_map<OctaneGUI::Window*, SDL_Window*> g_Windows;
+std::unordered_map<uint32_t, std::vector<SDL_Event>> g_UnhandledEvents {};
+std::unordered_map<SDL_SystemCursor, SDL_Cursor*> g_SystemCursors {};
 
 OctaneGUI::Keyboard::Key GetKey(SDL_Keycode Code)
 {
@@ -127,9 +129,41 @@ void* NativeHandle(SDL_Window* Window)
 #endif
 }
 
-std::vector<SDL_Event> g_Events;
+// Events in SDL have an associated window ID for which the event is tied to. With multiple windows,
+// this ID may not match the window that is pumping the events. If the IDs do not match, the event
+// is added to a queue for the appropriate window.
+// On some platforms, a window ID of '0' may appear. This means that the event should be handled by
+// all windows. This function will push the event to all windows if the SDL events are being pumped.
+bool AddUnhandledEvent(SDL_Event& Event, const uint32_t EventWindowID, const uint32_t WindowID)
+{
+    // If the event's window ID is '0', then all other windows should have this event queued.
+    if (EventWindowID == 0)
+    {
+        for (std::unordered_map<OctaneGUI::Window*, SDL_Window*>::iterator It = g_Windows.begin();
+            It != g_Windows.end();
+            ++It)
+        {
+            const uint32_t ItWindowID = SDL_GetWindowID(It->second);
+            if (SDL_GetWindowID(It->second) != WindowID)
+            {
+                AddUnhandledEvent(Event, ItWindowID, WindowID);
+            }
+        }
+    }
+    // If the event does not match the target window, then we must queue it.
+    else if (EventWindowID != WindowID)
+    {
+        std::vector<SDL_Event>& Events = g_UnhandledEvents[EventWindowID];
+        Events.push_back(Event);
+        // This event is not meant for the target window. Should not continue processing.
+        return false;
+    }
 
-OctaneGUI::Event HandleEvent(const SDL_Event& Event, const uint32_t WindowID)
+    // Calling function should continue processing this event.
+    return true;
+}
+
+OctaneGUI::Event HandleEvent(SDL_Event& Event, const uint32_t WindowID, bool IsPumping)
 {
     // If windowID for any event is 0, then that event should affect all windows.
     switch (Event.type)
@@ -139,14 +173,9 @@ OctaneGUI::Event HandleEvent(const SDL_Event& Event, const uint32_t WindowID)
     case SDL_KEYDOWN:
     case SDL_KEYUP:
     {
-        if (WindowID != Event.key.windowID)
+        if (IsPumping && !AddUnhandledEvent(Event, Event.key.windowID, WindowID))
         {
-            g_Events.push_back(Event);
-
-            if (Event.key.windowID != 0)
-            {
-                break;
-            }
+            break;
         }
 
         return OctaneGUI::Event(
@@ -156,14 +185,9 @@ OctaneGUI::Event HandleEvent(const SDL_Event& Event, const uint32_t WindowID)
 
     case SDL_MOUSEMOTION:
     {
-        if (WindowID != Event.motion.windowID)
+        if (IsPumping && !AddUnhandledEvent(Event, Event.motion.windowID, WindowID))
         {
-            g_Events.push_back(Event);
-
-            if (Event.motion.windowID != 0)
-            {
-                break;
-            }
+            break;
         }
 
         return OctaneGUI::Event(
@@ -173,14 +197,9 @@ OctaneGUI::Event HandleEvent(const SDL_Event& Event, const uint32_t WindowID)
     case SDL_MOUSEBUTTONDOWN:
     case SDL_MOUSEBUTTONUP:
     {
-        if (WindowID != Event.button.windowID)
+        if (IsPumping && !AddUnhandledEvent(Event, Event.button.windowID, WindowID))
         {
-            g_Events.push_back(Event);
-
-            if (Event.button.windowID != 0)
-            {
-                break;
-            }
+            break;
         }
 
         OctaneGUI::Mouse::Count Count = OctaneGUI::Mouse::Count::Single;
@@ -200,14 +219,9 @@ OctaneGUI::Event HandleEvent(const SDL_Event& Event, const uint32_t WindowID)
 
     case SDL_MOUSEWHEEL:
     {
-        if (WindowID != Event.wheel.windowID)
+        if (IsPumping && !AddUnhandledEvent(Event, Event.wheel.windowID, WindowID))
         {
-            g_Events.push_back(Event);
-
-            if (Event.wheel.windowID != 0)
-            {
-                break;
-            }
+            break;
         }
 
         return OctaneGUI::Event(
@@ -216,14 +230,9 @@ OctaneGUI::Event HandleEvent(const SDL_Event& Event, const uint32_t WindowID)
 
     case SDL_TEXTINPUT:
     {
-        if (WindowID != Event.text.windowID)
+        if (IsPumping && !AddUnhandledEvent(Event, Event.text.windowID, WindowID))
         {
-            g_Events.push_back(Event);
-
-            if (Event.text.windowID != 0)
-            {
-                break;
-            }
+            break;
         }
 
         return OctaneGUI::Event(
@@ -232,14 +241,9 @@ OctaneGUI::Event HandleEvent(const SDL_Event& Event, const uint32_t WindowID)
 
     case SDL_WINDOWEVENT:
     {
-        if (WindowID != Event.window.windowID)
+        if (IsPumping && !AddUnhandledEvent(Event, Event.window.windowID, WindowID))
         {
-            g_Events.push_back(Event);
-
-            if (Event.window.windowID != 0)
-            {
-                break;
-            }
+            break;
         }
 
         switch (Event.window.event)
@@ -263,8 +267,6 @@ OctaneGUI::Event HandleEvent(const SDL_Event& Event, const uint32_t WindowID)
 
     return OctaneGUI::Event(OctaneGUI::Event::Type::None);
 }
-
-std::unordered_map<SDL_SystemCursor, SDL_Cursor*> g_SystemCursors {};
 
 bool Initialize()
 {
@@ -343,7 +345,9 @@ void DestroyWindow(OctaneGUI::Window* Window)
         return;
     }
 
-    SDL_DestroyWindow(g_Windows[Window]);
+    SDL_Window* Instance = g_Windows[Window];
+    g_UnhandledEvents.erase(SDL_GetWindowID(Instance));
+    SDL_DestroyWindow(Instance);
     g_Windows.erase(Window);
 }
 
@@ -377,7 +381,17 @@ void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
 
 void NewFrame()
 {
-    g_Events.clear();
+    // Only hold a max of 10 unhandled events.
+    for (std::unordered_map<uint32_t, std::vector<SDL_Event>>::iterator It = g_UnhandledEvents.begin();
+        It != g_UnhandledEvents.end();
+        ++It)
+    {
+        std::vector<SDL_Event>& Events = It->second;
+        if (Events.size() > 10)
+        {
+            Events.erase(Events.begin(), Events.begin() + Events.size() - 10);
+        }
+    }
 }
 
 OctaneGUI::Event Event(OctaneGUI::Window* Window)
@@ -390,12 +404,14 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
     SDL_Window* Instance = g_Windows[Window];
     const uint32_t WindowID = SDL_GetWindowID(Instance);
 
-    for (std::vector<SDL_Event>::const_iterator It = g_Events.begin(); It != g_Events.end(); ++It)
+    std::vector<SDL_Event>& Events = g_UnhandledEvents[WindowID];
+    while (!Events.empty())
     {
-        OctaneGUI::Event Processed = HandleEvent(*It, WindowID);
+        SDL_Event Event = Events[0];
+        Events.erase(Events.begin());
+        OctaneGUI::Event Processed = HandleEvent(Event, WindowID, false);
         if (Processed.GetType() != OctaneGUI::Event::Type::None)
         {
-            g_Events.erase(It);
             return Processed;
         }
     }
@@ -403,7 +419,7 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
     SDL_Event Event;
     while (SDL_PollEvent(&Event))
     {
-        OctaneGUI::Event Processed = HandleEvent(Event, WindowID);
+        OctaneGUI::Event Processed = HandleEvent(Event, WindowID, true);
         if (Processed.GetType() != OctaneGUI::Event::Type::None)
         {
             return Processed;
