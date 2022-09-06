@@ -170,6 +170,17 @@ bool Window::IsResizable() const
     return m_Resizable;
 }
 
+Window& Window::SetCanMinimize(bool CanMinimize)
+{
+    m_CanMinimize = CanMinimize;
+    return *this;
+}
+
+bool Window::CanMinimize() const
+{
+    return m_CanMinimize;
+}
+
 bool Window::Modal() const
 {
     return m_Modal;
@@ -525,6 +536,7 @@ void Window::LoadRoot(const Json& Root)
     SetTitle(Title.c_str());
     SetSize({ Width, Height });
     SetResizable(Root["Resizable"].Boolean(IsResizable()));
+    SetCanMinimize(Root["CanMinimize"].Boolean(CanMinimize()));
     m_Modal = Root["Modal"].Boolean(m_Modal);
 }
 

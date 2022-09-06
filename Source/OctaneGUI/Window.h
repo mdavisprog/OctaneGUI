@@ -87,6 +87,9 @@ public:
     Window& SetResizable(bool Resizable);
     bool IsResizable() const;
 
+    Window& SetCanMinimize(bool CanMinimize);
+    bool CanMinimize() const;
+
     bool Modal() const;
 
     Application& App() const;
@@ -176,6 +179,7 @@ private:
     bool m_Visible { false };
     bool m_RequestClose { false };
     bool m_Resizable { true };
+    bool m_CanMinimize { true };
     bool m_Modal { false };
     std::vector<std::weak_ptr<Container>> m_LayoutRequests;
 
