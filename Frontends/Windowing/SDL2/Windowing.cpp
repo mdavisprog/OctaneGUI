@@ -329,6 +329,8 @@ void NewWindow(OctaneGUI::Window* Window)
             SetAlwaysOnTop(NativeHandle(Instance));
         }
 
+        ShowMinimize(NativeHandle(Instance), Window->CanMinimize());
+
         const int DisplayIndex = SDL_GetWindowDisplayIndex(Instance);
         SDL_DisplayMode DisplayMode {};
         SDL_GetCurrentDisplayMode(DisplayIndex, &DisplayMode);

@@ -49,6 +49,13 @@ void SetAlwaysOnTop(void* Handle)
 {
 }
 
+void ShowMinimize(void* Handle, bool Show)
+{
+	NSWindow* Window = (NSWindow*)Handle;
+	NSButton* Minimize = [Window standardWindowButton:NSWindowMiniaturizeButton];
+	[Minimize setHidden:Show ? NO : YES];
+}
+
 void Focus(void* Handle)
 {
 }

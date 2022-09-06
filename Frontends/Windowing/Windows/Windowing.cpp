@@ -53,6 +53,14 @@ void SetAlwaysOnTop(void* Handle)
     SetWindowPos(WinHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 }
 
+void ShowMinimize(void* Handle, bool Show)
+{
+    HWND WinHandle = (HWND)Handle;
+    LONG_PTR Flags = GetWindowLongPtr(WinHandle, GWL_STYLE);
+    Flags = Show ? Flags | WS_MINIMIZEBOX : Flags & ~WS_MINIMIZEBOX;
+    SetWindowLongPtr(WinHandle, GWL_STYLE, Flags);
+}
+
 void Focus(void* Handle)
 {
     HWND WinHandle = (HWND)Handle;

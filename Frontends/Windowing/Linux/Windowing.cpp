@@ -43,6 +43,10 @@ void SetAlwaysOnTop(void* Handle)
 {
 }
 
+void ShowMinimize(void* Handl, bool Show)
+{
+}
+
 void Focus(void* Handle)
 {
 }
