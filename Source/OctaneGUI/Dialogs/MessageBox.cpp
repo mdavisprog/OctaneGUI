@@ -157,7 +157,7 @@ void Show(Application& App, const char32_t* Title, const char32_t* Message, OnRe
 {
     if (!App.HasWindow(ID))
     {
-        App.NewWindow(ID, "{\"Width\": 200, \"Height\": 200, \"Modal\": true, \"Resizable\": false}");
+        App.NewWindow(ID, "{\"Width\": 200, \"Height\": 200, \"Modal\": true, \"Resizable\": false, \"CanMinimize\": false}");
     }
 
     const std::shared_ptr<Window> MBWindow { App.GetWindow(ID) };
