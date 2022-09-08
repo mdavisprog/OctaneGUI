@@ -31,6 +31,25 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+const char* Icons::ToString(Type InType)
+{
+    switch (InType)
+    {
+    case Type::ArrowLeft: return "ArrowLeft";
+    case Type::ArrowRight: return "ArrowRight";
+    case Type::ArrowUp: return "ArrowUp";
+    case Type::ArrowDown: return "ArrowDown";
+    case Type::Check: return "Check";
+    case Type::Expand: return "Expand";
+    case Type::Collapse: return "Collapse";
+    case Type::Plus: return "Plus";
+    case Type::Minus: return "Minus";
+    default: break;
+    }
+
+    return "None";
+}
+
 Icons::Icons()
     : m_Texture(nullptr)
 {

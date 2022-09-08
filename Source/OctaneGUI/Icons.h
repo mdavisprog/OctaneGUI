@@ -53,6 +53,8 @@ public:
         Max
     };
 
+    static const char* ToString(Type InType);
+
     Icons();
     ~Icons();
 
