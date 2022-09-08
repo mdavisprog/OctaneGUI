@@ -26,11 +26,12 @@ SOFTWARE.
 
 #include "TextureViewer.h"
 #include "../Application.h"
-#include "../Controls/ControlList.h"
 #include "../Controls/Image.h"
 #include "../Controls/ListBox.h"
+#include "../Controls/Panel.h"
 #include "../Controls/ScrollableContainer.h"
 #include "../Controls/ScrollableViewControl.h"
+#include "../Controls/Splitter.h"
 #include "../Controls/Text.h"
 #include "../Controls/VerticalContainer.h"
 #include "../Font.h"
@@ -41,17 +42,15 @@ SOFTWARE.
 #include "../Theme.h"
 #include "../Window.h"
 
-#include <sstream>
-
 namespace OctaneGUI
 {
 namespace Tools
 {
 
+#define ID "TextureViewer"
+
 class ImagePreview : public VerticalContainer
 {
-    CLASS(ImagePreview)
-
 public:
     ImagePreview(Window* InWindow)
         : VerticalContainer(InWindow)
@@ -59,6 +58,13 @@ public:
         SetPosition({ 4.0f, 4.0f });
         m_Size = AddControl<Text>();
         m_Image = AddControl<Image>();
+    }
+
+    void Clear()
+    {
+        m_Size->SetText(U"");
+        m_Image->SetTexture(std::shared_ptr<Texture> { nullptr });
+        Invalidate();
     }
 
     void SetTexture(const std::shared_ptr<Texture>& Texture_)
@@ -81,85 +87,94 @@ private:
     std::shared_ptr<Image> m_Image { nullptr };
 };
 
-TextureViewer& TextureViewer::Get()
+class TextureViewerContainer : public Container
 {
-    static TextureViewer s_TextureViewer;
-    return s_TextureViewer;
-}
+public:
+    TextureViewerContainer(Window* InWindow)
+        : Container(InWindow)
+    {
+        SetExpand(Expand::Both);
+
+        AddControl<Panel>()->SetExpand(Expand::Both);
+
+        const std::shared_ptr<Splitter> Split = AddControl<Splitter>();
+        Split
+            ->SetOrientation(Orientation::Vertical)
+            .SetExpand(Expand::Both);
+
+        m_List = Split->First()->AddControl<ListBox>();
+        m_List
+            ->SetOnSelect([this](int Index, std::weak_ptr<Control> Item) -> void
+                {
+                    if (Index < m_Textures.size())
+                    {
+                        const std::weak_ptr<Texture> Selected = m_Textures[Index];
+                        if (!Selected.expired())
+                        {
+                            m_Preview->SetTexture(Selected.lock());
+                        }
+                    }
+                })
+            .SetExpand(Expand::Both);
+
+        const std::shared_ptr<ScrollableViewControl> PreviewView = Split->Second()->AddControl<ScrollableViewControl>();
+        PreviewView->SetExpand(Expand::Both);
+        m_Preview = PreviewView->Scrollable()->AddControl<ImagePreview>();
+    }
+
+    void UpdateList()
+    {
+        m_List
+            ->ClearItems()
+            .Invalidate();
+        m_Textures.clear();
+        m_Preview->Clear();
+
+        Application& App = GetWindow()->App();
+
+        for (const std::pair<std::string, std::shared_ptr<Texture>>& Item : App.GetTextureCache().Cache())
+        {
+            if (Item.second && Item.second->IsValid())
+            {
+                m_List->AddItem<Text>()->SetText(Item.first.c_str());
+                m_Textures.push_back(Item.second);
+            }
+        }
+
+        for (const std::shared_ptr<Font>& Item : App.GetTheme()->Fonts())
+        {
+            const std::string Label = std::string(Item->Path()) + " " + std::to_string(Item->Size());
+            m_List->AddItem<Text>()->SetText(Label.c_str());
+            m_Textures.push_back(Item->GetTexture());
+        }
+
+        m_List->AddItem<Text>()->SetText("Icons");
+        m_Textures.push_back(App.GetIcons()->GetTexture());
+    }
+
+private:
+    std::shared_ptr<ListBox> m_List { nullptr };
+    std::shared_ptr<ImagePreview> m_Preview { nullptr };
+    std::vector<std::weak_ptr<Texture>> m_Textures {};
+};
 
 void TextureViewer::Show(Application& App)
 {
-    if (m_Window.expired())
+    std::shared_ptr<Window> TVWindow { nullptr };
+
+    if (!App.HasWindow(ID))
     {
-        std::stringstream Stream;
-        Stream << "{\"Title\": \"Texture Viewer\", \"Width\": 800, \"Height\": 400, \"Body\": {\"Controls\": ["
-               << "{\"Type\": \"Panel\", \"Expand\": \"Both\"},"
-               << "{\"Type\": \"Splitter\", \"Expand\": \"Both\", \"Orientation\": \"Vertical\", \"First\": "
-               << "{\"Controls\": [{\"ID\": \"List\", \"Type\": \"ListBox\", \"Expand\": \"Both\"}]},"
-               << "\"Second\": {\"Controls\": [{\"ID\": \"ImageView\", \"Type\": \"ScrollableViewControl\", \"Expand\": \"Both\"}]}}"
-               << "]}}";
-
-        ControlList List;
-        m_Window = App.NewWindow("TextureViewer", Stream.str().c_str(), List);
-        std::shared_ptr<ListBox> Names = List.To<ListBox>("List");
-        Names->SetOnSelect([this](int Index, std::weak_ptr<Control> Item) -> void
-            {
-                if (Index < m_Textures.size())
-                {
-                    const std::weak_ptr<Texture> Selected = m_Textures[Index];
-                    if (!Selected.expired())
-                    {
-                        std::shared_ptr<ImagePreview> Preview = m_Preview.lock();
-                        std::shared_ptr<Texture> PreviewTexture = Selected.lock();
-                        Preview->SetTexture(PreviewTexture);
-                    }
-                }
-            });
-        m_Names = Names;
-
-        std::shared_ptr<ScrollableViewControl> View = List.To<ScrollableViewControl>("ImageView");
-        m_Preview = View->Scrollable()->AddControl<ImagePreview>();
+        const char* Stream = R"({"Title": "Texture Viewer", "Width": 800, "Height": 400})";
+        TVWindow = App.NewWindow(ID, Stream);
+        TVWindow->GetContainer()->AddControl<TextureViewerContainer>();
     }
 
-    App.DisplayWindow("TextureViewer");
-    UpdateList();
-}
+    App.DisplayWindow(ID);
 
-TextureViewer::TextureViewer()
-{
-}
-
-void TextureViewer::UpdateList()
-{
-    if (m_Names.expired())
-    {
-        return;
-    }
-
-    std::shared_ptr<ListBox> Names = m_Names.lock();
-    Names->ClearItems();
-    Names->Invalidate();
-    Application& App = Names->GetWindow()->App();
-
-    m_Textures.clear();
-    for (const std::pair<std::string, std::shared_ptr<Texture>>& Item : App.GetTextureCache().Cache())
-    {
-        if (Item.second && Item.second->IsValid())
-        {
-            Names->AddItem<Text>()->SetText(Item.first.c_str());
-            m_Textures.push_back(Item.second);
-        }
-    }
-
-    for (const std::shared_ptr<Font>& Item : App.GetTheme()->Fonts())
-    {
-        const std::string Label = std::string(Item->Path()) + " " + std::to_string(Item->Size());
-        Names->AddItem<Text>()->SetText(Label.c_str());
-        m_Textures.push_back(Item->GetTexture());
-    }
-
-    Names->AddItem<Text>()->SetText("Icons");
-    m_Textures.push_back(App.GetIcons()->GetTexture());
+    TVWindow = App.GetWindow(ID);
+    const std::shared_ptr<TextureViewerContainer> TVC =
+        std::static_pointer_cast<TextureViewerContainer>(TVWindow->GetContainer()->Get(0));
+    TVC->UpdateList();
 }
 
 }

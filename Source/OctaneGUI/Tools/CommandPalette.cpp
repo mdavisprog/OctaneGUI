@@ -205,7 +205,7 @@ bool CommandPalette::Process(const std::u32string& Command, const std::vector<st
     }
     else if (Lower == U"textureviewer" || Lower == U"tv")
     {
-        TextureViewer::Get().Show(GetWindow()->App());
+        TextureViewer::Show(GetWindow()->App());
     }
     else if (Lower == U"dumpjson")
     {

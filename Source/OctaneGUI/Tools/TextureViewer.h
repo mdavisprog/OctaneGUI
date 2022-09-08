@@ -33,31 +33,14 @@ namespace OctaneGUI
 {
 
 class Application;
-class ListBox;
-class Texture;
-class Window;
 
 namespace Tools
 {
 
-class ImagePreview;
-
 class TextureViewer
 {
 public:
-    static TextureViewer& Get();
-
-    void Show(Application& App);
-
-private:
-    TextureViewer();
-
-    void UpdateList();
-
-    std::weak_ptr<Window> m_Window {};
-    std::weak_ptr<ListBox> m_Names {};
-    std::weak_ptr<ImagePreview> m_Preview {};
-    std::vector<std::weak_ptr<Texture>> m_Textures {};
+    static void Show(Application& App);
 };
 
 }
