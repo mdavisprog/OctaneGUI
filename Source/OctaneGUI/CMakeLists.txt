@@ -83,8 +83,3 @@ add_library(
     STATIC
     ${SOURCE}
 )
-
-target_include_directories(
-    ${TARGET}
-    PUBLIC ${STB_INCLUDE}
-)
