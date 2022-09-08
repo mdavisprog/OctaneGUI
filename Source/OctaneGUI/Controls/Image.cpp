@@ -69,6 +69,14 @@ Image& Image::SetTexture(const char* Path)
 Image& Image::SetTexture(const std::shared_ptr<Texture>& InTexture)
 {
     m_Texture = InTexture;
+    if (m_Texture)
+    {
+        SetUVs({ Vector2::Zero, m_Texture->GetSize() });
+    }
+    else
+    {
+        SetUVs({});
+    }
     return *this;
 }
 

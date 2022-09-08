@@ -140,8 +140,8 @@ bool AddUnhandledEvent(SDL_Event& Event, const uint32_t EventWindowID, const uin
     if (EventWindowID == 0)
     {
         for (std::unordered_map<OctaneGUI::Window*, SDL_Window*>::iterator It = g_Windows.begin();
-            It != g_Windows.end();
-            ++It)
+             It != g_Windows.end();
+             ++It)
         {
             const uint32_t ItWindowID = SDL_GetWindowID(It->second);
             if (SDL_GetWindowID(It->second) != WindowID)
@@ -385,8 +385,8 @@ void NewFrame()
 {
     // Only hold a max of 10 unhandled events.
     for (std::unordered_map<uint32_t, std::vector<SDL_Event>>::iterator It = g_UnhandledEvents.begin();
-        It != g_UnhandledEvents.end();
-        ++It)
+         It != g_UnhandledEvents.end();
+         ++It)
     {
         std::vector<SDL_Event>& Events = It->second;
         if (Events.size() > 10)
