@@ -55,6 +55,7 @@ public:
 
         m_Toggle
             ->SetTexture(InWindow->GetIcons()->GetTexture())
+            .SetUVs({})
             .SetParent(this);
 
         m_Text
