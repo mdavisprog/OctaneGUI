@@ -364,6 +364,11 @@ void FileDialog::PopulateList()
 
 void FileDialog::Close(bool Success)
 {
+    if (!Success)
+    {
+        m_FileName->SetText(U"");
+    }
+
     if (m_OnClose)
     {
         m_OnClose(m_Type, m_FileName->GetText());
