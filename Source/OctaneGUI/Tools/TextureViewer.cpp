@@ -26,17 +26,21 @@ SOFTWARE.
 
 #include "TextureViewer.h"
 #include "../Application.h"
+#include "../Controls/ControlList.h"
 #include "../Controls/Image.h"
 #include "../Controls/ListBox.h"
+#include "../Controls/MenuItem.h"
 #include "../Controls/Panel.h"
 #include "../Controls/ScrollableContainer.h"
 #include "../Controls/ScrollableViewControl.h"
 #include "../Controls/Splitter.h"
 #include "../Controls/Text.h"
 #include "../Controls/VerticalContainer.h"
+#include "../Dialogs/FileDialog.h"
 #include "../Font.h"
 #include "../Icons.h"
 #include "../Paint.h"
+#include "../String.h"
 #include "../Texture.h"
 #include "../TextureCache.h"
 #include "../Theme.h"
@@ -158,23 +162,50 @@ private:
     std::vector<std::weak_ptr<Texture>> m_Textures {};
 };
 
-void TextureViewer::Show(Application& App)
+void Refresh(Application& App)
 {
-    std::shared_ptr<Window> TVWindow { nullptr };
-
-    if (!App.HasWindow(ID))
-    {
-        const char* Stream = R"({"Title": "Texture Viewer", "Width": 800, "Height": 400})";
-        TVWindow = App.NewWindow(ID, Stream);
-        TVWindow->GetContainer()->AddControl<TextureViewerContainer>();
-    }
-
-    App.DisplayWindow(ID);
-
-    TVWindow = App.GetWindow(ID);
+    const std::shared_ptr<Window> TVWindow = App.GetWindow(ID);
     const std::shared_ptr<TextureViewerContainer> TVC =
         std::static_pointer_cast<TextureViewerContainer>(TVWindow->GetContainer()->Get(0));
     TVC->UpdateList();
+}
+
+void TextureViewer::Show(Application& App)
+{
+    if (!App.HasWindow(ID))
+    {
+        const char* Stream = 
+R"({"Title": "Texture Viewer", "Width": 800, "Height": 400, "MenuBar": {"Items": [
+    {"Text": "File", "Items": [
+        {"Text": "Load", "ID": "File.Load"}
+    ]}
+]}})";
+        ControlList List;
+        std::shared_ptr<Window> TVWindow = App.NewWindow(ID, Stream, List);
+        TVWindow->GetContainer()->AddControl<TextureViewerContainer>();
+
+        const std::shared_ptr<MenuItem> Load = List.To<MenuItem>("File.Load");
+        Load->SetOnPressed([&App](TextSelectable& Item) -> void
+            {
+                FileSystem& FS = Item.GetWindow()->App().FS();
+
+                FS.SetOnFileDialogResult([&App](FileDialogType Type, const std::u32string& Path) -> void
+                    {
+                        if (!Path.empty())
+                        {
+                            const std::string UTF8Path = String::ToMultiByte(Path);
+                            App.GetTextureCache().Load(UTF8Path.c_str());
+                            Refresh(App);
+                        }
+                    });
+
+                const std::vector<FileDialogFilter> Filters { {{U"png", U"svg"}, U"Image Files"} };
+                FS.FileDialog(FileDialogType::Open, Filters);
+            });
+    }
+
+    App.DisplayWindow(ID);
+    Refresh(App);
 }
 
 }
