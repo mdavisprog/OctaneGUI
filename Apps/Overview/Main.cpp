@@ -64,9 +64,9 @@ void LoadTheme(OctaneGUI::Application& Application, const char* Name)
 
 int main(int argc, char **argv)
 {
-    if (std::filesystem::exists("./Themes"))
+    if (std::filesystem::exists("./Resources/Themes"))
     {
-        for (const std::filesystem::directory_entry& Entry : std::filesystem::directory_iterator("./Themes"))
+        for (const std::filesystem::directory_entry& Entry : std::filesystem::directory_iterator("./Resources/Themes"))
         {
             const std::string Stem = Entry.path().stem().string().c_str();
             Themes[Stem] = Entry.path().string().c_str();

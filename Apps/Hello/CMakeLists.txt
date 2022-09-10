@@ -24,9 +24,3 @@ set_target_properties(
     RUNTIME_OUTPUT_DIRECTORY_DEBUG ${BIN_DIR}
     RUNTIME_OUTPUT_DIRECTORY_RELEASE ${BIN_DIR}
 )
-
-add_custom_command(
-    TARGET ${TARGET}
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${APP_FONTS} ${BIN_DIR}
-)

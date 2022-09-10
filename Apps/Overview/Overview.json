@@ -1,5 +1,5 @@
 {
-    "Theme": "./Themes/Dark.json",
+    "Theme": "Resources/Themes/Dark.json",
     "Windows": {
         "Main": { "Title": "Overview", "Width": 800, "Height": 400,
             "MenuBar": {"Items": [
@@ -26,8 +26,8 @@
                                 {"Type": "Separator", "Orientation": "Vertical"},
                                 {"Type": "GroupBox", "Text": "Image Buttons", "Controls": [
                                     {"Type": "HorizontalContainer", "Expand": "Width", "Controls": [
-                                        {"Type": "ImageButton", "Image": {"Texture": "thumbs_up.png"}},
-                                        {"Type": "ImageButton", "Disabled": true, "Image": {"Texture": "thumbs_up.png"}}
+                                        {"Type": "ImageButton", "Image": {"Texture": "Resources/thumbs_up.png"}},
+                                        {"Type": "ImageButton", "Disabled": true, "Image": {"Texture": "Resources/thumbs_up.png"}}
                                     ]}
                                 ]},
                                 {"Type": "Separator", "Orientation": "Vertical"},

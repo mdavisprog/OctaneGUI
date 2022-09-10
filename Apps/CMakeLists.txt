@@ -27,4 +27,6 @@ foreach(APP ${APPS})
     list(REMOVE_ITEM APPS ${APP})
 endforeach()
 
+file(COPY "${APP_RESOURCES}" DESTINATION "${BIN_DIR}")
+
 unset(NO_APPS CACHE)

@@ -63,7 +63,7 @@ int main(int argc, char** argv)
     
     const char* Json = 
     "{"
-        "\"Theme\": {\"FontPath\": \"Roboto-Regular.ttf\", \"FontSize\": 18},"
+        "\"Theme\": {\"FontPath\": \"Resources/Roboto-Regular.ttf\", \"FontSize\": 18},"
         "\"Windows\": {\"Main\": {\"Title\": \"Unit Tests\", \"Width\": 1280, \"Height\": 720}}"
     "}";
     

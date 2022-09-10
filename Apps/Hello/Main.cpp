@@ -30,7 +30,7 @@ SOFTWARE.
 int main(int argc, char** argv)
 {
     const char* Stream = R"({
-    "Theme": "./Themes/Dark.json",
+    "Theme": "Resources/Themes/Dark.json",
     "Windows": {
         "Main": {"Title": "Hello", "Width": 300, "Height": 200, "Body": {"Controls": [
             {"ID": "Container", "Type": "VerticalContainer", "Controls": [

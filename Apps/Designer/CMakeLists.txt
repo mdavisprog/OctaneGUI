@@ -26,12 +26,6 @@ set_target_properties(
 )
 
 add_custom_command(
-    TARGET ${TARGET}
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${APP_RESOURCES} ${BIN_DIR}
-)
-
-add_custom_command(
     OUTPUT ${BIN_DIR}/App.json
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/App.json ${BIN_DIR}
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/App.json

@@ -1,5 +1,5 @@
 {
-    "Theme": "./Themes/Dark.json",
+    "Theme": "Resources/Themes/Dark.json",
     "Windows": {
         "Main": {
             "Title": "Designer",
@@ -31,7 +31,7 @@
                         {"Type": "Container", "ID": "Editor", "Expand": "Both", "Controls": [
                             {"Type": "Splitter", "ID": "Splitter", "Expand": "Both", "Orientation": "Vertical",
                                 "First": {"Controls": [
-                                    {"Type": "TextEditor", "ID": "Document", "Expand": "Both", "Text": {"Font": "SourceCodePro-Regular.ttf", "FontSize": 14}}
+                                    {"Type": "TextEditor", "ID": "Document", "Expand": "Both", "Text": {"Font": "Resources/SourceCodePro-Regular.ttf", "FontSize": 14}}
                                 ]},
                                 "Second": {"Controls": [
                                     {"Type": "WindowContainer", "Expand": "Both", "ID": "PreviewPane"}
