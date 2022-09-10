@@ -33,6 +33,19 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+std::string FileSystem::Extension(const std::string& Location)
+{
+    std::string Result {};
+
+    size_t Pos = Location.rfind('.');
+    if (Pos != std::string::npos)
+    {
+        Result = Location.substr(Pos, Location.length() - Pos);
+    }
+
+    return Result;
+}
+
 FileSystem::FileSystem(Application& App)
     : m_Application(App)
 {

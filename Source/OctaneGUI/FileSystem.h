@@ -45,6 +45,8 @@ public:
     typedef std::function<std::u32string(FileDialogType, const std::vector<FileDialogFilter>&)> OnFileDialogSignature;
     typedef std::function<void(FileDialogType, const std::u32string&)> OnFileDialogResultSignature;
 
+    static std::string Extension(const std::string& Location);
+
     FileSystem(Application& App);
     ~FileSystem();
 
