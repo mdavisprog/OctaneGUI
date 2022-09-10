@@ -45,6 +45,10 @@ public:
     static void SetOnLoad(OnLoadSignature Fn);
     static std::shared_ptr<Texture> Load(const std::vector<uint8_t>& Data, uint32_t Width, uint32_t Height);
     static std::shared_ptr<Texture> Load(const char* Path);
+    static std::shared_ptr<Texture> LoadPNG(const char* Path);
+    static std::shared_ptr<Texture> LoadSVG(const char* Path);
+    static std::shared_ptr<Texture> LoadSVG(const char* Path, uint32_t Width, uint32_t Height);
+    static std::vector<uint8_t> LoadSVGData(const char* Path, uint32_t Width, uint32_t Height);
 
     Texture();
     ~Texture();

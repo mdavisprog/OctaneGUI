@@ -44,6 +44,7 @@ public:
     ~TextureCache();
 
     std::shared_ptr<Texture> Load(const char* Path);
+    std::shared_ptr<Texture> LoadSVG(const char* Path, uint32_t Width, uint32_t Height);
     const CacheMap& Cache() const;
 
 private:

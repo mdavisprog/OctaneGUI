@@ -56,6 +56,17 @@ std::shared_ptr<Texture> TextureCache::Load(const char* Path)
     return m_Cache[Path];
 }
 
+std::shared_ptr<Texture> TextureCache::LoadSVG(const char* Path, uint32_t Width, uint32_t Height)
+{
+    std::shared_ptr<Texture>& Result = m_Cache[Path];
+    if (!Result)
+    {
+        Result = Texture::LoadSVG(Path, Width, Height);
+    }
+
+    return m_Cache[Path];
+}
+
 const TextureCache::CacheMap& TextureCache::Cache() const
 {
     return m_Cache;

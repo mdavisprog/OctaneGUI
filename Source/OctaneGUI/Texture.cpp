@@ -24,14 +24,40 @@ SOFTWARE.
 
 */
 
+#define NANOSVG_IMPLEMENTATION
+#define NANOSVGRAST_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #include "Texture.h"
+#include "External/nanosvg/nanosvg.h"
+#include "External/nanosvg/nanosvgrast.h"
 #include "External/stb/stb_image.h"
+#include "FileSystem.h"
 
 #include <cstring>
 
 namespace OctaneGUI
 {
+
+std::vector<uint8_t> RasterSVG(NSVGimage* Image, float Width, float Height)
+{
+    std::vector<uint8_t> Result;
+
+    if (Image)
+    {
+        const float ScaleW = (float)Width / Image->width;
+        const float ScaleH = (float)Height / Image->height;
+        const float Scale = std::max<float>(ScaleW, ScaleH);
+
+        Result.resize(Width * Height * 4);
+
+        NSVGrasterizer* Raster = nsvgCreateRasterizer();
+        nsvgRasterize(Raster, Image, 0.0f, 0.0f, Scale, Result.data(), Width, Height, Width * 4);
+        nsvgDeleteRasterizer(Raster);
+        nsvgDelete(Image);
+    }
+
+    return Result;
+}
 
 Texture::OnLoadSignature Texture::s_OnLoad = nullptr;
 
@@ -62,6 +88,23 @@ std::shared_ptr<Texture> Texture::Load(const std::vector<uint8_t>& Data, uint32_
 
 std::shared_ptr<Texture> Texture::Load(const char* Path)
 {
+    std::shared_ptr<Texture> Result { nullptr };
+
+    const std::string Extension = FileSystem::Extension(Path);
+    if (Extension == ".png")
+    {
+        Result = LoadPNG(Path);
+    }
+    else if (Extension == ".svg")
+    {
+        Result = LoadSVG(Path);
+    }
+
+    return Result;
+}
+
+std::shared_ptr<Texture> Texture::LoadPNG(const char* Path)
+{
     std::shared_ptr<Texture> Result;
 
     int Width, Height, Channels;
@@ -75,6 +118,47 @@ std::shared_ptr<Texture> Texture::Load(const char* Path)
 
         Result = Load(Buffer, Width, Height);
         Result->m_Path = Path;
+    }
+
+    return Result;
+}
+
+std::shared_ptr<Texture> Texture::LoadSVG(const char* Path)
+{
+    std::shared_ptr<Texture> Result { nullptr };
+
+    NSVGimage* Image = nsvgParseFromFile(Path, "px", 96);
+    if (Image != nullptr)
+    {
+        const std::vector<uint8_t> Data = RasterSVG(Image, Image->width, Image->height);
+        Result = Load(Data, (uint32_t)Image->width, (uint32_t)Image->height);
+    }
+
+    return Result;
+}
+
+std::shared_ptr<Texture> Texture::LoadSVG(const char* Path, uint32_t Width, uint32_t Height)
+{
+    std::shared_ptr<Texture> Result { nullptr };
+
+    NSVGimage* Image = nsvgParseFromFile(Path, "px", 96);
+    if (Image != nullptr)
+    {
+        const std::vector<uint8_t> Data = RasterSVG(Image, (float)Width, (float)Height);
+        Result = Load(Data, Width, Height);
+    }
+
+    return Result;
+}
+
+std::vector<uint8_t> Texture::LoadSVGData(const char* Path, uint32_t Width, uint32_t Height)
+{
+    std::vector<uint8_t> Result;
+
+    NSVGimage* Image = nsvgParseFromFile(Path, "px", 96);
+    if (Image != nullptr)
+    {
+        Result = RasterSVG(Image, Width, Height);
     }
 
     return Result;
