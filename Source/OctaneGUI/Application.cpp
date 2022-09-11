@@ -99,7 +99,26 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
     DisplayWindow("Main");
 
     m_Icons = std::make_shared<Icons>();
-    m_Icons->Initialize();
+    const Json& IconsObject = Root["Icons"];
+    if (IconsObject.IsNull() || IconsObject["UseInternal"].Boolean())
+    {
+        m_Icons->Initialize();
+    }
+    else
+    {
+        const Vector2 IconSize = Vector2::FromJson(IconsObject["Size"]);
+        Assert(IconSize.Length() > 0.0f, "Icon size is not valid!");
+
+        std::vector<Icons::Definition> Definitions;
+        const Json& Types = IconsObject["Types"];
+        for (unsigned int I = 0; I < Types.Count(); I++)
+        {
+            const Json& Item = Types[I];
+            Definitions.push_back({ Item["Type"].String(), Item["FileName"].String() });
+        }
+
+        m_Icons->Initialize(Definitions, IconSize);
+    }
 
     m_Theme->Load(Root["Theme"]);
 

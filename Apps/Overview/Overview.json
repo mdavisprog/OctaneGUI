@@ -1,5 +1,20 @@
 {
     "Theme": "Resources/Themes/Dark.json",
+    "Icons": {
+        "UseInternal": false,
+        "Size": [24, 24],
+        "Types": [
+            {"Type": "ArrowLeft", "FileName": "Resources/ArrowLeft.svg"},
+            {"Type": "ArrowRight", "FileName": "Resources/ArrowRight.svg"},
+            {"Type": "ArrowUp", "FileName": "Resources/ArrowUp.svg"},
+            {"Type": "ArrowDown", "FileName": "Resources/ArrowDown.svg"},
+            {"Type": "Check", "FileName": "Resources/Check.svg"},
+            {"Type": "Expand", "FileName": "Resources/Expand.svg"},
+            {"Type": "Collapse", "FileName": "Resources/Collapse.svg"},
+            {"Type": "Plus", "FileName": "Resources/Plus.svg"},
+            {"Type": "Minus", "FileName": "Resources/Minus.svg"}
+        ]
+    },
     "Windows": {
         "Main": { "Title": "Overview", "Width": 800, "Height": 400,
             "MenuBar": {"Items": [
