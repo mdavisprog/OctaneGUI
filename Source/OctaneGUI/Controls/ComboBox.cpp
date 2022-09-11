@@ -49,6 +49,7 @@ ComboBox::ComboBox(Window* InWindow)
         ->SetReadOnly(true)
         .SetMultiline(false);
 
+    const Vector2 InputSize = m_Input->GetSize();
     m_Button = AddControl<ImageButton>();
     m_Button
         ->SetTexture(InWindow->GetIcons()->GetTexture())
@@ -66,7 +67,8 @@ ComboBox::ComboBox(Window* InWindow)
                     GetWindow()->SetPopup(m_List);
                 }
             })
-        .SetExpand(Expand::Height);
+        .SetSize({ InputSize.Y, InputSize.Y })
+        ->SetExpand(Expand::Height);
 
     // Setup the color to use by default for the image button.
     OnThemeLoaded();
