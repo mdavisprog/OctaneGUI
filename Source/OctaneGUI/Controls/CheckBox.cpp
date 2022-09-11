@@ -217,8 +217,8 @@ void CheckBox::OnClicked()
 
 Vector2 CheckBox::BoxSize() const
 {
-    const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
-    return TexCoords.GetSize() + Vector2(3.0f, 3.0f);
+    const Vector2 TextSize = m_Text->GetSize();
+    return Vector2(TextSize.Y, TextSize.Y) + Vector2(3.0f, 3.0f);
 }
 
 void CheckBox::UpdateSize()
