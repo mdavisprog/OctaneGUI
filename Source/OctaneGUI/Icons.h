@@ -30,6 +30,8 @@ SOFTWARE.
 
 #include <cstdint>
 #include <memory>
+#include <string>
+#include <vector>
 
 namespace OctaneGUI
 {
@@ -53,12 +55,21 @@ public:
         Max
     };
 
+    struct Definition
+    {
+    public:
+        std::string Name {};
+        std::string FileName {};
+    };
+
     static const char* ToString(Type InType);
+    static Type ToType(const std::string& Name);
 
     Icons();
     ~Icons();
 
     void Initialize();
+    void Initialize(const std::vector<Definition>& Definitions, const Vector2& IconSize);
     std::shared_ptr<Texture> GetTexture() const;
     Rect GetUVs(Type InType) const;
     Rect GetUVsNormalized(Type InType) const;

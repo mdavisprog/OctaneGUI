@@ -28,6 +28,8 @@ SOFTWARE.
 #include "Color.h"
 #include "Texture.h"
 
+#include <cstring>
+
 namespace OctaneGUI
 {
 
@@ -48,6 +50,19 @@ const char* Icons::ToString(Type InType)
     }
 
     return "None";
+}
+
+Icons::Type Icons::ToType(const std::string& Name)
+{
+    for (int I = 0; I < (int)Type::Max; I++)
+    {
+        if (Name == ToString((Type)I))
+        {
+            return (Type)I;
+        }
+    }
+
+    return Type::Max;
 }
 
 Icons::Icons()
@@ -121,6 +136,31 @@ void Icons::Initialize()
     m_UVs[(int)Type::Collapse] = { 77.0f, 2.0f, 83.0f, 11.0f };
     m_UVs[(int)Type::Plus] = { 84.0f, 2.0f, 92.0f, 10.0f };
     m_UVs[(int)Type::Minus] = { 93.0f, 5.0f, 101.0f, 7.0f };
+}
+
+void Icons::Initialize(const std::vector<Definition>& Definitions, const Vector2& IconSize)
+{
+    const size_t IconW = (size_t)IconSize.X;
+    const size_t IconH = (size_t)IconSize.Y;
+    const size_t Width = IconW;
+    const size_t Height = IconH * (size_t)Type::Max;
+    std::vector<uint8_t> Data;
+    Data.resize(Width * Height * 4);
+
+    size_t DataOffset = 0;
+    Vector2 Offset;
+    for (const Definition& Item : Definitions)
+    {
+        const std::vector<uint8_t> IconData = Texture::LoadSVGData(Item.FileName.c_str(), IconW, IconH);
+        memcpy(&Data[DataOffset], IconData.data(), IconData.size());
+        DataOffset += IconData.size();
+
+        Type IconType = ToType(Item.Name);
+        m_UVs[(int)IconType] = { Offset.X, Offset.Y, Offset.X + IconSize.X, Offset.Y + IconSize.Y };
+        Offset.Y += IconSize.Y;
+    }
+
+    m_Texture = Texture::Load(Data, Width, Height);
 }
 
 std::shared_ptr<Texture> Icons::GetTexture() const
