@@ -670,7 +670,7 @@ bool Application::Initialize()
                 Item.second->ThemeLoaded();
                 if (Item.second->IsVisible())
                 {
-                    Item.second->GetContainer()->Invalidate();
+                    Item.second->GetRootContainer()->Invalidate();
                 }
             }
         });
