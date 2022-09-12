@@ -90,6 +90,15 @@ void GroupBox::OnLoad(const Json& Root)
     m_Margins->SetExpand(Expand::Both);
 }
 
+void GroupBox::OnThemeLoaded()
+{
+    Container::OnThemeLoaded();
+
+    Rect Margins = m_Margins->Margins();
+    Margins.Min.Y = TopMargin();
+    m_Margins->SetMargins(Margins);
+}
+
 float GroupBox::TopMargin() const
 {
     return m_Text->GetFont()->Size() * 1.4f;
