@@ -161,13 +161,19 @@ void MenuBar::OnThemeLoaded()
 {
     Container::OnThemeLoaded();
 
+    // Update height based on new sizes for each item.
+    float Height = GetSize().Y;
     for (const std::shared_ptr<MenuItem>& Item : m_MenuItems)
     {
+        Height = std::max<float>(Height, Item->GetSize().Y);
+
         if (Item->GetMenu())
         {
             Item->GetMenu()->OnThemeLoaded();
         }
     }
+
+    SetSize({ 0.0f, Height });
 }
 
 void MenuBar::OnHover(MenuItem& Hovered)
