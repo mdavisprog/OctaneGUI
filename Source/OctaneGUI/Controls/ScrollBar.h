@@ -46,6 +46,7 @@ public:
 
     ScrollBarHandle& SetHandleSize(float HandleSize);
     float HandleSize() const;
+    float PropertySize() const;
     float GetAvailableScrollSize() const;
 
     ScrollBarHandle& SetOnDrag(OnScrollBarSignature Fn);
@@ -87,6 +88,8 @@ public:
 
     ScrollBar& SetScrollBarSize(const Vector2& Size);
     Vector2 GetScrollBarSize() const;
+
+    float PropertySize() const;
 
     ScrollBar& SetAlwaysPaint(bool AlwaysPaint);
     bool ShouldPaint() const;

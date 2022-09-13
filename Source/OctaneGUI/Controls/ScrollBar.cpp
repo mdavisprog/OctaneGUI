@@ -66,6 +66,13 @@ float ScrollBarHandle::HandleSize() const
     return m_HandleSize;
 }
 
+float ScrollBarHandle::PropertySize() const
+{
+    const float Size = GetProperty(ThemeProperties::ScrollBar_Size).Float();
+    const Vector2 Scale = GetWindow()->RenderScale();
+    return Size * Scale.Y;
+}
+
 float ScrollBarHandle::GetAvailableScrollSize() const
 {
     const float Max = m_Orientation == Orientation::Horizontal ? GetSize().X : GetSize().Y;
@@ -264,7 +271,7 @@ ScrollBar& ScrollBar::SetScrollBarSize(const Vector2& Size)
     Vector2 HandleSize = Size;
     if (m_Buttons)
     {
-        const float ScrollBarSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
+        const float ScrollBarSize = m_Handle->PropertySize();
 
         if (m_Handle->GetOrientation() == Orientation::Horizontal)
         {
@@ -294,6 +301,11 @@ ScrollBar& ScrollBar::SetScrollBarSize(const Vector2& Size)
 Vector2 ScrollBar::GetScrollBarSize() const
 {
     return m_Handle->GetSize();
+}
+
+float ScrollBar::PropertySize() const
+{
+    return m_Handle->PropertySize();
 }
 
 ScrollBar& ScrollBar::SetAlwaysPaint(bool AlwaysPaint)
@@ -442,7 +454,7 @@ void ScrollBar::OnThemeLoaded()
 
     if (m_Buttons)
     {
-        const float ScrollBarSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
+        const float ScrollBarSize = m_Handle->PropertySize();
 
         if (!m_MinButton)
         {
@@ -529,7 +541,7 @@ Rect ScrollBar::HandleBackgroundBounds() const
 
     if (m_Buttons)
     {
-        const float ScrollBarSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
+        const float ScrollBarSize = m_Handle->PropertySize();
 
         if (m_Handle->GetOrientation() == Orientation::Horizontal)
         {

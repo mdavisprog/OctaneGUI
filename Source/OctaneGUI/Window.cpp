@@ -93,7 +93,7 @@ const char* Window::GetTitle() const
 void Window::SetSize(Vector2 Size)
 {
     m_Bounds.Max = m_Bounds.Min + Size;
-    m_Container->SetSize(m_Bounds.GetSize());
+    m_Container->SetSize(m_Bounds.GetSize() * m_RenderScale);
     m_Container->InvalidateLayout();
 }
 
@@ -111,6 +111,29 @@ Window& Window::SetDeviceSize(Vector2 Size)
 Vector2 Window::DeviceSize() const
 {
     return m_DeviceSize;
+}
+
+Window& Window::SetRenderScale(Vector2 RenderScale)
+{
+    m_RenderScale = RenderScale;
+    m_Container->SetSize(m_Bounds.GetSize() * m_RenderScale);
+    return *this;
+}
+
+Vector2 Window::RenderScale() const
+{
+    return m_RenderScale;
+}
+
+Window& Window::SetHighDPI(bool HighDPI)
+{
+    m_HighDPI = HighDPI;
+    return *this;
+}
+
+bool Window::HighDPI() const
+{
+    return m_HighDPI;
 }
 
 void Window::SetID(const char* ID)
@@ -266,13 +289,13 @@ void Window::OnKeyReleased(Keyboard::Key Key)
 
 void Window::OnMouseMove(const Vector2& Position)
 {
-    m_MousePosition = Position;
+    m_MousePosition = Position * m_RenderScale;
 
-    std::weak_ptr<Control> Hovered = m_Popup.GetControl(Position);
+    std::weak_ptr<Control> Hovered = m_Popup.GetControl(m_MousePosition);
 
     if (!m_Popup.IsModal() && Hovered.expired())
     {
-        Hovered = m_Container->GetControl(Position);
+        Hovered = m_Container->GetControl(m_MousePosition);
     }
 
     std::shared_ptr<Control> Current = Hovered.lock();
@@ -294,7 +317,7 @@ void Window::OnMouseMove(const Vector2& Position)
 
     if (Current)
     {
-        Current->OnMouseMove(Position);
+        Current->OnMouseMove(m_MousePosition);
     }
 
     if (!m_Focus.expired())
@@ -303,7 +326,7 @@ void Window::OnMouseMove(const Vector2& Position)
 
         if (Current != Focused)
         {
-            Focused->OnMouseMove(Position);
+            Focused->OnMouseMove(m_MousePosition);
         }
     }
 }
@@ -314,7 +337,7 @@ void Window::OnMousePressed(const Vector2& Position, Mouse::Button MouseButton, 
     if (!m_Hovered.expired())
     {
         std::shared_ptr<Control> Hovered = m_Hovered.lock();
-        bool Pressed = Hovered->OnMousePressed(Position, MouseButton, Count);
+        bool Pressed = Hovered->OnMousePressed(Position * m_RenderScale, MouseButton, Count);
 
         if (Pressed)
         {
@@ -342,12 +365,12 @@ void Window::OnMouseReleased(const Vector2& Position, Mouse::Button MouseButton)
 
     if (Hovered && Hovered != Focused)
     {
-        Hovered->OnMouseReleased(Position, MouseButton);
+        Hovered->OnMouseReleased(Position * m_RenderScale, MouseButton);
     }
 
     if (Focused)
     {
-        Focused->OnMouseReleased(Position, MouseButton);
+        Focused->OnMouseReleased(Position * m_RenderScale, MouseButton);
     }
 }
 

@@ -198,11 +198,18 @@ ScrollableContainer& ScrollableContainer::ScrollIntoView(const std::shared_ptr<C
 
 Vector2 ScrollableContainer::GetScrollableSize() const
 {
-    const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
+    const float SBSize = ScrollBarPropertySize();
     return {
         GetSize().X - (m_VerticalSB->ShouldPaint() ? SBSize : 0.0f),
         GetSize().Y - (m_HorizontalSB->ShouldPaint() ? SBSize : 0.0f)
     };
+}
+
+float ScrollableContainer::ScrollBarPropertySize() const
+{
+    // The property size does not care about orientation. It is a constant scaled by a
+    // height factor of the rendering output.
+    return m_VerticalSB->PropertySize();
 }
 
 ScrollableContainer& ScrollableContainer::SetScrollSpeed(const Vector2& ScrollSpeed)
@@ -372,7 +379,7 @@ Vector2 ScrollableContainer::GetContentSize(const std::vector<std::shared_ptr<Co
 
 Vector2 ScrollableContainer::GetOverflow() const
 {
-    const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
+    const float SBSize = ScrollBarPropertySize();
     return {
         std::max<float>(m_ContentSize.X - GetSize().X + (m_VerticalSB->ShouldPaint() ? SBSize : 0.0f), 0.0f),
         std::max<float>(m_ContentSize.Y - GetSize().Y + (m_HorizontalSB->ShouldPaint() ? SBSize : 0.0f), 0.0f)
@@ -411,7 +418,7 @@ void ScrollableContainer::UpdateScrollBars()
 {
     const Vector2 Size = GetSize();
     const Vector2 Overflow = GetOverflow();
-    const float SBSize = GetProperty(ThemeProperties::ScrollBar_Size).Float();
+    const float SBSize = ScrollBarPropertySize();
 
     m_HorizontalSB
         ->SetScrollBarSize({ Size.X, SBSize })

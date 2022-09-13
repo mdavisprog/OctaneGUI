@@ -174,8 +174,8 @@ void TextureViewer::Show(Application& App)
 {
     if (!App.HasWindow(ID))
     {
-        const char* Stream = 
-R"({"Title": "Texture Viewer", "Width": 800, "Height": 400, "MenuBar": {"Items": [
+        const char* Stream =
+            R"({"Title": "Texture Viewer", "Width": 800, "Height": 400, "MenuBar": {"Items": [
     {"Text": "File", "Items": [
         {"Text": "Load", "ID": "File.Load"}
     ]}
@@ -199,7 +199,7 @@ R"({"Title": "Texture Viewer", "Width": 800, "Height": 400, "MenuBar": {"Items":
                         }
                     });
 
-                const std::vector<FileDialogFilter> Filters { {{U"png", U"svg"}, U"Image Files"} };
+                const std::vector<FileDialogFilter> Filters { { { U"png", U"svg" }, U"Image Files" } };
                 FS.FileDialog(FileDialogType::Open, Filters);
             });
     }

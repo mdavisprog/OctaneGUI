@@ -239,7 +239,18 @@ void CreateRenderer(OctaneGUI::Window* Window)
 {
 #if SDL2
 	SDL_Window* Instance = Windowing::Get(Window);
-	SDL_CreateRenderer(Instance, -1, SDL_RENDERER_ACCELERATED);
+	SDL_Renderer* Renderer = SDL_CreateRenderer(Instance, -1, SDL_RENDERER_ACCELERATED);
+
+	int WinW = 0, WinH = 0;
+	SDL_GetWindowSize(Instance, &WinW, &WinH);
+
+	int ResW = 0, ResH = 0;
+	SDL_GetRendererOutputSize(Renderer, &ResW, &ResH);
+
+	if (Window->HighDPI())
+	{
+		Window->SetRenderScale({ (float)ResW / (float)WinW, (float)ResH / (float)WinH });
+	}
 #endif
 }
 
@@ -285,7 +296,13 @@ void Paint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& VertexBuffe
 		Layer.drawableSize = CGSizeMake((int)OutputSize.X, (int)OutputSize.Y);
 
 		OctaneGUI::Vector2 WindowSize = Window->GetSize();
-		OctaneGUI::Vector2 Scale(OutputSize.X / WindowSize.X, OutputSize.Y / WindowSize.Y);
+		OctaneGUI::Vector2 Scale = OutputSize / WindowSize;
+
+		if (Window->HighDPI())
+		{
+			WindowSize = OutputSize;
+			Scale = { 1.0f, 1.0f };
+		}
 
 		[Encoder setCullMode:MTLCullModeNone];
 		[Encoder setDepthStencilState:g_DepthStencil];

@@ -132,6 +132,7 @@ private:
     std::vector<Keyboard::Key> m_PressedKeys {};
     TextureCache m_TextureCache {};
     FileSystem m_FileSystem { *this };
+    bool m_HighDPI { true };
 
 #if TOOLS
     bool m_IgnoreModals { false };

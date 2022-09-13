@@ -59,6 +59,7 @@ public:
     ScrollableContainer& ScrollIntoView(const std::shared_ptr<Control>& Item);
 
     Vector2 GetScrollableSize() const;
+    float ScrollBarPropertySize() const;
 
     ScrollableContainer& SetScrollSpeed(const Vector2& ScrollSpeed);
     Vector2 ScrollSpeed() const;

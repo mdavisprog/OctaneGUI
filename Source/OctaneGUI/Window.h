@@ -73,6 +73,12 @@ public:
     Window& SetDeviceSize(Vector2 Size);
     Vector2 DeviceSize() const;
 
+    Window& SetRenderScale(Vector2 RenderScale);
+    Vector2 RenderScale() const;
+
+    Window& SetHighDPI(bool HighDPI);
+    bool HighDPI() const;
+
     void SetID(const char* ID);
     const char* ID() const;
     bool HasID() const;
@@ -171,6 +177,8 @@ private:
     Mouse::Cursor m_MouseCursor { Mouse::Cursor::Arrow };
     Rect m_Bounds {};
     Vector2 m_DeviceSize {};
+    Vector2 m_RenderScale { 1.0f, 1.0f };
+    bool m_HighDPI { true };
     std::shared_ptr<WindowContainer> m_Container { nullptr };
     bool m_Repaint { false };
     std::weak_ptr<Control> m_Focus {};

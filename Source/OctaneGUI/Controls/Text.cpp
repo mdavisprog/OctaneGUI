@@ -31,6 +31,7 @@ SOFTWARE.
 #include "../Profiler.h"
 #include "../String.h"
 #include "../Theme.h"
+#include "../Window.h"
 
 #include <cassert>
 
@@ -209,7 +210,7 @@ bool Text::IsFixedSize() const
 void Text::UpdateFont()
 {
     const char* FontPath = GetProperty(ThemeProperties::FontPath).String(nullptr);
-    const float FontSize = GetProperty(ThemeProperties::FontSize).Float(LineHeight());
+    const float FontSize = GetProperty(ThemeProperties::FontSize).Float(LineHeight()) * GetWindow()->RenderScale().Y;
     m_Font = GetTheme()->GetOrAddFont(FontPath, FontSize);
 }
 

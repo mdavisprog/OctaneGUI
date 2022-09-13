@@ -96,7 +96,7 @@
                             ]},
                             {"Type": "HorizontalContainer", "Controls": [
                                 {"Type": "GroupBox", "Text": "Wrapped Text", "Controls": [
-                                    {"Type": "Container", "Size": [90, 50], "Controls": [
+                                    {"Type": "VerticalContainer", "Expand": "Width", "Controls": [
                                         {"Type": "Text", "Text": "This is a very long string!", "Wrap": true}
                                     ]}
                                 ]},

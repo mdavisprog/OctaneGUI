@@ -85,6 +85,8 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
         return false;
     }
 
+    m_HighDPI = Root["HighDPI"].Boolean(m_HighDPI);
+
     // First, create and load base settings for each defined window.
     Windows.ForEach([&](const std::string& Key, const Json& Value) -> void
         {
@@ -106,7 +108,7 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
     }
     else
     {
-        const Vector2 IconSize = Vector2::FromJson(IconsObject["Size"]);
+        const Vector2 IconSize = Vector2::FromJson(IconsObject["Size"]) * GetMainWindow()->RenderScale();
         Assert(IconSize.Length() > 0.0f, "Icon size is not valid!");
 
         std::vector<Icons::Definition> Definitions;
@@ -490,6 +492,7 @@ std::shared_ptr<Window> Application::CreateWindow(const char* ID)
 {
     std::shared_ptr<Window> Result = std::make_shared<Window>(this);
     m_Windows[ID] = Result;
+    Result->SetHighDPI(m_HighDPI);
     Result->CreateContainer();
     Result->SetOnPaint(std::bind(&Application::OnPaint, this, std::placeholders::_1, std::placeholders::_2));
     Result->SetID(ID);
