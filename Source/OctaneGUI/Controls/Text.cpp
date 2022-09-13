@@ -42,7 +42,7 @@ Text::Text(Window* InWindow)
 {
     if (GetTheme())
     {
-        m_Font = GetTheme()->GetFont();
+        UpdateFont();
     }
 }
 
@@ -81,7 +81,11 @@ const std::shared_ptr<Font>& Text::GetFont() const
 
 float Text::LineHeight() const
 {
-    assert(m_Font);
+    if (!m_Font)
+    {
+        return 0.0f;
+    }
+
     return m_Font->Size();
 }
 
