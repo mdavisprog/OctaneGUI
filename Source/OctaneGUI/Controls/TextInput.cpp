@@ -661,6 +661,11 @@ void TextInput::OnThemeLoaded()
 {
     ScrollableViewControl::OnThemeLoaded();
 
+    if (!Multiline())
+    {
+        SetSize({ GetSize().X, m_Text->LineHeight() });
+    }
+
     UpdateSpans();
 }
 
