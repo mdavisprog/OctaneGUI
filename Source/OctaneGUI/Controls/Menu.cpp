@@ -124,7 +124,7 @@ Menu& Menu::Close()
 
 Vector2 Menu::Margins() const
 {
-    return GetProperty(ThemeProperties::Menu_Margins).Vector();
+    return GetProperty(ThemeProperties::Menu_Margins).Vector() * RenderScale();
 }
 
 void Menu::GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const
@@ -145,7 +145,7 @@ void Menu::GetMenuItems(std::vector<std::shared_ptr<MenuItem>>& Items) const
 void Menu::Resize()
 {
     const Vector2 Margins = this->Margins();
-    const float RightPadding = GetProperty(ThemeProperties::Menu_RightPadding).Float();
+    const float RightPadding = GetProperty(ThemeProperties::Menu_RightPadding).Float() * RenderScale().X;
 
     Vector2 Size = { GetSize().X + Margins.X, Margins.Y * 2.0f };
     for (const std::shared_ptr<Control>& Item : m_Container->Controls())
