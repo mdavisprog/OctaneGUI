@@ -71,8 +71,7 @@ std::shared_ptr<Menu> MenuBar::AddItem(const char* InText)
 
     if (m_MenuItems.size() == 0)
     {
-        const Vector2 Padding = GetProperty(ThemeProperties::MenuBar_Padding).Vector();
-        SetSize(Vector2(0.0f, Item->GetSize().Y));
+        SetSize({ 0.0f, Item->GetSize().Y });
     }
 
     m_MenuItems.push_back(Item);
@@ -173,7 +172,7 @@ void MenuBar::OnThemeLoaded()
         }
     }
 
-    SetSize({ 0.0f, Height });
+    SetSize({ GetSize().X, Height });
 }
 
 void MenuBar::OnHover(MenuItem& Hovered)
