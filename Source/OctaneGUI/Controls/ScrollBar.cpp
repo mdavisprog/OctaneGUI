@@ -69,7 +69,7 @@ float ScrollBarHandle::HandleSize() const
 float ScrollBarHandle::PropertySize() const
 {
     const float Size = GetProperty(ThemeProperties::ScrollBar_Size).Float();
-    const Vector2 Scale = GetWindow()->RenderScale();
+    const Vector2 Scale = RenderScale();
     return Size * Scale.Y;
 }
 

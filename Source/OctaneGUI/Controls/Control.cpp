@@ -219,6 +219,16 @@ Window* Control::GetWindow() const
     return m_Window;
 }
 
+Vector2 Control::RenderScale() const
+{
+    if (m_Window == nullptr)
+    {
+        return {};
+    }
+
+    return m_Window->RenderScale();
+}
+
 Vector2 Control::GetMousePosition() const
 {
     if (m_Window)

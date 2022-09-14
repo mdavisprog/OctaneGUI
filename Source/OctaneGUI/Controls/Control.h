@@ -143,6 +143,7 @@ public:
 
     virtual void SetWindow(Window* InWindow);
     Window* GetWindow() const;
+    Vector2 RenderScale() const;
 
     Vector2 GetMousePosition() const;
     std::shared_ptr<Theme> GetTheme() const;
