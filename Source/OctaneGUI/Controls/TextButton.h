@@ -48,6 +48,7 @@ public:
     virtual void Update() override;
     virtual void OnLoad(const Json& Root) override;
     virtual void OnSave(Json& Root) const override;
+    virtual void OnThemeLoaded() override;
 
 protected:
     virtual void OnPressed() override;

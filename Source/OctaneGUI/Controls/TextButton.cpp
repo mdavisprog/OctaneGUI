@@ -94,6 +94,13 @@ void TextButton::OnSave(Json& Root) const
     Root["Text"] = std::move(TextRoot);
 }
 
+void TextButton::OnThemeLoaded()
+{
+    Button::OnThemeLoaded();
+    m_Text->OnThemeLoaded();
+    UpdateSize();
+}
+
 void TextButton::OnPressed()
 {
     UpdateTextPosition(true);
@@ -120,7 +127,7 @@ void TextButton::UpdateTextPosition(bool Pressed)
 
 void TextButton::UpdateSize()
 {
-    Vector2 Padding = GetProperty(ThemeProperties::Button_Padding).Vector();
+    Vector2 Padding = GetProperty(ThemeProperties::Button_Padding).Vector() * RenderScale();
     Vector2 Size = m_Text->GetSize() + Padding * 2.0f;
     SetSize(Size);
 }
