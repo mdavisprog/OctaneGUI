@@ -309,6 +309,8 @@ bool Application::DisplayWindow(const char* ID)
         return true;
     }
 
+    const Vector2 RenderScale = It->second->RenderScale();
+
     OnWindowAction(It->second.get(), WindowAction::Create);
 
     It->second
@@ -320,6 +322,13 @@ bool Application::DisplayWindow(const char* ID)
                     m_OnSetWindowTitle(&Target, Title);
                 }
             });
+
+    // The window's scale may be updated when it is displayed. Calling 'OnThemeLoaded' will
+    // resize any controls and fonts based on this scaling.
+    if (It->second->RenderScale() != RenderScale)
+    {
+        It->second->GetRootContainer()->OnThemeLoaded();
+    }
 
     if (It->second->Modal())
     {
