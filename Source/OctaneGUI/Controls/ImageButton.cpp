@@ -139,7 +139,7 @@ void ImageButton::UpdateImagePosition(bool Pressed)
 
 void ImageButton::UpdateSize()
 {
-    Vector2 Padding = GetProperty(ThemeProperties::Button_Padding).Vector();
+    Vector2 Padding = GetProperty(ThemeProperties::Button_Padding).Vector() * RenderScale();
     SetSize(m_Image->GetSize() + Padding * 2.0f);
 }
 
