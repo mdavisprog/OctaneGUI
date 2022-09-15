@@ -31,6 +31,7 @@ SOFTWARE.
 #include "../String.h"
 #include "../ThemeProperties.h"
 #include "../Window.h"
+#include "HorizontalContainer.h"
 #include "Image.h"
 #include "Text.h"
 #include "VerticalContainer.h"
@@ -40,7 +41,7 @@ namespace OctaneGUI
 
 #define TOGGLE_SIZE 16.0f
 
-class TreeItem : public Control
+class TreeItem : public HorizontalContainer
 {
     CLASS(TreeItem)
 
@@ -48,21 +49,17 @@ public:
     typedef std::function<void(bool)> OnHoveredSignature;
 
     TreeItem(Window* InWindow)
-        : Control(InWindow)
+        : HorizontalContainer(InWindow)
     {
-        m_Toggle = std::make_shared<Image>(InWindow);
-        m_Text = std::make_shared<Text>(InWindow);
+        m_Toggle = AddControl<Image>();
+        m_Text = AddControl<Text>();
 
         m_Toggle
             ->SetTexture(InWindow->GetIcons()->GetTexture())
-            .SetUVs({})
-            .SetParent(this);
-
-        m_Text
-            ->SetParent(this)
-            ->SetPosition({ TOGGLE_SIZE + 4.0f, 0.0f });
+            .SetUVs({});
 
         ClearHoveredColors();
+        UpdateToggleSize();
     }
 
     Tree* Owner() const
@@ -79,7 +76,6 @@ public:
     TreeItem& SetText(const char32_t* Text)
     {
         m_Text->SetText(Text);
-        UpdateSize();
         Invalidate();
         return *this;
     }
@@ -89,16 +85,21 @@ public:
         return m_Text->GetText();
     }
 
-    Rect TextBounds()
+    Rect TextBounds() const
     {
         return m_Text->GetAbsoluteBounds();
+    }
+
+    Vector2 TextOffset() const
+    {
+        return m_Text->GetPosition();
     }
 
     TreeItem& SetToggle(bool Expand)
     {
         const Rect UVs = GetUVs(Expand);
         m_Toggle->SetUVs(UVs);
-        m_Toggle->SetPosition({ TOGGLE_SIZE * 0.5f - UVs.GetSize().X * 0.5f, TOGGLE_SIZE * 0.5f - UVs.GetSize().Y * 0.5f });
+        UpdateToggleSize();
         return *this;
     }
 
@@ -163,19 +164,18 @@ public:
 
     virtual void OnPaint(Paint& Brush) const override
     {
+        HorizontalContainer::OnPaint(Brush);
+
         if (Owner()->HasChildren() && GetProperty(ThemeProperties::Tree_Classic_Icons).Bool())
         {
-            const Vector2 Position = GetAbsolutePosition() + Vector2(1.0f, 1.0f);
-            Brush.RectangleOutline({ Position, Position + Vector2(TOGGLE_SIZE - 1.0f, TOGGLE_SIZE - 1.0f) }, m_Toggle->Tint());
+            const Vector2 Scale { m_Toggle->GetSize() * 0.20f };
+            Brush.RectangleOutline(m_Toggle->GetAbsoluteBounds().Shrink(Scale), m_Toggle->Tint());
         }
-        m_Toggle->OnPaint(Brush);
-        m_Text->OnPaint(Brush);
     }
 
     virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override
     {
-        const Rect ToggleBounds = { GetAbsolutePosition(), GetAbsolutePosition() + Vector2(TOGGLE_SIZE, TOGGLE_SIZE) };
-        if (ToggleBounds.Contains(Position))
+        if (m_Toggle->Contains(Position))
         {
             if (m_OnToggle)
             {
@@ -208,17 +208,17 @@ public:
 
     virtual void OnThemeLoaded() override
     {
-        Control::OnThemeLoaded();
+        HorizontalContainer::OnThemeLoaded();
         ClearHoveredColors();
+        UpdateToggleSize();
     }
 
 private:
-    void UpdateSize()
+    TreeItem& UpdateToggleSize()
     {
-        Vector2 Size = { TOGGLE_SIZE, TOGGLE_SIZE };
-        Size.X += m_Text->GetSize().X + 4.0f;
-        Size.Y = std::max<float>(Size.Y, m_Text->GetSize().Y);
-        SetSize(Size);
+        const Vector2 Size = m_Text->GetSize();
+        m_Toggle->SetSize({ Size.Y, Size.Y });
+        return *this;
     }
 
     Rect GetUVs(bool Expand) const
@@ -289,9 +289,7 @@ std::shared_ptr<Tree> Tree::AddChild(const char32_t* Text)
     if (!m_List)
     {
         m_List = AddControl<VerticalContainer>();
-        m_List
-            ->SetSpacing({ 0.0f, 0.0f })
-            ->SetPosition({ TOGGLE_SIZE + 4.0f, m_Item->GetSize().Y });
+        m_List->SetSpacing({ 0.0f, 0.0f });
 
         m_Item->SetToggle(m_Expand);
 
@@ -389,6 +387,9 @@ Tree& Tree::SetExpanded(bool Expand)
             if (!HasControl(m_List))
             {
                 InsertControl(m_List);
+                m_List
+                    ->Layout()
+                    ->SetPosition({ m_Item->TextOffset().X, m_Item->GetSize().Y });
             }
         }
         else
