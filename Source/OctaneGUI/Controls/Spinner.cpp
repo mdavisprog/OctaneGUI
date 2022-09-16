@@ -45,7 +45,8 @@ Spinner::Spinner(Window* InWindow)
     m_Input = AddControl<TextInput>();
     m_Input
         ->SetReadOnly(true)
-        .SetMultiline(false);
+        .SetMultiline(false)
+        .SetExpand(Expand::Width);
 }
 
 Spinner& Spinner::SetValue(const int32_t Value)
@@ -84,7 +85,7 @@ Orientation Spinner::GetOppositeOrientation() const
 
 void Spinner::OnLoad(const Json& Root)
 {
-    Control::OnLoad(Root);
+    HorizontalContainer::OnLoad(Root);
 
     m_MinSet = (Root["Range"].Contains("Min"));
     m_Min = Root["Range"]["Min"].Number();
@@ -104,11 +105,9 @@ void Spinner::OnLoad(const Json& Root)
 
 void Spinner::OnThemeLoaded()
 {
+    HorizontalContainer::OnThemeLoaded();
     m_DecrementButton->SetProperty(ThemeProperties::ImageButton, GetProperty(ThemeProperties::Check).ToColor());
-    m_DecrementButton->OnThemeLoaded();
-
     m_IncrementButton->SetProperty(ThemeProperties::ImageButton, GetProperty(ThemeProperties::Check).ToColor());
-    m_IncrementButton->OnThemeLoaded();
 }
 
 int32_t Spinner::RangeValue(const int32_t InValue)
