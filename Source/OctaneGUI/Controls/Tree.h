@@ -96,6 +96,8 @@ private:
 
     Tree& SetParentTree(const std::weak_ptr<Tree> Parent);
 
+    Tree& UpdateListOffset();
+
     std::shared_ptr<TreeItem> m_Item { nullptr };
     std::weak_ptr<Tree> m_ParentTree {};
     std::shared_ptr<VerticalContainer> m_List { nullptr };

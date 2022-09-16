@@ -76,6 +76,7 @@ public:
     TreeItem& SetText(const char32_t* Text)
     {
         m_Text->SetText(Text);
+        UpdateToggleSize();
         Invalidate();
         return *this;
     }
@@ -90,9 +91,9 @@ public:
         return m_Text->GetAbsoluteBounds();
     }
 
-    Vector2 TextOffset() const
+    Vector2 ToggleSize() const
     {
-        return m_Text->GetPosition();
+        return m_Toggle->GetSize();
     }
 
     TreeItem& SetToggle(bool Expand)
@@ -344,19 +345,22 @@ std::shared_ptr<Tree> Tree::AddChild(const char32_t* Text)
                 InvalidateLayout();
             });
 
+    m_List->Layout();
+    UpdateListOffset();
     InvalidateLayout();
     return Result;
 }
 
 Tree& Tree::SetText(const char* Text)
 {
-    m_Item->SetText(Text);
+    SetText(String::ToUTF32(Text).c_str());
     return *this;
 }
 
 Tree& Tree::SetText(const char32_t* Text)
 {
     m_Item->SetText(Text);
+    UpdateListOffset();
     return *this;
 }
 
@@ -387,9 +391,8 @@ Tree& Tree::SetExpanded(bool Expand)
             if (!HasControl(m_List))
             {
                 InsertControl(m_List);
-                m_List
-                    ->Layout()
-                    ->SetPosition({ m_Item->TextOffset().X, m_Item->GetSize().Y });
+                m_List->Layout();
+                UpdateListOffset();
             }
         }
         else
@@ -615,6 +618,7 @@ void Tree::OnThemeLoaded()
     if (m_List)
     {
         m_Item->SetToggle(m_Expand);
+        UpdateListOffset();
     }
 
     if (!m_Selected.expired())
@@ -793,6 +797,17 @@ void Tree::RowSelect(const std::shared_ptr<TreeItem>& Item) const
 Tree& Tree::SetParentTree(const std::weak_ptr<Tree> Parent)
 {
     m_ParentTree = Parent;
+    return *this;
+}
+
+Tree& Tree::UpdateListOffset()
+{
+    if (m_List)
+    {
+        const Vector2 Offset { m_Item->ToggleSize() };
+        m_List->SetPosition(Offset);
+    }
+
     return *this;
 }
 
