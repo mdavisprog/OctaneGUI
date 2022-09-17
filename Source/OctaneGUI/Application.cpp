@@ -202,14 +202,22 @@ int Application::Run()
             int EventsProcessed = 0;
             for (auto& Item : m_Windows)
             {
-                if (Item.second->IsVisible())
+                // Attempt to process all events for a single window.
+                while (Item.second->IsVisible())
                 {
-                    EventsProcessed += ProcessEvent(Item.second);
+                    int Processed = ProcessEvent(Item.second);
+                    EventsProcessed += Processed;
 
-                    if (!m_IsRunning)
+                    if (Processed == 0)
                     {
                         break;
                     }
+                }
+
+                if (!m_IsRunning)
+                {
+                    EventsProcessed = 0;
+                    break;
                 }
             }
 
