@@ -284,8 +284,6 @@ void CreateRenderer(OctaneGUI::Window* Window)
 
     if (g_Context == nullptr)
     {
-        SDL_Renderer* Renderer = SDL_CreateRenderer(Instance, -1, SDL_RENDERER_ACCELERATED);
-
         g_Context = SDL_GL_CreateContext(Instance);
         SDL_GL_MakeCurrent(Instance, g_Context);
         SDL_GL_SetSwapInterval(0);
@@ -294,7 +292,7 @@ void CreateRenderer(OctaneGUI::Window* Window)
         SDL_GetWindowSize(Instance, &WinW, &WinH);
 
         int ResW = 0, ResH = 0;
-        SDL_GetRendererOutputSize(Renderer, &ResW, &ResH);
+        SDL_GL_GetDrawableSize(Instance, &ResW, &ResH);
 
         if (Window->HighDPI())
         {
