@@ -438,6 +438,8 @@ void Container::OnLoad(const Json& Root)
             NewControl->OnLoad(Item);
         }
     }
+
+    SetClip(Root["Clip"].Boolean(ShouldClip()));
 }
 
 void Container::OnSave(Json& Root) const
