@@ -93,7 +93,7 @@ CommandPalette::CommandPalette(Window* InWindow)
 void CommandPalette::Show()
 {
     const Vector2 ContentSize = m_Container->DesiredSize();
-    const Vector2 WindowSize = GetWindow()->GetSize();
+    const Vector2 WindowSize = GetWindow()->GetSize() * GetWindow()->RenderScale();
     const Vector2 Size = { WindowSize.X * 0.6f, ContentSize.Y };
     SetSize(Size);
     SetPosition({ WindowSize.X * 0.5f - Size.X * 0.5f, 30.0f });
