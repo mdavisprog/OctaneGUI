@@ -25,6 +25,8 @@ SOFTWARE.
 */
 
 #include "Tools.h"
+#include "../Window.h"
+#include "CommandPalette.h"
 
 namespace OctaneGUI
 {
@@ -34,6 +36,22 @@ namespace Tools
 Interface::Interface(Application& App)
     : m_App(App)
 {
+}
+
+Interface& Interface::ShowCommandPalette(Window* InWindow)
+{
+    if (!m_CommandPalette)
+    {
+        m_CommandPalette = std::make_shared<CommandPalette>(InWindow);
+    }
+
+    if (m_CommandPalette != InWindow->GetPopup())
+    {
+        m_CommandPalette->SetWindow(InWindow);
+        m_CommandPalette->Show();
+    }
+
+    return *this;
 }
 
 }

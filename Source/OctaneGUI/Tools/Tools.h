@@ -26,21 +26,29 @@ SOFTWARE.
 
 #pragma once
 
+#include <memory>
+
 namespace OctaneGUI
 {
 
 class Application;
+class Window;
 
 namespace Tools
 {
+
+class CommandPalette;
 
 class Interface
 {
 public:
     Interface(Application& App);
 
+    Interface& ShowCommandPalette(Window* InWindow);
+
 private:
     Application& m_App;
+    std::shared_ptr<CommandPalette> m_CommandPalette { nullptr };
 };
 
 }
