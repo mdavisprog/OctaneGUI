@@ -430,6 +430,11 @@ FileSystem& Application::FS()
 }
 
 #if TOOLS
+Tools::Interface& Application::Tools()
+{
+    return m_Tools;
+}
+
 Application& Application::SetIgnoreModals(bool IgnoreModals)
 {
     m_IgnoreModals = IgnoreModals;

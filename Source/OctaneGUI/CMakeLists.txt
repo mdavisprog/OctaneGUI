@@ -75,6 +75,7 @@ if(TOOLS)
         Tools/ProfileViewer.cpp
         Tools/Properties.cpp
         Tools/TextureViewer.cpp
+        Tools/Tools.cpp
     )
 endif()
 

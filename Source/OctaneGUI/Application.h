@@ -33,6 +33,10 @@ SOFTWARE.
 #include "TextureCache.h"
 #include "Vector2.h"
 
+#if TOOLS
+#include "Tools/Tools.h"
+#endif
+
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -101,6 +105,7 @@ public:
     FileSystem& FS();
 
 #if TOOLS
+    Tools::Interface& Tools();
     Application& SetIgnoreModals(bool IgnoreModals);
 #endif
 
@@ -136,6 +141,7 @@ private:
 
 #if TOOLS
     bool m_IgnoreModals { false };
+    Tools::Interface m_Tools { *this };
 #endif
 
     OnWindowActionSignature m_OnWindowAction { nullptr };
