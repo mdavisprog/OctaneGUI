@@ -197,8 +197,6 @@ int Application::Run()
                 m_OnNewFrame();
             }
 
-            Update();
-
             int EventsProcessed = 0;
             for (auto& Item : m_Windows)
             {
@@ -220,6 +218,8 @@ int Application::Run()
                     break;
                 }
             }
+
+            Update();
 
             if (EventsProcessed <= 0)
             {
