@@ -96,6 +96,8 @@ public:
     Window& SetCanMinimize(bool CanMinimize);
     bool CanMinimize() const;
 
+    Window& SetFocus(const std::shared_ptr<Control>& Focus);
+
     bool Modal() const;
 
     Application& App() const;

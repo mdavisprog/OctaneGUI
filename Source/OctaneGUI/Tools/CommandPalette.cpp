@@ -46,20 +46,6 @@ namespace OctaneGUI
 namespace Tools
 {
 
-std::shared_ptr<CommandPalette> CommandPalette::Get(Window* InWindow)
-{
-    if (!s_Root)
-    {
-        s_Root = std::make_shared<CommandPalette>(InWindow);
-    }
-    else
-    {
-        s_Root->SetWindow(InWindow);
-    }
-
-    return s_Root;
-}
-
 CommandPalette::CommandPalette(Window* InWindow)
     : Container(InWindow)
 {
@@ -99,6 +85,8 @@ void CommandPalette::Show()
     SetPosition({ WindowSize.X * 0.5f - Size.X * 0.5f, 30.0f });
     // The proper index will be set when the up key is pressed for the first time after a 'Show'.
     m_HistoryIndex = m_History.size();
+    GetWindow()->SetPopup(TShare<CommandPalette>());
+    GetWindow()->SetFocus(Input());
 }
 
 std::shared_ptr<Control> CommandPalette::Input() const
@@ -167,8 +155,6 @@ bool CommandPalette::OnKeyPressed(Keyboard::Key Key)
 
     return false;
 }
-
-std::shared_ptr<CommandPalette> CommandPalette::s_Root { nullptr };
 
 bool CommandPalette::Process(const std::u32string& Command, const std::vector<std::u32string>& Arguments)
 {

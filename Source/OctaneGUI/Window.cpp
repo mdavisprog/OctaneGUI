@@ -204,6 +204,12 @@ bool Window::CanMinimize() const
     return m_CanMinimize;
 }
 
+Window& Window::SetFocus(const std::shared_ptr<Control>& Focus)
+{
+    UpdateFocus(Focus);
+    return *this;
+}
+
 bool Window::Modal() const
 {
     return m_Modal;
@@ -255,14 +261,7 @@ void Window::OnKeyPressed(Keyboard::Key Key)
 #if TOOLS
     if (Key == Keyboard::Key::P && (IsKeyPressed(Keyboard::Key::LeftControl) || IsKeyPressed(Keyboard::Key::RightControl)))
     {
-        std::shared_ptr<Tools::CommandPalette> CommandPalette = Tools::CommandPalette::Get(this);
-        if (m_Popup.GetContainer() != CommandPalette)
-        {
-            CommandPalette->Show();
-            SetPopup(CommandPalette);
-            UpdateFocus(CommandPalette->Input());
-            m_Repaint = true;
-        }
+        App().Tools().ShowCommandPalette(this);
         return;
     }
 #endif
