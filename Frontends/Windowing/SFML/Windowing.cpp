@@ -123,10 +123,15 @@ void NewWindow(OctaneGUI::Window* Window)
 {
     if (g_Windows.find(Window) == g_Windows.end())
     {
-        unsigned int Style = sf::Style::Titlebar | sf::Style::Close;
-        if (Window->IsResizable())
+        unsigned int Style = sf::Style::None;
+        if (!Window->CustomTitleBar())
         {
-            Style |= sf::Style::Resize;
+            Style |= sf::Style::Titlebar | sf::Style::Close;
+
+            if (Window->IsResizable())
+            {
+                Style |= sf::Style::Resize;
+            }
         }
 
         const OctaneGUI::Vector2 Size = Window->GetSize();

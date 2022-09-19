@@ -299,9 +299,16 @@ void NewWindow(OctaneGUI::Window* Window)
             Flags |= SDL_WINDOW_ALWAYS_ON_TOP;
         }
 
-        if (Window->IsResizable())
+        if (Window->CustomTitleBar())
         {
-            Flags |= SDL_WINDOW_RESIZABLE;
+            Flags |= SDL_WINDOW_BORDERLESS;
+        }
+        else
+        {
+            if (Window->IsResizable())
+            {
+                Flags |= SDL_WINDOW_RESIZABLE;
+            }
         }
 
 #if OPENGL
