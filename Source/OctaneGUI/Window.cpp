@@ -225,6 +225,24 @@ bool Window::CanMinimize() const
     return m_Flags & WindowFlags::CanMinimize;
 }
 
+Window& Window::SetCustomTitleBar(bool CustomTitleBar)
+{
+    if (CustomTitleBar)
+    {
+        UnsetFlags(WindowFlags::TitleBar);
+    }
+    else
+    {
+        SetFlags(WindowFlags::TitleBar);
+    }
+    return *this;
+}
+
+bool Window::CustomTitleBar() const
+{
+    return !(m_Flags & WindowFlags::TitleBar);
+}
+
 Window& Window::SetFlags(uint64_t Flags)
 {
     m_Flags = m_Flags | Flags;
@@ -592,6 +610,7 @@ void Window::LoadRoot(const Json& Root)
     SetSize({ Width, Height });
     SetResizable(Root["Resizable"].Boolean(IsResizable()));
     SetCanMinimize(Root["CanMinimize"].Boolean(CanMinimize()));
+    SetCustomTitleBar(Root["CustomTitleBar"].Boolean(CustomTitleBar()));
     
     if (Root["Modal"].Boolean(Modal()))
     {

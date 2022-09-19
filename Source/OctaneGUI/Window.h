@@ -64,8 +64,9 @@ enum Flags
     HighDPI = 1 << 1,
     CanMinimize = 1 << 2,
     Modal = 1 << 3,
+    TitleBar = 1 << 4,
 
-    Normal = Resizable | HighDPI | CanMinimize,
+    Normal = Resizable | HighDPI | CanMinimize | TitleBar,
 };
 
 }
@@ -111,6 +112,9 @@ public:
 
     Window& SetCanMinimize(bool CanMinimize);
     bool CanMinimize() const;
+
+    Window& SetCustomTitleBar(bool CustomTitleBar);
+    bool CustomTitleBar() const;
 
     Window& SetFlags(uint64_t Flags);
     Window& UnsetFlags(uint64_t Flags);
