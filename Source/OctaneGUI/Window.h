@@ -54,6 +54,22 @@ class Timer;
 class VertexBuffer;
 class WindowContainer;
 
+namespace WindowFlags
+{
+
+enum Flags
+{
+    None = 0,
+    Resizable = 1 << 0,
+    HighDPI = 1 << 1,
+    CanMinimize = 1 << 2,
+    Modal = 1 << 3,
+
+    Normal = Resizable | HighDPI | CanMinimize,
+};
+
+}
+
 class Window
 {
 public:
@@ -95,6 +111,9 @@ public:
 
     Window& SetCanMinimize(bool CanMinimize);
     bool CanMinimize() const;
+
+    Window& SetFlags(uint64_t Flags);
+    Window& UnsetFlags(uint64_t Flags);
 
     Window& SetFocus(const std::shared_ptr<Control>& Focus);
 
@@ -180,7 +199,6 @@ private:
     Rect m_Bounds {};
     Vector2 m_DeviceSize {};
     Vector2 m_RenderScale { 1.0f, 1.0f };
-    bool m_HighDPI { true };
     std::shared_ptr<WindowContainer> m_Container { nullptr };
     bool m_Repaint { false };
     std::weak_ptr<Control> m_Focus {};
@@ -188,9 +206,7 @@ private:
     Popup m_Popup {};
     bool m_Visible { false };
     bool m_RequestClose { false };
-    bool m_Resizable { true };
-    bool m_CanMinimize { true };
-    bool m_Modal { false };
+    uint64_t m_Flags { WindowFlags::Normal };
     std::vector<std::weak_ptr<Container>> m_LayoutRequests;
 
     std::vector<TimerHandle> m_Timers {};

@@ -127,13 +127,20 @@ Vector2 Window::RenderScale() const
 
 Window& Window::SetHighDPI(bool HighDPI)
 {
-    m_HighDPI = HighDPI;
+    if (HighDPI)
+    {
+        SetFlags(WindowFlags::HighDPI);
+    }
+    else
+    {
+        UnsetFlags(WindowFlags::HighDPI);
+    }
     return *this;
 }
 
 bool Window::HighDPI() const
 {
-    return m_HighDPI;
+    return m_Flags & WindowFlags::HighDPI;
 }
 
 void Window::SetID(const char* ID)
@@ -184,24 +191,50 @@ void Window::Close()
 
 Window& Window::SetResizable(bool Resizable)
 {
-    m_Resizable = Resizable;
+    if (Resizable)
+    {
+        SetFlags(WindowFlags::Resizable);
+    }
+    else
+    {
+        UnsetFlags(WindowFlags::Resizable);
+    }
     return *this;
 }
 
 bool Window::IsResizable() const
 {
-    return m_Resizable;
+    return m_Flags & WindowFlags::Resizable;
 }
 
 Window& Window::SetCanMinimize(bool CanMinimize)
 {
-    m_CanMinimize = CanMinimize;
+    if (CanMinimize)
+    {
+        SetFlags(WindowFlags::CanMinimize);
+    }
+    else
+    {
+        UnsetFlags(WindowFlags::CanMinimize);
+    }
     return *this;
 }
 
 bool Window::CanMinimize() const
 {
-    return m_CanMinimize;
+    return m_Flags & WindowFlags::CanMinimize;
+}
+
+Window& Window::SetFlags(uint64_t Flags)
+{
+    m_Flags = m_Flags | Flags;
+    return *this;
+}
+
+Window& Window::UnsetFlags(uint64_t Flags)
+{
+    m_Flags = m_Flags & ~Flags;
+    return *this;
 }
 
 Window& Window::SetFocus(const std::shared_ptr<Control>& Focus)
@@ -212,7 +245,7 @@ Window& Window::SetFocus(const std::shared_ptr<Control>& Focus)
 
 bool Window::Modal() const
 {
-    return m_Modal;
+    return m_Flags & WindowFlags::Modal;
 }
 
 Application& Window::App() const
@@ -559,7 +592,11 @@ void Window::LoadRoot(const Json& Root)
     SetSize({ Width, Height });
     SetResizable(Root["Resizable"].Boolean(IsResizable()));
     SetCanMinimize(Root["CanMinimize"].Boolean(CanMinimize()));
-    m_Modal = Root["Modal"].Boolean(m_Modal);
+    
+    if (Root["Modal"].Boolean(Modal()))
+    {
+        SetFlags(WindowFlags::Modal);
+    }
 }
 
 void Window::LoadContents(const Json& Root)
