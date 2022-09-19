@@ -32,11 +32,13 @@ namespace OctaneGUI
 {
 
 class MenuBar;
+class TitleBar;
 
 //
-// This container contains the controls and logic for handling a menu bar
-// and a body. Each window will hold an instance of this container and is
-// the container in which interactions will occur.
+// This container contains the controls and logic for handling a title bar,
+// menu bar, and a body. The title bar will only be present if a custom title
+// bar is requested for the owning widnow. Each window will hold an instance
+// of this container and is the container in which interactions will occur.
 //
 
 class WindowContainer : public VerticalContainer
@@ -49,6 +51,9 @@ public:
     WindowContainer& Clear();
     WindowContainer& CloseMenuBar();
 
+    WindowContainer& ShowTitleBar(bool Show);
+    WindowContainer& SetTitle(const char32_t* Title);
+
     const std::shared_ptr<Container>& Body() const;
     const std::shared_ptr<MenuBar>& GetMenuBar() const;
 
@@ -57,6 +62,7 @@ public:
     virtual void OnLoad(const Json& Root) override;
 
 private:
+    std::shared_ptr<TitleBar> m_TitleBar { nullptr };
     std::shared_ptr<MenuBar> m_MenuBar { nullptr };
     std::shared_ptr<Container> m_Body { nullptr };
 };

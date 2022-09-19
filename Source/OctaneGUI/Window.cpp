@@ -235,6 +235,12 @@ Window& Window::SetCustomTitleBar(bool CustomTitleBar)
     {
         SetFlags(WindowFlags::TitleBar);
     }
+
+    if (m_Container)
+    {
+        m_Container->ShowTitleBar(CustomTitleBar);
+    }
+
     return *this;
 }
 

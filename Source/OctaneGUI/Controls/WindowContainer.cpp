@@ -26,12 +26,43 @@ SOFTWARE.
 
 #include "WindowContainer.h"
 #include "../Json.h"
+#include "../String.h"
+#include "../Window.h"
 #include "ControlList.h"
+#include "HorizontalContainer.h"
 #include "MenuBar.h"
+#include "Panel.h"
+#include "Text.h"
 #include "VerticalContainer.h"
 
 namespace OctaneGUI
 {
+
+class TitleBar : public Container
+{
+public:
+    TitleBar(Window* InWindow)
+        : Container(InWindow)
+    {
+        SetExpand(Expand::Width);
+
+        AddControl<Panel>()->SetExpand(Expand::Both);
+
+        const std::shared_ptr<HorizontalContainer> Layout = AddControl<HorizontalContainer>();
+        m_Title = Layout->AddControl<Text>();
+
+        SetSize({ 0.0f, m_Title->LineHeight() });
+    }
+
+    TitleBar& SetTitle(const char32_t* Title)
+    {
+        m_Title->SetText(Title);
+        return *this;
+    }
+
+private:
+    std::shared_ptr<Text> m_Title { nullptr };
+};
 
 WindowContainer::WindowContainer(Window* InWindow)
     : VerticalContainer(InWindow)
@@ -54,6 +85,36 @@ WindowContainer& WindowContainer::Clear()
 WindowContainer& WindowContainer::CloseMenuBar()
 {
     m_MenuBar->Close();
+    return *this;
+}
+
+WindowContainer& WindowContainer::ShowTitleBar(bool Show)
+{
+    if (Show)
+    {
+        if (!m_TitleBar)
+        {
+            m_TitleBar = std::make_shared<TitleBar>(GetWindow());
+            InsertControl(m_TitleBar, 0);
+            SetTitle(String::ToUTF32(GetWindow()->GetTitle()).c_str());
+        }
+    }
+    else if (m_TitleBar)
+    {
+        RemoveControl(m_TitleBar);
+        m_TitleBar = nullptr;
+    }
+
+    return *this;
+}
+
+WindowContainer& WindowContainer::SetTitle(const char32_t* Title)
+{
+    if (m_TitleBar)
+    {
+        m_TitleBar->SetTitle(Title);
+    }
+
     return *this;
 }
 
