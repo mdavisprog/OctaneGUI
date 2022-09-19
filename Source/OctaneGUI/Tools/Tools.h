@@ -38,6 +38,7 @@ namespace Tools
 {
 
 class CommandPalette;
+class Inspector;
 
 class Interface
 {
@@ -45,10 +46,12 @@ public:
     Interface(Application& App);
 
     Interface& ShowCommandPalette(Window* InWindow);
+    Interface& ShowInspector(Window* Target);
 
 private:
     Application& m_App;
     std::shared_ptr<CommandPalette> m_CommandPalette { nullptr };
+    std::shared_ptr<Inspector> m_Inspector { nullptr };
 };
 
 }

@@ -215,9 +215,8 @@ private:
     OnSelectedSignature m_OnSelected { nullptr };
 };
 
-Inspector& Inspector::Get()
+Inspector::Inspector()
 {
-    return s_Inspector;
 }
 
 void Inspector::Inspect(Window* Target)
@@ -334,12 +333,6 @@ void Inspector::Inspect(Window* Target)
     Target->App().SetIgnoreModals(true);
 
     Populate();
-}
-
-Inspector Inspector::s_Inspector {};
-
-Inspector::Inspector()
-{
 }
 
 void Inspector::Populate()

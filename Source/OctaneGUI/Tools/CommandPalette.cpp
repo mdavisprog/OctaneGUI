@@ -163,7 +163,7 @@ bool CommandPalette::Process(const std::u32string& Command, const std::vector<st
     std::u32string Lower = String::ToLower(Command);
     if (Lower == U"inspector")
     {
-        Inspector::Get().Inspect(GetWindow());
+        GetWindow()->App().Tools().ShowInspector(GetWindow());
     }
     else if (Lower == U"profile")
     {

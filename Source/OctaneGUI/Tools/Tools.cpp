@@ -27,6 +27,7 @@ SOFTWARE.
 #include "Tools.h"
 #include "../Window.h"
 #include "CommandPalette.h"
+#include "Inspector.h"
 
 namespace OctaneGUI
 {
@@ -36,6 +37,7 @@ namespace Tools
 Interface::Interface(Application& App)
     : m_App(App)
 {
+    m_Inspector = std::make_shared<Inspector>();
 }
 
 Interface& Interface::ShowCommandPalette(Window* InWindow)
@@ -51,6 +53,12 @@ Interface& Interface::ShowCommandPalette(Window* InWindow)
         m_CommandPalette->Show();
     }
 
+    return *this;
+}
+
+Interface& Interface::ShowInspector(Window* Target)
+{
+    m_Inspector->Inspect(Target);
     return *this;
 }
 

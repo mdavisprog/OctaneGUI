@@ -49,14 +49,11 @@ class Properties;
 class Inspector
 {
 public:
-    static Inspector& Get();
+    Inspector();
 
     void Inspect(Window* Target);
 
 private:
-    static Inspector s_Inspector;
-
-    Inspector();
     void Populate();
     void ParseProperty(Control const* Target);
     void Close();
