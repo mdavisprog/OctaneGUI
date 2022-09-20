@@ -89,6 +89,7 @@ public:
     const std::u32string& GetString() const;
     const std::u32string_view Line() const;
     const std::u32string_view VisibleText() const;
+    const std::u32string_view SelectedText() const;
 
     TextInput& SelectAll();
 

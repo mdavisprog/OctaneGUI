@@ -312,6 +312,19 @@ const std::u32string_view TextInput::VisibleText() const
     return std::u32string_view(&m_Text->GetString()[Start], End - Start);
 }
 
+const std::u32string_view TextInput::SelectedText() const
+{
+    if (!m_Anchor.IsValid())
+    {
+        return U"";
+    }
+
+    uint32_t Start = m_Anchor < m_Position ? m_Anchor.Index() : m_Position.Index();
+    uint32_t End = m_Anchor < m_Position ? m_Position.Index() : m_Anchor.Index();
+
+    return std::u32string_view(&m_Text->GetString()[Start], End - Start);
+}
+
 TextInput& TextInput::SelectAll()
 {
     m_Anchor = { 0, 0, 0 };
