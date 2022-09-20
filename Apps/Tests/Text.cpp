@@ -36,7 +36,7 @@ TEST_SUITE(Text,
 TEST_CASE(SingleLine,
 {
     OctaneGUI::ControlList List;
-    Utility::Load(Application, "{\"Type\": \"Text\", \"ID\": \"Text\", \"Text\": \"Well Hello Friends!\"}", List);
+    Utility::Load(Application, R"({"Type": "Text", "ID": "Text", "Text": "Well Hello Friends!"})", List);
 
     const std::shared_ptr<OctaneGUI::Text> Text = List.To<OctaneGUI::Text>("Text");
     const std::shared_ptr<OctaneGUI::Font> Font = Application.GetTheme()->GetFont();
@@ -47,7 +47,7 @@ TEST_CASE(SingleLine,
 TEST_CASE(MultiLine,
 {
     OctaneGUI::ControlList List;
-    Utility::Load(Application, "{\"Type\": \"Text\", \"ID\": \"Text\", \"Text\": \"Well\n Hello\n Friends!\"}", List);
+    Utility::Load(Application, R"({"Type": "Text", "ID": "Text", "Text": "Well\n Hello\n Friends!"})", List);
 
     const std::shared_ptr<OctaneGUI::Text> Text = List.To<OctaneGUI::Text>("Text");
     const std::shared_ptr<OctaneGUI::Font> Font = Application.GetTheme()->GetFont();
@@ -58,7 +58,7 @@ TEST_CASE(MultiLine,
 TEST_CASE(Wrap,
 {
     OctaneGUI::ControlList List;
-    Utility::Load(Application, "{\"Type\": \"Container\", \"Size\": [80, 200], \"Controls\": [{\"Type\": \"Text\", \"ID\": \"Text\", \"Wrap\": true, \"Text\": \"Well Hello Friends\"}]}", List);
+    Utility::Load(Application, R"({"Type": "Container", "Size": [80, 200], "Controls": [{"Type": "Text", "ID": "Text", "Wrap": true, "Text": "Well Hello Friends"}]})", List);
 
     const std::shared_ptr<OctaneGUI::Text> Text = List.To<OctaneGUI::Text>("Text");
     const std::shared_ptr<OctaneGUI::Font> Font = Application.GetTheme()->GetFont();
