@@ -216,6 +216,28 @@ TEST_CASE(ReadOnly,
     return true;
 })
 
+TEST_CASE(MouseSelect,
+{
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Text\": {\"Text\": \"Hello World\"}}", List);
+
+    const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+
+    VERIFYF(TextInput->SelectedText() == U"", "TextInput has selected text '%s' when it shouldn't!",
+        OctaneGUI::String::ToMultiByte(TextInput->SelectedText()).c_str());
+
+    Utility::MousePress(Application, TextInput->GetAbsolutePosition() + OctaneGUI::Vector2(2.0f, 0.0f));
+    Application.Update();
+
+    Utility::MouseRelease(Application, TextInput->GetAbsolutePosition() + OctaneGUI::Vector2(TextInput->GetSize().X - 2.0f, 0.0f));
+    Application.Update();
+
+    VERIFYF(TextInput->SelectedText() == TextInput->GetText(), "TextInput has selected text '%s' when it should have '%s'!",
+        OctaneGUI::String::ToMultiByte(TextInput->SelectedText()).c_str(), OctaneGUI::String::ToMultiByte(TextInput->GetText()).c_str());
+
+    return true;
+})
+
 )
 
 }
