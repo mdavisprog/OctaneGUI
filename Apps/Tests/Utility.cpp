@@ -69,6 +69,18 @@ void MouseMove(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Po
     Application.GetMainWindow()->OnMouseMove(Position);
 }
 
+void MousePress(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Position, OctaneGUI::Mouse::Button Button)
+{
+    MouseMove(Application, Position);
+    Application.GetMainWindow()->OnMousePressed(Position, Button);
+}
+
+void MouseRelease(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Position, OctaneGUI::Mouse::Button Button)
+{
+    MouseMove(Application, Position);
+    Application.GetMainWindow()->OnMouseReleased(Position, Button);
+}
+
 void MouseClick(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Position, OctaneGUI::Mouse::Button Button)
 {
     MouseMove(Application, Position);
