@@ -33,7 +33,7 @@ namespace Tests
 
 void Load(OctaneGUI::Application& Application, const char* Json, OctaneGUI::ControlList& List, int Width = 1280, int Height = 720)
 {
-    std::string Stream = "{\"ID\": \"View\", \"Type\": \"ScrollableViewControl\", \"Expand\": \"Both\", \"Controls\": [";
+    std::string Stream = R"({"ID": "View", "Type": "ScrollableViewControl", "Expand": "Both", "Controls": [)";
     Stream += Json;
     Stream += "]}";
     Utility::Load(Application, "", Stream.c_str(), List, Width, Height);
@@ -52,7 +52,7 @@ TEST_CASE(NoScrollBars,
 TEST_CASE(HScrollBar,
 {
     OctaneGUI::ControlList List;
-    Load(Application, "{\"Type\": \"Container\", \"Size\": [220, 40]}", List, 200, 200);
+    Load(Application, R"({"Type": "Container", "Size": [220, 40]})", List, 200, 200);
     const std::shared_ptr<OctaneGUI::ScrollableViewControl> View = List.To<OctaneGUI::ScrollableViewControl>("View");
     return View->Scrollable()->HorizontalScrollBar()->ShouldPaint() && !View->Scrollable()->VerticalScrollBar()->ShouldPaint();
 })
@@ -60,7 +60,7 @@ TEST_CASE(HScrollBar,
 TEST_CASE(VScrollBar,
 {
     OctaneGUI::ControlList List;
-    Load(Application, "{\"Type\": \"Container\", \"Size\": [40, 240]}", List, 200, 200);
+    Load(Application, R"({"Type": "Container", "Size": [40, 240]})", List, 200, 200);
     const std::shared_ptr<OctaneGUI::ScrollableViewControl> View = List.To<OctaneGUI::ScrollableViewControl>("View");
     return !View->Scrollable()->HorizontalScrollBar()->ShouldPaint() && View->Scrollable()->VerticalScrollBar()->ShouldPaint();
 })
@@ -68,7 +68,7 @@ TEST_CASE(VScrollBar,
 TEST_CASE(HAndVScrollBar,
 {
     OctaneGUI::ControlList List;
-    Load(Application, "{\"Type\": \"Container\", \"Size\": [240, 240]}", List, 200, 200);
+    Load(Application, R"({"Type": "Container", "Size": [240, 240]})", List, 200, 200);
     const std::shared_ptr<OctaneGUI::ScrollableViewControl> View = List.To<OctaneGUI::ScrollableViewControl>("View");
     return View->Scrollable()->HorizontalScrollBar()->ShouldPaint() && View->Scrollable()->VerticalScrollBar()->ShouldPaint();
 })
@@ -76,7 +76,7 @@ TEST_CASE(HAndVScrollBar,
 TEST_CASE(HScrollBarVisibility,
 {
     OctaneGUI::ControlList List;
-    Load(Application, "{\"Type\": \"Container\", \"ID\": \"Container\", \"Size\": [40, 200]}", List, 200, 200);
+    Load(Application, R"({"Type": "Container", "ID": "Container", "Size": [40, 200]})", List, 200, 200);
     const std::shared_ptr<OctaneGUI::ScrollableViewControl> View = List.To<OctaneGUI::ScrollableViewControl>("View");
     const std::shared_ptr<OctaneGUI::Container> Container = List.To<OctaneGUI::Container>("View.Container");
     VERIFYF(!View->Scrollable()->HorizontalScrollBar()->ShouldPaint(), "Horizontal scroll bar is painted when it should not be!\n");
@@ -91,7 +91,7 @@ TEST_CASE(HScrollBarVisibility,
 TEST_CASE(VScrollBarVisibility,
 {
     OctaneGUI::ControlList List;
-    Load(Application, "{\"Type\": \"Container\", \"ID\": \"Container\", \"Size\": [200, 40]}", List, 200, 200);
+    Load(Application, R"({"Type": "Container", "ID": "Container", "Size": [200, 40]})", List, 200, 200);
     const std::shared_ptr<OctaneGUI::ScrollableViewControl> View = List.To<OctaneGUI::ScrollableViewControl>("View");
     const std::shared_ptr<OctaneGUI::Container> Container = List.To<OctaneGUI::Container>("View.Container");
     VERIFYF(!View->Scrollable()->VerticalScrollBar()->ShouldPaint(), "Vertical scroll bar is painted when it should not be!\n");
@@ -106,7 +106,7 @@ TEST_CASE(VScrollBarVisibility,
 TEST_CASE(HScrollOffsetUpdate,
 {
     OctaneGUI::ControlList List;
-    Load(Application, "{\"Type\": \"Container\", \"ID\": \"Container\", \"Size\": [240, 200]}", List, 200, 200);
+    Load(Application, R"({"Type": "Container", "ID": "Container", "Size": [240, 200]})", List, 200, 200);
     const std::shared_ptr<OctaneGUI::ScrollableViewControl> View = List.To<OctaneGUI::ScrollableViewControl>("View");
     const std::shared_ptr<OctaneGUI::Container> Container = List.To<OctaneGUI::Container>("View.Container");
     VERIFYF(View->Scrollable()->HorizontalScrollBar()->ShouldPaint(), "Horizontal scroll bar is not painted when it should be.\n");
@@ -132,7 +132,7 @@ TEST_CASE(HScrollOffsetUpdate,
 TEST_CASE(VScrollOffsetUpdate,
 {
     OctaneGUI::ControlList List;
-    Load(Application, "{\"Type\": \"Container\", \"ID\": \"Container\", \"Size\": [200, 240]}", List, 200, 200);
+    Load(Application, R"({"Type": "Container", "ID": "Container", "Size": [200, 240]})", List, 200, 200);
     const std::shared_ptr<OctaneGUI::ScrollableViewControl> View = List.To<OctaneGUI::ScrollableViewControl>("View");
     const std::shared_ptr<OctaneGUI::Container> Container = List.To<OctaneGUI::Container>("View.Container");
     VERIFYF(View->Scrollable()->VerticalScrollBar()->ShouldPaint(), "Vertical scroll bar is not painted when it should be.\n");
