@@ -38,7 +38,7 @@ TEST_CASE(SingleLine_NoScrollBars,
     OctaneGUI::ControlList List;
     Utility::Load(
         Application,
-        "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Text\": {\"Text\": \"Well Hello Friends! Welcome to the program!\"}}",
+        R"({"Type": "TextInput", "ID": "TextInput", "Text": {"Text": "Well Hello Friends! Welcome to the program!"}})",
         List);
     
     const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
@@ -51,7 +51,7 @@ TEST_CASE(MultiLine_ScrollBars,
     OctaneGUI::ControlList List;
     Utility::Load(
         Application,
-        "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Multiline\": true, \"Size\": [80, 30], \"Text\": {\"Text\": \"Well Hello Friends!\n Welcome to the program!\"}}",
+        R"({"Type": "TextInput", "ID": "TextInput", "Multiline": true, "Size": [80, 30], "Text": {"Text": "Well Hello Friends!\n Welcome to the program!"}})",
         List);
     
     const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
@@ -62,7 +62,7 @@ TEST_CASE(MultiLine_ScrollBars,
 TEST_CASE(TextEvent,
 {
     OctaneGUI::ControlList List;
-    Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\"}", List);
+    Utility::Load(Application, R"({"Type": "TextInput", "ID": "TextInput"})", List);
 
     const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
     Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
@@ -76,7 +76,7 @@ TEST_CASE(TextEvent,
 TEST_CASE(MoveCursorRightNextLine,
 {
     OctaneGUI::ControlList List;
-    Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Multiline\": true, \"Text\": {\"Text\": \"Hello\nFriends\"}}", List);
+    Utility::Load(Application, R"({"Type": "TextInput", "ID": "TextInput", "Multiline": true, "Text": {"Text": "Hello\nFriends"}})", List);
 
     const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
     Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
@@ -100,7 +100,7 @@ TEST_CASE(MoveCursorRightNextLine,
 TEST_CASE(MoveCursorLeftPrevLine,
 {
     OctaneGUI::ControlList List;
-    Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Multiline\": true, \"Text\": {\"Text\": \"Hello\nFriends\"}}", List);
+    Utility::Load(Application, R"({"Type": "TextInput", "ID": "TextInput", "Multiline": true, "Text": {"Text": "Hello\nFriends"}})", List);
 
     const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
     Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
@@ -124,7 +124,7 @@ TEST_CASE(MoveCursorLeftPrevLine,
 TEST_CASE(HomeEnd_SingleLine,
 {
     OctaneGUI::ControlList List;
-    Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Text\": {\"Text\": \"Hello World\"}}", List);
+    Utility::Load(Application, R"({"Type": "TextInput", "ID": "TextInput", "Text": {"Text": "Hello World"}})", List);
 
     const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
     Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
@@ -144,7 +144,7 @@ TEST_CASE(HomeEnd_SingleLine,
 TEST_CASE(HomeEnd_MultiLine,
 {
     OctaneGUI::ControlList List;
-    Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Text\": {\"Text\": \"Hello\nFriends\"}}", List);
+    Utility::Load(Application, R"({"Type": "TextInput", "ID": "TextInput", "Text": {"Text": "Hello\nFriends"}})", List);
 
     const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
     Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
@@ -180,7 +180,7 @@ TEST_CASE(HomeEnd_MultiLine,
 TEST_CASE(NumbersOnly,
 {
     OctaneGUI::ControlList List;
-    Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"NumbersOnly\": true}", List);
+    Utility::Load(Application, R"({"Type": "TextInput", "ID": "TextInput", "NumbersOnly": true})", List);
 
     const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
     Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
@@ -202,7 +202,7 @@ TEST_CASE(NumbersOnly,
 TEST_CASE(ReadOnly,
 {
     OctaneGUI::ControlList List;
-    Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"ReadOnly\": true, \"Text\": {\"Text\": \"Well Hello Friends\"}}", List);
+    Utility::Load(Application, R"({"Type": "TextInput", "ID": "TextInput", "ReadOnly": true, "Text": {"Text": "Well Hello Friends"}})", List);
 
     const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
     Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
@@ -219,7 +219,7 @@ TEST_CASE(ReadOnly,
 TEST_CASE(MouseSelect,
 {
     OctaneGUI::ControlList List;
-    Utility::Load(Application, "{\"Type\": \"TextInput\", \"ID\": \"TextInput\", \"Text\": {\"Text\": \"Hello World\"}}", List);
+    Utility::Load(Application, R"({"Type": "TextInput", "ID": "TextInput", "Text": {"Text": "Hello World"}})", List);
 
     const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
 
