@@ -30,7 +30,7 @@ SOFTWARE.
 namespace Tests
 {
 
-static const char* Json = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [{\"Type\": \"TextButton\", \"ID\": \"Button\", \"Text\": {\"Text\": \"Button\"}}]}}";
+static const char* Json = R"({"Width": 1280, "Height": 720, "Body": {"Controls": [{"Type": "TextButton", "ID": "Button", "Text": {"Text": "Button"}}]}})";
 
 TEST_SUITE(Button,
 
