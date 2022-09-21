@@ -60,6 +60,7 @@ enum class WindowAction : uint8_t
     Raise,
     Enable,
     Disable,
+    Position,
 };
 
 class Application

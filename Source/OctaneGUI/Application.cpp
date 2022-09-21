@@ -330,6 +330,10 @@ bool Application::DisplayWindow(const char* ID)
                 {
                     m_OnSetWindowTitle(&Target, Title);
                 }
+            })
+        .SetOnSetPosition([this](Window& Target) -> void
+            {
+                OnWindowAction(&Target, WindowAction::Position);
             });
 
     // The window's scale may be updated when it is displayed. Calling 'OnThemeLoaded' will
@@ -534,6 +538,7 @@ void Application::DestroyWindow(const std::shared_ptr<Window>& Item)
     Item
         ->SetVisible(false)
         .SetOnSetTitle(nullptr)
+        .SetOnSetPosition(nullptr)
         .RequestClose(false)
         .Close();
 
