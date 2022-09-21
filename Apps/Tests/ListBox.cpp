@@ -35,10 +35,10 @@ namespace Tests
 
 void Load(OctaneGUI::Application& Application, const std::vector<std::string>& Items, OctaneGUI::ControlList& List)
 {
-    std::string Json = "{\"Type\": \"ListBox\", \"ID\": \"ListBox\", \"Expand\": \"Both\", \"Controls\": [";
+    std::string Json = R"({"Type": "ListBox", "ID": "ListBox", "Expand": "Both", "Controls": [)";
     for (const std::string& Item : Items)
     {
-        Json += "{\"Type\": \"TextSelectable\", \"Text\": {\"Text\": \"" + Item + "\"}}";
+        Json += R"({"Type": "TextSelectable", "Text": {"Text": ")" + Item + R"("}})";
         if (Item != Items.back())
         {
             Json += ",";
