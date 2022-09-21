@@ -496,7 +496,7 @@ std::shared_ptr<MenuBar> Window::GetMenuBar() const
     return m_Container->GetMenuBar();
 }
 
-std::shared_ptr<Container> Window::GetRootContainer() const
+std::shared_ptr<WindowContainer> Window::GetRootContainer() const
 {
     return m_Container;
 }

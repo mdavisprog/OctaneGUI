@@ -34,6 +34,7 @@ SOFTWARE.
 #include "../Controls/ScrollableViewControl.h"
 #include "../Controls/Splitter.h"
 #include "../Controls/Tree.h"
+#include "../Controls/WindowContainer.h"
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Window.h"
@@ -339,7 +340,7 @@ void Inspector::Populate()
 {
     const std::shared_ptr<Tree> TreeView = m_Tree.lock();
 
-    const std::shared_ptr<Container> RootContainer = m_Target->GetRootContainer();
+    const std::shared_ptr<WindowContainer> RootContainer = m_Target->GetRootContainer();
     TreeView->SetText(m_Target->GetRootContainer()->GetType());
     TreeView->SetMetaData(RootContainer.get());
     TreeView->ClearChildren();

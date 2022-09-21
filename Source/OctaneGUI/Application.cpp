@@ -28,6 +28,7 @@ SOFTWARE.
 #include "Assert.h"
 #include "Controls/Container.h"
 #include "Controls/ControlList.h"
+#include "Controls/WindowContainer.h"
 #include "Event.h"
 #include "Icons.h"
 #include "Json.h"

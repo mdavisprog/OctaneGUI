@@ -31,6 +31,7 @@ SOFTWARE.
 #include "../Controls/Text.h"
 #include "../Controls/TextInput.h"
 #include "../Controls/VerticalContainer.h"
+#include "../Controls/WindowContainer.h"
 #include "../Dialogs/MessageBox.h"
 #include "../Json.h"
 #include "../String.h"
@@ -195,7 +196,7 @@ bool CommandPalette::Process(const std::u32string& Command, const std::vector<st
     }
     else if (Lower == U"dumpjson")
     {
-        const std::shared_ptr<Container> Root = GetWindow()->GetRootContainer();
+        const std::shared_ptr<WindowContainer> Root = GetWindow()->GetRootContainer();
 
         Json Value { Json::Type::Object };
         Root->OnSave(Value);
