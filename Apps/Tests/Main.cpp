@@ -62,10 +62,10 @@ int main(int argc, char** argv)
         .SetOnExit(OnExit);
     
     const char* Json = 
-    "{"
-        "\"Theme\": {\"FontPath\": \"Resources/Roboto-Regular.ttf\", \"FontSize\": 18},"
-        "\"Windows\": {\"Main\": {\"Title\": \"Unit Tests\", \"Width\": 1280, \"Height\": 720}}"
-    "}";
+    R"({
+        "Theme": {"FontPath": "Resources/Roboto-Regular.ttf", "FontSize": 18},
+        "Windows": {"Main": {"Title": "Unit Tests", "Width": 1280, "Height": 720}}
+    })";
     
     std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
     if (!Application.Initialize(Json, WindowControls))
