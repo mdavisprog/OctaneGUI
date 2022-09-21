@@ -31,7 +31,7 @@ SOFTWARE.
 namespace Tests
 {
 
-static const char* Json = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [{\"Type\": \"ComboBox\", \"ID\": \"ComboBox\"}]}}";
+static const char* Json = R"({"Width": 1280, "Height": 720, "Body": {"Controls": [{"Type": "ComboBox", "ID": "ComboBox"}]}})";
 
 TEST_SUITE(ComboBox,
 
