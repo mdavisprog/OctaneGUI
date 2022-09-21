@@ -33,13 +33,11 @@ namespace Tests
 
 static std::string CheckBoxJson(const char* ID, const char* Text, bool TriState)
 {
-    const char* Json = "{\"Width\": 1280, \"Height\": 720, \"Body\": {\"Controls\": [";
+    const char* Json = R"({"Width": 1280, "Height": 720, "Body": {"Controls": [)";
 
     return std::string(Json)
-        + "{\"Type\": \"CheckBox\", \"ID\": \"" + ID + "\", "
-        + "\"TriState\": " + (TriState ? "true" : "false") + ", "
-        + "\"Text\": {\"Text\": \"" + Text + "\"}}"
-        + "]}}";
+        + R"({"Type": "CheckBox", "ID": ")" + ID + R"(", "TriState": )" + (TriState ? "true" : "false") + R"(, 
+        "Text": {"Text": ")" + Text + R"("}}]}})";
 }
 
 TEST_SUITE(CheckBox,
