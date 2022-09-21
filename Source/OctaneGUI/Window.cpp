@@ -90,6 +90,22 @@ const char* Window::GetTitle() const
     return m_Title.c_str();
 }
 
+Window& Window::SetPosition(Vector2 Position)
+{
+    m_Position = Position;
+
+    if (m_OnSetPosition)
+    {
+        m_OnSetPosition(*this);
+    }
+    return *this;
+}
+
+Vector2 Window::GetPosition() const
+{
+    return m_Position;
+}
+
 void Window::SetSize(Vector2 Size)
 {
     m_Bounds.Max = m_Bounds.Min + Size;
@@ -701,6 +717,12 @@ Window& Window::SetOnPaint(OnPaintSignature&& Fn)
 Window& Window::SetOnSetTitle(OnSetTitleSignature&& Fn)
 {
     m_OnSetTitle = std::move(Fn);
+    return *this;
+}
+
+Window& Window::SetOnSetPosition(OnWindowSignature&& Fn)
+{
+    m_OnSetPosition = std::move(Fn);
     return *this;
 }
 

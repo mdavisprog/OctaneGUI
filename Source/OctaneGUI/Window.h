@@ -84,6 +84,9 @@ public:
     void SetTitle(const char* Title);
     const char* GetTitle() const;
 
+    Window& SetPosition(Vector2 Position);
+    Vector2 GetPosition() const;
+
     void SetSize(Vector2 Size);
     Vector2 GetSize() const;
 
@@ -172,6 +175,7 @@ public:
 
     Window& SetOnPaint(OnPaintSignature&& Fn);
     Window& SetOnSetTitle(OnSetTitleSignature&& Fn);
+    Window& SetOnSetPosition(OnWindowSignature&& Fn);
     Window& SetOnClose(OnWindowSignature&& Fn);
     Window& SetOnLayout(OnWindowSignature&& Fn);
 
@@ -197,6 +201,7 @@ private:
 
     Application* m_Application { nullptr };
     std::string m_Title {};
+    Vector2 m_Position {};
     std::string m_ID {};
     Vector2 m_MousePosition {};
     Mouse::Cursor m_MouseCursor { Mouse::Cursor::Arrow };
@@ -218,6 +223,7 @@ private:
     OnPaintSignature m_OnPaint { nullptr };
     OnContainerSignature m_OnPopupClose { nullptr };
     OnSetTitleSignature m_OnSetTitle { nullptr };
+    OnWindowSignature m_OnSetPosition { nullptr };
     OnWindowSignature m_OnClose { nullptr };
     OnWindowSignature m_OnLayout { nullptr };
 };
