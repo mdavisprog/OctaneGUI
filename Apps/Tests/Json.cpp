@@ -71,7 +71,7 @@ TEST_CASE(IsNumber,
 
 TEST_CASE(IsString,
 {
-    OctaneGUI::Json Root = OctaneGUI::Json::Parse("\"String\"");
+    OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"("String")");
     return Root.IsString() && std::string(Root.String()) == "String";
 })
 
@@ -97,7 +97,7 @@ TEST_CASE(NumberArray,
 
 TEST_CASE(StringArray,
 {
-    OctaneGUI::Json Root = OctaneGUI::Json::Parse("[\"Apple\", \"Orange\", \"Banana\"]");
+    OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"(["Apple", "Orange", "Banana"])");
     VERIFYF(Root.Count() == 3, "Incorrect number of elements: %d\n", Root.Count())
     VERIFY(std::string(Root[0u].String()) == "Apple")
     VERIFY(std::string(Root[1u].String()) == "Orange")
@@ -107,7 +107,7 @@ TEST_CASE(StringArray,
 
 TEST_CASE(ObjectArray,
 {
-    OctaneGUI::Json Root = OctaneGUI::Json::Parse("[{\"Key\": \"One\"}, {\"Key\": \"Two\"}, {\"Key\": \"Three\"}]");
+    OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"([{"Key": "One"}, {"Key": "Two"}, {"Key": "Three"}])");
     VERIFYF(Root.Count() == 3, "Incorrect number of objects: %d\n", Root.Count())
 
     const OctaneGUI::Json& One = Root[0u];
@@ -124,7 +124,7 @@ TEST_CASE(ObjectArray,
 
 TEST_CASE(Object,
 {
-    OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Number\": 1, \"Boolean\": true, \"String\": \"Hello World\"}");
+    OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"({"Number": 1, "Boolean": true, "String": "Hello World"})");
 
     float Number = Root["Number"].Number();
     VERIFYF(Number == 1.0f, "Number field is incorrect: %f\n", Number)
@@ -142,7 +142,7 @@ TEST_CASE(Object,
 
 TEST_CASE(SubObject,
 {
-    OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Sub\": {\"Value\": 255}}");
+    OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"({"Sub": {"Value": 255}})");
     const OctaneGUI::Json& Sub = Root["Sub"];
     VERIFYF(Sub.IsObject(), "Sub value is not an object!\n")
     const float Value = Sub["Value"].Number();
@@ -168,7 +168,7 @@ TEST_CASE(CopyArray,
 
 TEST_CASE(CopyObject,
 {
-    OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Bool\": true, \"Number\": 3.14, \"String\": \"Hello Friends\"}");
+    OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"({"Bool": true, "Number": 3.14, "String": "Hello Friends"})");
     OctaneGUI::Json Copy = "Hello";
     Copy = Root;
     return Root.IsObject() && Copy.IsObject() && Root == Copy;
@@ -184,7 +184,7 @@ TEST_CASE(MoveArray,
 
 TEST_CASE(MoveObject,
 {
-    OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Bool\": true, \"Number\": 3.14, \"String\": \"Hello Friends\"}");
+    OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"({"Bool": true, "Number": 3.14, "String": "Hello Friends"})");
     OctaneGUI::Json Move = "";
     Move = std::move(Root);
     return Root.IsNull() && Move.IsObject() && Root != Move;
@@ -192,13 +192,14 @@ TEST_CASE(MoveObject,
 
 TEST_CASE(Spaces,
 {
-    OctaneGUI::Json Root = OctaneGUI::Json::Parse("[\n{\n\"One\": 1\n},{\n\"Two\": 2\n}\n]");
+    OctaneGUI::Json Root = OctaneGUI::Json::Parse("([\n{\n\"One\": 1\n},{\n\"Two\": 2\n}\n]");
+    printf("Root: %s\n", Root.ToString().c_str());
     return Root.IsArray() && Root[0u]["One"].Number() == 1.0f && Root[1u]["Two"].Number() == 2.0f;
 })
 
 TEST_CASE(EmptyObject,
 {
-    OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Empty\": {}, \"Filled\": {\"Property\": \"One\"}}");
+    OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"({"Empty": {}, "Filled": {"Property": "One"}})");
     const OctaneGUI::Json& Empty = Root["Empty"];
     const OctaneGUI::Json& Filled = Root["Filled"];
     VERIFYF(Empty.IsObject() && Empty.Count() == 0, "Empty object is not empty!\n");
@@ -208,21 +209,21 @@ TEST_CASE(EmptyObject,
 
 TEST_CASE(CommaInString,
 {
-    OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Text\": \"Hello, World\"}");
+    OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"({"Text": "Hello, World"})");
     return std::string(Root["Text"].String()) == "Hello, World";
 })
 
 TEST_CASE(InvalidKey_NoStartingQuote,
 {
     bool IsError = false;
-    OctaneGUI::Json Root = OctaneGUI::Json::Parse("{Hello\": \"World\"}", IsError);
+    OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"({Hello": "World"})", IsError);
     return IsError && Root["Column"].Number() == 2.0f;
 })
 
 TEST_CASE(InvalidKey_NoEndingQuote,
 {
     bool IsError = false;
-    OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Hello: \"World\"}", IsError);
+    OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"({"Hello: "World"})", IsError);
     // The first quote for "World" is parsed as the ending quote for "Hello". The parser
     // expects a valid ':' character but it was not found due to it being parsed as part of
     // the key. So the error will be that it did not find the ':' character at the expected
@@ -233,21 +234,21 @@ TEST_CASE(InvalidKey_NoEndingQuote,
 TEST_CASE(InvalidObjectError,
 {
     bool IsError = false;
-    OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Text\": \"Hello\"", IsError);
+    OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"({"Text": "Hello")", IsError);
     return IsError;
 })
 
 TEST_CASE(InvalidObjectSyntaxError,
 {
     bool IsError = false;
-    OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Object\": \"Hello\": \"World\"}}", IsError);
+    OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"({"Object": "Hello": "World"}})", IsError);
     return IsError && Root["Column"].Number() == 19.0f;
 })
 
 TEST_CASE(InvalidSubObjectError,
 {
     bool IsError = false;
-    OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"Object1\": {\"Hello\": \"World\"}, \"Object2\": {\"Foo: \"Bar\"}}", IsError);
+    OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"({"Object1": {"Hello": "World"}, "Object2": {"Foo: "Bar"}})", IsError);
     return IsError && Root["Column"].Number() == 52.0f;
 })
 
@@ -295,7 +296,7 @@ TEST_CASE(InvalidMultiline,
 TEST_CASE(ValidEmptyString,
 {
     bool IsError = false;
-    OctaneGUI::Json Root = OctaneGUI::Json::Parse("{\"\": true}", IsError);
+    OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"({"": true})", IsError);
     return !IsError;
 })
 
