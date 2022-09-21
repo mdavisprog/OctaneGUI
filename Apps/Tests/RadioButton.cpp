@@ -33,7 +33,7 @@ namespace Tests
 
 void Load(OctaneGUI::Application& Application, const char* Json, OctaneGUI::ControlList& ControlList)
 {
-    std::string Stream = "{\"Type\": \"VerticalContainer\", \"Controls\": [";
+    std::string Stream = R"({"Type": "VerticalContainer", "Controls": [)";
     Stream += Json;
     Stream += "]}";
     Utility::Load(Application, Stream.c_str(), ControlList);
@@ -44,9 +44,9 @@ TEST_SUITE(RadioButton,
 TEST_CASE(OneGroup,
 {
     const std::string Stream =
-        "{\"Type\": \"RadioButton\", \"ID\": \"One\", \"Text\": {\"Text\": \"One\"}},"
-        "{\"Type\": \"RadioButton\", \"ID\": \"Two\", \"Text\": {\"Text\": \"Two\"}},"
-        "{\"Type\": \"RadioButton\", \"ID\": \"Three\", \"Text\": {\"Text\": \"Three\"}}";
+        R"({"Type": "RadioButton", "ID": "One", "Text": {"Text": "One"}},
+        {"Type": "RadioButton", "ID": "Two", "Text": {"Text": "Two"}},
+        {"Type": "RadioButton", "ID": "Three", "Text": {"Text": "Three"}})";
 
     OctaneGUI::ControlList List;
     Load(Application, Stream.c_str(), List);
@@ -79,12 +79,12 @@ TEST_CASE(OneGroup,
 TEST_CASE(TwoGroups,
 {
     const std::string Stream =
-        "{\"Type\": \"HorizontalContainer\", \"Controls\": ["
-        "{\"Type\": \"RadioButton\", \"ID\": \"One\", \"Text\": {\"Text\": \"One\"}},"
-        "{\"Type\": \"RadioButton\", \"ID\": \"Two\", \"Text\": {\"Text\": \"Two\"}}]},"
-        "{\"Type\": \"HorizontalContainer\", \"Controls\": ["
-        "{\"Type\": \"RadioButton\", \"ID\": \"Three\", \"Text\": {\"Text\": \"Three\"}},"
-        "{\"Type\": \"RadioButton\", \"ID\": \"Four\", \"Text\": {\"Text\": \"Four\"}}]}";
+        R"({"Type": "HorizontalContainer", "Controls": [
+        {"Type": "RadioButton", "ID": "One", "Text": {"Text": "One"}},
+        {"Type": "RadioButton", "ID": "Two", "Text": {"Text": "Two"}}]},
+        {"Type": "HorizontalContainer", "Controls": [
+        {"Type": "RadioButton", "ID": "Three", "Text": {"Text": "Three"}},
+        {"Type": "RadioButton", "ID": "Four", "Text": {"Text": "Four"}}]})";
     
     OctaneGUI::ControlList List;
     Load(Application, Stream.c_str(), List);
@@ -116,8 +116,8 @@ TEST_CASE(TwoGroups,
 TEST_CASE(MouseClick,
 {
     const std::string Stream =
-        "{\"Type\": \"RadioButton\", \"ID\": \"One\", \"Text\": {\"Text\": \"One\"}},"
-        "{\"Type\": \"RadioButton\", \"ID\": \"Two\", \"Text\": {\"Text\": \"Two\"}}";
+        R"({"Type": "RadioButton", "ID": "One", "Text": {"Text": "One"}},
+        {"Type": "RadioButton", "ID": "Two", "Text": {"Text": "Two"}})";
     
     OctaneGUI::ControlList List;
     Load(Application, Stream.c_str(), List);
