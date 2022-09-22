@@ -62,6 +62,12 @@ void OnWindowAction(OctaneGUI::Window* Window, OctaneGUI::WindowAction Action)
     }
     break;
 
+    case OctaneGUI::WindowAction::Position:
+    {
+        Windowing::SetWindowPosition(Window);
+    }
+    break;
+
     default: break;
     }
 }

@@ -268,6 +268,29 @@ OctaneGUI::Event HandleEvent(SDL_Event& Event, const uint32_t WindowID, bool IsP
     return OctaneGUI::Event(OctaneGUI::Event::Type::None);
 }
 
+SDL_HitTestResult SDLCALL OnHitTest(SDL_Window* Window, SDL_Point* Area, void* Data)
+{
+    OctaneGUI::Window* Target { nullptr };
+    for (std::unordered_map<OctaneGUI::Window*, SDL_Window*>::const_iterator It = g_Windows.begin(); It != g_Windows.end(); ++It)
+    {
+        if (It->second == Window)
+        {
+            Target = It->first;
+            break;
+        }
+    }
+
+    if (Target != nullptr)
+    {
+        if (Target->GetRootContainer()->IsInTitleBar({ (float)Area->x, (float)Area->y }))
+        {
+            return SDL_HITTEST_DRAGGABLE;
+        }
+    }
+
+    return SDL_HITTEST_NORMAL;
+}
+
 bool Initialize()
 {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
@@ -342,6 +365,12 @@ void NewWindow(OctaneGUI::Window* Window)
         SDL_DisplayMode DisplayMode {};
         SDL_GetCurrentDisplayMode(DisplayIndex, &DisplayMode);
         Window->SetDeviceSize({ (float)DisplayMode.w, (float)DisplayMode.h });
+
+        int X, Y;
+        SDL_GetWindowPosition(Instance, &X, &Y);
+        Window->SetPosition({ (float)X, (float)Y });
+
+        SDL_SetWindowHitTest(Instance, (SDL_HitTest)OnHitTest, nullptr);
 
         g_Windows[Window] = Instance;
     }
@@ -472,6 +501,17 @@ void SetWindowTitle(OctaneGUI::Window* Window, const char* Title)
     }
 
     SDL_SetWindowTitle(g_Windows[Window], Title);
+}
+
+void SetWindowPosition(OctaneGUI::Window* Window)
+{
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        return;
+    }
+
+    SDL_SetWindowPosition(g_Windows[Window], (int)Window->GetPosition().X, (int)Window->GetPosition().Y);
+    SDL_SetWindowSize(g_Windows[Window], (int)Window->GetSize().X, (int)Window->GetSize().Y);
 }
 
 void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor)

@@ -149,6 +149,26 @@ void NewWindow(OctaneGUI::Window* Window)
 
         sf::VideoMode Desktop = sf::VideoMode::getDesktopMode();
         Window->SetDeviceSize({ (float)Desktop.width, (float)Desktop.height });
+        Window->SetPosition({ (float)RenderWindow->getPosition().x, (float)RenderWindow->getPosition().y });
+
+        SetOnHitTest((void*)RenderWindow->getSystemHandle(), [](void* Handle, const OctaneGUI::Vector2& Point) -> HitTestResult
+            {
+                HitTestResult Result = HitTestResult::Normal;
+
+                for (std::unordered_map<OctaneGUI::Window*, std::shared_ptr<sf::RenderWindow>>::const_iterator It = g_Windows.begin(); It != g_Windows.end(); ++It)
+                {
+                    if ((void*)It->second->getSystemHandle() == Handle)
+                    {
+                        if (It->first->GetRootContainer()->IsInTitleBar(Point))
+                        {
+                            Result = HitTestResult::Draggable;
+                        }
+                        break;
+                    }
+                }
+
+                return Result;
+            });
     }
 }
 
@@ -335,6 +355,16 @@ void SetWindowTitle(OctaneGUI::Window* Window, const char* Title)
     }
 
     g_Windows[Window]->setTitle(Title);
+}
+
+void SetWindowPosition(OctaneGUI::Window* Window)
+{
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        return;
+    }
+
+    g_Windows[Window]->setPosition({ (int)Window->GetPosition().X, (int)Window->GetPosition().Y });
 }
 
 void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor)

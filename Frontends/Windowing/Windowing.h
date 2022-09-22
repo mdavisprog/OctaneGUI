@@ -37,6 +37,7 @@ namespace OctaneGUI
 
 class Event;
 struct FileDialogFilter;
+struct Vector2;
 class Window;
 
 }
@@ -45,6 +46,22 @@ namespace Frontend
 {
 namespace Windowing
 {
+
+enum class HitTestResult
+{
+    Normal,
+    Draggable,
+    TopLeft,
+    Top,
+    TopRight,
+    Right,
+    BottomRight,
+    Bottom,
+    BottomLeft,
+    Left,
+};
+
+typedef HitTestResult (*OnHitTestSignature)(void*, const OctaneGUI::Vector2&);
 
 bool Initialize();
 void NewWindow(OctaneGUI::Window* Window);
@@ -57,6 +74,7 @@ void Exit();
 void SetClipboardContents(const std::u32string& Contents);
 std::u32string GetClipboardContents();
 void SetWindowTitle(OctaneGUI::Window* Window, const char* Title);
+void SetWindowPosition(OctaneGUI::Window* Window);
 void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor);
 
 // Platform specific functions.
@@ -64,6 +82,7 @@ void SetMovable(void* Handle, bool Movable);
 void SetEnabled(void* Handle, bool Enabled);
 void SetAlwaysOnTop(void* Handle);
 void ShowMinimize(void* Handle, bool Show);
+void SetOnHitTest(void* Handle, OnHitTestSignature&& Fn);
 void Focus(void* Handle);
 std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters, void* Handle);
 
