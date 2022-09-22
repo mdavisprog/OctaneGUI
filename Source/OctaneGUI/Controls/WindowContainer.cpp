@@ -38,6 +38,42 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+class TitleBarInteraction : public Control
+{
+public:
+    TitleBarInteraction(Window* InWindow)
+        : Control(InWindow)
+    {
+    }
+
+    virtual void OnMouseMove(const Vector2& Position) override
+    {
+        if (m_Move)
+        {
+            const Vector2 Delta = Position - m_LastPosition;
+            const Vector2 New = GetWindow()->GetPosition() + Delta;
+            GetWindow()->SetPosition(New);
+        }
+
+        m_LastPosition = Position;
+    }
+
+    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override
+    {
+        m_Move = true;
+        return true;
+    }
+
+    virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override
+    {
+        m_Move = false;
+    }
+
+private:
+    bool m_Move { false };
+    Vector2 m_LastPosition {};
+};
+
 class TitleBar : public Container
 {
 public:
@@ -50,6 +86,8 @@ public:
 
         const std::shared_ptr<HorizontalContainer> Layout = AddControl<HorizontalContainer>();
         m_Title = Layout->AddControl<Text>();
+
+        AddControl<TitleBarInteraction>()->SetExpand(Expand::Both);
 
         SetSize({ 0.0f, m_Title->LineHeight() });
     }
@@ -118,6 +156,16 @@ WindowContainer& WindowContainer::SetTitle(const char32_t* Title)
     return *this;
 }
 
+bool WindowContainer::IsInTitleBar(const Vector2& Position) const
+{
+    if (!m_TitleBar)
+    {
+        return false;
+    }
+
+    return m_TitleBar->Contains(Position);
+}
+
 const std::shared_ptr<Container>& WindowContainer::Body() const
 {
     return m_Body;
@@ -130,7 +178,17 @@ const std::shared_ptr<MenuBar>& WindowContainer::GetMenuBar() const
 
 std::weak_ptr<Control> WindowContainer::GetControl(const Vector2& Point) const
 {
-    std::weak_ptr<Control> Result = m_MenuBar->GetControl(Point);
+    std::weak_ptr<Control> Result;
+
+    if (m_TitleBar)
+    {
+        Result = m_TitleBar->GetControl(Point);
+    }
+    
+    if (Result.expired())
+    {
+        Result = m_MenuBar->GetControl(Point);
+    }
 
     if (Result.expired())
     {

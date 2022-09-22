@@ -54,6 +54,8 @@ public:
     WindowContainer& ShowTitleBar(bool Show);
     WindowContainer& SetTitle(const char32_t* Title);
 
+    bool IsInTitleBar(const Vector2& Position) const;
+
     const std::shared_ptr<Container>& Body() const;
     const std::shared_ptr<MenuBar>& GetMenuBar() const;
 
