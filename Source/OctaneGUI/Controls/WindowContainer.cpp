@@ -98,6 +98,12 @@ public:
         return *this;
     }
 
+    virtual void OnThemeLoaded() override
+    {
+        Container::OnThemeLoaded();
+        SetSize({ 0.0f, m_Title->LineHeight() });
+    }
+
 private:
     std::shared_ptr<Text> m_Title { nullptr };
 };
