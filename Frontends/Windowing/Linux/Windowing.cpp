@@ -43,7 +43,11 @@ void SetAlwaysOnTop(void* Handle)
 {
 }
 
-void ShowMinimize(void* Handl, bool Show)
+void ShowMinimize(void* Handle, bool Show)
+{
+}
+
+void SetOnHitTest(void* Handle, OnHitTestSignature&& Fn)
 {
 }
 
