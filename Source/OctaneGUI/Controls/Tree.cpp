@@ -51,7 +51,12 @@ public:
     TreeItem(Window* InWindow)
         : HorizontalContainer(InWindow)
     {
-        m_Toggle = AddControl<Image>();
+        const std::shared_ptr<VerticalContainer> ToggleContainer = AddControl<VerticalContainer>();
+        ToggleContainer
+            ->SetGrow(Grow::Center)
+            ->SetExpand(Expand::Height);
+
+        m_Toggle = ToggleContainer->AddControl<Image>();
         m_Text = AddControl<Text>();
 
         m_Toggle
@@ -91,9 +96,9 @@ public:
         return m_Text->GetAbsoluteBounds();
     }
 
-    Vector2 ToggleSize() const
+    float TextOffset() const
     {
-        return m_Toggle->GetSize();
+        return m_Text->GetPosition().X;
     }
 
     TreeItem& SetToggle(bool Expand)
@@ -101,6 +106,7 @@ public:
         const Rect UVs = GetUVs(Expand);
         m_Toggle->SetUVs(UVs);
         UpdateToggleSize();
+        InvalidateLayout();
         return *this;
     }
 
@@ -218,7 +224,10 @@ private:
     TreeItem& UpdateToggleSize()
     {
         const Vector2 Size = m_Text->GetSize();
-        m_Toggle->SetSize({ Size.Y, Size.Y });
+        if (m_Toggle->GetSize().Y > Size.Y)
+        {
+            m_Toggle->SetSize({ Size.Y, Size.Y });
+        }
         return *this;
     }
 
@@ -804,7 +813,7 @@ Tree& Tree::UpdateListOffset()
 {
     if (m_List)
     {
-        const Vector2 Offset { m_Item->ToggleSize() };
+        const Vector2 Offset { m_Item->TextOffset(), m_Item->GetSize().Y };
         m_List->SetPosition(Offset);
     }
 
