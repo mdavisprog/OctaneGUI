@@ -81,23 +81,27 @@ void Icons::Initialize()
         return;
     }
 
-    const uint32_t Width = 102;
-    const uint32_t Height = 13;
+    const uint32_t Width = 144;
+    const uint32_t Height = 16;
+
     const char* Data =
-        "x               x               xx                                                                    "
-        "x.x           x.x              x..x                                                                   "
-        "x..x         x..x             x..x                                           ..        ..             "
-        "x...x       x...x            x..x                                             ..       ..             "
-        "x....x     x....x           x..x    xxxxxxxxxxxxx       x       ..       ..    ..      ..             "
-        "x.....x   x.....x          x..x      x.........x       x.x       ..     ..      ..  ........ ........ "
-        "x......x x......x  xx     x..x        x.......x       x...x       ..   ..        .. ........ ........ "
-        "x.....x   x.....x x..x   x..x          x.....x       x.....x       .. ..        ..     ..             "
-        "x....x     x....x  x..x x..x            x...x       x.......x       ...        ..      ..             "
-        "x...x       x...x   x..x..x              x.x       x.........x       .        ..       ..             "
-        "x..x         x..x    x...x                x       xxxxxxxxxxxxx              ..                       "
-        "x.x           x.x     xxx                                                                             "
-        "x               x                                                                                     "
-        "                                                                                                      ";
+        "                                                                                                                                                "
+        "                                                                                                                                                "
+        "    xx                    xx                                                                                                                    "
+        "    x.x                  x.x                 xx                                                     ...               ....                      "
+        "    x..x                x..x                x..x                                                     ...              ....                      "
+        "    x...x              x...x               x..x                                                       ...             ....                      "
+        "    x....x            x....x              x..x   xxxxxxxxxxxxxx        xx       ...          ...       ...            ....                      "
+        "    x.....x          x.....x             x..x     x..........x        x..x       ...        ...         ...       ............    ............  "
+        "    x......x        x......x     xx     x..x       x........x        x....x       ...      ...           ...      ............    ............  "
+        "    x.....x          x.....x    x..x   x..x         x......x        x......x       ...    ...           ...       ............    ............  "
+        "    x....x            x....x     x..x x..x           x....x        x........x       ...  ...           ...            ....                      "
+        "    x...x              x...x      x..x..x             x..x        x..........x       .....            ...             ....                      "
+        "    x..x                x..x       x...x               xx        xxxxxxxxxxxxxx       ...            ...              ....                      "
+        "    x.x                  x.x        xxx                                                .            ...               ....                      "
+        "    xx                    xx                                                                                                                    "
+        "                                                                                                                                                "
+        "                                                                                                                                                ";
 
     std::vector<uint8_t> Buffer;
     Buffer.resize(Width * Height * 4);
@@ -127,15 +131,15 @@ void Icons::Initialize()
 
     m_Texture = Texture::Load(Buffer, Width, Height);
 
-    m_UVs[(int)Type::ArrowRight] = { 0.0f, 0.0f, 8.0f, 13.0f };
-    m_UVs[(int)Type::ArrowLeft] = { 9.0f, 0.0f, 17.0f, 13.0f };
-    m_UVs[(int)Type::ArrowUp] = { 50.0f, 4.0f, 63.0f, 11.0f };
-    m_UVs[(int)Type::ArrowDown] = { 36.0f, 4.0f, 49.0f, 11.0f };
-    m_UVs[(int)Type::Check] = { 18.0f, 0.0f, 35.0f, 12.0f };
-    m_UVs[(int)Type::Expand] = { 64.0f, 4.0f, 75.0f, 9.0f };
-    m_UVs[(int)Type::Collapse] = { 77.0f, 2.0f, 83.0f, 11.0f };
-    m_UVs[(int)Type::Plus] = { 84.0f, 2.0f, 92.0f, 10.0f };
-    m_UVs[(int)Type::Minus] = { 93.0f, 5.0f, 101.0f, 7.0f };
+    m_UVs[(int)Type::ArrowRight] = { 0.0f, 0.0f, 16.0f, 16.0f };
+    m_UVs[(int)Type::ArrowLeft] = { 16.0f, 0.0f, 32.0f, 16.0f };
+    m_UVs[(int)Type::ArrowUp] = { 64.0f, 0.0f, 80.0f, 16.0f };
+    m_UVs[(int)Type::ArrowDown] = { 48.0f, 0.0f, 64.0f, 16.0f };
+    m_UVs[(int)Type::Check] = { 32.0f, 0.0f, 48.0f, 16.0f };
+    m_UVs[(int)Type::Expand] = { 80.0f, 0.0f, 96.0f, 16.0f };
+    m_UVs[(int)Type::Collapse] = { 96.0f, 0.0f, 112.0f, 16.0f };
+    m_UVs[(int)Type::Plus] = { 112.0f, 0.0f, 128.0f, 16.0f };
+    m_UVs[(int)Type::Minus] = { 128.0f, 0.0f, 144.0f, 16.0f };
 }
 
 void Icons::Initialize(const std::vector<Definition>& Definitions, const Vector2& IconSize)
