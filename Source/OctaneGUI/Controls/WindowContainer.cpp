@@ -25,11 +25,12 @@ SOFTWARE.
 */
 
 #include "WindowContainer.h"
+#include "../Icons.h"
 #include "../Json.h"
 #include "../String.h"
 #include "../Window.h"
-#include "ControlList.h"
 #include "HorizontalContainer.h"
+#include "ImageButton.h"
 #include "MenuBar.h"
 #include "Panel.h"
 #include "Text.h"
@@ -37,42 +38,6 @@ SOFTWARE.
 
 namespace OctaneGUI
 {
-
-class TitleBarInteraction : public Control
-{
-public:
-    TitleBarInteraction(Window* InWindow)
-        : Control(InWindow)
-    {
-    }
-
-    virtual void OnMouseMove(const Vector2& Position) override
-    {
-        if (m_Move)
-        {
-            const Vector2 Delta = Position - m_LastPosition;
-            const Vector2 New = GetWindow()->GetPosition() + Delta;
-            GetWindow()->SetPosition(New);
-        }
-
-        m_LastPosition = Position;
-    }
-
-    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override
-    {
-        m_Move = true;
-        return true;
-    }
-
-    virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override
-    {
-        m_Move = false;
-    }
-
-private:
-    bool m_Move { false };
-    Vector2 m_LastPosition {};
-};
 
 class TitleBar : public Container
 {
@@ -84,12 +49,41 @@ public:
 
         AddControl<Panel>()->SetExpand(Expand::Both);
 
-        const std::shared_ptr<HorizontalContainer> Layout = AddControl<HorizontalContainer>();
-        m_Title = Layout->AddControl<Text>();
+        const std::shared_ptr<HorizontalContainer> Root = AddControl<HorizontalContainer>();
+        Root->SetExpand(Expand::Width);
 
-        AddControl<TitleBarInteraction>()->SetExpand(Expand::Both);
+        m_Draggable = Root->AddControl<HorizontalContainer>();
+        m_Draggable->SetExpand(Expand::Width);
+        m_Title = m_Draggable->AddControl<Text>();
 
-        SetSize({ 0.0f, m_Title->LineHeight() });
+        const std::shared_ptr<VerticalContainer> RightLayout = Root->AddControl<VerticalContainer>();
+        RightLayout
+            ->SetGrow(Grow::Center)
+            ->SetExpand(Expand::Height);
+        
+        const std::shared_ptr<HorizontalContainer> Buttons = RightLayout->AddControl<HorizontalContainer>();
+        Buttons->SetGrow(Grow::End);
+
+        m_Close = Buttons->AddControl<ImageButton>();
+        m_Close
+            ->SetProperty(ThemeProperties::Button_Padding, Vector2{})
+            .SetProperty(ThemeProperties::Button, Color{});
+        m_Close
+            ->SetTexture(GetWindow()->GetIcons()->GetTexture())
+            .SetUVs(GetWindow()->GetIcons()->GetUVs(Icons::Type::Close))
+            .SetOnClicked([this](const Button&) -> void
+                {
+                    GetWindow()->RequestClose();
+                })
+            .SetExpand(Expand::Height);
+        
+        const Vector2 IconSize { m_Title->LineHeight(), m_Title->LineHeight() };
+        if (m_Close->GetSize().Y > IconSize.Y)
+        {
+            m_Close->SetSize(IconSize);
+        }
+
+        OnThemeLoaded();
     }
 
     TitleBar& SetTitle(const char32_t* Title)
@@ -98,14 +92,22 @@ public:
         return *this;
     }
 
+    bool IsDraggable(const Vector2& Position) const
+    {
+        return m_Draggable->Contains(Position);
+    }
+
     virtual void OnThemeLoaded() override
     {
         Container::OnThemeLoaded();
+        m_Close->SetProperty(ThemeProperties::ImageButton, GetProperty(ThemeProperties::Check));
         SetSize({ 0.0f, m_Title->LineHeight() });
     }
 
 private:
     std::shared_ptr<Text> m_Title { nullptr };
+    std::shared_ptr<BoxContainer> m_Draggable { nullptr };
+    std::shared_ptr<ImageButton> m_Close { nullptr };
 };
 
 WindowContainer::WindowContainer(Window* InWindow)
@@ -169,7 +171,7 @@ bool WindowContainer::IsInTitleBar(const Vector2& Position) const
         return false;
     }
 
-    return m_TitleBar->Contains(Position);
+    return m_TitleBar->IsDraggable(Position);
 }
 
 const std::shared_ptr<Container>& WindowContainer::Body() const
