@@ -699,10 +699,7 @@ bool Application::Initialize()
             for (const std::pair<std::string, std::shared_ptr<Window>>& Item : m_Windows)
             {
                 Item.second->ThemeLoaded();
-                if (Item.second->IsVisible())
-                {
-                    Item.second->GetRootContainer()->Invalidate();
-                }
+                Item.second->GetRootContainer()->InvalidateLayout();
             }
         });
 
