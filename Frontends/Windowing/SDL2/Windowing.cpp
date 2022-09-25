@@ -282,7 +282,8 @@ SDL_HitTestResult SDLCALL OnHitTest(SDL_Window* Window, SDL_Point* Area, void* D
 
     if (Target != nullptr)
     {
-        if (Target->GetRootContainer()->IsInTitleBar({ (float)Area->x, (float)Area->y }))
+        const OctaneGUI::Vector2 Position { (float)Area->x, (float)Area->y };
+        if (Target->GetRootContainer()->IsInTitleBar(Position * Target->RenderScale()))
         {
             return SDL_HITTEST_DRAGGABLE;
         }
