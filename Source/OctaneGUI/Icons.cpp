@@ -46,6 +46,7 @@ const char* Icons::ToString(Type InType)
     case Type::Collapse: return "Collapse";
     case Type::Plus: return "Plus";
     case Type::Minus: return "Minus";
+    case Type::Close: return "Close";
     default: break;
     }
 
@@ -81,27 +82,27 @@ void Icons::Initialize()
         return;
     }
 
-    const uint32_t Width = 144;
+    const uint32_t Width = 160;
     const uint32_t Height = 16;
 
     const char* Data =
-        "                                                                                                                                                "
-        "                                                                                                                                                "
-        "    xx                    xx                                                                                                                    "
-        "    x.x                  x.x                 xx                                                     ...               ....                      "
-        "    x..x                x..x                x..x                                                     ...              ....                      "
-        "    x...x              x...x               x..x                                                       ...             ....                      "
-        "    x....x            x....x              x..x   xxxxxxxxxxxxxx        xx       ...          ...       ...            ....                      "
-        "    x.....x          x.....x             x..x     x..........x        x..x       ...        ...         ...       ............    ............  "
-        "    x......x        x......x     xx     x..x       x........x        x....x       ...      ...           ...      ............    ............  "
-        "    x.....x          x.....x    x..x   x..x         x......x        x......x       ...    ...           ...       ............    ............  "
-        "    x....x            x....x     x..x x..x           x....x        x........x       ...  ...           ...            ....                      "
-        "    x...x              x...x      x..x..x             x..x        x..........x       .....            ...             ....                      "
-        "    x..x                x..x       x...x               xx        xxxxxxxxxxxxxx       ...            ...              ....                      "
-        "    x.x                  x.x        xxx                                                .            ...               ....                      "
-        "    xx                    xx                                                                                                                    "
-        "                                                                                                                                                "
-        "                                                                                                                                                ";
+        "                                                                                                                                                                "
+        "                                                                                                                                                                "
+        "    xx                    xx                                                                                                                                    "
+        "    x.x                  x.x                 xx                                                     ...               ....                                      "
+        "    x..x                x..x                x..x                                                     ...              ....                        ...      ...  "
+        "    x...x              x...x               x..x                                                       ...             ....                         ...    ...   "
+        "    x....x            x....x              x..x   xxxxxxxxxxxxxx        xx       ...          ...       ...            ....                          ...  ...    "
+        "    x.....x          x.....x             x..x     x..........x        x..x       ...        ...         ...       ............    ............       ......     "
+        "    x......x        x......x     xx     x..x       x........x        x....x       ...      ...           ...      ............    ............        ....      "
+        "    x.....x          x.....x    x..x   x..x         x......x        x......x       ...    ...           ...       ............    ............       ......     "
+        "    x....x            x....x     x..x x..x           x....x        x........x       ...  ...           ...            ....                          ...  ...    "
+        "    x...x              x...x      x..x..x             x..x        x..........x       .....            ...             ....                         ...    ...   "
+        "    x..x                x..x       x...x               xx        xxxxxxxxxxxxxx       ...            ...              ....                        ...      ...  "
+        "    x.x                  x.x        xxx                                                .            ...               ....                                      "
+        "    xx                    xx                                                                                                                                    "
+        "                                                                                                                                                                "
+        "                                                                                                                                                                ";
 
     std::vector<uint8_t> Buffer;
     Buffer.resize(Width * Height * 4);
@@ -140,6 +141,7 @@ void Icons::Initialize()
     m_UVs[(int)Type::Collapse] = { 96.0f, 0.0f, 112.0f, 16.0f };
     m_UVs[(int)Type::Plus] = { 112.0f, 0.0f, 128.0f, 16.0f };
     m_UVs[(int)Type::Minus] = { 128.0f, 0.0f, 144.0f, 16.0f };
+    m_UVs[(int)Type::Close] = { 144.0f, 0.0f, 160.0f, 16.0f };
 }
 
 void Icons::Initialize(const std::vector<Definition>& Definitions, const Vector2& IconSize)

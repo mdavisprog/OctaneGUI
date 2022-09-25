@@ -52,6 +52,7 @@ public:
         Collapse,
         Plus,
         Minus,
+        Close,
         Max
     };
 

@@ -12,7 +12,8 @@
             {"Type": "Expand", "FileName": "Resources/Expand.svg"},
             {"Type": "Collapse", "FileName": "Resources/Collapse.svg"},
             {"Type": "Plus", "FileName": "Resources/Plus.svg"},
-            {"Type": "Minus", "FileName": "Resources/Minus.svg"}
+            {"Type": "Minus", "FileName": "Resources/Minus.svg"},
+            {"Type": "Close", "FileName": "Resources/Close.svg"}
         ]
     },
     "Windows": {
