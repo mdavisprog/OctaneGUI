@@ -53,8 +53,13 @@ public:
         Root->SetExpand(Expand::Width);
 
         m_Draggable = Root->AddControl<HorizontalContainer>();
-        m_Draggable->SetExpand(Expand::Width);
-        m_Title = m_Draggable->AddControl<Text>();
+        m_Draggable->SetExpand(Expand::Both);
+
+        const std::shared_ptr<VerticalContainer> TextContainer = m_Draggable->AddControl<VerticalContainer>();
+        TextContainer
+            ->SetGrow(Grow::Center)
+            ->SetExpand(Expand::Height);
+        m_Title = TextContainer->AddControl<Text>();
 
         const std::shared_ptr<VerticalContainer> RightLayout = Root->AddControl<VerticalContainer>();
         RightLayout
@@ -62,7 +67,9 @@ public:
             ->SetExpand(Expand::Height);
         
         const std::shared_ptr<HorizontalContainer> Buttons = RightLayout->AddControl<HorizontalContainer>();
-        Buttons->SetGrow(Grow::End);
+        Buttons
+            ->SetGrow(Grow::End)
+            ->SetExpand(Expand::Height);
 
         m_Close = Buttons->AddControl<ImageButton>();
         m_Close
@@ -76,12 +83,6 @@ public:
                     GetWindow()->RequestClose();
                 })
             .SetExpand(Expand::Height);
-        
-        const Vector2 IconSize { m_Title->LineHeight(), m_Title->LineHeight() };
-        if (m_Close->GetSize().Y > IconSize.Y)
-        {
-            m_Close->SetSize(IconSize);
-        }
 
         OnThemeLoaded();
     }
@@ -101,10 +102,15 @@ public:
     {
         Container::OnThemeLoaded();
         m_Close->SetProperty(ThemeProperties::ImageButton, GetProperty(ThemeProperties::Check));
-        SetSize({ 0.0f, m_Title->LineHeight() });
+        SetSize({ 0.0f, Height() });
     }
 
 private:
+    float Height() const
+    {
+        return std::max<float>(m_Title->GetSize().Y, m_Close->GetSize().Y);
+    }
+
     std::shared_ptr<Text> m_Title { nullptr };
     std::shared_ptr<BoxContainer> m_Draggable { nullptr };
     std::shared_ptr<ImageButton> m_Close { nullptr };
