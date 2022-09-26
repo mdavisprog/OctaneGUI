@@ -47,6 +47,7 @@ const char* Icons::ToString(Type InType)
     case Type::Plus: return "Plus";
     case Type::Minus: return "Minus";
     case Type::Close: return "Close";
+    case Type::Minimize: return "Minimize";
     default: break;
     }
 
@@ -83,7 +84,7 @@ void Icons::Initialize()
     }
 
     const uint32_t Width = 160;
-    const uint32_t Height = 16;
+    const uint32_t Height = 32;
 
     const char* Data =
         "                                                                                                                                                                "
@@ -101,6 +102,21 @@ void Icons::Initialize()
         "    x..x                x..x       x...x               xx        xxxxxxxxxxxxxx       ...            ...              ....                        ...      ...  "
         "    x.x                  x.x        xxx                                                .            ...               ....                                      "
         "    xx                    xx                                                                                                                                    "
+        "                                                                                                                                                                "
+        "                                                                                                                                                                "
+        "                                                                                                                                                                "
+        "                                                                                                                                                                "
+        "                                                                                                                                                                "
+        "                                                                                                                                                                "
+        "                                                                                                                                                                "
+        "                                                                                                                                                                "
+        "                                                                                                                                                                "
+        "                                                                                                                                                                "
+        "                                                                                                                                                                "
+        "                                                                                                                                                                "
+        "  ............                                                                                                                                                  "
+        "  ............                                                                                                                                                  "
+        "  ............                                                                                                                                                  "
         "                                                                                                                                                                "
         "                                                                                                                                                                ";
 
@@ -142,6 +158,7 @@ void Icons::Initialize()
     m_UVs[(int)Type::Plus] = { 112.0f, 0.0f, 128.0f, 16.0f };
     m_UVs[(int)Type::Minus] = { 128.0f, 0.0f, 144.0f, 16.0f };
     m_UVs[(int)Type::Close] = { 144.0f, 0.0f, 160.0f, 16.0f };
+    m_UVs[(int)Type::Minimize] = { 0.0f, 16.0f, 16.0f, 32.0f };
 }
 
 void Icons::Initialize(const std::vector<Definition>& Definitions, const Vector2& IconSize)

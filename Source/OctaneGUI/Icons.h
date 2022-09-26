@@ -53,6 +53,7 @@ public:
         Plus,
         Minus,
         Close,
+        Minimize,
         Max
     };
 
