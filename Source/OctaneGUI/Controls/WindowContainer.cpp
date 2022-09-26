@@ -70,19 +70,21 @@ public:
         Buttons
             ->SetGrow(Grow::End)
             ->SetExpand(Expand::Height);
-
-        m_Close = Buttons->AddControl<ImageButton>();
-        m_Close
-            ->SetProperty(ThemeProperties::Button_Padding, Vector2{})
-            .SetProperty(ThemeProperties::Button, Color{});
-        m_Close
-            ->SetTexture(GetWindow()->GetIcons()->GetTexture())
-            .SetUVs(GetWindow()->GetIcons()->GetUVs(Icons::Type::Close))
-            .SetOnClicked([this](const Button&) -> void
+        
+        if (GetWindow()->CanMinimize())
+        {
+            m_Minimize = AddButton(Icons::Type::Minimize, Buttons);
+            m_Minimize->SetOnClicked([this](const Button&) -> void
                 {
-                    GetWindow()->RequestClose();
-                })
-            .SetExpand(Expand::Height);
+                    GetWindow()->Minimize();
+                });
+        }
+
+        m_Close = AddButton(Icons::Type::Close, Buttons);
+        m_Close->SetOnClicked([this](const Button&) -> void
+            {
+                GetWindow()->RequestClose();
+            });
 
         OnThemeLoaded();
     }
@@ -111,8 +113,22 @@ private:
         return std::max<float>(m_Title->GetSize().Y, m_Close->GetSize().Y);
     }
 
+    std::shared_ptr<ImageButton> AddButton(Icons::Type Type, const std::shared_ptr<Container>& Parent)
+    {
+        std::shared_ptr<ImageButton> Result = Parent->AddControl<ImageButton>();
+
+        Result
+            ->SetTexture(GetWindow()->GetIcons()->GetTexture())
+            .SetUVs(GetWindow()->GetIcons()->GetUVs(Type))
+            .SetProperty(ThemeProperties::Button, Color{})
+            .SetExpand(Expand::Height);
+
+        return Result;
+    }
+
     std::shared_ptr<Text> m_Title { nullptr };
     std::shared_ptr<BoxContainer> m_Draggable { nullptr };
+    std::shared_ptr<ImageButton> m_Minimize { nullptr };
     std::shared_ptr<ImageButton> m_Close { nullptr };
 };
 
