@@ -223,6 +223,16 @@ bool Window::IsResizable() const
     return m_Flags & WindowFlags::Resizable;
 }
 
+Window& Window::Minimize()
+{
+    if (m_OnMinimize)
+    {
+        m_OnMinimize(*this);
+    }
+
+    return *this;
+}
+
 Window& Window::SetCanMinimize(bool CanMinimize)
 {
     if (CanMinimize)
@@ -723,6 +733,12 @@ Window& Window::SetOnSetTitle(OnSetTitleSignature&& Fn)
 Window& Window::SetOnSetPosition(OnWindowSignature&& Fn)
 {
     m_OnSetPosition = std::move(Fn);
+    return *this;
+}
+
+Window& Window::SetOnMinimize(OnWindowSignature&& Fn)
+{
+    m_OnMinimize = std::move(Fn);
     return *this;
 }
 

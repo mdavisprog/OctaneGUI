@@ -113,6 +113,7 @@ public:
     Window& SetResizable(bool Resizable);
     bool IsResizable() const;
 
+    Window& Minimize();
     Window& SetCanMinimize(bool CanMinimize);
     bool CanMinimize() const;
 
@@ -176,6 +177,7 @@ public:
     Window& SetOnPaint(OnPaintSignature&& Fn);
     Window& SetOnSetTitle(OnSetTitleSignature&& Fn);
     Window& SetOnSetPosition(OnWindowSignature&& Fn);
+    Window& SetOnMinimize(OnWindowSignature&& Fn);
     Window& SetOnClose(OnWindowSignature&& Fn);
     Window& SetOnLayout(OnWindowSignature&& Fn);
 
@@ -224,6 +226,7 @@ private:
     OnContainerSignature m_OnPopupClose { nullptr };
     OnSetTitleSignature m_OnSetTitle { nullptr };
     OnWindowSignature m_OnSetPosition { nullptr };
+    OnWindowSignature m_OnMinimize { nullptr };
     OnWindowSignature m_OnClose { nullptr };
     OnWindowSignature m_OnLayout { nullptr };
 };
