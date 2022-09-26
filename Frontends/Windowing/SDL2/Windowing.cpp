@@ -400,6 +400,16 @@ void RaiseWindow(OctaneGUI::Window* Window)
     SDL_RaiseWindow(g_Windows[Window]);
 }
 
+void MinimizeWindow(OctaneGUI::Window* Window)
+{
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        return;
+    }
+
+    SDL_MinimizeWindow(g_Windows[Window]);
+}
+
 void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
 {
     if (g_Windows.find(Window) == g_Windows.end())

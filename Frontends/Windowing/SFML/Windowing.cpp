@@ -193,6 +193,16 @@ void RaiseWindow(OctaneGUI::Window* Window)
     g_Windows[Window]->requestFocus();
 }
 
+void MinimizeWindow(OctaneGUI::Window* Window)
+{
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        return;
+    }
+
+    Minimize((void*)g_Windows[Window]->getSystemHandle());
+}
+
 void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
 {
     if (g_Windows.find(Window) == g_Windows.end())

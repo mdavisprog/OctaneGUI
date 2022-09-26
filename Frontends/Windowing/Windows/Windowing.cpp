@@ -118,6 +118,12 @@ void ShowMinimize(void* Handle, bool Show)
     SetWindowLongPtr(WinHandle, GWL_STYLE, Flags);
 }
 
+void Minimize(void* Handle)
+{
+    HWND WinHandle = (HWND)Handle;
+    ShowWindow(WinHandle, SW_MINIMIZE);
+}
+
 void SetOnHitTest(void* Handle, OnHitTestSignature&& Fn)
 {
     HWND WinHandle = (HWND)Handle;

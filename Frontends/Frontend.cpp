@@ -68,6 +68,12 @@ void OnWindowAction(OctaneGUI::Window* Window, OctaneGUI::WindowAction Action)
     }
     break;
 
+    case OctaneGUI::WindowAction::Minimize:
+    {
+        Windowing::MinimizeWindow(Window);
+    }
+    break;
+
     default: break;
     }
 }
