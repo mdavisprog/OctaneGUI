@@ -331,6 +331,10 @@ bool Application::DisplayWindow(const char* ID)
                     m_OnSetWindowTitle(&Target, Title);
                 }
             })
+        .SetOnMinimize([this](Window& Target) -> void
+            {
+                OnWindowAction(&Target, WindowAction::Minimize);
+            })
         .SetOnSetPosition([this](Window& Target) -> void
             {
                 OnWindowAction(&Target, WindowAction::Position);
@@ -538,6 +542,7 @@ void Application::DestroyWindow(const std::shared_ptr<Window>& Item)
     Item
         ->SetVisible(false)
         .SetOnSetTitle(nullptr)
+        .SetOnMinimize(nullptr)
         .SetOnSetPosition(nullptr)
         .RequestClose(false)
         .Close();
