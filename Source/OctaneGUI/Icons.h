@@ -54,6 +54,7 @@ public:
         Minus,
         Close,
         Minimize,
+        Maximize,
         Max
     };
 

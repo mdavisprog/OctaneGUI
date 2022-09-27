@@ -14,7 +14,8 @@
             {"Type": "Plus", "FileName": "Resources/Plus.svg"},
             {"Type": "Minus", "FileName": "Resources/Minus.svg"},
             {"Type": "Close", "FileName": "Resources/Close.svg"},
-            {"Type": "Minimize", "FileName": "Resources/Minimize.svg"}
+            {"Type": "Minimize", "FileName": "Resources/Minimize.svg"},
+            {"Type": "Maximize", "FileName": "Resources/Maximize.svg"}
         ]
     },
     "Windows": {

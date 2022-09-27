@@ -48,6 +48,7 @@ const char* Icons::ToString(Type InType)
     case Type::Minus: return "Minus";
     case Type::Close: return "Close";
     case Type::Minimize: return "Minimize";
+    case Type::Maximize: return "Maximize";
     default: break;
     }
 
@@ -104,19 +105,19 @@ void Icons::Initialize()
         "    xx                    xx                                                                                                                                    "
         "                                                                                                                                                                "
         "                                                                                                                                                                "
-        "                                                                                                                                                                "
-        "                                                                                                                                                                "
-        "                                                                                                                                                                "
-        "                                                                                                                                                                "
-        "                                                                                                                                                                "
-        "                                                                                                                                                                "
-        "                                                                                                                                                                "
-        "                                                                                                                                                                "
-        "                                                                                                                                                                "
-        "                                                                                                                                                                "
-        "  ............                                                                                                                                                  "
-        "  ............                                                                                                                                                  "
-        "  ............                                                                                                                                                  "
+        "                  ............                                                                                                                                  "
+        "                  ............                                                                                                                                  "
+        "                  ..        ..                                                                                                                                  "
+        "                  ..        ..                                                                                                                                  "
+        "                  ..        ..                                                                                                                                  "
+        "                  ..        ..                                                                                                                                  "
+        "                  ..        ..                                                                                                                                  "
+        "                  ..        ..                                                                                                                                  "
+        "                  ..        ..                                                                                                                                  "
+        "                  ..        ..                                                                                                                                  "
+        "  ............    ..        ..                                                                                                                                  "
+        "  ............    ............                                                                                                                                  "
+        "  ............    ............                                                                                                                                  "
         "                                                                                                                                                                "
         "                                                                                                                                                                ";
 
@@ -159,6 +160,7 @@ void Icons::Initialize()
     m_UVs[(int)Type::Minus] = { 128.0f, 0.0f, 144.0f, 16.0f };
     m_UVs[(int)Type::Close] = { 144.0f, 0.0f, 160.0f, 16.0f };
     m_UVs[(int)Type::Minimize] = { 0.0f, 16.0f, 16.0f, 32.0f };
+    m_UVs[(int)Type::Maximize] = { 16.0f, 16.0f, 32.0f, 32.0f };
 }
 
 void Icons::Initialize(const std::vector<Definition>& Definitions, const Vector2& IconSize)
