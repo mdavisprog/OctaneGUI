@@ -65,12 +65,12 @@ public:
         RightLayout
             ->SetGrow(Grow::Center)
             ->SetExpand(Expand::Height);
-        
+
         const std::shared_ptr<HorizontalContainer> Buttons = RightLayout->AddControl<HorizontalContainer>();
         Buttons
             ->SetGrow(Grow::End)
             ->SetExpand(Expand::Height);
-        
+
         if (GetWindow()->CanMinimize())
         {
             m_Minimize = AddButton(Icons::Type::Minimize, Buttons);
@@ -78,6 +78,16 @@ public:
                 {
                     GetWindow()->Minimize();
                 });
+        }
+
+        if (GetWindow()->IsResizable())
+        {
+            m_Maximize = AddButton(Icons::Type::Maximize, Buttons);
+            m_Maximize->SetOnClicked([this](const Button&) -> void
+                {
+                    GetWindow()->Maximize();
+                });
+            SetMaximized(GetWindow()->IsMaximized());
         }
 
         m_Close = AddButton(Icons::Type::Close, Buttons);
@@ -92,6 +102,20 @@ public:
     TitleBar& SetTitle(const char32_t* Title)
     {
         m_Title->SetText(Title);
+        return *this;
+    }
+
+    TitleBar& SetMaximized(bool Maximized)
+    {
+        if (!m_Maximize)
+        {
+            return *this;
+        }
+
+        const Icons::Type IconType = Maximized ? Icons::Type::Restore : Icons::Type::Maximize;
+        const Rect UVs = GetWindow()->GetIcons()->GetUVs(IconType);
+        m_Maximize->SetUVs(UVs);
+
         return *this;
     }
 
@@ -120,7 +144,7 @@ private:
         Result
             ->SetTexture(GetWindow()->GetIcons()->GetTexture())
             .SetUVs(GetWindow()->GetIcons()->GetUVs(Type))
-            .SetProperty(ThemeProperties::Button, Color{})
+            .SetProperty(ThemeProperties::Button, Color {})
             .SetExpand(Expand::Height);
 
         return Result;
@@ -129,6 +153,7 @@ private:
     std::shared_ptr<Text> m_Title { nullptr };
     std::shared_ptr<BoxContainer> m_Draggable { nullptr };
     std::shared_ptr<ImageButton> m_Minimize { nullptr };
+    std::shared_ptr<ImageButton> m_Maximize { nullptr };
     std::shared_ptr<ImageButton> m_Close { nullptr };
 };
 
@@ -186,6 +211,17 @@ WindowContainer& WindowContainer::SetTitle(const char32_t* Title)
     return *this;
 }
 
+WindowContainer& WindowContainer::SetMaximized(bool Maximized)
+{
+    if (!m_TitleBar)
+    {
+        return *this;
+    }
+
+    m_TitleBar->SetMaximized(Maximized);
+    return *this;
+}
+
 bool WindowContainer::IsInTitleBar(const Vector2& Position) const
 {
     if (!m_TitleBar)
@@ -214,7 +250,7 @@ std::weak_ptr<Control> WindowContainer::GetControl(const Vector2& Point) const
     {
         Result = m_TitleBar->GetControl(Point);
     }
-    
+
     if (Result.expired())
     {
         Result = m_MenuBar->GetControl(Point);

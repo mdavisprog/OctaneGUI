@@ -53,6 +53,7 @@ public:
 
     WindowContainer& ShowTitleBar(bool Show);
     WindowContainer& SetTitle(const char32_t* Title);
+    WindowContainer& SetMaximized(bool Maximized);
 
     bool IsInTitleBar(const Vector2& Position) const;
 
