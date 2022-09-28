@@ -65,6 +65,7 @@ enum Flags
     CanMinimize = 1 << 2,
     Modal = 1 << 3,
     TitleBar = 1 << 4,
+    Maximized = 1 << 5,
 
     Normal = Resizable | HighDPI | CanMinimize | TitleBar,
 };
@@ -89,6 +90,8 @@ public:
 
     void SetSize(Vector2 Size);
     Vector2 GetSize() const;
+
+    Rect RestoreBounds() const;
 
     Window& SetDeviceSize(Vector2 Size);
     Vector2 DeviceSize() const;
@@ -116,6 +119,10 @@ public:
     Window& Minimize();
     Window& SetCanMinimize(bool CanMinimize);
     bool CanMinimize() const;
+
+    Window& Maximize();
+    Window& SetMaximized(bool Maximized);
+    bool IsMaximized() const;
 
     Window& SetCustomTitleBar(bool CustomTitleBar);
     bool CustomTitleBar() const;
@@ -178,6 +185,7 @@ public:
     Window& SetOnSetTitle(OnSetTitleSignature&& Fn);
     Window& SetOnSetPosition(OnWindowSignature&& Fn);
     Window& SetOnMinimize(OnWindowSignature&& Fn);
+    Window& SetOnMaximize(OnWindowSignature&& Fn);
     Window& SetOnClose(OnWindowSignature&& Fn);
     Window& SetOnLayout(OnWindowSignature&& Fn);
 
@@ -207,6 +215,7 @@ private:
     Vector2 m_MousePosition {};
     Mouse::Cursor m_MouseCursor { Mouse::Cursor::Arrow };
     Rect m_Bounds {};
+    Rect m_RestoreBounds {};
     Vector2 m_DeviceSize {};
     Vector2 m_RenderScale { 1.0f, 1.0f };
     std::shared_ptr<WindowContainer> m_Container { nullptr };
@@ -226,6 +235,7 @@ private:
     OnSetTitleSignature m_OnSetTitle { nullptr };
     OnWindowSignature m_OnSetPosition { nullptr };
     OnWindowSignature m_OnMinimize { nullptr };
+    OnWindowSignature m_OnMaximize { nullptr };
     OnWindowSignature m_OnClose { nullptr };
     OnWindowSignature m_OnLayout { nullptr };
 };

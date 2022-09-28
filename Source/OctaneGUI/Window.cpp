@@ -91,7 +91,7 @@ const char* Window::GetTitle() const
 }
 
 Window& Window::SetPosition(Vector2 Position)
-{    
+{
     const Vector2 Size = m_Bounds.GetSize();
     m_Bounds.Min = Position;
     SetSize(Size);
@@ -118,6 +118,11 @@ void Window::SetSize(Vector2 Size)
 Vector2 Window::GetSize() const
 {
     return m_Bounds.Max - m_Bounds.Min;
+}
+
+Rect Window::RestoreBounds() const
+{
+    return m_RestoreBounds;
 }
 
 Window& Window::SetDeviceSize(Vector2 Size)
@@ -251,6 +256,42 @@ Window& Window::SetCanMinimize(bool CanMinimize)
 bool Window::CanMinimize() const
 {
     return m_Flags & WindowFlags::CanMinimize;
+}
+
+Window& Window::Maximize()
+{
+    if (m_OnMaximize)
+    {
+        if (!IsMaximized())
+        {
+            m_RestoreBounds = m_Bounds;
+        }
+
+        m_OnMaximize(*this);
+        SetMaximized(!IsMaximized());
+    }
+
+    return *this;
+}
+
+Window& Window::SetMaximized(bool Maximized)
+{
+    if (Maximized)
+    {
+        SetFlags(WindowFlags::Maximized);
+    }
+    else
+    {
+        UnsetFlags(WindowFlags::Maximized);
+    }
+    m_Container->SetMaximized(Maximized);
+    m_Container->InvalidateLayout();
+    return *this;
+}
+
+bool Window::IsMaximized() const
+{
+    return m_Flags & WindowFlags::Maximized;
 }
 
 Window& Window::SetCustomTitleBar(bool CustomTitleBar)
@@ -645,7 +686,7 @@ void Window::LoadRoot(const Json& Root)
     SetResizable(Root["Resizable"].Boolean(IsResizable()));
     SetCanMinimize(Root["CanMinimize"].Boolean(CanMinimize()));
     SetCustomTitleBar(Root["CustomTitleBar"].Boolean(CustomTitleBar()));
-    
+
     if (Root["Modal"].Boolean(Modal()))
     {
         SetFlags(WindowFlags::Modal);
@@ -741,6 +782,12 @@ Window& Window::SetOnSetPosition(OnWindowSignature&& Fn)
 Window& Window::SetOnMinimize(OnWindowSignature&& Fn)
 {
     m_OnMinimize = std::move(Fn);
+    return *this;
+}
+
+Window& Window::SetOnMaximize(OnWindowSignature&& Fn)
+{
+    m_OnMaximize = std::move(Fn);
     return *this;
 }
 
