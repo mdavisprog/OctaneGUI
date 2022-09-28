@@ -55,6 +55,7 @@ public:
         Close,
         Minimize,
         Maximize,
+        Restore,
         Max
     };
 
