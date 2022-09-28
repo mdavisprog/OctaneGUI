@@ -34,7 +34,7 @@ SOFTWARE.
 #include "Vector2.h"
 
 #if TOOLS
-#include "Tools/Tools.h"
+    #include "Tools/Tools.h"
 #endif
 
 #include <memory>
@@ -62,6 +62,7 @@ enum class WindowAction : uint8_t
     Disable,
     Position,
     Minimize,
+    Maximize,
 };
 
 class Application

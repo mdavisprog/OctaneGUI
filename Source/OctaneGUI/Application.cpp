@@ -335,6 +335,10 @@ bool Application::DisplayWindow(const char* ID)
             {
                 OnWindowAction(&Target, WindowAction::Minimize);
             })
+        .SetOnMaximize([this](Window& Target) -> void
+            {
+                OnWindowAction(&Target, WindowAction::Maximize);
+            })
         .SetOnSetPosition([this](Window& Target) -> void
             {
                 OnWindowAction(&Target, WindowAction::Position);
