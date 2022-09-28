@@ -91,8 +91,10 @@ const char* Window::GetTitle() const
 }
 
 Window& Window::SetPosition(Vector2 Position)
-{
-    m_Position = Position;
+{    
+    const Vector2 Size = m_Bounds.GetSize();
+    m_Bounds.Min = Position;
+    SetSize(Size);
 
     if (m_OnSetPosition)
     {
@@ -103,7 +105,7 @@ Window& Window::SetPosition(Vector2 Position)
 
 Vector2 Window::GetPosition() const
 {
-    return m_Position;
+    return m_Bounds.Min;
 }
 
 void Window::SetSize(Vector2 Size)

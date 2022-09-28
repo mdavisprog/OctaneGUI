@@ -203,7 +203,6 @@ private:
 
     Application* m_Application { nullptr };
     std::string m_Title {};
-    Vector2 m_Position {};
     std::string m_ID {};
     Vector2 m_MousePosition {};
     Mouse::Cursor m_MouseCursor { Mouse::Cursor::Arrow };
