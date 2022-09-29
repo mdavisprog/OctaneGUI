@@ -31,6 +31,10 @@ SOFTWARE.
 #include <memory>
 #include <unordered_map>
 
+#if defined(WINDOWS)
+    #include "../Windows/Windowing.h"
+#endif
+
 namespace Frontend
 {
 namespace Windowing
@@ -201,6 +205,26 @@ void MinimizeWindow(OctaneGUI::Window* Window)
     }
 
     Minimize((void*)g_Windows[Window]->getSystemHandle());
+}
+
+void MaximizeWindow(OctaneGUI::Window* Window)
+{
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        return;
+    }
+
+#if defined(WINDOWS)
+    void* Handle = g_Windows[Window]->getSystemHandle();
+    if (Window->IsMaximized())
+    {
+        Windows::RestoreWindow(Handle);
+    }
+    else
+    {
+        Windows::MaximizeWindow(Handle);
+    }
+#endif
 }
 
 void ToggleWindow(OctaneGUI::Window* Window, bool Enable)

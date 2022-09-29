@@ -74,6 +74,12 @@ void OnWindowAction(OctaneGUI::Window* Window, OctaneGUI::WindowAction Action)
     }
     break;
 
+    case OctaneGUI::WindowAction::Maximize:
+    {
+        Windowing::MaximizeWindow(Window);
+    }
+    break;
+
     default: break;
     }
 }

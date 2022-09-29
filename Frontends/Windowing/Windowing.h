@@ -68,6 +68,7 @@ void NewWindow(OctaneGUI::Window* Window);
 void DestroyWindow(OctaneGUI::Window* Window);
 void RaiseWindow(OctaneGUI::Window* Window);
 void MinimizeWindow(OctaneGUI::Window* Window);
+void MaximizeWindow(OctaneGUI::Window* Window);
 void ToggleWindow(OctaneGUI::Window* Window, bool Enable);
 void NewFrame();
 OctaneGUI::Event Event(OctaneGUI::Window* Window);

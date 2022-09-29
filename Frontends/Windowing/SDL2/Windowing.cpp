@@ -34,6 +34,10 @@ SOFTWARE.
 // these enum entries. 'None' define is not used in this file so ignore for now.
 #undef None
 
+#if defined(WINDOWS)
+    #include "../Windows/Windowing.h"
+#endif
+
 #include <unordered_map>
 
 namespace Frontend
@@ -261,6 +265,7 @@ OctaneGUI::Event HandleEvent(SDL_Event& Event, const uint32_t WindowID, bool IsP
             OctaneGUI::Event::Type::WindowLeave);
         }
     }
+    break;
 
     default: break;
     }
@@ -410,6 +415,49 @@ void MinimizeWindow(OctaneGUI::Window* Window)
     SDL_MinimizeWindow(g_Windows[Window]);
 }
 
+void MaximizeWindow(OctaneGUI::Window* Window)
+{
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        return;
+    }
+
+#if defined(WINDOWS)
+    // SDL on Windows does not properly maximize the window either through the SDL_MaximizeWindow API or the
+    // ShowWindow(HWND, SW_MAXIMIZE) Win32 API. This will be managed manually if using a borderless window.
+    SDL_Window* Instance = g_Windows[Window];
+    if (!(SDL_GetWindowFlags(Instance) & SDL_WINDOW_BORDERLESS))
+    {
+        return;
+    }
+
+    OctaneGUI::Rect Area {};
+    if (Window->IsMaximized())
+    {
+        Area = Window->RestoreBounds();
+    }
+    else
+    {
+        Area = Windows::GetWorkingArea(NativeHandle(g_Windows[Window]));
+    }
+
+    SDL_SetWindowPosition(g_Windows[Window], (int)Area.Min.X, (int)Area.Min.Y);
+    SDL_SetWindowSize(g_Windows[Window], (int)Area.Width(), (int)Area.Height());
+
+    Window->SetPosition(Area.Min);
+    Window->SetSize({ Area.Width(), Area.Height() });
+#else
+    if (Window->IsMaximized())
+    {
+        SDL_RestoreWindow(g_Windows[Window]);
+    }
+    else
+    {
+        SDL_MaximizeWindow(g_Windows[Window]);
+    }
+#endif
+}
+
 void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
 {
     if (g_Windows.find(Window) == g_Windows.end())
@@ -522,7 +570,6 @@ void SetWindowPosition(OctaneGUI::Window* Window)
     }
 
     SDL_SetWindowPosition(g_Windows[Window], (int)Window->GetPosition().X, (int)Window->GetPosition().Y);
-    SDL_SetWindowSize(g_Windows[Window], (int)Window->GetSize().X, (int)Window->GetSize().Y);
 }
 
 void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor)

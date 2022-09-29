@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "../Windowing.h"
 #include "OctaneGUI/OctaneGUI.h"
+#include "Windowing.h"
 
 #include <climits>
 #define WIN32_LEAN_AND_MEAN
@@ -209,6 +210,33 @@ std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<Octa
     }
 
     return Result;
+}
+
+namespace Windows
+{
+
+OctaneGUI::Rect GetWorkingArea(void* Handle)
+{
+    HWND WinHandle = (HWND)Handle;
+    HMONITOR Monitor = MonitorFromWindow(WinHandle, MONITOR_DEFAULTTONEAREST);
+    MONITORINFO Info {};
+    Info.cbSize = sizeof(MONITORINFO);
+    GetMonitorInfo(Monitor, &Info);
+    return { (float)Info.rcWork.left, (float)Info.rcWork.top, (float)Info.rcWork.right, (float)Info.rcWork.bottom};
+}
+
+void MaximizeWindow(void* Handle)
+{
+    HWND WinHandle = (HWND)Handle;
+    ShowWindow(WinHandle, SW_MAXIMIZE);
+}
+
+void RestoreWindow(void* Handle)
+{
+    HWND WinHandle = (HWND)Handle;
+    ShowWindow(WinHandle, SW_NORMAL);
+}
+
 }
 
 }
