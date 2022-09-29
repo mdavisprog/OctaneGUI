@@ -36,6 +36,8 @@ SOFTWARE.
 
 #if defined(WINDOWS)
     #include "../Windows/Windowing.h"
+#elif defined(APPLE)
+    #include "../Mac/Windowing.h"
 #endif
 
 #include <unordered_map>
@@ -330,7 +332,14 @@ void NewWindow(OctaneGUI::Window* Window)
 
         if (Window->CustomTitleBar())
         {
+#if defined(APPLE)
+            if (Window->IsResizable())
+            {
+                Flags |= SDL_WINDOW_RESIZABLE;
+            }
+#else
             Flags |= SDL_WINDOW_BORDERLESS;
+#endif
         }
         else
         {
@@ -377,6 +386,13 @@ void NewWindow(OctaneGUI::Window* Window)
         Window->SetPosition({ (float)X, (float)Y });
 
         SDL_SetWindowHitTest(Instance, (SDL_HitTest)OnHitTest, nullptr);
+
+#if defined(APPLE)
+        if (Window->CustomTitleBar())
+        {
+            Mac::HideTitleBar(NativeHandle(Instance));
+        }
+#endif
 
         g_Windows[Window] = Instance;
     }

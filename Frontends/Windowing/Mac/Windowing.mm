@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "../Windowing.h"
 #include "OctaneGUI/OctaneGUI.h"
+#include "Windowing.h"
 
 #import <Cocoa/Cocoa.h>
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
@@ -106,6 +107,24 @@ std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<Octa
 	[KeyWindow makeKeyWindow];
 
 	return OctaneGUI::String::ToUTF32(Result);
+}
+
+namespace Mac
+{
+
+void HideTitleBar(void* Handle)
+{
+	NSWindow* Window = (NSWindow*)Handle;
+	Window.titleVisibility = NSWindowTitleHidden;
+	Window.titlebarAppearsTransparent = YES;
+	Window.movableByWindowBackground = YES;
+	Window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+
+	[[Window standardWindowButton:NSWindowCloseButton] setHidden:YES];
+	[[Window standardWindowButton:NSWindowMiniaturizeButton] setHidden:YES];
+	[[Window standardWindowButton:NSWindowZoomButton] setHidden:YES];
+}
+
 }
 
 }
