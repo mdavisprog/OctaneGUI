@@ -332,21 +332,14 @@ void NewWindow(OctaneGUI::Window* Window)
 
         if (Window->CustomTitleBar())
         {
-#if defined(APPLE)
-            if (Window->IsResizable())
-            {
-                Flags |= SDL_WINDOW_RESIZABLE;
-            }
-#else
+#if !defined(APPLE)
             Flags |= SDL_WINDOW_BORDERLESS;
 #endif
         }
-        else
+
+        if (Window->IsResizable())
         {
-            if (Window->IsResizable())
-            {
-                Flags |= SDL_WINDOW_RESIZABLE;
-            }
+            Flags |= SDL_WINDOW_RESIZABLE;
         }
 
 #if OPENGL
