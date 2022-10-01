@@ -185,6 +185,10 @@ Window& Window::SetVisible(bool Visible)
 {
     m_Visible = Visible;
     m_Repaint = Visible;
+    if (m_Visible)
+    {
+        SetCustomTitleBar(CustomTitleBar());
+    }
     return *this;
 }
 
@@ -305,7 +309,10 @@ Window& Window::SetCustomTitleBar(bool CustomTitleBar)
         SetFlags(WindowFlags::TitleBar);
     }
 
-    if (m_Container)
+    // Icons are not loaded until after the initial window is created. The CustomTitleBar property can be set during
+    // loading which can occur before these icons are loaded. Another attempt to set the custom title bar will be
+    // done when the window visibility is set to true.
+    if (m_Container && GetIcons() != nullptr)
     {
         m_Container->ShowTitleBar(CustomTitleBar);
     }
