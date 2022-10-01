@@ -1,7 +1,7 @@
 # OctaneGUI
-Latest update: [August 2022](https://github.com/mdavisprog/OctaneGUI/wiki/August22)
+Latest update: [September 2022](https://github.com/mdavisprog/OctaneGUI/wiki/September22)
 
-<img src=https://github.com/mdavisprog/OctaneGUI/wiki/Images/August22/Overview_Classic.png width=50%>
+<img src=https://github.com/mdavisprog/OctaneGUI/wiki/Images/September22/Window_High_Res.png width=50%>
 
 ![Inspector](https://github.com/mdavisprog/OctaneGUI/wiki/Images/May22/Inspector.gif)
 
