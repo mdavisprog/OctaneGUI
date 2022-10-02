@@ -475,7 +475,10 @@ void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
     }
 
     void* Handle = NativeHandle(g_Windows[Window]);
-    Windowing::SetEnabled(Handle, Enable);
+
+#if defined(WINDOWS)
+    Windows::SetEnabled(Handle, Enable);
+#endif
 
     if (Enable)
     {

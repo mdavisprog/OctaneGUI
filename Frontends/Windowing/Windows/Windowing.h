@@ -43,6 +43,7 @@ namespace Windows
 OctaneGUI::Rect GetWorkingArea(void* Handle);
 void MaximizeWindow(void* Handle);
 void RestoreWindow(void* Handle);
+void SetEnabled(void* Handle, bool Enabled);
 
 }
 }

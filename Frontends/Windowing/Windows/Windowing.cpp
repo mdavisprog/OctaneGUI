@@ -95,12 +95,6 @@ void RegisterWndProc(HWND Handle)
     }
 }
 
-void SetEnabled(void* Handle, bool Enabled)
-{
-    HWND WinHandle = (HWND)Handle;
-    EnableWindow(WinHandle, Enabled ? TRUE : FALSE);
-}
-
 void SetAlwaysOnTop(void* Handle)
 {
     HWND WinHandle = (HWND)Handle;
@@ -231,6 +225,12 @@ void RestoreWindow(void* Handle)
 {
     HWND WinHandle = (HWND)Handle;
     ShowWindow(WinHandle, SW_NORMAL);
+}
+
+void SetEnabled(void* Handle, bool Enabled)
+{
+    HWND WinHandle = (HWND)Handle;
+    EnableWindow(WinHandle, Enabled ? TRUE : FALSE);
 }
 
 }

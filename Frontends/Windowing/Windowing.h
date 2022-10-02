@@ -79,7 +79,6 @@ void SetWindowTitle(OctaneGUI::Window* Window, const char* Title);
 void SetWindowPosition(OctaneGUI::Window* Window);
 void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor);
 
-void SetEnabled(void* Handle, bool Enabled);
 void SetAlwaysOnTop(void* Handle);
 void ShowMinimize(void* Handle, bool Show);
 void Minimize(void* Handle);

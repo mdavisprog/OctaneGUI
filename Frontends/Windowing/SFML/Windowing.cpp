@@ -235,7 +235,10 @@ void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
     }
 
     const std::shared_ptr<sf::RenderWindow>& RenderWindow = g_Windows[Window];
-    Windowing::SetEnabled((void*)RenderWindow->getSystemHandle(), Enable);
+
+#if defined(WINDOWS)
+    Windows::SetEnabled((void*)RenderWindow->getSystemHandle(), Enable);
+#endif
 
     if (Enable)
     {
