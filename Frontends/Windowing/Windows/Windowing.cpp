@@ -95,12 +95,6 @@ void RegisterWndProc(HWND Handle)
     }
 }
 
-void SetAlwaysOnTop(void* Handle)
-{
-    HWND WinHandle = (HWND)Handle;
-    SetWindowPos(WinHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-}
-
 void ShowMinimize(void* Handle, bool Show)
 {
     HWND WinHandle = (HWND)Handle;
@@ -231,6 +225,12 @@ void SetEnabled(void* Handle, bool Enabled)
 {
     HWND WinHandle = (HWND)Handle;
     EnableWindow(WinHandle, Enabled ? TRUE : FALSE);
+}
+
+void SetAlwaysOnTop(void* Handle)
+{
+    HWND WinHandle = (HWND)Handle;
+    SetWindowPos(WinHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 }
 
 }

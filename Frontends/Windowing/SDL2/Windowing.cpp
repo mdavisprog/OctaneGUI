@@ -364,7 +364,9 @@ void NewWindow(OctaneGUI::Window* Window)
                 SDL_SetWindowModalFor(Instance, g_Windows[Main]);
             }
 
-            SetAlwaysOnTop(NativeHandle(Instance));
+#if defined(WINDOWS)
+            Windows::SetAlwaysOnTop(NativeHandle(Instance));
+#endif
         }
 
         ShowMinimize(NativeHandle(Instance), Window->CanMinimize());

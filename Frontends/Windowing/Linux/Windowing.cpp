@@ -31,10 +31,6 @@ namespace Frontend
 namespace Windowing
 {
 
-void SetAlwaysOnTop(void* Handle)
-{
-}
-
 void ShowMinimize(void* Handle, bool Show)
 {
 }

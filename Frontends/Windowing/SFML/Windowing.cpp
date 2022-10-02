@@ -144,10 +144,12 @@ void NewWindow(OctaneGUI::Window* Window)
         RenderWindow->setVerticalSyncEnabled(false);
         g_Windows[Window] = std::shared_ptr<sf::RenderWindow>(RenderWindow);
 
+#if defined(WINDOWS)
         if (Window->Modal())
         {
-            SetAlwaysOnTop((void*)RenderWindow->getSystemHandle());
+            Windows::SetAlwaysOnTop((void*)RenderWindow->getSystemHandle());
         }
+#endif
 
         ShowMinimize((void*)RenderWindow->getSystemHandle(), Window->CanMinimize());
 
