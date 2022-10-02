@@ -45,6 +45,7 @@ void MaximizeWindow(void* Handle);
 void RestoreWindow(void* Handle);
 void SetEnabled(void* Handle, bool Enabled);
 void SetAlwaysOnTop(void* Handle);
+void ShowMinimize(void* Handle, bool Show);
 
 }
 }

@@ -369,7 +369,11 @@ void NewWindow(OctaneGUI::Window* Window)
 #endif
         }
 
-        ShowMinimize(NativeHandle(Instance), Window->CanMinimize());
+#if defined(WINDOWS)
+        Windows::ShowMinimize(NativeHandle(Instance), Window->CanMinimize());
+#elif defined(APPLE)
+        Mac::ShowMinimize(NatvieHandle(Instance), Window->CanMinimize());
+#endif
 
         const int DisplayIndex = SDL_GetWindowDisplayIndex(Instance);
         SDL_DisplayMode DisplayMode {};

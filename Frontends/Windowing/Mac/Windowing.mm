@@ -36,13 +36,6 @@ namespace Frontend
 namespace Windowing
 {
 
-void ShowMinimize(void* Handle, bool Show)
-{
-	NSWindow* Window = (NSWindow*)Handle;
-	NSButton* Minimize = [Window standardWindowButton:NSWindowMiniaturizeButton];
-	[Minimize setHidden:Show ? NO : YES];
-}
-
 void Focus(void* Handle)
 {
 }
@@ -115,6 +108,13 @@ void HideTitleBar(void* Handle)
 	[[Window standardWindowButton:NSWindowCloseButton] setHidden:YES];
 	[[Window standardWindowButton:NSWindowMiniaturizeButton] setHidden:YES];
 	[[Window standardWindowButton:NSWindowZoomButton] setHidden:YES];
+}
+
+void ShowMinimize(void* Handle, bool Show)
+{
+	NSWindow* Window = (NSWindow*)Handle;
+	NSButton* Minimize = [Window standardWindowButton:NSWindowMiniaturizeButton];
+	[Minimize setHidden:Show ? NO : YES];
 }
 
 }

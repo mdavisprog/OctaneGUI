@@ -149,9 +149,9 @@ void NewWindow(OctaneGUI::Window* Window)
         {
             Windows::SetAlwaysOnTop((void*)RenderWindow->getSystemHandle());
         }
-#endif
 
-        ShowMinimize((void*)RenderWindow->getSystemHandle(), Window->CanMinimize());
+        Windows::ShowMinimize((void*)RenderWindow->getSystemHandle(), Window->CanMinimize());
+#endif
 
         sf::VideoMode Desktop = sf::VideoMode::getDesktopMode();
         Window->SetDeviceSize({ (float)Desktop.width, (float)Desktop.height });
