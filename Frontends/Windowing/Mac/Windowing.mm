@@ -36,11 +36,7 @@ namespace Frontend
 namespace Windowing
 {
 
-void SetMovable(void* Handle, bool Movable)
-{
-	NSWindow* Window = (NSWindow*)Handle;
-	Window.movable = Movable ? YES : NO;
-}
+
 
 void SetEnabled(void* Handle, bool Enabled)
 {
@@ -111,6 +107,12 @@ std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<Octa
 
 namespace Mac
 {
+
+void SetMovable(void* Handle, bool Movable)
+{
+	NSWindow* Window = (NSWindow*)Handle;
+	Window.movable = Movable ? YES : NO;
+}
 
 void HideTitleBar(void* Handle)
 {

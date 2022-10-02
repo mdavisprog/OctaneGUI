@@ -95,10 +95,6 @@ void RegisterWndProc(HWND Handle)
     }
 }
 
-void SetMovable(void* Handle, bool Movable)
-{
-}
-
 void SetEnabled(void* Handle, bool Enabled)
 {
     HWND WinHandle = (HWND)Handle;

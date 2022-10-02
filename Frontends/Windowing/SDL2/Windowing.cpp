@@ -482,7 +482,9 @@ void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
         RaiseWindow(Window);
     }
 
-    Windowing::SetMovable(Handle, Enable);
+#if defined(APPLE)
+    Mac::SetMovable(Handle, Enable);
+#endif
 }
 
 void NewFrame()

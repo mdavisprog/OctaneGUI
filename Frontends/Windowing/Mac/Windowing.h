@@ -33,6 +33,7 @@ namespace Windowing
 namespace Mac
 {
 
+void SetMovable(void* Handle, bool Movable);
 void HideTitleBar(void* Handle);
 
 }
