@@ -95,12 +95,6 @@ void RegisterWndProc(HWND Handle)
     }
 }
 
-void Minimize(void* Handle)
-{
-    HWND WinHandle = (HWND)Handle;
-    ShowWindow(WinHandle, SW_MINIMIZE);
-}
-
 void SetOnHitTest(void* Handle, OnHitTestSignature&& Fn)
 {
     HWND WinHandle = (HWND)Handle;
@@ -199,6 +193,12 @@ OctaneGUI::Rect GetWorkingArea(void* Handle)
     Info.cbSize = sizeof(MONITORINFO);
     GetMonitorInfo(Monitor, &Info);
     return { (float)Info.rcWork.left, (float)Info.rcWork.top, (float)Info.rcWork.right, (float)Info.rcWork.bottom};
+}
+
+void MinimizeWindow(void* Handle)
+{
+    HWND WinHandle = (HWND)Handle;
+    ShowWindow(WinHandle, SW_MINIMIZE);
 }
 
 void MaximizeWindow(void* Handle)

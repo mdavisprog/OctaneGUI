@@ -206,7 +206,9 @@ void MinimizeWindow(OctaneGUI::Window* Window)
         return;
     }
 
-    Minimize((void*)g_Windows[Window]->getSystemHandle());
+#if defined(WINDOWS)
+    Windows::MinimizeWindow((void*)g_Windows[Window]->getSystemHandle());
+#endif
 }
 
 void MaximizeWindow(OctaneGUI::Window* Window)
