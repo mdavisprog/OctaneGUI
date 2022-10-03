@@ -39,69 +39,6 @@ namespace Frontend
 namespace Windowing
 {
 
-OnHitTestSignature OnHitTest { nullptr };
-LONG_PTR OriginalEvent { 0 };
-
-LRESULT CALLBACK OnEvent(HWND Handle, UINT Message, WPARAM WParam, LPARAM LParam)
-{
-    switch (Message)
-    {
-    case WM_NCHITTEST:
-    {
-        POINT Point { GET_X_LPARAM(LParam), GET_Y_LPARAM(LParam) };
-        if (ScreenToClient(Handle, &Point))
-        {
-            if (OnHitTest != nullptr)
-            {
-                HitTestResult Result = OnHitTest((void*)Handle, { (float)Point.x, (float)Point.y });
-                switch (Result)
-                {
-                case HitTestResult::Draggable: return HTCAPTION;
-                case HitTestResult::TopLeft: return HTTOPLEFT;
-                case HitTestResult::Top: return HTTOP;
-                case HitTestResult::TopRight: return HTTOPRIGHT;
-                case HitTestResult::Right: return HTRIGHT;
-                case HitTestResult::BottomRight: return HTBOTTOMRIGHT;
-                case HitTestResult::Bottom: return HTBOTTOM;
-                case HitTestResult::BottomLeft: return HTBOTTOMLEFT;
-                case HitTestResult::Left: return HTLEFT;
-                case HitTestResult::Normal:
-                default: break;
-                }
-            }
-
-            return HTCLIENT;
-        }
-    }
-    break;
-
-    default: break;
-    }
-
-    if (OriginalEvent != 0)
-    {
-        return CallWindowProc(reinterpret_cast<WNDPROC>(OriginalEvent), Handle, Message, WParam, LParam);
-    }
-
-    return DefWindowProc(Handle, Message, WParam, LParam);
-}
-
-void RegisterWndProc(HWND Handle)
-{
-    LONG_PTR Proc = GetWindowLongPtr(Handle, GWLP_WNDPROC);
-    if (reinterpret_cast<WNDPROC>(Proc) != OnEvent)
-    {
-        OriginalEvent = SetWindowLongPtr(Handle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&OnEvent));
-    }
-}
-
-void SetOnHitTest(void* Handle, OnHitTestSignature&& Fn)
-{
-    HWND WinHandle = (HWND)Handle;
-    RegisterWndProc(WinHandle);
-    OnHitTest = std::move(Fn);
-}
-
 void Focus(void* Handle)
 {
     HWND WinHandle = (HWND)Handle;
@@ -184,6 +121,69 @@ std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<Octa
 
 namespace Windows
 {
+
+OnHitTestSignature OnHitTest { nullptr };
+LONG_PTR OriginalEvent { 0 };
+
+LRESULT CALLBACK OnEvent(HWND Handle, UINT Message, WPARAM WParam, LPARAM LParam)
+{
+    switch (Message)
+    {
+    case WM_NCHITTEST:
+    {
+        POINT Point { GET_X_LPARAM(LParam), GET_Y_LPARAM(LParam) };
+        if (ScreenToClient(Handle, &Point))
+        {
+            if (OnHitTest != nullptr)
+            {
+                HitTestResult Result = OnHitTest((void*)Handle, { (float)Point.x, (float)Point.y });
+                switch (Result)
+                {
+                case HitTestResult::Draggable: return HTCAPTION;
+                case HitTestResult::TopLeft: return HTTOPLEFT;
+                case HitTestResult::Top: return HTTOP;
+                case HitTestResult::TopRight: return HTTOPRIGHT;
+                case HitTestResult::Right: return HTRIGHT;
+                case HitTestResult::BottomRight: return HTBOTTOMRIGHT;
+                case HitTestResult::Bottom: return HTBOTTOM;
+                case HitTestResult::BottomLeft: return HTBOTTOMLEFT;
+                case HitTestResult::Left: return HTLEFT;
+                case HitTestResult::Normal:
+                default: break;
+                }
+            }
+
+            return HTCLIENT;
+        }
+    }
+    break;
+
+    default: break;
+    }
+
+    if (OriginalEvent != 0)
+    {
+        return CallWindowProc(reinterpret_cast<WNDPROC>(OriginalEvent), Handle, Message, WParam, LParam);
+    }
+
+    return DefWindowProc(Handle, Message, WParam, LParam);
+}
+
+void RegisterWndProc(HWND Handle)
+{
+    LONG_PTR Proc = GetWindowLongPtr(Handle, GWLP_WNDPROC);
+    if (reinterpret_cast<WNDPROC>(Proc) != OnEvent)
+    {
+        OriginalEvent = SetWindowLongPtr(Handle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&OnEvent));
+    }
+}
+
+void SetOnHitTest(void* Handle, OnHitTestSignature&& Fn)
+{
+    HWND WinHandle = (HWND)Handle;
+    RegisterWndProc(WinHandle);
+    OnHitTest = std::move(Fn);
+}
 
 OctaneGUI::Rect GetWorkingArea(void* Handle)
 {

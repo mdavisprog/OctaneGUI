@@ -157,7 +157,8 @@ void NewWindow(OctaneGUI::Window* Window)
         Window->SetDeviceSize({ (float)Desktop.width, (float)Desktop.height });
         Window->SetPosition({ (float)RenderWindow->getPosition().x, (float)RenderWindow->getPosition().y });
 
-        SetOnHitTest((void*)RenderWindow->getSystemHandle(), [](void* Handle, const OctaneGUI::Vector2& Point) -> HitTestResult
+#if defined(WINDOWS)
+        Windows::SetOnHitTest((void*)RenderWindow->getSystemHandle(), [](void* Handle, const OctaneGUI::Vector2& Point) -> HitTestResult
             {
                 HitTestResult Result = HitTestResult::Normal;
 
@@ -175,6 +176,7 @@ void NewWindow(OctaneGUI::Window* Window)
 
                 return Result;
             });
+#endif
     }
 }
 

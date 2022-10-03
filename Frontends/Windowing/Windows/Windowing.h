@@ -47,6 +47,7 @@ void RestoreWindow(void* Handle);
 void SetEnabled(void* Handle, bool Enabled);
 void SetAlwaysOnTop(void* Handle);
 void ShowMinimize(void* Handle, bool Show);
+void SetOnHitTest(void* Handle, OnHitTestSignature&& Fn);
 
 }
 }

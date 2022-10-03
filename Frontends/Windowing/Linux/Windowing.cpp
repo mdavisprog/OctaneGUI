@@ -31,10 +31,6 @@ namespace Frontend
 namespace Windowing
 {
 
-void SetOnHitTest(void* Handle, OnHitTestSignature&& Fn)
-{
-}
-
 void Focus(void* Handle)
 {
 }
