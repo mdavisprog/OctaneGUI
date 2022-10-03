@@ -108,6 +108,14 @@ Vector2 Window::GetPosition() const
     return m_Bounds.Min;
 }
 
+Window& Window::SyncPosition(const Vector2& Position)
+{
+    const Vector2 Size = m_Bounds.GetSize();
+    m_Bounds.Min = Position;
+    m_Bounds.Max = m_Bounds.Min + Size;
+    return *this;
+}
+
 void Window::SetSize(Vector2 Size)
 {
     m_Bounds.Max = m_Bounds.Min + Size;

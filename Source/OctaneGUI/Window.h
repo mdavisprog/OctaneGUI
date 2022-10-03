@@ -86,7 +86,12 @@ public:
     const char* GetTitle() const;
 
     Window& SetPosition(Vector2 Position);
+    Window& SetPositionBoundsOnly(const Vector2& Position);
     Vector2 GetPosition() const;
+
+    // This function is meant to sync the position from what is reported from the Frontend.
+    // The m_Bounds member is updated and no callback is invoked when syncing occurs.
+    Window& SyncPosition(const Vector2& Position);
 
     void SetSize(Vector2 Size);
     Vector2 GetSize() const;
