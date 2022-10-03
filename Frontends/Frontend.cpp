@@ -29,6 +29,12 @@ SOFTWARE.
 #include "Rendering/Rendering.h"
 #include "Windowing/Windowing.h"
 
+#if defined(WINDOWS)
+    #include "Windowing/Windows/Windowing.h"
+#elif defined(APPLE)
+    #include "Windowing/Mac/Windowing.h"
+#endif
+
 namespace Frontend
 {
 void OnWindowAction(OctaneGUI::Window* Window, OctaneGUI::WindowAction Action)
@@ -132,7 +138,13 @@ void OnSetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor
 
 std::u32string OnFileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters)
 {
-    return Windowing::FileDialog(Type, Filters, nullptr);
+#if defined(WINDOWS)
+    return Windowing::Windows::FileDialog(Type, Filters, nullptr);
+#elif defined(APPLE)
+    return Windowing::Mac::FileDialog(Type, Filters, nullptr);
+#else
+    return U"";
+#endif
 }
 
 void Initialize(OctaneGUI::Application& Application)

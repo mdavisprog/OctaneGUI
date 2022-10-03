@@ -49,6 +49,7 @@ void SetEnabled(void* Handle, bool Enabled);
 void SetAlwaysOnTop(void* Handle);
 void ShowMinimize(void* Handle, bool Show);
 void SetOnHitTest(void* Handle, OnHitTestSignature&& Fn);
+std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters, void* Handle);
 
 }
 }

@@ -79,7 +79,5 @@ void SetWindowTitle(OctaneGUI::Window* Window, const char* Title);
 void SetWindowPosition(OctaneGUI::Window* Window);
 void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor);
 
-std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters, void* Handle);
-
 }
 }

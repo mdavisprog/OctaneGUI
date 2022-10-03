@@ -36,6 +36,35 @@ namespace Frontend
 namespace Windowing
 {
 
+namespace Mac
+{
+
+void SetMovable(void* Handle, bool Movable)
+{
+	NSWindow* Window = (NSWindow*)Handle;
+	Window.movable = Movable ? YES : NO;
+}
+
+void HideTitleBar(void* Handle)
+{
+	NSWindow* Window = (NSWindow*)Handle;
+	Window.titleVisibility = NSWindowTitleHidden;
+	Window.titlebarAppearsTransparent = YES;
+	Window.movableByWindowBackground = YES;
+	Window.styleMask |= NSWindowStyleMaskFullSizeContentView;
+
+	[[Window standardWindowButton:NSWindowCloseButton] setHidden:YES];
+	[[Window standardWindowButton:NSWindowMiniaturizeButton] setHidden:YES];
+	[[Window standardWindowButton:NSWindowZoomButton] setHidden:YES];
+}
+
+void ShowMinimize(void* Handle, bool Show)
+{
+	NSWindow* Window = (NSWindow*)Handle;
+	NSButton* Minimize = [Window standardWindowButton:NSWindowMiniaturizeButton];
+	[Minimize setHidden:Show ? NO : YES];
+}
+
 std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters, void* Handle)
 {
 	NSString* Title = Type == OctaneGUI::FileDialogType::Open
@@ -82,35 +111,6 @@ std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<Octa
 	[KeyWindow makeKeyWindow];
 
 	return OctaneGUI::String::ToUTF32(Result);
-}
-
-namespace Mac
-{
-
-void SetMovable(void* Handle, bool Movable)
-{
-	NSWindow* Window = (NSWindow*)Handle;
-	Window.movable = Movable ? YES : NO;
-}
-
-void HideTitleBar(void* Handle)
-{
-	NSWindow* Window = (NSWindow*)Handle;
-	Window.titleVisibility = NSWindowTitleHidden;
-	Window.titlebarAppearsTransparent = YES;
-	Window.movableByWindowBackground = YES;
-	Window.styleMask |= NSWindowStyleMaskFullSizeContentView;
-
-	[[Window standardWindowButton:NSWindowCloseButton] setHidden:YES];
-	[[Window standardWindowButton:NSWindowMiniaturizeButton] setHidden:YES];
-	[[Window standardWindowButton:NSWindowZoomButton] setHidden:YES];
-}
-
-void ShowMinimize(void* Handle, bool Show)
-{
-	NSWindow* Window = (NSWindow*)Handle;
-	NSButton* Minimize = [Window standardWindowButton:NSWindowMiniaturizeButton];
-	[Minimize setHidden:Show ? NO : YES];
 }
 
 }
