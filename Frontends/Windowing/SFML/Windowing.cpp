@@ -244,12 +244,12 @@ void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
 
 #if defined(WINDOWS)
     Windows::SetEnabled((void*)RenderWindow->getSystemHandle(), Enable);
-#endif
 
     if (Enable)
     {
-        Windowing::Focus((void*)RenderWindow->getSystemHandle());
+        Windows::FocusWindow((void*)RenderWindow->getSystemHandle());
     }
+#endif
 }
 
 void NewFrame()

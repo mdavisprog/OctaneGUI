@@ -41,6 +41,7 @@ namespace Windows
 {
 
 OctaneGUI::Rect GetWorkingArea(void* Handle);
+void FocusWindow(void* Handle);
 void MinimizeWindow(void* Handle);
 void MaximizeWindow(void* Handle);
 void RestoreWindow(void* Handle);

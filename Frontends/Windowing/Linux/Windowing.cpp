@@ -31,10 +31,6 @@ namespace Frontend
 namespace Windowing
 {
 
-void Focus(void* Handle)
-{
-}
-
 std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters, void* Handle)
 {
     return U"";

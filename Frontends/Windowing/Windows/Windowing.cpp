@@ -39,12 +39,6 @@ namespace Frontend
 namespace Windowing
 {
 
-void Focus(void* Handle)
-{
-    HWND WinHandle = (HWND)Handle;
-    SetFocus(WinHandle);
-}
-
 std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters, void* Handle)
 {
     HWND WinHandle = (HWND)Handle;
@@ -193,6 +187,12 @@ OctaneGUI::Rect GetWorkingArea(void* Handle)
     Info.cbSize = sizeof(MONITORINFO);
     GetMonitorInfo(Monitor, &Info);
     return { (float)Info.rcWork.left, (float)Info.rcWork.top, (float)Info.rcWork.right, (float)Info.rcWork.bottom};
+}
+
+void FocusWindow(void* Handle)
+{
+    HWND WinHandle = (HWND)Handle;
+    SetFocus(WinHandle);
 }
 
 void MinimizeWindow(void* Handle)
