@@ -44,6 +44,7 @@ const char* ToString(Event::Type InType)
     case Event::Type::WindowResized: return "WindowResized";
     case Event::Type::WindowEnter: return "WindowEnter";
     case Event::Type::WindowLeave: return "WindowLeave";
+    case Event::Type::WindowMoved: return "WindowMoved";
     case Event::Type::None:
     default: break;
     }
@@ -96,6 +97,12 @@ Event::Event(const WindowResized& InResized)
     : m_Type(Type::WindowResized)
 {
     m_Data.m_Resized = InResized;
+}
+
+Event::Event(const WindowMoved& InMoved)
+    : m_Type(Type::WindowMoved)
+{
+    m_Data.m_Moved = InMoved;
 }
 
 Event::~Event()

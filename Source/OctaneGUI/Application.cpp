@@ -685,6 +685,10 @@ int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
     case Event::Type::WindowLeave:
         Item->OnMouseLeave();
         break;
+    
+    case Event::Type::WindowMoved:
+        Item->SyncPosition(E.GetData().m_Moved.m_Position);
+        break;
 
     case Event::Type::None:
     default: Processed--; break;

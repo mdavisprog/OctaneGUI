@@ -52,6 +52,7 @@ public:
         WindowResized,
         WindowEnter,
         WindowLeave,
+        WindowMoved,
     };
 
     struct Key
@@ -133,6 +134,17 @@ public:
         Vector2 m_Size;
     };
 
+    struct WindowMoved
+    {
+    public:
+        WindowMoved(const Vector2& Position)
+            : m_Position(Position)
+        {
+        }
+
+        Vector2 m_Position {};
+    };
+
     union Data
     {
         Data();
@@ -143,6 +155,7 @@ public:
         MouseWheel m_MouseWheel;
         Text m_Text;
         WindowResized m_Resized;
+        WindowMoved m_Moved;
     };
 
     Event(Type InType);
@@ -151,6 +164,7 @@ public:
     Event(Type InType, const MouseButton& InMouseButton);
     Event(const MouseWheel& InMouseWheel);
     Event(const WindowResized& InResized);
+    Event(const WindowMoved& InMoved);
     Event(const Text& InText);
     ~Event();
 
