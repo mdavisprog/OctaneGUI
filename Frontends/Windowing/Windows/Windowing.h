@@ -40,6 +40,9 @@ namespace Windowing
 namespace Windows
 {
 
+typedef void (*OnWindowMoveSignature)(void*, const OctaneGUI::Vector2&);
+typedef HitTestResult (*OnHitTestSignature)(void*, const OctaneGUI::Vector2&);
+
 OctaneGUI::Rect GetWorkingArea(void* Handle);
 void FocusWindow(void* Handle);
 void MinimizeWindow(void* Handle);
@@ -49,6 +52,7 @@ void SetEnabled(void* Handle, bool Enabled);
 void SetAlwaysOnTop(void* Handle);
 void ShowMinimize(void* Handle, bool Show);
 void SetOnHitTest(void* Handle, OnHitTestSignature&& Fn);
+void SetOnWindowMove(void* Handle, OnWindowMoveSignature&& Fn);
 std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters, void* Handle);
 
 }

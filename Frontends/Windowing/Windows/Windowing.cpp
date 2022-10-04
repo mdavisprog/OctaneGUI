@@ -42,6 +42,7 @@ namespace Windowing
 namespace Windows
 {
 
+OnWindowMoveSignature OnWindowMove { nullptr };
 OnHitTestSignature OnHitTest { nullptr };
 LONG_PTR OriginalEvent { 0 };
 
@@ -49,6 +50,18 @@ LRESULT CALLBACK OnEvent(HWND Handle, UINT Message, WPARAM WParam, LPARAM LParam
 {
     switch (Message)
     {
+    case WM_MOVE:
+    {
+        int X = (int)(short)LOWORD(LParam);
+        int Y = (int)(short)HIWORD(LParam);
+
+        if (OnWindowMove != nullptr)
+        {
+            OnWindowMove((void*)Handle, {(float)X, (float)Y});
+        }
+    }
+    break;
+
     case WM_NCHITTEST:
     {
         POINT Point { GET_X_LPARAM(LParam), GET_Y_LPARAM(LParam) };
@@ -96,13 +109,6 @@ void RegisterWndProc(HWND Handle)
     {
         OriginalEvent = SetWindowLongPtr(Handle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&OnEvent));
     }
-}
-
-void SetOnHitTest(void* Handle, OnHitTestSignature&& Fn)
-{
-    HWND WinHandle = (HWND)Handle;
-    RegisterWndProc(WinHandle);
-    OnHitTest = std::move(Fn);
 }
 
 OctaneGUI::Rect GetWorkingArea(void* Handle)
@@ -157,6 +163,20 @@ void ShowMinimize(void* Handle, bool Show)
     LONG_PTR Flags = GetWindowLongPtr(WinHandle, GWL_STYLE);
     Flags = Show ? Flags | WS_MINIMIZEBOX : Flags & ~WS_MINIMIZEBOX;
     SetWindowLongPtr(WinHandle, GWL_STYLE, Flags);
+}
+
+void SetOnHitTest(void* Handle, OnHitTestSignature&& Fn)
+{
+    HWND WinHandle = (HWND)Handle;
+    RegisterWndProc(WinHandle);
+    OnHitTest = std::move(Fn);
+}
+
+void SetOnWindowMove(void* Handle, OnWindowMoveSignature&& Fn)
+{
+    HWND WinHandle = (HWND)Handle;
+    RegisterWndProc(WinHandle);
+    OnWindowMove = std::move(Fn);
 }
 
 std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters, void* Handle)

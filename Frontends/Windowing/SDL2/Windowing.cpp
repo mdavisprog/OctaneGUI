@@ -265,6 +265,9 @@ OctaneGUI::Event HandleEvent(SDL_Event& Event, const uint32_t WindowID, bool IsP
 
         case SDL_WINDOWEVENT_LEAVE: return OctaneGUI::Event(
             OctaneGUI::Event::Type::WindowLeave);
+        
+        case SDL_WINDOWEVENT_MOVED: return OctaneGUI::Event(
+            OctaneGUI::Event::WindowMoved({(float)Event.window.data1, (float)Event.window.data2}));
         }
     }
     break;

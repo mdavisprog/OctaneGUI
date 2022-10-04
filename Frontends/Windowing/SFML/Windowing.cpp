@@ -118,6 +118,19 @@ void SetMouseCursor(const std::shared_ptr<sf::RenderWindow>& Window, sf::Cursor:
     Window->setMouseCursor(GetCursor(Type));
 }
 
+OctaneGUI::Window* ToWindow(void* Handle)
+{
+    for (std::unordered_map<OctaneGUI::Window*, std::shared_ptr<sf::RenderWindow>>::const_iterator It = g_Windows.begin(); It != g_Windows.end(); ++It)
+    {
+        if ((void*)It->second->getSystemHandle() == Handle)
+        {
+            return It->first;
+        }
+    }
+
+    return nullptr;
+}
+
 bool Initialize()
 {
     return true;
@@ -144,6 +157,10 @@ void NewWindow(OctaneGUI::Window* Window)
         RenderWindow->setVerticalSyncEnabled(false);
         g_Windows[Window] = std::shared_ptr<sf::RenderWindow>(RenderWindow);
 
+        sf::VideoMode Desktop = sf::VideoMode::getDesktopMode();
+        Window->SetDeviceSize({ (float)Desktop.width, (float)Desktop.height });
+        Window->SetPosition({ (float)RenderWindow->getPosition().x, (float)RenderWindow->getPosition().y });
+
 #if defined(WINDOWS)
         if (Window->Modal())
         {
@@ -151,30 +168,26 @@ void NewWindow(OctaneGUI::Window* Window)
         }
 
         Windows::ShowMinimize((void*)RenderWindow->getSystemHandle(), Window->CanMinimize());
-#endif
-
-        sf::VideoMode Desktop = sf::VideoMode::getDesktopMode();
-        Window->SetDeviceSize({ (float)Desktop.width, (float)Desktop.height });
-        Window->SetPosition({ (float)RenderWindow->getPosition().x, (float)RenderWindow->getPosition().y });
-
-#if defined(WINDOWS)
+        Windows::SetOnWindowMove((void*)RenderWindow->getSystemHandle(), [](void* Handle, const OctaneGUI::Vector2& Position) -> void
+            {
+                OctaneGUI::Window* Window = ToWindow(Handle);
+                if (Window != nullptr)
+                {
+                    Window->SyncPosition(Position);
+                }
+            });
         Windows::SetOnHitTest((void*)RenderWindow->getSystemHandle(), [](void* Handle, const OctaneGUI::Vector2& Point) -> HitTestResult
             {
-                HitTestResult Result = HitTestResult::Normal;
-
-                for (std::unordered_map<OctaneGUI::Window*, std::shared_ptr<sf::RenderWindow>>::const_iterator It = g_Windows.begin(); It != g_Windows.end(); ++It)
+                OctaneGUI::Window* Window = ToWindow(Handle);
+                if (Window != nullptr)
                 {
-                    if ((void*)It->second->getSystemHandle() == Handle)
+                    if (Window->GetRootContainer()->IsInTitleBar(Point))
                     {
-                        if (It->first->GetRootContainer()->IsInTitleBar(Point))
-                        {
-                            Result = HitTestResult::Draggable;
-                        }
-                        break;
+                        return HitTestResult::Draggable;
                     }
                 }
 
-                return Result;
+                return HitTestResult::Normal;
             });
 #endif
     }

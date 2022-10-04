@@ -61,8 +61,6 @@ enum class HitTestResult
     Left,
 };
 
-typedef HitTestResult (*OnHitTestSignature)(void*, const OctaneGUI::Vector2&);
-
 bool Initialize();
 void NewWindow(OctaneGUI::Window* Window);
 void DestroyWindow(OctaneGUI::Window* Window);
