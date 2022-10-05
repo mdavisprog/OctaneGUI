@@ -142,6 +142,7 @@ private:
     TextureCache m_TextureCache {};
     FileSystem m_FileSystem { *this };
     bool m_HighDPI { true };
+    bool m_CustomTitleBar { false };
 
 #if TOOLS
     bool m_IgnoreModals { false };

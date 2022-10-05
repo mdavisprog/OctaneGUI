@@ -87,6 +87,7 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
     }
 
     m_HighDPI = Root["HighDPI"].Boolean(m_HighDPI);
+    m_CustomTitleBar = Root["CustomTitleBar"].Boolean(m_CustomTitleBar);
 
     // First, create and load base settings for each defined window.
     Windows.ForEach([&](const std::string& Key, const Json& Value) -> void
@@ -522,6 +523,7 @@ std::shared_ptr<Window> Application::CreateWindow(const char* ID)
     std::shared_ptr<Window> Result = std::make_shared<Window>(this);
     m_Windows[ID] = Result;
     Result->SetHighDPI(m_HighDPI);
+    Result->SetCustomTitleBar(m_CustomTitleBar);
     Result->CreateContainer();
     Result->SetOnPaint(std::bind(&Application::OnPaint, this, std::placeholders::_1, std::placeholders::_2));
     Result->SetID(ID);
