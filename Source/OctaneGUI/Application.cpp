@@ -136,6 +136,9 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
             WindowControls[Key] = List;
         });
 
+    // Notify the main window to be visible again. This will force any custom title bars to initialize.
+    GetMainWindow()->SetVisible(true);
+
     return true;
 }
 
@@ -685,7 +688,7 @@ int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
     case Event::Type::WindowLeave:
         Item->OnMouseLeave();
         break;
-    
+
     case Event::Type::WindowMoved:
         Item->SyncPosition(E.GetData().m_Moved.m_Position);
         break;
