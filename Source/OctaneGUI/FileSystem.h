@@ -61,6 +61,9 @@ public:
     std::u32string Extension(const std::u32string& Location) const;
     std::vector<std::u32string> DirectoryItems(const std::u32string& Location) const;
 
+    std::string LoadContents(const std::string& Location) const;
+    std::string LoadContents(const std::u32string& Location) const;
+
     bool IsFile(const std::u32string& Location) const;
     bool IsDirectory(const std::u32string& Location) const;
     bool IsEmpty(const std::u32string& Location) const;

@@ -28,6 +28,7 @@ SOFTWARE.
 #include "Dialogs/FileDialog.h"
 
 #include <filesystem>
+#include <fstream>
 #include <system_error>
 
 namespace OctaneGUI
@@ -114,6 +115,32 @@ std::vector<std::u32string> FileSystem::DirectoryItems(const std::u32string& Loc
     }
 
     return Result;
+}
+
+std::string FileSystem::LoadContents(const std::string& Location) const
+{
+    std::string Result {};
+    std::fstream Stream {};
+
+    Stream.open(Location);
+    if (!Stream.is_open())
+    {
+        return Result;
+    }
+
+    Stream.seekg(0, std::ios_base::end);
+    Result.resize(Stream.tellg());
+    Stream.seekg(0, std::ios_base::beg);
+    Stream.read(&Result[0], Result.size());
+    Stream.close();
+
+    return Result;
+}
+
+std::string FileSystem::LoadContents(const std::u32string& Location) const
+{
+    std::filesystem::path Path { Location };
+    return LoadContents(Path.u8string());
 }
 
 bool FileSystem::IsFile(const std::u32string& Location) const
