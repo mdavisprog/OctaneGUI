@@ -234,15 +234,23 @@ void MaximizeWindow(OctaneGUI::Window* Window)
     }
 
 #if defined(WINDOWS)
-    void* Handle = g_Windows[Window]->getSystemHandle();
+    const std::shared_ptr<sf::RenderWindow>& RenderWindow = g_Windows[Window];
+
+    OctaneGUI::Rect Area {};
     if (Window->IsMaximized())
     {
-        Windows::RestoreWindow(Handle);
+        Area = Window->RestoreBounds();
     }
     else
     {
-        Windows::MaximizeWindow(Handle);
+        Area = Windows::GetWorkingArea((void*)RenderWindow->getSystemHandle());
     }
+
+    RenderWindow->setPosition({ (int)Area.Min.X, (int)Area.Min.Y });
+    RenderWindow->setSize({ (unsigned int)Area.Width(), (unsigned int)Area.Height() });
+
+    Window->SetPosition(Area.Min);
+    Window->SetSize(Area.GetSize());
 #endif
 }
 
