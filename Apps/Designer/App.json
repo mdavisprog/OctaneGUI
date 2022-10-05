@@ -1,23 +1,7 @@
 {
     "Theme": "Resources/Themes/Dark.json",
     "Icons": {
-        "UseInternal": false,
-        "Size": [24, 24],
-        "Types": [
-            {"Type": "ArrowLeft", "FileName": "Resources/ArrowLeft.svg"},
-            {"Type": "ArrowRight", "FileName": "Resources/ArrowRight.svg"},
-            {"Type": "ArrowUp", "FileName": "Resources/ArrowUp.svg"},
-            {"Type": "ArrowDown", "FileName": "Resources/ArrowDown.svg"},
-            {"Type": "Check", "FileName": "Resources/Check.svg"},
-            {"Type": "Expand", "FileName": "Resources/Expand.svg"},
-            {"Type": "Collapse", "FileName": "Resources/Collapse.svg"},
-            {"Type": "Plus", "FileName": "Resources/Plus.svg"},
-            {"Type": "Minus", "FileName": "Resources/Minus.svg"},
-            {"Type": "Close", "FileName": "Resources/Close.svg"},
-            {"Type": "Minimize", "FileName": "Resources/Minimize.svg"},
-            {"Type": "Maximize", "FileName": "Resources/Maximize.svg"},
-            {"Type": "Restore", "FileName": "Resources/Restore.svg"}
-        ]
+        "File": "Resources/Icons.json"
     },
     "Windows": {
         "Main": {

@@ -103,24 +103,15 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
 
     m_Icons = std::make_shared<Icons>();
     const Json& IconsObject = Root["Icons"];
-    if (IconsObject.IsNull() || IconsObject["UseInternal"].Boolean())
+    if (!IconsObject.IsNull() && !IconsObject["File"].IsNull())
     {
-        m_Icons->Initialize();
+        const std::string Contents = FS().LoadContents(IconsObject["File"].String());
+        const Json Loaded = Json::Parse(Contents.c_str());
+        LoadIcons(Loaded);
     }
     else
     {
-        const Vector2 IconSize = Vector2::FromJson(IconsObject["Size"]) * GetMainWindow()->RenderScale();
-        Assert(IconSize.Length() > 0.0f, "Icon size is not valid!");
-
-        std::vector<Icons::Definition> Definitions;
-        const Json& Types = IconsObject["Types"];
-        for (unsigned int I = 0; I < Types.Count(); I++)
-        {
-            const Json& Item = Types[I];
-            Definitions.push_back({ Item["Type"].String(), Item["FileName"].String() });
-        }
-
-        m_Icons->Initialize(Definitions, IconSize);
+        LoadIcons(IconsObject);
     }
 
     m_Theme->Load(Root["Theme"]);
@@ -729,6 +720,29 @@ void Application::OnWindowAction(Window* InWindow, WindowAction Action)
     if (m_OnWindowAction)
     {
         m_OnWindowAction(InWindow, Action);
+    }
+}
+
+void Application::LoadIcons(const Json& Root)
+{
+    if (Root.IsNull() || Root["UseBitmap"].Boolean())
+    {
+        m_Icons->Initialize();
+    }
+    else
+    {
+        const Vector2 IconSize = Vector2::FromJson(Root["Size"]) * GetMainWindow()->RenderScale();
+        Assert(IconSize.Length() > 0.0f, "Icon size is not valid!");
+
+        std::vector<Icons::Definition> Definitions;
+        const Json& Types = Root["Types"];
+        for (unsigned int I = 0; I < Types.Count(); I++)
+        {
+            const Json& Item = Types[I];
+            Definitions.push_back({ Item["Type"].String(), Item["FileName"].String() });
+        }
+
+        m_Icons->Initialize(Definitions, IconSize);
     }
 }
 

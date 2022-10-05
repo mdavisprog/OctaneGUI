@@ -130,6 +130,7 @@ private:
     int ProcessEvent(const std::shared_ptr<Window>& Item);
     bool Initialize();
     void OnWindowAction(Window* InWindow, WindowAction Action);
+    void LoadIcons(const Json& Root);
 
     std::unordered_map<std::string, std::shared_ptr<Window>> m_Windows;
     std::vector<std::weak_ptr<Window>> m_Modals {};
