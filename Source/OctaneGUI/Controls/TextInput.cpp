@@ -617,7 +617,7 @@ void TextInput::OnPaint(Paint& Brush) const
 
     Brush.PopClip();
 
-    Container::OnPaint(Brush);
+    ScrollableViewControl::OnPaint(Brush);
 }
 
 void TextInput::OnLoad(const Json& Root)
