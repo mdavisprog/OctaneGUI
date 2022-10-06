@@ -127,6 +127,17 @@ public:
     virtual void OnThemeLoaded() override
     {
         Container::OnThemeLoaded();
+
+        if (m_Minimize)
+        {
+            m_Minimize->SetProperty(ThemeProperties::ImageButton, GetProperty(ThemeProperties::Check));
+        }
+
+        if (m_Maximize)
+        {
+            m_Maximize->SetProperty(ThemeProperties::ImageButton, GetProperty(ThemeProperties::Check));
+        }
+
         m_Close->SetProperty(ThemeProperties::ImageButton, GetProperty(ThemeProperties::Check));
         SetSize({ 0.0f, Height() });
     }
