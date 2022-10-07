@@ -383,7 +383,14 @@ void Paint::ArcOutline(const Vector2& Center, float Radius, float StartAngle, fl
 
 void Paint::PushClip(const Rect& Bounds)
 {
-    m_ClipStack.push_back(Bounds);
+    if (!m_ClipStack.empty())
+    {
+        m_ClipStack.push_back(Bounds.Intersection(m_ClipStack.back()));
+    }
+    else
+    {
+        m_ClipStack.push_back(Bounds);
+    }
 }
 
 void Paint::PopClip()
