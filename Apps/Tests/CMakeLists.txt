@@ -12,6 +12,7 @@ add_executable(
     Main.cpp
     MenuBar.cpp
     RadioButton.cpp
+    Rect.cpp
     Scrollable.cpp
     TestSuite.cpp
     Text.cpp
