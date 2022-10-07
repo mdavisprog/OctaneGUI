@@ -77,6 +77,11 @@ Rect::Rect(const Vector2& InMin, const Vector2& InMax)
 {
 }
 
+bool Rect::operator==(const Rect& Other) const
+{
+    return Min == Other.Min && Max == Other.Max;
+}
+
 float Rect::Width() const
 {
     return Max.X - Min.X;
@@ -192,6 +197,26 @@ bool Rect::Intersects(const Rect& Other) const
 bool Rect::Encompasses(const Rect& Other) const
 {
     return Contains(Other.Min) && Contains(Other.Max);
+}
+
+Rect Rect::Intersection(const Rect& Other) const
+{
+    Rect Result;
+
+    // Top left.
+    Result.Min.X = std::max<float>(Min.X, Other.Min.X);
+    Result.Min.Y = std::max<float>(Min.Y, Other.Min.Y);
+
+    // Bottom right.
+    Result.Max.X = std::min<float>(Max.X, Other.Max.X);
+    Result.Max.Y = std::min<float>(Max.Y, Other.Max.Y);
+
+    if (Result.Min.X > Result.Max.X || Result.Min.Y > Result.Max.Y)
+    {
+        return {};
+    }
+
+    return Result;
 }
 
 }

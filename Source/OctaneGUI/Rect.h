@@ -43,6 +43,8 @@ public:
     Rect(float MinX, float MinY, float MaxX, float MaxY);
     Rect(const Vector2& InMin, const Vector2& InMax);
 
+    bool operator==(const Rect& Other) const;
+
     float Width() const;
     float Height() const;
     Vector2 GetSize() const;
@@ -69,6 +71,8 @@ public:
 
     bool Intersects(const Rect& Other) const;
     bool Encompasses(const Rect& Other) const;
+
+    Rect Intersection(const Rect& Other) const;
 };
 
 }
