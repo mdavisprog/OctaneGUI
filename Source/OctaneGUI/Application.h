@@ -61,6 +61,7 @@ enum class WindowAction : uint8_t
     Enable,
     Disable,
     Position,
+    Size,
     Minimize,
     Maximize,
 };
