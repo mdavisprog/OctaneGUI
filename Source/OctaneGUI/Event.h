@@ -53,6 +53,7 @@ public:
         WindowEnter,
         WindowLeave,
         WindowMoved,
+        WindowMaximized,
     };
 
     struct Key
@@ -165,6 +166,7 @@ public:
     Event(const MouseWheel& InMouseWheel);
     Event(const WindowResized& InResized);
     Event(const WindowMoved& InMoved);
+    Event(Type InType, const WindowMoved& InMoved);
     Event(const Text& InText);
     ~Event();
 

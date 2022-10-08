@@ -105,6 +105,12 @@ Event::Event(const WindowMoved& InMoved)
     m_Data.m_Moved = InMoved;
 }
 
+Event::Event(Type InType, const WindowMoved& InMoved)
+    : m_Type(InType)
+{
+    m_Data.m_Moved = InMoved;
+}
+
 Event::~Event()
 {
 }
