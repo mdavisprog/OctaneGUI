@@ -74,6 +74,12 @@ void OnWindowAction(OctaneGUI::Window* Window, OctaneGUI::WindowAction Action)
     }
     break;
 
+    case OctaneGUI::WindowAction::Size:
+    {
+        Windowing::SetWindowSize(Window);
+    }
+    break;
+
     case OctaneGUI::WindowAction::Minimize:
     {
         Windowing::MinimizeWindow(Window);

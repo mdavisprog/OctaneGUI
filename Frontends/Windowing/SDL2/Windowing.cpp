@@ -595,6 +595,16 @@ void SetWindowPosition(OctaneGUI::Window* Window)
     SDL_SetWindowPosition(g_Windows[Window], (int)Window->GetPosition().X, (int)Window->GetPosition().Y);
 }
 
+void SetWindowSize(OctaneGUI::Window* Window)
+{
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        return;
+    }
+
+    SDL_SetWindowSize(g_Windows[Window], (int)Window->GetSize().X, (int)Window->GetSize().Y);
+}
+
 void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor)
 {
     if (g_Windows.find(Window) == g_Windows.end())

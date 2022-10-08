@@ -431,6 +431,16 @@ void SetWindowPosition(OctaneGUI::Window* Window)
     g_Windows[Window]->setPosition({ (int)Window->GetPosition().X, (int)Window->GetPosition().Y });
 }
 
+void SetWindowSize(OctaneGUI::Window* Window)
+{
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        return;
+    }
+
+    g_Windows[Window]->setSize({ (unsigned int)Window->GetSize().X, (unsigned int)Window->GetSize().Y });
+}
+
 void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor)
 {
     if (g_Windows.find(Window) == g_Windows.end())

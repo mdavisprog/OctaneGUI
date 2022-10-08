@@ -75,6 +75,7 @@ void SetClipboardContents(const std::u32string& Contents);
 std::u32string GetClipboardContents();
 void SetWindowTitle(OctaneGUI::Window* Window, const char* Title);
 void SetWindowPosition(OctaneGUI::Window* Window);
+void SetWindowSize(OctaneGUI::Window* Window);
 void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor);
 
 }
