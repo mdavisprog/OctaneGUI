@@ -98,8 +98,9 @@ public:
     /// also prevents any invalidation to occur since no contents were resized.
     ///
     /// @param Position The new position of the window
+    /// @param MaximizeEvent Whether the syncing occurred due to a maximize event.
     /// @return This reference for chaining.
-    Window& SyncPosition(const Vector2& Position);
+    Window& SyncPosition(const Vector2& Position, bool MaximizeEvent);
 
     Window& SetSize(const Vector2& Size);
 

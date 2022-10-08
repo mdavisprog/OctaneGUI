@@ -108,13 +108,13 @@ Vector2 Window::GetPosition() const
     return m_Bounds.Min;
 }
 
-Window& Window::SyncPosition(const Vector2& Position)
+Window& Window::SyncPosition(const Vector2& Position, bool MaximizeEvent)
 {
     const Vector2 Size = m_Bounds.GetSize();
     m_Bounds.Min = Position;
     m_Bounds.Max = m_Bounds.Min + Size;
 
-    if (IsMaximized())
+    if (!MaximizeEvent && IsMaximized())
     {
         SetMaximized(false);
         // TODO: Restore bounds to match the behavior found on Windows when maximized window is dragged.

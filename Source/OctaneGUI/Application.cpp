@@ -688,7 +688,11 @@ int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
         break;
 
     case Event::Type::WindowMoved:
-        Item->SyncPosition(E.GetData().m_Moved.m_Position);
+        Item->SyncPosition(E.GetData().m_Moved.m_Position, false);
+        break;
+    
+    case Event::Type::WindowMaximized:
+        Item->SyncPosition(E.GetData().m_Moved.m_Position, true);
         break;
 
     case Event::Type::None:

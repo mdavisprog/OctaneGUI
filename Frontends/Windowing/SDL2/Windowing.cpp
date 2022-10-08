@@ -266,8 +266,24 @@ OctaneGUI::Event HandleEvent(SDL_Event& Event, const uint32_t WindowID, bool IsP
         case SDL_WINDOWEVENT_LEAVE: return OctaneGUI::Event(
             OctaneGUI::Event::Type::WindowLeave);
 
-        case SDL_WINDOWEVENT_MOVED: return OctaneGUI::Event(
-            OctaneGUI::Event::WindowMoved({ (float)Event.window.data1, (float)Event.window.data2 }));
+        case SDL_WINDOWEVENT_MOVED:
+        {
+#if defined(LINUX)
+            // On X11, no maximize event is sent, so manual detection is needed here.
+            // If the window was moved and SDL reports that the window is maximized, then
+            // an assumption can be made that it was maximized.
+            if (SDL_GetWindowFlags(SDL_GetWindowFromID(Event.window.windowID)) & SDL_WINDOW_MAXIMIZED)
+            {
+                return OctaneGUI::Event(
+                    OctaneGUI::Event::Type::WindowMaximized,
+                    OctaneGUI::Event::WindowMoved({ (float)Event.window.data1, (float)Event.window.data1 }));
+            }
+#endif
+            return OctaneGUI::Event(
+                OctaneGUI::Event::WindowMoved({ (float)Event.window.data1, (float)Event.window.data2 }));
+        }
+        break;
+
         }
     }
     break;
