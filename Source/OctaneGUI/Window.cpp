@@ -113,14 +113,34 @@ Window& Window::SyncPosition(const Vector2& Position)
     const Vector2 Size = m_Bounds.GetSize();
     m_Bounds.Min = Position;
     m_Bounds.Max = m_Bounds.Min + Size;
+
+    if (IsMaximized())
+    {
+        SetMaximized(false);
+        // TODO: Restore bounds to match the behavior found on Windows when maximized window is dragged.
+    }
+
     return *this;
 }
 
-void Window::SetSize(Vector2 Size)
+Window& Window::SetSize(const Vector2& Size)
 {
     m_Bounds.Max = m_Bounds.Min + Size;
     m_Container->SetSize(m_Bounds.GetSize() * m_RenderScale);
     m_Container->InvalidateLayout();
+    return *this;
+}
+
+Window& Window::SetSizeNotify(const Vector2& Size)
+{
+    SetSize(Size);
+
+    if (m_OnSetSize)
+    {
+        m_OnSetSize(*this);
+    }
+
+    return *this;
 }
 
 Vector2 Window::GetSize() const
@@ -791,6 +811,12 @@ Window& Window::SetOnSetTitle(OnSetTitleSignature&& Fn)
 Window& Window::SetOnSetPosition(OnWindowSignature&& Fn)
 {
     m_OnSetPosition = std::move(Fn);
+    return *this;
+}
+
+Window& Window::SetOnSetSize(OnWindowSignature&& Fn)
+{
+    m_OnSetSize = std::move(Fn);
     return *this;
 }
 

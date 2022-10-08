@@ -89,11 +89,24 @@ public:
     Window& SetPositionBoundsOnly(const Vector2& Position);
     Vector2 GetPosition() const;
 
-    // This function is meant to sync the position from what is reported from the Frontend.
-    // The m_Bounds member is updated and no callback is invoked when syncing occurs.
+    
+
+    /// @brief Sync position from frontend.
+    ///
+    /// This function is meant to sync the position from what is reported from the Frontend.
+    /// The m_Bounds member is updated and no callback is invoked when syncing occurs. This
+    /// also prevents any invalidation to occur since no contents were resized.
+    ///
+    /// @param Position The new position of the window
+    /// @return This reference for chaining.
     Window& SyncPosition(const Vector2& Position);
 
-    void SetSize(Vector2 Size);
+    Window& SetSize(const Vector2& Size);
+
+    /// @brief Calls the SetSize function but also invokes callback to update frontend window size.
+    /// @param Size The new size of the window.
+    /// @return This reference for chaining.
+    Window& SetSizeNotify(const Vector2& Size);
     Vector2 GetSize() const;
 
     Rect RestoreBounds() const;
@@ -189,6 +202,7 @@ public:
     Window& SetOnPaint(OnPaintSignature&& Fn);
     Window& SetOnSetTitle(OnSetTitleSignature&& Fn);
     Window& SetOnSetPosition(OnWindowSignature&& Fn);
+    Window& SetOnSetSize(OnWindowSignature&& Fn);
     Window& SetOnMinimize(OnWindowSignature&& Fn);
     Window& SetOnMaximize(OnWindowSignature&& Fn);
     Window& SetOnClose(OnWindowSignature&& Fn);
@@ -239,6 +253,7 @@ private:
     OnContainerSignature m_OnPopupClose { nullptr };
     OnSetTitleSignature m_OnSetTitle { nullptr };
     OnWindowSignature m_OnSetPosition { nullptr };
+    OnWindowSignature m_OnSetSize { nullptr };
     OnWindowSignature m_OnMinimize { nullptr };
     OnWindowSignature m_OnMaximize { nullptr };
     OnWindowSignature m_OnClose { nullptr };
