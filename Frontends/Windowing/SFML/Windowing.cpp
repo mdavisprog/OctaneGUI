@@ -173,7 +173,7 @@ void NewWindow(OctaneGUI::Window* Window)
                 OctaneGUI::Window* Window = ToWindow(Handle);
                 if (Window != nullptr)
                 {
-                    Window->SyncPosition(Position);
+                    Window->SyncPosition(Position, false);
                 }
             });
         Windows::SetOnHitTest((void*)RenderWindow->getSystemHandle(), [](void* Handle, const OctaneGUI::Vector2& Point) -> HitTestResult
