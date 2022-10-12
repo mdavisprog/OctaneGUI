@@ -113,6 +113,12 @@ std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<Octa
 	return OctaneGUI::String::ToUTF32(Result);
 }
 
+bool IsZoomed(void* Handle)
+{
+	NSWindow* Window = (NSWindow*)Handle;
+	return Window.zoomed;
+}
+
 }
 
 }
