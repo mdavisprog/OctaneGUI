@@ -38,6 +38,7 @@ void HideTitleBar(void* Handle);
 void ShowMinimize(void* Handle, bool Show);
 std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters, void* Handle);
 bool IsZoomed(void* Handle);
+void Zoom(void* Handle);
 
 }
 }

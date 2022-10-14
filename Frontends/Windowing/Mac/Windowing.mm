@@ -119,6 +119,12 @@ bool IsZoomed(void* Handle)
 	return Window.zoomed;
 }
 
+void Zoom(void* Handle)
+{
+	NSWindow* Window = (NSWindow*)Handle;
+	[Window zoom:nil];
+}
+
 }
 
 }
