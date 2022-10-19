@@ -16,8 +16,9 @@ impl Function {
 }
 
 pub struct Class {
-    pub name: String,
     pub path: String,
+    name: String,
+    full_name: String,
     description: String,
     functions: Vec<Function>,
 }
@@ -25,11 +26,27 @@ pub struct Class {
 impl Class {
     pub fn new() -> Self {
         Self {
-            name: String::new(),
             path: String::new(),
+            name: String::new(),
+            full_name: String::new(),
             description: String::new(),
             functions: Vec::<Function>::new(),
         }
+    }
+
+    pub fn set_full_name(&mut self, full_name: &str) {
+        self.full_name = full_name.to_string();
+        self.name = full_name.to_string();
+
+        let split = full_name.split("::");
+
+        if let Some(last) = split.last() {
+            self.name = last.to_string();
+        }
+    }
+
+    pub fn name(&self) -> &str {
+        &self.name
     }
 
     pub fn parse(&mut self) -> bool {

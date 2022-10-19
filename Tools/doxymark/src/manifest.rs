@@ -39,7 +39,7 @@ impl Manifest {
                             class_path.set_extension("xml");
 
                             let mut class = Class::new();
-                            class.name = name.get_inner();
+                            class.set_full_name(&name.get_inner());
                             class.path = class_path.to_str().unwrap().to_string();
                             self.classes.push(class);
                         }
