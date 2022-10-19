@@ -54,7 +54,16 @@ impl Class {
     pub fn write(&self, file: &std::fs::File) -> Result<(), std::io::Error> {
         let mut writer = std::io::BufWriter::new(file);
 
-        writeln!(writer, "# {}", self.name)?;
+        writeln!(writer, "# {}\n", self.name)?;
+        
+        writeln!(writer, "## Functions")?;
+        writeln!(writer, "|Name|Description|")?;
+        writeln!(writer, "|---|---|")?;
+
+        for function in &self.functions {
+            let description = function.description.replace("\n", "<br>");
+            writeln!(writer, "|{}|{}|", function.name, description)?;
+        }
 
         Ok(())
     }
