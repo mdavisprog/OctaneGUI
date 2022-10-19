@@ -21,6 +21,34 @@ impl Manifest {
         Some(result)
     }
 
+    pub fn generate(&self, directory: &str) -> bool {
+        let path = std::path::Path::new(directory).join("md");
+        if !path.exists() {
+            let result = std::fs::create_dir_all(&path);
+
+            match result {
+                Err(error) => {
+                    println!("Failed to create directory {}: {}", path.display(), error);
+                    return false;
+                }
+                _ => {}
+            }
+        }
+
+        for class in &self.classes {
+            let mut class_path = path.join(class.name());
+            class_path.set_extension("md");
+
+            if let Ok(class_file) = std::fs::File::create(&class_path) {
+                if let Err(error) = class.write(&class_file) {
+                    println!("Failed to write class {}: {}", class.name(), error);
+                }
+            }
+        }
+
+        true
+    }
+
     fn parse_index(&mut self) -> bool {
         let index_path = std::path::Path::new(&self.root).join("index.xml");
         if !index_path.exists() {

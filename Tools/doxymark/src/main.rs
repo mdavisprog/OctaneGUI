@@ -12,10 +12,13 @@ fn main() {
     println!("{}: {}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
 
     let mut path = "";
+    let mut output_dir = "";
     let args: Vec<String> = std::env::args().collect();
     for (index, arg) in args.iter().enumerate() {
         if arg == "--path" && index < args.len() - 1 {
             path = &args[index + 1];
+        } else if arg == "--output-dir" && index < args.len() - 1 {
+            output_dir = &args[index + 1];
         }
     }
 
@@ -24,5 +27,7 @@ fn main() {
         return;
     }
 
-    let _manifest = Manifest::load(path);
+    if let Some(manifest) = Manifest::load(path) {
+        manifest.generate(&output_dir);
+    }
 }

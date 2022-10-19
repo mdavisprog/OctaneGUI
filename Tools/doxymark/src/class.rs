@@ -1,6 +1,8 @@
 use crate::document::Document;
 use crate::element::Element;
 
+use std::io::Write;
+
 struct Function {
     pub name: String,
     pub description: String,
@@ -47,6 +49,14 @@ impl Class {
 
     pub fn name(&self) -> &str {
         &self.name
+    }
+
+    pub fn write(&self, file: &std::fs::File) -> Result<(), std::io::Error> {
+        let mut writer = std::io::BufWriter::new(file);
+
+        writeln!(writer, "# {}", self.name)?;
+
+        Ok(())
     }
 
     pub fn parse(&mut self) -> bool {
