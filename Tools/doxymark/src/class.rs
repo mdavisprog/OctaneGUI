@@ -140,11 +140,44 @@ impl Class {
 
         let paras: Vec<&Element> = element.get_elements("para");
         for (index, para) in paras.iter().enumerate() {
-            result.push_str(&para.get_inner());
+            result.push_str(&Self::parse_para(para));
 
             if index < paras.len() - 1 {
                 result.push_str("\n\n");
             }
+        }
+
+        result
+    }
+
+    fn parse_para(element: &Element) -> String {
+        let mut result = String::new();
+
+        let lists: Vec<&Element> = element.get_elements("itemizedlist");
+        if !lists.is_empty() {
+            for list in lists {
+                result.push_str(&Self::parse_list(list));
+            }
+        } else {
+            result = element.get_inner();
+        }
+
+        result
+    }
+
+    fn parse_list(element: &Element) -> String {
+        let mut result = String::new();
+
+        let items: Vec<&Element> = element.get_elements("listitem");
+
+        if !items.is_empty() {
+            result.push_str("<ul>");
+            for item in items {
+                result.push_str("<li>");
+                result.push_str(&Self::parse_description(item));
+                result.push_str("</li>\n");
+            }
+            result.push_str("</ul>")
         }
 
         result
