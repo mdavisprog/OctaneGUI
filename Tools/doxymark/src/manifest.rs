@@ -39,7 +39,7 @@ impl Manifest {
             let mut class_path = path.join(class.name());
             class_path.set_extension("md");
 
-            if let Ok(class_file) = std::fs::File::create(&class_path) {
+            if let Ok(class_file) = std::fs::OpenOptions::new().write(true).truncate(true).create(true).open(&class_path) {
                 if let Err(error) = class.write(&class_file) {
                     println!("Failed to write class {}: {}", class.name(), error);
                 }
