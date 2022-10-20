@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 pub struct Element {
     pub name: String,
-    pub values: Vec<String>,
+    pub value: String,
     pub attributes: HashMap<String, String>,
     pub elements: Vec::<Element>,
 }
@@ -11,7 +11,7 @@ impl Element {
     pub fn new() -> Self {
         Self {
             name: String::new(),
-            values: Vec::<String>::new(),
+            value: String::new(),
             attributes: HashMap::<String, String>::new(),
             elements: Vec::<Element>::new(),
         }
@@ -53,30 +53,10 @@ impl Element {
         let mut result = String::new();
 
         if self.elements.is_empty() {
-            result = self.values.concat();
+            result = self.value.clone();
         } else {
-            let mut i = 0;
-
-            if self.values.len() >= self.elements.len() {
-                while i < self.values.len() {
-                    result.push_str(&self.values[i]);
-                    
-                    if i < self.elements.len() {
-                        result.push_str(&self.elements[i].get_inner());
-                    }
-    
-                    i += 1;
-                }
-            } else {
-                while i < self.elements.len() {
-                    result.push_str(&self.elements[i].get_inner());
-
-                    if i < self.values.len() {
-                        result.push_str(&self.values[i]);
-                    }
-
-                    i += 1;
-                }
+            for element in &self.elements {
+                result += &element.get_inner();
             }
         }
 
@@ -84,7 +64,7 @@ impl Element {
     }
 
     fn print(&self, f: &mut std::fmt::Formatter, indent: usize) {
-        match writeln!(f, "{:tab$}{} => {}", "", self.name, self.values.concat(), tab=indent) {
+        match writeln!(f, "{:tab$}{} => '{}'", "", self.name, self.value, tab=indent) {
             Err(error) => {
                 panic!("Error writing to formatter: {}", error);
             }

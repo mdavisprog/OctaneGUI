@@ -61,7 +61,10 @@ impl Document {
                 }
                 Ok(xml::reader::XmlEvent::Characters(string)) => {
                     if let Some(element) = element_stack.last_mut() {
-                        element.values.push(string);
+                        let mut p_element = Element::new();
+                        p_element.name = String::from("p");
+                        p_element.value = string;
+                        element.elements.push(p_element);
                     }
                 }
                 Err(error) => {
