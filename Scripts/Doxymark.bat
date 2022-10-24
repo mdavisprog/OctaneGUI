@@ -17,6 +17,7 @@ IF NOT "%1" == "" (
 
 IF "%CLEAN%" == "TRUE" (
     ECHO Cleaning...
+    RMDIR /S /Q %DOC_PATH%\md
     cargo clean %MANIFEST_PATH%
 )
 
