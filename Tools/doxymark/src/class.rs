@@ -51,6 +51,10 @@ impl Class {
         &self.name
     }
 
+    pub fn description(&self) -> &str {
+        &self.description
+    }
+
     pub fn write(&self, file: &std::fs::File) -> Result<(), std::io::Error> {
         let mut writer = std::io::BufWriter::new(file);
 
