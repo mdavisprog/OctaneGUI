@@ -2,6 +2,8 @@ use crate::class::Class;
 use crate::document::Document;
 use crate::element::Element;
 
+use std::io::Write;
+
 pub struct Manifest {
     root: String,
     classes: Vec<Class>,
@@ -35,10 +37,17 @@ impl Manifest {
             }
         }
 
+        let mut table_of_contents = Vec::<String>::new();
         for class in &self.classes {
             if !class.description().is_empty() {
                 let mut class_path = path.join(class.name());
                 class_path.set_extension("md");
+
+                if let Some(os_file_name) = class_path.file_name() {
+                    if let Some(file_name) = os_file_name.to_str() {
+                        table_of_contents.push(file_name.to_string());
+                    }
+                }
     
                 if let Ok(class_file) = std::fs::OpenOptions::new().write(true).truncate(true).create(true).open(&class_path) {
                     if let Err(error) = class.write(&class_file) {
@@ -46,6 +55,10 @@ impl Manifest {
                     }
                 }
             }
+        }
+
+        if let Err(error) = self.write_toc(&table_of_contents, &path) {
+            println!("Failed to write table of contents: {}", error);
         }
 
         true
@@ -84,5 +97,22 @@ impl Manifest {
         }
 
         true
+    }
+
+    fn write_toc(&self, table_of_contents: &Vec<String>, root: &std::path::Path) -> Result<(), std::io::Error> {
+        let mut toc_path = root.join("TOC");
+        toc_path.set_extension("md");
+
+        if let Ok(toc_file) = std::fs::OpenOptions::new().write(true).truncate(true).create(true).open(&toc_path) {
+            let mut writer = std::io::BufWriter::new(toc_file);
+
+            writeln!(writer, "# Table of Contents\n")?;
+
+            for item in table_of_contents {
+                writeln!(writer, "* [{}]({})", item.trim_end_matches(".md"), item)?;
+            }
+        }
+
+        Ok(())
     }
 }
