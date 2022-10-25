@@ -68,7 +68,8 @@ impl Class {
     pub fn write(&self, file: &std::fs::File) -> Result<(), std::io::Error> {
         let mut writer = std::io::BufWriter::new(file);
 
-        writeln!(writer, "# {}\n", self.name)?;
+        writeln!(writer, "# {}", self.name)?;
+        writeln!(writer, "{}\n", self.description)?;
         
         writeln!(writer, "## Functions")?;
         writeln!(writer, "|Name|Description|")?;
