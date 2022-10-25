@@ -21,6 +21,7 @@ pub struct Class {
     pub path: String,
     name: String,
     full_name: String,
+    parent_full_name: String,
     description: String,
     functions: Vec<Function>,
 }
@@ -31,6 +32,7 @@ impl Class {
             path: String::new(),
             name: String::new(),
             full_name: String::new(),
+            parent_full_name: String::new(),
             description: String::new(),
             functions: Vec::<Function>::new(),
         }
@@ -51,8 +53,16 @@ impl Class {
         &self.name
     }
 
+    pub fn full_name(&self) -> &str {
+        &self.full_name
+    }
+
     pub fn description(&self) -> &str {
         &self.description
+    }
+
+    pub fn parent_name(&self) -> &str {
+        &self.parent_full_name
     }
 
     pub fn write(&self, file: &std::fs::File) -> Result<(), std::io::Error> {
@@ -92,6 +102,10 @@ impl Class {
     fn parse_def(&mut self, root: &Element) {
 
         self.description = Self::get_description(root);
+
+        if let Some(base) = root.get_element("basecompoundref") {
+            self.parent_full_name = base.get_inner();
+        }
 
         let sections: Vec<&Element> = root.get_elements("sectiondef");
         for section in &sections {
