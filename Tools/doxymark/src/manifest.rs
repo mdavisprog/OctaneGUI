@@ -152,8 +152,8 @@ impl Manifest {
         let mut result = Vec::<String>::new();
 
         result.push(entry.file_name.clone());
-        if depth > 0 {
-            if let Err(error) = write!(writer, "{:depth$}", "\t", depth=depth) {
+        for _i in 0..depth {
+            if let Err(error) = write!(writer, "\t") {
                 println!("Failed to write depth: {}", error);
             }
         }
