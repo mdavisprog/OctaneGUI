@@ -31,6 +31,7 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+/// @brief BoxContainer set to a vertical orientation.
 class VerticalContainer : public BoxContainer
 {
     CLASS(VerticalContainer)

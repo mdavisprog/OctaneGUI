@@ -38,6 +38,17 @@ enum class Grow : uint8_t
     End
 };
 
+/// @brief Container that lays out controls sequentially for an orientation.
+///
+/// BoxContainers will lay out controls in either horizontal or vertical orientation
+/// in sequential order. The container bounds can also grow from the beginning,
+/// the center, or the end which will align the controls based on the orientation.
+///
+/// Controls requested to expand will also be given the space to expand based on the
+/// amount of remaining space left after all other non-expanded controls are placed.
+///
+/// Spacing between each control can be defined or can be packed tightly if set to
+/// zero.
 class BoxContainer : public Container
 {
     CLASS(BoxContainer)
