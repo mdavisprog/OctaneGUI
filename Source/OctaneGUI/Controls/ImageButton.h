@@ -34,6 +34,7 @@ namespace OctaneGUI
 class Image;
 class Texture;
 
+/// @brief Button with an image.
 class ImageButton : public Button
 {
     CLASS(ImageButton)

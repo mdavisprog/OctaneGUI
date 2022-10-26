@@ -33,6 +33,7 @@ namespace OctaneGUI
 
 class Text;
 
+/// @brief Button with a text label.
 class TextButton : public Button
 {
     CLASS(TextButton)

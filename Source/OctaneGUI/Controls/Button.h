@@ -32,6 +32,15 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+/// @brief Base class for any controls that wishes to have button behaviors.
+///
+/// The Button class handles the behavior for when a user interacts with this
+/// control. This handles when the button is hovered, pressed, and released.
+/// A 'click' is not registered until a pressed button is released and the cursor
+/// is hovering over the button.
+///
+/// The basic behavior of this button is to just paint the background and will handle
+/// painting the state changes.
 class Button : public Control
 {
     CLASS(Button)
