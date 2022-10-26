@@ -18,6 +18,7 @@ pushd "$(dirname "${BASH_SOURCE[0]}")"
 
 if [ "$CLEAN" = true ] ; then
 	echo Cleaning...
+    rm -rf $DOC_PATH/md
 	cargo clean $MANIFEST_PATH
 fi
 
