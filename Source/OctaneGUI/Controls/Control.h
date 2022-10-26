@@ -106,6 +106,14 @@ static const char* ToString(HorizontalAlignment Type)
     return "Left";
 }
 
+/// @brief Base class for all controls in the library.
+///
+/// Controls are the base objects that make up a GUI element. All controls must be
+/// a part of a Container in order to be positioned, updated, and painted.
+///
+/// This class contains a number of virtual functions that are invoked whenever the
+/// state of the GUI changes. All classes that inherit from Control can override
+/// the desired functions to implement the desired behavior.
 class Control
     : public Class
     , public std::enable_shared_from_this<Control>

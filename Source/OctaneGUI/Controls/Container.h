@@ -37,6 +37,13 @@ namespace OctaneGUI
 
 class ControlList;
 
+/// @brief Owner of any Controls that will be positioned, sized, and painted.
+///
+/// Containers are responsible for layouts of Control objects. This includes
+/// positioning and sizing each control within the bounds of this Container.
+/// The base Container class will place all controls and their defined
+/// position and size. Containers can also contain sub-containers which
+/// can perform it's own layout logic.
 class Container : public Control
 {
     CLASS(Container)
