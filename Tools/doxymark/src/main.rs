@@ -13,12 +13,15 @@ fn main() {
 
     let mut path = "";
     let mut output_dir = "";
+    let mut link = "";
     let args: Vec<String> = std::env::args().collect();
     for (index, arg) in args.iter().enumerate() {
         if arg == "--path" && index < args.len() - 1 {
             path = &args[index + 1];
         } else if arg == "--output-dir" && index < args.len() - 1 {
             output_dir = &args[index + 1];
+        } else if arg == "--link" && index < args.len() - 1 {
+            link = &args[index + 1];
         }
     }
 
@@ -28,6 +31,6 @@ fn main() {
     }
 
     if let Some(manifest) = Manifest::load(path) {
-        manifest.generate(&output_dir);
+        manifest.generate(&output_dir, &link);
     }
 }

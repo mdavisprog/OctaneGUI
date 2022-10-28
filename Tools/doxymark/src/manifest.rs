@@ -37,7 +37,7 @@ impl Manifest {
         Some(result)
     }
 
-    pub fn generate(&self, directory: &str) -> bool {
+    pub fn generate(&self, directory: &str, link: &str) -> bool {
         let path = std::path::Path::new(directory).join("md");
         if !path.exists() {
             let result = std::fs::create_dir_all(&path);
@@ -71,7 +71,7 @@ impl Manifest {
             }
         }
 
-        if let Err(error) = self.write_toc(table_of_contents, &path) {
+        if let Err(error) = self.write_toc(table_of_contents, &path, link) {
             println!("Failed to write table of contents: {}", error);
         }
 
@@ -113,7 +113,7 @@ impl Manifest {
         true
     }
 
-    fn write_toc(&self, table_of_contents: Vec<TOCEntry>, root: &std::path::Path) -> Result<(), std::io::Error> {
+    fn write_toc(&self, table_of_contents: Vec<TOCEntry>, root: &std::path::Path, link: &str) -> Result<(), std::io::Error> {
         let mut toc_path = root.join("TOC");
         toc_path.set_extension("md");
 
@@ -129,7 +129,7 @@ impl Manifest {
                 // Marked entries should be returned and added to a handled list so that they are not repeated.
                 if !Self::has_parent_entry(item, &table_of_contents) {
                     if !marked_entries.contains(&item.file_name) {
-                        marked_entries.append(&mut Self::write_toc_entry(item, 0, &table_of_contents, &mut writer));
+                        marked_entries.append(&mut Self::write_toc_entry(item, 0, &table_of_contents, &mut writer, link));
                     }
                 }
             }
@@ -148,7 +148,7 @@ impl Manifest {
         false
     }
 
-    fn write_toc_entry(entry: &TOCEntry, depth: usize, toc: &Vec<TOCEntry>, writer: &mut std::io::BufWriter<std::fs::File>) -> Vec<String> {
+    fn write_toc_entry(entry: &TOCEntry, depth: usize, toc: &Vec<TOCEntry>, writer: &mut std::io::BufWriter<std::fs::File>, link: &str) -> Vec<String> {
         let mut result = Vec::<String>::new();
 
         result.push(entry.file_name.clone());
@@ -158,13 +158,14 @@ impl Manifest {
             }
         }
 
-        if let Err(error) = writeln!(writer, "* [{}]({})", entry.file_name.trim_end_matches(".md"), entry.file_name) {
+        let name = entry.file_name.trim_end_matches(".md");
+        if let Err(error) = writeln!(writer, "* [{}]({}/{})", name, link, name) {
             println!("Failed to write TOC entry {}: {}", entry.file_name, error);
         }
 
         for item in toc {
             if item.class.parent_name() == entry.class.full_name() {
-                result.append(&mut Self::write_toc_entry(item, depth + 1, toc, writer));
+                result.append(&mut Self::write_toc_entry(item, depth + 1, toc, writer, link));
             }
         }
 
