@@ -21,7 +21,7 @@ IF "%CLEAN%" == "TRUE" (
     cargo clean %MANIFEST_PATH%
 )
 
-cargo run %MANIFEST_PATH% -- --path %XML_PATH% --output-dir %DOC_PATH%
+cargo run %MANIFEST_PATH% -- --path %XML_PATH% --output-dir %DOC_PATH% --link https://github.com/mdavisprog/OctaneGUI/wiki
 
 POPD
 ENDLOCAL

@@ -22,6 +22,6 @@ if [ "$CLEAN" = true ] ; then
 	cargo clean $MANIFEST_PATH
 fi
 
-cargo run $MANIFEST_PATH -- --path $XML_PATH --output-dir $DOC_PATH
+cargo run $MANIFEST_PATH -- --path $XML_PATH --output-dir $DOC_PATH --link https://github.com/mdavisprog/OctaneGUI/wiki
 
 popd
