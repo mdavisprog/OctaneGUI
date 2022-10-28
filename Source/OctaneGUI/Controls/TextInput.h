@@ -40,6 +40,14 @@ namespace Syntax
 class Highlighter;
 }
 
+/// @brief Control that displays text and allows for user interaction.
+///
+/// TextInput controls accept text input from the user when the control is
+/// focused. The text can be selected by mouse or keyboard. By default,
+/// this control is set to be a single line input but can be set to allow
+/// multi-line editing. The control can be scrolled if the contents do not
+/// fit within the visible bounds. In single-line input mode, no scroll bars
+/// are displayed while they are visible in multi-line input mode.
 class TextInput : public ScrollableViewControl
 {
     friend TextInputInteraction;

@@ -34,6 +34,11 @@ namespace OctaneGUI
 
 class Texture;
 
+/// @brief Control that displays an image.
+///
+/// An Image is displayed through a loaded Texture object. The texture set can
+/// be a standalone texture, or UV coordinates can be defined to only show
+/// part of a texture. The tint of the image can also be set to change the color.
 class Image : public Control
 {
     CLASS(Image)

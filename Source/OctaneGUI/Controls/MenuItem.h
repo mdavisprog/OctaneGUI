@@ -33,6 +33,7 @@ namespace OctaneGUI
 
 class Menu;
 
+/// @brief Control that consists of a text control that is hoverable and selectable.
 class MenuItem : public TextSelectable
 {
     CLASS(MenuItem)

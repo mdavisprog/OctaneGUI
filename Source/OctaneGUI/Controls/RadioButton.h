@@ -33,6 +33,12 @@ namespace OctaneGUI
 
 class Text;
 
+/// @brief Button that can be part of a group where only one can be selected.
+///
+/// RadioButton consists of a circle button followed by a text control. RadioButtons
+/// within a single container are considered as part of the same group. Only
+/// a single RadioButton can be selected within this group. When selected, the circle
+/// is filled and the previous selected RadioButton is unfilled.
 class RadioButton : public Button
 {
     CLASS(RadioButton)

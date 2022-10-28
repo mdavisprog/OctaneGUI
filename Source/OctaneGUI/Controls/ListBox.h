@@ -35,6 +35,7 @@ class ListBoxInteraction;
 class Panel;
 class VerticalContainer;
 
+/// @brief List of items displayed in a scrollable container.
 class ListBox : public ScrollableViewControl
 {
     CLASS(ListBox)

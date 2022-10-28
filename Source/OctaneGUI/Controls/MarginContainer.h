@@ -31,6 +31,7 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+/// @brief Container that applies a margin on each side.
 class MarginContainer : public Container
 {
     CLASS(MarginContainer)

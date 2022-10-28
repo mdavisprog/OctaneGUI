@@ -34,6 +34,10 @@ namespace OctaneGUI
 class ScrollBar;
 class Timer;
 
+/// @brief Container that allows for scrolling.
+///
+/// ScrollableContainer allows for scrolling the contents of this container
+/// if the size of the contents exceed the size of the container.
 class ScrollableContainer : public Container
 {
     CLASS(ScrollableContainer)

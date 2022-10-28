@@ -35,6 +35,12 @@ namespace OctaneGUI
 {
 class Control;
 
+/// @brief Object that contains a list of controls that has a valid ID.
+///
+/// Any controls that has an ID defined will be collected and put into this
+/// list. The control can then be retrieved by the fully qualified ID path
+/// which can allow for setting up callbacks and modify other settings if
+/// desired.
 class ControlList
 {
 public:

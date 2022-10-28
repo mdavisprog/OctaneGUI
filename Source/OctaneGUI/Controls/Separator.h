@@ -31,6 +31,9 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+/// @brief Control that adds a separator which paints a line.
+///
+/// Separators can be oriented either horizontally or vertically.
 class Separator : public Control
 {
     CLASS(Separator)

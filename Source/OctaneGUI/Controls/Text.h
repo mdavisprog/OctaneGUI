@@ -37,6 +37,13 @@ namespace OctaneGUI
 
 class Font;
 
+/// @brief Control that displays text with a specified font.
+///
+/// Text controls displays text with a font that is either
+/// specified in the Theme object or a font that is specific
+/// to this control. The control can either be displayed as a
+/// single line or a wrap width can be set to be split
+/// into multiple lines.
 class Text : public Control
 {
     CLASS(Text)

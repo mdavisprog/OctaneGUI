@@ -34,6 +34,10 @@ namespace OctaneGUI
 class MarginContainer;
 class Text;
 
+/// @brief Container with a label and a border around its controls.
+///
+/// GroupBoxes are containers with no defined layout. BoxContainers should
+/// be added to define how its controls are organized.
 class GroupBox : public Container
 {
     CLASS(GroupBox)

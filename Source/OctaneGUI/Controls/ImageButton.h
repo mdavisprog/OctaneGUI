@@ -35,6 +35,8 @@ class Image;
 class Texture;
 
 /// @brief Button with an image.
+///
+/// The ImageButton displays the assigned texture with a padding on each side.
 class ImageButton : public Button
 {
     CLASS(ImageButton)

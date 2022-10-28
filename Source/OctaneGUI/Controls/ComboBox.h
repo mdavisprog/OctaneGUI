@@ -36,6 +36,12 @@ class ListBox;
 class Text;
 class TextInput;
 
+/// @brief Control that allows for a single selection among a list of options.
+///
+/// ComboBox is a container that consists of a text input control and a drop
+/// down button. When the button is clicked, a pop-up window is displayed
+/// with a list of options that can be selected. The selected option is
+/// displayed in the input control.
 class ComboBox : public HorizontalContainer
 {
     CLASS(ComboBox)

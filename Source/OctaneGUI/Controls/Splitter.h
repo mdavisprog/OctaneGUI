@@ -35,6 +35,10 @@ class BoxContainer;
 class Separator;
 class SplitterInteraction;
 
+/// @brief Container that holds two containers with a draggable splitter in between.
+///
+/// Splitter container has two sub-containers that can be populated with controls.
+/// They can oriented either horiztonally or vertically.
 class Splitter : public Container
 {
     friend SplitterInteraction;

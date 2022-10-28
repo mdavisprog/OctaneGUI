@@ -33,6 +33,7 @@ namespace OctaneGUI
 
 class Text;
 
+/// @brief Text control that can hovered or selected.
 class TextSelectable : public Control
 {
     CLASS(TextSelectable)

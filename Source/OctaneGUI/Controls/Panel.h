@@ -33,6 +33,7 @@ namespace OctaneGUI
 
 class Paint;
 
+/// @brief Control that paints a solid color.
 class Panel : public Control
 {
     CLASS(Panel)

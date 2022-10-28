@@ -37,6 +37,11 @@ class ListBox;
 class Text;
 class TextInput;
 
+/// @brief Container that allows for incrementing/decrementing a numeric value.
+///
+/// Spinner container consists of a TextInput control and two buttons that will
+/// increment or decrement the internal value. The buttons can be oriented to either
+/// be horizontal or vertical.
 class Spinner : public HorizontalContainer
 {
     CLASS(Spinner)

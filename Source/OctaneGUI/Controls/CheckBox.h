@@ -33,6 +33,13 @@ namespace OctaneGUI
 
 class Text;
 
+/// @brief Button that has a selection state toggled when it is clicked.
+///
+/// A CheckBox control consists of an opaque button along with a label.
+/// They can have up to three different states: None, Intermediate, Checked.
+/// The default behavior is to only allow a None and Checked state but can
+/// be configured to have an Intermediate state setting its TriState setting
+/// to true.
 class CheckBox : public Button
 {
     CLASS(CheckBox)

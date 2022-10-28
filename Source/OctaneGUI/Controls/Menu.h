@@ -37,6 +37,11 @@ class Panel;
 class MenuItem;
 class VerticalContainer;
 
+/// @brief A container that contains a list of selectable items that are displayed in a pop-up box.
+///
+/// Menu containers are either a part of a MenuBar container or can be standalone to be opened as a
+/// context menu. Menus can also contain sub-menus which is opened when the associated menu item is
+/// hovered.
 class Menu : public Container
 {
     CLASS(Menu)

@@ -36,6 +36,10 @@ class Menu;
 class MenuItem;
 class Panel;
 
+/// @brief A container of text items displayed below the window's title bar.
+///
+/// MenuBar contains a list of selectable text items that will open a menu
+/// when clicked.
 class MenuBar : public Container
 {
     CLASS(MenuBar)

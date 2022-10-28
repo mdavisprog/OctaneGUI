@@ -34,6 +34,12 @@ namespace OctaneGUI
 class ScrollableContainer;
 class ScrollableViewControl;
 
+/// @brief Interaction control that forwards input.
+///
+/// The ScrollableViewControl will always force this interaction to have focus.
+/// This control forwards input to the ScrollableContainer ScrollBar controls when
+/// appropriate, but prevent them from taking focus so that controls inside of
+/// the container can continue to receive input.
 class ScrollableViewInteraction : public Control
 {
     CLASS(ScrollableViewInteraction)
@@ -55,6 +61,12 @@ private:
     bool m_AlwaysFocus { false };
 };
 
+/// @brief Container that manages a ScrollableContainer and user interactions.
+///
+/// ScrollableViewControl is a container that forwards the mouse input into the
+/// contents of the ScrollableContainer. This container helps prevent the ScrollBar
+/// controls of the ScrollableContainer from taking focus away from the controls inside
+/// the ScrollableContainer.
 class ScrollableViewControl : public Container
 {
     CLASS(ScrollableViewControl)

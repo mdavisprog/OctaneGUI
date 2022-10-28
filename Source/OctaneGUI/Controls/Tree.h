@@ -34,6 +34,10 @@ namespace OctaneGUI
 class TreeItem;
 class VerticalContainer;
 
+/// @brief Control that displays a hierarchy of items.
+///
+/// Tree controls can display a hierarchy of items which can be expanded
+/// or collapsed.
 class Tree : public Container
 {
     CLASS(Tree)

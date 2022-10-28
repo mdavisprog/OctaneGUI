@@ -34,13 +34,12 @@ namespace OctaneGUI
 class MenuBar;
 class TitleBar;
 
-//
-// This container contains the controls and logic for handling a title bar,
-// menu bar, and a body. The title bar will only be present if a custom title
-// bar is requested for the owning widnow. Each window will hold an instance
-// of this container and is the container in which interactions will occur.
-//
-
+/// @brief Root container for Windows which consist of a title bar, menu bar, and body.
+///
+/// This container contains the controls and logic for handling a title bar,
+/// menu bar, and a body. The title bar will only be present if a custom title
+/// bar is requested for the owning widnow. Each window will hold an instance
+/// of this container and is the container in which interactions will occur.
 class WindowContainer : public VerticalContainer
 {
     CLASS(WindowContainer)
