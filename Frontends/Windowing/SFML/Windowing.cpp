@@ -179,15 +179,10 @@ void NewWindow(OctaneGUI::Window* Window)
         Windows::SetOnHitTest((void*)RenderWindow->getSystemHandle(), [](void* Handle, const OctaneGUI::Vector2& Point) -> HitTestResult
             {
                 OctaneGUI::Window* Window = ToWindow(Handle);
-                if (Window != nullptr)
-                {
-                    if (Window->GetRootContainer()->IsInTitleBar(Point))
-                    {
-                        return HitTestResult::Draggable;
-                    }
-                }
+                OctaneGUI::Rect CaptionArea { Windows::GetCaptionArea(Handle) };
+                OctaneGUI::Rect Bounds { OctaneGUI::Vector2::Zero - OctaneGUI::Vector2{0.0f, CaptionArea.Height()}, Window->GetSize() };
 
-                return HitTestResult::Normal;
+                return PerformHitTest(Window, Bounds, Point);
             });
 #endif
     }
