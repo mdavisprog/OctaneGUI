@@ -121,6 +121,18 @@ OctaneGUI::Rect GetWorkingArea(void* Handle)
     return { (float)Info.rcWork.left, (float)Info.rcWork.top, (float)Info.rcWork.right, (float)Info.rcWork.bottom};
 }
 
+OctaneGUI::Rect GetCaptionArea(void* Handle)
+{
+    HWND WinHandle = (HWND)Handle;
+
+    RECT Bounds {};
+    GetWindowRect(WinHandle, &Bounds);
+
+    const int Height = GetSystemMetrics(SM_CYFRAME) + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CXPADDEDBORDER);
+
+    return { (float)Bounds.left, (float)Bounds.top, (float)Bounds.right, (float)(Bounds.top + Height) };
+}
+
 void FocusWindow(void* Handle)
 {
     HWND WinHandle = (HWND)Handle;

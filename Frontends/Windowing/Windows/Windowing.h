@@ -44,6 +44,7 @@ typedef void (*OnWindowMoveSignature)(void*, const OctaneGUI::Vector2&);
 typedef HitTestResult (*OnHitTestSignature)(void*, const OctaneGUI::Vector2&);
 
 OctaneGUI::Rect GetWorkingArea(void* Handle);
+OctaneGUI::Rect GetCaptionArea(void* Handle);
 void FocusWindow(void* Handle);
 void MinimizeWindow(void* Handle);
 void MaximizeWindow(void* Handle);
