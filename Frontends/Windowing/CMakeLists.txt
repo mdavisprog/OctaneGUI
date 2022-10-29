@@ -14,4 +14,8 @@ else()
     set(SOURCE ${SOURCE} ${CMAKE_CURRENT_LIST_DIR}/Linux/Windowing.cpp)
 endif()
 
-set(SOURCE ${SOURCE} PARENT_SCOPE)
+set(SOURCE
+    ${SOURCE}
+    ${CMAKE_CURRENT_LIST_DIR}/Windowing.cpp
+    PARENT_SCOPE
+)
