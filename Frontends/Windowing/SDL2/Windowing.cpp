@@ -326,13 +326,30 @@ SDL_HitTestResult SDLCALL OnHitTest(SDL_Window* Window, SDL_Point* Area, void* D
         }
     }
 
-    if (Target != nullptr)
+    int Left, Top, Right, Bottom;
+    SDL_GetWindowBordersSize(Window, &Top, &Left, &Bottom, &Right);
+
+    int Width, Height;
+    SDL_GetWindowSize(Window, &Width, &Height);
+
+    const OctaneGUI::Vector2 Position { (float)Area->x, (float)Area->y };
+    const OctaneGUI::Rect Bounds { 0.0f, (float)-Top, (float)Width, (float)Height };
+
+    HitTestResult Result = PerformHitTest(Target, Bounds, Position);
+
+    switch (Result)
     {
-        const OctaneGUI::Vector2 Position { (float)Area->x, (float)Area->y };
-        if (Target->GetRootContainer()->IsInTitleBar(Position * Target->RenderScale()))
-        {
-            return SDL_HITTEST_DRAGGABLE;
-        }
+    case HitTestResult::Draggable: return SDL_HITTEST_DRAGGABLE;
+    case HitTestResult::TopLeft: return SDL_HITTEST_RESIZE_TOPLEFT;
+    case HitTestResult::Top: return SDL_HITTEST_RESIZE_TOP;
+    case HitTestResult::TopRight: return SDL_HITTEST_RESIZE_TOPRIGHT;
+    case HitTestResult::Right: return SDL_HITTEST_RESIZE_RIGHT;
+    case HitTestResult::BottomRight: return SDL_HITTEST_RESIZE_BOTTOMRIGHT;
+    case HitTestResult::Bottom: return SDL_HITTEST_RESIZE_BOTTOM;
+    case HitTestResult::BottomLeft: return SDL_HITTEST_RESIZE_BOTTOMLEFT;
+    case HitTestResult::Left: return SDL_HITTEST_RESIZE_LEFT;
+    case HitTestResult::Normal:
+    default: break;
     }
 
     return SDL_HITTEST_NORMAL;
