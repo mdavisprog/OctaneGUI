@@ -296,7 +296,7 @@ OctaneGUI::Event HandleEvent(SDL_Event& Event, const uint32_t WindowID, bool IsP
         }
         break;
 
-        case SDL_WINDOWEVENT_MAXIMIZED: 
+        case SDL_WINDOWEVENT_MAXIMIZED:
         {
             return OctaneGUI::Event(
                 OctaneGUI::Event::Type::WindowMaximized,
@@ -304,6 +304,11 @@ OctaneGUI::Event HandleEvent(SDL_Event& Event, const uint32_t WindowID, bool IsP
         }
         break;
 
+        case SDL_WINDOWEVENT_FOCUS_GAINED: return OctaneGUI::Event(
+            OctaneGUI::Event::Type::WindowGainedFocus);
+
+        case SDL_WINDOWEVENT_FOCUS_LOST: return OctaneGUI::Event(
+            OctaneGUI::Event::Type::WindowLostFocus);
         }
     }
     break;
@@ -524,13 +529,13 @@ void MaximizeWindow(OctaneGUI::Window* Window)
     }
     else
     {
-#if defined(APPLE)
+    #if defined(APPLE)
         // SDL_MaximizeWindow will prevent a 'zoom' operation if an already maximized window is
         // moved. By circumventing the SDL API, the window will be forced to zoom each call.
         Mac::Zoom(NativeHandle(g_Windows[Window]));
-#else
+    #else
         SDL_MaximizeWindow(g_Windows[Window]);
-#endif
+    #endif
     }
 #endif
 }

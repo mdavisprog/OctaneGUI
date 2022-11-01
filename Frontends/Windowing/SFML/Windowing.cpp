@@ -160,6 +160,7 @@ void NewWindow(OctaneGUI::Window* Window)
         sf::VideoMode Desktop = sf::VideoMode::getDesktopMode();
         Window->SetDeviceSize({ (float)Desktop.width, (float)Desktop.height });
         Window->SetPosition({ (float)RenderWindow->getPosition().x, (float)RenderWindow->getPosition().y });
+        Window->SetFocused(true);
 
 #if defined(WINDOWS)
         if (Window->Modal())
@@ -180,7 +181,7 @@ void NewWindow(OctaneGUI::Window* Window)
             {
                 OctaneGUI::Window* Window = ToWindow(Handle);
                 OctaneGUI::Rect CaptionArea { Windows::GetCaptionArea(Handle) };
-                OctaneGUI::Rect Bounds { OctaneGUI::Vector2::Zero - OctaneGUI::Vector2{0.0f, CaptionArea.Height()}, Window->GetSize() };
+                OctaneGUI::Rect Bounds { OctaneGUI::Vector2::Zero - OctaneGUI::Vector2 { 0.0f, CaptionArea.Height() }, Window->GetSize() };
 
                 return PerformHitTest(Window, Bounds, Point);
             });
@@ -364,6 +365,12 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 
         case sf::Event::MouseLeft:
             return OctaneGUI::Event(OctaneGUI::Event::Type::WindowLeave);
+
+        case sf::Event::GainedFocus:
+            return OctaneGUI::Event(OctaneGUI::Event::Type::WindowGainedFocus);
+
+        case sf::Event::LostFocus:
+            return OctaneGUI::Event(OctaneGUI::Event::Type::WindowLostFocus);
 
         default: break;
         }
