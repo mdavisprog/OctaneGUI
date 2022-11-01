@@ -54,6 +54,8 @@ public:
         WindowLeave,
         WindowMoved,
         WindowMaximized,
+        WindowGainedFocus,
+        WindowLostFocus,
     };
 
     struct Key

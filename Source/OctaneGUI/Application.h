@@ -57,13 +57,13 @@ class Window;
 /// @brief List of window actions that must be handled by the frontend.
 enum class WindowAction : uint8_t
 {
-    Create, ///< Create a window.
-    Destroy, ///< Destroy a window.
-    Raise, ///< Focus a window.
-    Enable, ///< Enables a window.
-    Disable, ///< Disables a window.
+    Create,   ///< Create a window.
+    Destroy,  ///< Destroy a window.
+    Raise,    ///< Focus a window.
+    Enable,   ///< Enables a window.
+    Disable,  ///< Disables a window.
     Position, ///< Update the position of a window.
-    Size, ///< Update the size of a window.
+    Size,     ///< Update the size of a window.
     Minimize, ///< Minimize a window.
     Maximize, ///< Maximize a window.
 };
@@ -122,7 +122,7 @@ public:
 
     /// @brief Destroy all existing windows and cleans up any used resources.
     ///
-    /// This function can be called manually, but is also called automatically when the 
+    /// This function can be called manually, but is also called automatically when the
     /// @ref Run "Run" function has ended.
     void Shutdown();
 
@@ -195,7 +195,7 @@ public:
 
     /// @brief Notifies the frontend to create a system window from the Window object with the
     /// given ID.
-    /// @param ID String representing the Window object. 
+    /// @param ID String representing the Window object.
     /// @return True if displayed by frontend or already displayed. False otherwise.
     bool DisplayWindow(const char* ID);
 
@@ -325,7 +325,7 @@ public:
     /// @brief Callback invoked when the application requests to get the system's
     /// clipboard contents.
     /// @param Fn The OnGetClipboardContentsSignature callback.
-    /// @return The Application object to allow for chaining methods. 
+    /// @return The Application object to allow for chaining methods.
     Application& SetOnGetClipboardContents(OnGetClipboardContentsSignature&& Fn);
 
     /// @brief Request to change the title of a system window.
@@ -334,12 +334,12 @@ public:
     /// to notify the frontend to change the system window's title.
     ///
     /// @param Fn The OnSetWindowTitleSignature callback.
-    /// @return The Application object to allow for chaining methods. 
+    /// @return The Application object to allow for chaining methods.
     Application& SetOnSetWindowTitle(OnSetWindowTitleSignature&& Fn);
 
     /// @brief Request to change the system's mouse cursor.
     /// @param Fn The OnSetMouseCursorSignature callback.
-    /// @return The Application object to allow for chaining methods. 
+    /// @return The Application object to allow for chaining methods.
     Application& SetOnSetMouseCursor(OnSetMouseCursorSignature&& Fn);
 
 private:
