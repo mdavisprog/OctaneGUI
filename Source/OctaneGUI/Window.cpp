@@ -371,6 +371,24 @@ Window& Window::SetFocus(const std::shared_ptr<Control>& Focus)
     return *this;
 }
 
+Window& Window::SetFocused(bool Focused)
+{
+    if (Focused)
+    {
+        SetFlags(WindowFlags::Focused);
+    }
+    else
+    {
+        UnsetFlags(WindowFlags::Focused);
+    }
+    return *this;
+}
+
+bool Window::Focused() const
+{
+    return m_Flags & WindowFlags::Focused;
+}
+
 bool Window::Modal() const
 {
     return m_Flags & WindowFlags::Modal;

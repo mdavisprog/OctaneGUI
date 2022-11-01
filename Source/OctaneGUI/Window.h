@@ -66,6 +66,7 @@ enum Flags
     Modal = 1 << 3,
     TitleBar = 1 << 4,
     Maximized = 1 << 5,
+    Focused = 1 << 6,
 
     Normal = Resizable | HighDPI | CanMinimize | TitleBar,
 };
@@ -88,8 +89,6 @@ public:
     Window& SetPosition(Vector2 Position);
     Window& SetPositionBoundsOnly(const Vector2& Position);
     Vector2 GetPosition() const;
-
-    
 
     /// @brief Sync position from frontend.
     ///
@@ -150,6 +149,9 @@ public:
     Window& UnsetFlags(uint64_t Flags);
 
     Window& SetFocus(const std::shared_ptr<Control>& Focus);
+
+    Window& SetFocused(bool Focused);
+    bool Focused() const;
 
     bool Modal() const;
 
