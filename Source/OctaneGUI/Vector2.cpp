@@ -90,6 +90,11 @@ Vector2 Vector2::operator/(const Vector2& Other) const
     return Vector2(X / Other.X, Y / Other.Y);
 }
 
+Vector2 Vector2::operator-(float Other) const
+{
+    return Vector2(X - Other, Y - Other);
+}
+
 Vector2 Vector2::operator*(float Other) const
 {
     return Vector2(X * Other, Y * Other);
