@@ -343,6 +343,7 @@ Window& Window::SetCustomTitleBar(bool CustomTitleBar)
     if (m_Container && GetIcons() != nullptr)
     {
         m_Container->ShowTitleBar(CustomTitleBar);
+        SetFocused(Focused());
     }
 
     return *this;
@@ -381,6 +382,9 @@ Window& Window::SetFocused(bool Focused)
     {
         UnsetFlags(WindowFlags::Focused);
     }
+    
+    m_Container->SetFocused(Focused);
+
     return *this;
 }
 
