@@ -54,6 +54,14 @@ public:
     WindowContainer& SetTitle(const char32_t* Title);
     WindowContainer& SetMaximized(bool Maximized);
 
+    /// @brief Notified by the owning Window if the focus state has changed.
+    ///
+    /// This function will update the title bar's color based on the theme.
+    ///
+    /// @param Focused True if the owning Window has focus. False otherwise.
+    /// @return The reference to this WindowContainer.
+    WindowContainer& SetFocused(bool Focused);
+
     bool IsInTitleBar(const Vector2& Position) const;
 
     const std::shared_ptr<Container>& Body() const;

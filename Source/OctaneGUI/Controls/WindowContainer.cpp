@@ -28,6 +28,7 @@ SOFTWARE.
 #include "../Icons.h"
 #include "../Json.h"
 #include "../String.h"
+#include "../ThemeProperties.h"
 #include "../Window.h"
 #include "HorizontalContainer.h"
 #include "ImageButton.h"
@@ -47,7 +48,8 @@ public:
     {
         SetExpand(Expand::Width);
 
-        AddControl<Panel>()->SetExpand(Expand::Both);
+        m_Background = AddControl<Panel>();
+        m_Background->SetExpand(Expand::Both);
 
         const std::shared_ptr<HorizontalContainer> Root = AddControl<HorizontalContainer>();
         Root->SetExpand(Expand::Width);
@@ -119,6 +121,18 @@ public:
         return *this;
     }
 
+    TitleBar& SetFocused(bool Focused)
+    {
+        const Variant& BackgroundColor = Focused ? GetProperty(ThemeProperties::Window_Focused) : GetProperty(ThemeProperties::Panel);
+        m_Background->SetProperty(ThemeProperties::Panel, BackgroundColor);
+
+        const Variant& TextColor = Focused ? GetProperty(ThemeProperties::Window_Title_Focused) : GetProperty(ThemeProperties::Text);
+        m_Title->SetProperty(ThemeProperties::Text, TextColor);
+
+        Invalidate(InvalidateType::Paint);
+        return *this;
+    }
+
     bool IsDraggable(const Vector2& Position) const
     {
         return m_Draggable->Contains(Position);
@@ -127,6 +141,8 @@ public:
     virtual void OnThemeLoaded() override
     {
         Container::OnThemeLoaded();
+
+        SetFocused(GetWindow()->Focused());
 
         if (m_Minimize)
         {
@@ -161,6 +177,7 @@ private:
         return Result;
     }
 
+    std::shared_ptr<Panel> m_Background { nullptr };
     std::shared_ptr<Text> m_Title { nullptr };
     std::shared_ptr<BoxContainer> m_Draggable { nullptr };
     std::shared_ptr<ImageButton> m_Minimize { nullptr };
@@ -230,6 +247,17 @@ WindowContainer& WindowContainer::SetMaximized(bool Maximized)
     }
 
     m_TitleBar->SetMaximized(Maximized);
+    return *this;
+}
+
+WindowContainer& WindowContainer::SetFocused(bool Focused)
+{
+    if (!m_TitleBar)
+    {
+        return *this;
+    }
+
+    m_TitleBar->SetFocused(Focused);
     return *this;
 }
 
