@@ -26,6 +26,8 @@
     "RadioButton_Hovered": [255, 255, 255, 255],
     "RadioButton_Pressed": [214, 218, 217, 255],
     "RadioButton_Selected": [0, 0, 0, 255],
+    "Window_Focused": [10, 36, 106, 255],
+    "Window_Title_Focused": [255, 255, 255, 255],
 
     "Separator_Thickness": 1.5,
     "Separator_Margins": 8.0,

@@ -66,6 +66,8 @@ public:
         RadioButton_Hovered,
         RadioButton_Pressed,
         RadioButton_Selected,
+        Window_Focused,
+        Window_Title_Focused,
 
         // Floats
         Separator_Thickness,

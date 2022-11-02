@@ -143,6 +143,8 @@ void Theme::Load(const Json& Root)
     Set(ThemeProperties::RadioButton_Hovered, Root["RadioButton_Hovered"]);
     Set(ThemeProperties::RadioButton_Pressed, Root["RadioButton_Pressed"]);
     Set(ThemeProperties::RadioButton_Selected, Root["RadioButton_Selected"]);
+    Set(ThemeProperties::Window_Focused, Root["Window_Focused"]);
+    Set(ThemeProperties::Window_Title_Focused, Root["Window_Title_Focused"]);
 
     Set(ThemeProperties::Separator_Thickness, Root["Separator_Thickness"]);
     Set(ThemeProperties::Separator_Margins, Root["Separator_Margins"]);
@@ -212,6 +214,8 @@ void Theme::InitializeDefault()
     m_Properties[ThemeProperties::RadioButton_Hovered] = Color(48, 63, 169, 255);
     m_Properties[ThemeProperties::RadioButton_Pressed] = Color(98, 125, 152, 255);
     m_Properties[ThemeProperties::RadioButton_Selected] = Color(255, 255, 255, 255);
+    m_Properties[ThemeProperties::Window_Focused] = Color(48, 48, 48, 255);
+    m_Properties[ThemeProperties::Window_Title_Focused] = Color(255, 255, 255, 255);
 
     m_Properties[ThemeProperties::Separator_Thickness] = 1.5f;
     m_Properties[ThemeProperties::Separator_Margins] = 8.0f;
