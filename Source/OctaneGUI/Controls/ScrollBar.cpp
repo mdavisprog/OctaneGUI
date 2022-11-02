@@ -166,14 +166,12 @@ void ScrollBarHandle::OnMouseMove(const Vector2& Position)
         float NewOffset = m_Offset;
         if (m_Orientation == Orientation::Horizontal)
         {
-            NewOffset += Position.X - m_DragAnchor.X;
+            NewOffset = Position.X - m_DragOffset.X;
         }
         else
         {
-            NewOffset += Position.Y - m_DragAnchor.Y;
+            NewOffset = Position.Y - m_DragOffset.Y;
         }
-
-        m_DragAnchor = Position;
 
         SetOffset(NewOffset);
 
@@ -189,7 +187,7 @@ bool ScrollBarHandle::OnMousePressed(const Vector2& Position, Mouse::Button Butt
     if (m_Hovered && Button == Mouse::Button::Left)
     {
         m_Drag = true;
-        m_DragAnchor = Position;
+        m_DragOffset = (Position - GetPosition()) - m_Offset;
         return true;
     }
 

@@ -72,7 +72,7 @@ private:
     float m_Offset { 0.0f };
     bool m_Hovered { false };
     bool m_Drag { false };
-    Vector2 m_DragAnchor { Vector2() };
+    Vector2 m_DragOffset {};
     ScrollBar* m_ScrollBar { nullptr };
     OnScrollBarSignature m_OnDrag { nullptr };
 };
