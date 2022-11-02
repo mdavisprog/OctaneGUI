@@ -342,6 +342,8 @@ bool Application::DisplayWindow(const char* ID)
             {
                 OnWindowAction(&Target, WindowAction::Size);
             });
+    
+    FocusWindow(It->second);
 
     // The window's scale may be updated when it is displayed. Calling 'OnThemeLoaded' will
     // resize any controls and fonts based on this scaling.
@@ -696,7 +698,7 @@ int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
         break;
 
     case Event::Type::WindowGainedFocus:
-        Item->SetFocused(true);
+        FocusWindow(Item);
         break;
 
     case Event::Type::WindowLostFocus:
@@ -762,6 +764,19 @@ void Application::LoadIcons(const Json& Root)
         }
 
         m_Icons->Initialize(Definitions, IconSize);
+    }
+}
+
+void Application::FocusWindow(const std::shared_ptr<Window>& Focus)
+{
+    Focus->SetFocused(true);
+
+    for (const std::pair<std::string, std::shared_ptr<Window>>& Item : m_Windows)
+    {
+        if (Item.second != Focus)
+        {
+            Item.second->SetFocused(false);
+        }
     }
 }
 

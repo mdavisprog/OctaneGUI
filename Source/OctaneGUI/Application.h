@@ -350,6 +350,7 @@ private:
     bool Initialize();
     void OnWindowAction(Window* InWindow, WindowAction Action);
     void LoadIcons(const Json& Root);
+    void FocusWindow(const std::shared_ptr<Window>& Focus);
 
     std::unordered_map<std::string, std::shared_ptr<Window>> m_Windows;
     std::vector<std::weak_ptr<Window>> m_Modals {};
