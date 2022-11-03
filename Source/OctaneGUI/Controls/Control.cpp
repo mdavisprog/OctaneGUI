@@ -130,15 +130,15 @@ Control* Control::GetParent() const
     return m_Parent;
 }
 
-Control* Control::SetExpand(Expand InExpand)
+Control& Control::SetExpand(Expand InExpand)
 {
     if (IsFixedSize())
     {
-        return this;
+        return *this;
     }
 
     m_Expand = InExpand;
-    return this;
+    return *this;
 }
 
 Expand Control::GetExpand() const

@@ -387,7 +387,7 @@ void Inspector::SetEnabled(const std::shared_ptr<InspectorProxy>& Proxy, bool En
         Proxy
             ->SetEnabled(true)
             .SetExpand(Expand::Both)
-            ->SetSize(Size);
+            .SetSize(Size);
     }
     else
     {
@@ -395,7 +395,7 @@ void Inspector::SetEnabled(const std::shared_ptr<InspectorProxy>& Proxy, bool En
             ->Clear()
             .SetEnabled(false)
             .SetExpand(Expand::None)
-            ->SetSize({});
+            .SetSize({});
     }
 
     Proxy->Invalidate(InvalidateType::Both);

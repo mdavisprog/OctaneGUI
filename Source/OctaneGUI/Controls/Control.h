@@ -169,7 +169,19 @@ public:
     /// @return Pointer to the parent control. May be NULL.
     Control* GetParent() const;
 
-    Control* SetExpand(Expand InExpand);
+    /// @brief Sets the Expand type for this control.
+    ///
+    /// The Expand type tells the owning Container how this control should be sized during
+    /// any layouts. Control's by default do not expand in any direction. This value can
+    /// either be None, Width, Height, or Both. If the control is set to be a fixed size,
+    /// then no change is made when this function is called.
+    ///
+    /// @param InExpand The Expand type to set for this control.
+    /// @return This Control reference.
+    Control& SetExpand(Expand InExpand);
+
+    /// @brief Returns this control's expand type.
+    /// @return Expand type.
     Expand GetExpand() const;
 
     Control& SetForwardKeyEvents(bool Forward);
