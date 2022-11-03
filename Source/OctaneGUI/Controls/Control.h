@@ -156,7 +156,17 @@ public:
     /// @return Vector2 of this control's size.
     Vector2 GetSize() const;
 
-    Control* SetParent(Control* Parent);
+    /// @brief Sets the parent for this control.
+    ///
+    /// Sets the parent for this control. The parent is usually a Container by in some cases
+    /// may be another control.
+    ///
+    /// @param Parent The parent control for this control. Can be NULL.
+    /// @return This Control reference.
+    Control& SetParent(Control* Parent);
+
+    /// @brief Returns the parent for this control.
+    /// @return Pointer to the parent control. May be NULL.
     Control* GetParent() const;
 
     Control* SetExpand(Expand InExpand);

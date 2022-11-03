@@ -103,7 +103,7 @@ ComboBox::ComboBox(Window* InWindow)
                 }
             })
         .SetParent(this)
-        ->SetPosition({ 0.0f, m_Input->GetSize().Y });
+        .SetPosition({ 0.0f, m_Input->GetSize().Y });
 
     OnThemeLoaded();
 }

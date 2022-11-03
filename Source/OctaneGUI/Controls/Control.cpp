@@ -119,10 +119,10 @@ Vector2 Control::GetSize() const
     return m_Bounds.GetSize();
 }
 
-Control* Control::SetParent(Control* Parent)
+Control& Control::SetParent(Control* Parent)
 {
     m_Parent = Parent;
-    return this;
+    return *this;
 }
 
 Control* Control::GetParent() const
