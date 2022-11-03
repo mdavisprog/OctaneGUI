@@ -128,6 +128,34 @@ Vector2& Vector2::operator/=(const Vector2& Other)
     return *this;
 }
 
+Vector2& Vector2::operator+=(float Other)
+{
+    X += Other;
+    Y += Other;
+    return *this;
+}
+
+Vector2& Vector2::operator-=(float Other)
+{
+    X -= Other;
+    Y -= Other;
+    return *this;
+}
+
+Vector2& Vector2::operator*=(float Other)
+{
+    X *= Other;
+    Y *= Other;
+    return *this;
+}
+
+Vector2& Vector2::operator/=(float Other)
+{
+    X /= Other;
+    Y /= Other;
+    return *this;
+}
+
 bool Vector2::operator==(const Vector2& Other) const
 {
     return X == Other.X && Y == Other.Y;

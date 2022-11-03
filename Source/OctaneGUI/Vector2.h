@@ -58,6 +58,11 @@ public:
     Vector2& operator*=(const Vector2& Other);
     Vector2& operator/=(const Vector2& Other);
 
+    Vector2& operator+=(float Other);
+    Vector2& operator-=(float Other);
+    Vector2& operator*=(float Other);
+    Vector2& operator/=(float Other);
+
     bool operator==(const Vector2& Other) const;
     bool operator!=(const Vector2& Other) const;
 
