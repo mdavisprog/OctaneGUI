@@ -80,11 +80,11 @@ Control::~Control()
 {
 }
 
-Control* Control::SetPosition(const Vector2& Position)
+Control& Control::SetPosition(const Vector2& Position)
 {
     m_Bounds.SetPosition(Position);
     Invalidate(InvalidateType::Layout);
-    return this;
+    return *this;
 }
 
 Vector2 Control::GetPosition() const
@@ -102,7 +102,7 @@ Vector2 Control::GetAbsolutePosition() const
     return m_Parent->GetAbsolutePosition() + GetPosition();
 }
 
-Control* Control::SetSize(const Vector2& Size)
+Control& Control::SetSize(const Vector2& Size)
 {
     const Vector2 LastSize = GetSize();
     m_Bounds.Max = m_Bounds.Min + Size;
@@ -111,7 +111,7 @@ Control* Control::SetSize(const Vector2& Size)
         Invalidate(InvalidateType::Layout);
         OnResized();
     }
-    return this;
+    return *this;
 }
 
 Vector2 Control::GetSize() const

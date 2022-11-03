@@ -68,7 +68,7 @@ ComboBox::ComboBox(Window* InWindow)
                 }
             })
         .SetSize({ InputSize.Y, InputSize.Y })
-        ->SetExpand(Expand::Height);
+        .SetExpand(Expand::Height);
 
     m_List = std::make_shared<ListBox>(InWindow);
     m_List

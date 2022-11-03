@@ -124,11 +124,36 @@ public:
     Control(Window* InWindow);
     virtual ~Control();
 
-    Control* SetPosition(const Vector2& Position);
+    /// @brief Sets this control's relative position.
+    ///
+    /// All control's positioning is relative to it's parent. When the position is
+    /// set, the control's layout is invalidated, notifying the owning container
+    /// to update it's layout with this new position for this control.
+    ///
+    /// @param Position Relative position of this control.
+    /// @return This Control reference.
+    Control& SetPosition(const Vector2& Position);
+
+    /// @brief Returns the relative position of this control without any transformations.
+    /// @return Vector2 relative position.
     Vector2 GetPosition() const;
+
+    /// @brief Returns the absolute position of this control. Applies parent transformations.
+    /// @return Vector2 absolute position.
     Vector2 GetAbsolutePosition() const;
 
-    Control* SetSize(const Vector2& Size);
+    /// @brief Sets the size of this control.
+    ///
+    /// Sets the size of this control. If the size is different, a layout invalidate request is
+    /// sent and the owning container will re-layout its contents with this new size for this
+    /// control. The OnResized function will be called on this control before the layout occurs.
+    ///
+    /// @param Size Vector2 of the new size for this control.
+    /// @return 
+    Control& SetSize(const Vector2& Size);
+
+    /// @brief Returns the size of this control.
+    /// @return Vector2 of this control's size.
     Vector2 GetSize() const;
 
     Control* SetParent(Control* Parent);

@@ -322,13 +322,13 @@ void Inspector::Inspect(Window* Target)
     m_MenuBarProxy
         ->SetRoot(Target->GetMenuBar())
         .SetSize(Target->GetMenuBar()->GetSize())
-        ->SetWindow(Target);
+        .SetWindow(Target);
     Target->GetMenuBar()->InsertControl(m_MenuBarProxy);
 
     m_BodyProxy
         ->SetRoot(Target->GetContainer())
         .SetSize(Target->GetSize())
-        ->SetWindow(Target);
+        .SetWindow(Target);
     Target->GetContainer()->InsertControl(m_BodyProxy);
 
     Target->App().SetIgnoreModals(true);
