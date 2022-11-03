@@ -184,7 +184,19 @@ public:
     /// @return Expand type.
     Expand GetExpand() const;
 
+    /// @brief Sets whether the parent control should be notified of this control's key events.
+    ///
+    /// Sets whether this control's key events should notify the parent control. Containers
+    /// may want to handle key events but due to the architecture only allowing Controls to have
+    /// focus, Containers will not be able to directly receive these events. Setting this flag
+    /// will allow for this to occur.
+    ///
+    /// @param Forward Boolean to set whether key events should be forwarded.
+    /// @return This Control reference.
     Control& SetForwardKeyEvents(bool Forward);
+
+    /// @brief Returns whether this control should forward key events.
+    /// @return Boolean value.
     bool ShouldForwardKeyEvents() const;
 
     Control* SetID(const char* ID);
