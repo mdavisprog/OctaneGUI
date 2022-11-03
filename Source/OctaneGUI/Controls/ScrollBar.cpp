@@ -188,6 +188,12 @@ bool ScrollBarHandle::OnMousePressed(const Vector2& Position, Mouse::Button Butt
     {
         m_Drag = true;
         m_DragOffset = (Position - GetPosition()) - m_Offset;
+
+        if (GetParent()->GetProperty(ThemeProperties::ScrollBar_Buttons).Bool())
+        {
+            m_DragOffset += PropertySize();
+        }
+
         return true;
     }
 
