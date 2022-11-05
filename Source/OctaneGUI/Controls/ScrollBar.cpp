@@ -275,9 +275,9 @@ ScrollBar& ScrollBar::SetScrollBarSize(const Vector2& Size)
     Vector2 HandleSize = Size;
     if (m_Buttons)
     {
-        const float ScrollBarSize = m_Handle->PropertySize();
+        const float ScrollBarSize = PropertySize();
 
-        if (m_Handle->GetOrientation() == Orientation::Horizontal)
+        if (GetOrientation() == Orientation::Horizontal)
         {
             HandleSize.X -= ScrollBarSize * 2.0f;
 
@@ -310,6 +310,11 @@ Vector2 ScrollBar::GetScrollBarSize() const
 float ScrollBar::PropertySize() const
 {
     return m_Handle->PropertySize();
+}
+
+Orientation ScrollBar::GetOrientation() const
+{
+    return m_Handle->GetOrientation();
 }
 
 ScrollBar& ScrollBar::SetAlwaysPaint(bool AlwaysPaint)

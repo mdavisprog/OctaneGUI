@@ -90,6 +90,7 @@ public:
     Vector2 GetScrollBarSize() const;
 
     float PropertySize() const;
+    Orientation GetOrientation() const;
 
     ScrollBar& SetAlwaysPaint(bool AlwaysPaint);
     bool ShouldPaint() const;
