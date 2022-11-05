@@ -33,6 +33,7 @@ SOFTWARE.
 #include "../Window.h"
 #include "ImageButton.h"
 #include "ListBox.h"
+#include "ScrollableContainer.h"
 #include "Text.h"
 #include "TextInput.h"
 
@@ -190,7 +191,16 @@ ComboBox& ComboBox::SetOnSelected(OnSelectedSignature&& Fn)
 
 void ComboBox::Update()
 {
-    const Vector2 ContentSize = m_List->ListSize();
+    Vector2 ContentSize = m_List->ListSize();
+
+    // TODO: Should this logic be applied to all ScrollableViewControls?
+    const float AlwaysPaint = m_List->Scrollable()->GetProperty(ThemeProperties::ScrollBar_AlwaysPaint).Bool();
+    if (AlwaysPaint)
+    {
+        const float SBSize = m_List->Scrollable()->GetProperty(ThemeProperties::ScrollBar_Size).Float();
+        ContentSize += Vector2(SBSize, SBSize);
+    }
+
     m_List->SetSize({ GetSize().X, std::min<float>(ContentSize.Y, 200.0f) });
 }
 
