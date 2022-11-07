@@ -119,10 +119,10 @@ int main(int argc, char **argv)
     ThemesComboBox->SetSelected(OctaneGUI::String::ToUTF32(Theme).c_str());
 
     std::shared_ptr<OctaneGUI::ListBox> ListBox = List.To<OctaneGUI::ListBox>("ListBox");
-    for (int I = 0; I < 10; I++)
+    for (int I = 0; I < 15; I++)
     {
         const std::string Text { std::string("Item ") + std::to_string(I) };
-        ListBox->AddItem<OctaneGUI::TextSelectable>()->SetText(Text.c_str());
+        ListBox->AddItem<OctaneGUI::Text>()->SetText(Text.c_str());
     }
 
     const OctaneGUI::ControlList& AboutList = WindowControls["About"];
