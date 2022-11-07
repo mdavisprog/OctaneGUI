@@ -27,12 +27,15 @@ SOFTWARE.
 #include "ListBox.h"
 #include "../Assert.h"
 #include "../Json.h"
+#include "../Keyboard.h"
 #include "../Paint.h"
 #include "../Profiler.h"
 #include "../ThemeProperties.h"
 #include "Panel.h"
 #include "ScrollableContainer.h"
 #include "VerticalContainer.h"
+
+#include <algorithm>
 
 namespace OctaneGUI
 {
@@ -51,9 +54,14 @@ public:
         SetExpand(Expand::Both);
     }
 
-    int Index() const
+    const std::vector<int>& Indices() const
     {
-        return m_Index;
+        return m_Indices;
+    }
+
+    bool IsSelected(int Index) const
+    {
+        return std::find(m_Indices.begin(), m_Indices.end(), Index) != m_Indices.end();
     }
 
     int HoveredIndex() const
@@ -63,7 +71,7 @@ public:
 
     void Clear()
     {
-        m_Index = -1;
+        m_Indices.clear();
     }
 
     ListBoxInteraction& SetOnSelect(ListBox::OnSelectSignature Fn)
@@ -130,15 +138,27 @@ public:
 
         if (Button == Mouse::Button::Left)
         {
-            if (m_OnSelectionChange)
+            if (!IsCtrlPressed())
             {
-                m_OnSelectionChange(m_Hovered_Index, m_Index);
+                if (m_OnSelectionChange)
+                {
+                    for (int Index : m_Indices)
+                    {
+                        m_OnSelectionChange(m_Hovered_Index, Index);
+                    }
+                }
+
+                m_Indices.clear();
             }
 
-            m_Index = m_Hovered_Index;
+            if (std::find(m_Indices.begin(), m_Indices.end(), m_Hovered_Index) == m_Indices.end())
+            {
+                m_Indices.push_back(m_Hovered_Index);
+            }
+
             if (m_OnSelect && !m_List.expired())
             {
-                m_OnSelect(m_Index, m_List.lock()->Controls()[m_Index]);
+                m_OnSelect(m_Hovered_Index, m_List.lock()->Controls()[m_Hovered_Index]);
             }
             Invalidate();
         }
@@ -165,9 +185,14 @@ private:
         }
     }
 
+    bool IsCtrlPressed() const
+    {
+        return IsKeyPressed(Keyboard::Key::LeftControl) || IsKeyPressed(Keyboard::Key::RightControl);
+    }
+
     std::weak_ptr<Container> m_List {};
-    int m_Index { -1 };
     int m_Hovered_Index { -1 };
+    std::vector<int> m_Indices {};
     ListBox::OnSelectSignature m_OnSelect { nullptr };
     OnChangeSignature m_OnHoverChange { nullptr };
     OnChangeSignature m_OnSelectionChange { nullptr };
@@ -201,7 +226,7 @@ ListBox::ListBox(Window* InWindow)
                 }
 
                 const std::shared_ptr<ListBoxInteraction>& Interaction = std::static_pointer_cast<ListBoxInteraction>(this->Interaction());
-                if (Old != -1 && Old != Interaction->Index())
+                if (Old != -1 && !Interaction->IsSelected(Old))
                 {
                     m_List->Controls()[Old]->ClearProperty(ThemeProperties::Text);
                 }
@@ -230,12 +255,24 @@ ListBox& ListBox::ClearItems()
 int ListBox::Index() const
 {
     const std::shared_ptr<ListBoxInteraction>& Interaction = std::static_pointer_cast<ListBoxInteraction>(this->Interaction());
-    return Interaction->Index();
+
+    if (Interaction->Indices().empty())
+    {
+        return -1;
+    }
+
+    return Interaction->Indices().front();
 }
 
 int ListBox::Count() const
 {
     return (int)m_List->Controls().size();
+}
+
+const std::vector<int>& ListBox::Selected() const
+{
+    const std::shared_ptr<ListBoxInteraction>& Interaction = std::static_pointer_cast<ListBoxInteraction>(this->Interaction());
+    return Interaction->Indices();
 }
 
 ListBox& ListBox::Deselect()
@@ -284,15 +321,15 @@ void ListBox::OnPaint(Paint& Brush) const
 
     const std::shared_ptr<ListBoxInteraction>& Interaction = std::static_pointer_cast<ListBoxInteraction>(this->Interaction());
     const int HoveredIndex = Interaction->HoveredIndex();
-    const int Index = Interaction->Index();
+    const std::vector<int>& Indices = Interaction->Indices();
 
-    if (HoveredIndex != -1 && HoveredIndex != Index)
+    if (HoveredIndex != -1 && !Interaction->IsSelected(HoveredIndex))
     {
         const std::shared_ptr<Control>& Item = m_List->Controls()[HoveredIndex];
         PaintItem(Brush, Item);
     }
 
-    if (Index != -1)
+    for (int Index : Indices)
     {
         const std::shared_ptr<Control>& Item = m_List->Controls()[Index];
         PaintItem(Brush, Item);

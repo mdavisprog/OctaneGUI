@@ -57,6 +57,7 @@ public:
 
     int Index() const;
     int Count() const;
+    const std::vector<int>& Selected() const;
     ListBox& Deselect();
     ListBox& SetOnSelect(OnSelectSignature Fn);
     Vector2 ListSize() const;
