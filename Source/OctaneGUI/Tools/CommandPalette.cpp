@@ -37,7 +37,6 @@ SOFTWARE.
 #include "../String.h"
 #include "../Window.h"
 #include "Inspector.h"
-#include "ProfileViewer.h"
 #include "Profiler.h"
 #include "TextureViewer.h"
 
@@ -181,7 +180,7 @@ bool CommandPalette::Process(const std::u32string& Command, const std::vector<st
                 if (Profiler::Get().IsEnabled())
                 {
                     Profiler::Get().Disable();
-                    ProfileViewer::Get().View(GetWindow());
+                    GetWindow()->App().Tools().ShowProfileViewer(GetWindow());
                 }
             }
             else

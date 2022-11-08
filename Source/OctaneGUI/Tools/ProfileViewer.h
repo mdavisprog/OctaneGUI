@@ -51,13 +51,11 @@ public:
         Count
     };
 
-    static ProfileViewer& Get();
+    ProfileViewer();
 
     void View(Window* InWindow);
 
 private:
-    ProfileViewer();
-
     void SetViewMode(ViewMode Mode);
     void Populate();
     void SetFrame(size_t Index);

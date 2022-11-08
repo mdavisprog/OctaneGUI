@@ -28,6 +28,7 @@ SOFTWARE.
 #include "../Window.h"
 #include "CommandPalette.h"
 #include "Inspector.h"
+#include "ProfileViewer.h"
 
 namespace OctaneGUI
 {
@@ -38,18 +39,19 @@ Interface::Interface(Application& App)
     : m_App(App)
 {
     m_Inspector = std::make_shared<Inspector>();
+    m_ProfileViewer = std::make_shared<ProfileViewer>();
 }
 
-Interface& Interface::ShowCommandPalette(Window* InWindow)
+Interface& Interface::ShowCommandPalette(Window* Target)
 {
     if (!m_CommandPalette)
     {
-        m_CommandPalette = std::make_shared<CommandPalette>(InWindow);
+        m_CommandPalette = std::make_shared<CommandPalette>(Target);
     }
 
-    if (m_CommandPalette != InWindow->GetPopup())
+    if (m_CommandPalette != Target->GetPopup())
     {
-        m_CommandPalette->SetWindow(InWindow);
+        m_CommandPalette->SetWindow(Target);
         m_CommandPalette->Show();
     }
 
@@ -59,6 +61,12 @@ Interface& Interface::ShowCommandPalette(Window* InWindow)
 Interface& Interface::ShowInspector(Window* Target)
 {
     m_Inspector->Inspect(Target);
+    return *this;
+}
+
+Interface& Interface::ShowProfileViewer(Window* Target)
+{
+    m_ProfileViewer->View(Target);
     return *this;
 }
 

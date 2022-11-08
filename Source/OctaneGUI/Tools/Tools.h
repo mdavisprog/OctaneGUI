@@ -39,19 +39,22 @@ namespace Tools
 
 class CommandPalette;
 class Inspector;
+class ProfileViewer;
 
 class Interface
 {
 public:
     Interface(Application& App);
 
-    Interface& ShowCommandPalette(Window* InWindow);
+    Interface& ShowCommandPalette(Window* Target);
     Interface& ShowInspector(Window* Target);
+    Interface& ShowProfileViewer(Window* Target);
 
 private:
     Application& m_App;
     std::shared_ptr<CommandPalette> m_CommandPalette { nullptr };
     std::shared_ptr<Inspector> m_Inspector { nullptr };
+    std::shared_ptr<ProfileViewer> m_ProfileViewer { nullptr };
 };
 
 }

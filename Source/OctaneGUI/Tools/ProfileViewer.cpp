@@ -284,10 +284,8 @@ private:
     std::shared_ptr<TimelineTrack> m_Track { nullptr };
 };
 
-ProfileViewer& ProfileViewer::Get()
+ProfileViewer::ProfileViewer()
 {
-    static ProfileViewer s_ProfileViewer;
-    return s_ProfileViewer;
 }
 
 void ProfileViewer::View(Window* InWindow)
@@ -394,10 +392,6 @@ void ProfileViewer::View(Window* InWindow)
 
     InWindow->App().DisplayWindow("ProfileViewer");
     Populate();
-}
-
-ProfileViewer::ProfileViewer()
-{
 }
 
 void ProfileViewer::SetViewMode(ViewMode Mode)
