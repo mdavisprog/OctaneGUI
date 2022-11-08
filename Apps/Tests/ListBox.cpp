@@ -164,6 +164,7 @@ TEST_CASE(MultiSelect,
     Load(Application, {}, List);
 
     const std::shared_ptr<OctaneGUI::ListBox> ListBox = List.To<OctaneGUI::ListBox>("ListBox");
+    ListBox->SetMultiSelect(true);
     for (int I = 0; I < 10; I++)
     {
         const std::string String = std::string("Item ") + std::to_string(I);

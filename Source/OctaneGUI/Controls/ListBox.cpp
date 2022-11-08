@@ -74,6 +74,17 @@ public:
         m_Indices.clear();
     }
 
+    ListBoxInteraction& SetMultiSelect(bool MultiSelect)
+    {
+        m_MultiSelect = MultiSelect;
+        return *this;
+    }
+
+    bool MultiSelect() const
+    {
+        return m_MultiSelect;
+    }
+
     ListBoxInteraction& SetOnSelect(ListBox::OnSelectSignature Fn)
     {
         m_OnSelect = Fn;
@@ -138,7 +149,7 @@ public:
 
         if (Button == Mouse::Button::Left)
         {
-            if (!IsCtrlPressed())
+            if (!IsCtrlPressed() || !m_MultiSelect)
             {
                 if (m_OnSelectionChange)
                 {
@@ -193,6 +204,7 @@ private:
     std::weak_ptr<Container> m_List {};
     int m_Hovered_Index { -1 };
     std::vector<int> m_Indices {};
+    bool m_MultiSelect { false };
     ListBox::OnSelectSignature m_OnSelect { nullptr };
     OnChangeSignature m_OnHoverChange { nullptr };
     OnChangeSignature m_OnSelectionChange { nullptr };
@@ -299,12 +311,27 @@ const std::shared_ptr<Control>& ListBox::Item(size_t Index) const
     return m_List->Controls()[Index];
 }
 
+ListBox& ListBox::SetMultiSelect(bool MultiSelect)
+{
+    const std::shared_ptr<ListBoxInteraction>& Interaction = std::static_pointer_cast<ListBoxInteraction>(this->Interaction());
+    Interaction->SetMultiSelect(MultiSelect);
+    return *this;
+}
+
+bool ListBox::MultiSelect() const
+{
+    const std::shared_ptr<ListBoxInteraction>& Interaction = std::static_pointer_cast<ListBoxInteraction>(this->Interaction());
+    return Interaction->MultiSelect();
+}
+
 void ListBox::OnLoad(const Json& Root)
 {
     Json Copy = Root;
     Copy["Controls"] = Json();
 
     Container::OnLoad(Copy);
+
+    SetMultiSelect(Root["MultiSelect"].Boolean());
 
     Json List(Json::Type::Object);
     List["Controls"] = Root["Controls"];

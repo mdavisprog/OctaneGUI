@@ -63,6 +63,9 @@ public:
     Vector2 ListSize() const;
     const std::shared_ptr<Control>& Item(size_t Index) const;
 
+    ListBox& SetMultiSelect(bool MultiSelect);
+    bool MultiSelect() const;
+
     virtual void OnLoad(const Json& Root) override;
     virtual void OnPaint(Paint& Brush) const override;
 
