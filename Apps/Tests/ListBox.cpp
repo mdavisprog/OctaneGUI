@@ -158,6 +158,31 @@ TEST_CASE(VScrollSelection,
     return true;
 })
 
+TEST_CASE(MultiSelect,
+{
+    OctaneGUI::ControlList List;
+    Load(Application, {}, List);
+
+    const std::shared_ptr<OctaneGUI::ListBox> ListBox = List.To<OctaneGUI::ListBox>("ListBox");
+    for (int I = 0; I < 10; I++)
+    {
+        const std::string String = std::string("Item ") + std::to_string(I);
+        ListBox->AddItem<OctaneGUI::TextSelectable>()->SetText(String.c_str());
+    }
+    Application.Update();
+    Application.KeyPressed(OctaneGUI::Keyboard::Key::LeftControl);
+
+    const std::shared_ptr<OctaneGUI::Control>& Item = ListBox->Item(0);
+    const float Height { Item->GetSize().Y };
+    Utility::MouseClick(Application, { 5.0f, 5.0f });
+    Utility::MouseClick(Application, { 5.0f, Height * 2.0f });
+    Utility::MouseClick(Application, { 5.0f, Height * 3.0f });
+
+    VERIFYF(ListBox->Selected().size() == 3, "Number of selected items is not 3. Number selected is %zu!\n", ListBox->Selected().size());
+
+    return true;
+})
+
 )
 
 }
