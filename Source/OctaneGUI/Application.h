@@ -218,6 +218,9 @@ public:
     /// @cond !IGNORE_FUNCTIONS
     /// @brief Used internally.
     bool IsKeyPressed(Keyboard::Key Key) const;
+    Application& KeyPressed(Keyboard::Key Key);
+    Application& KeyReleased(Keyboard::Key Key);
+    Application& ClearKeys();
     /// @endcond
 
     /// @brief Places the given content to the system's clipboard.

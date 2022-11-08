@@ -400,6 +400,31 @@ bool Application::IsKeyPressed(Keyboard::Key Key) const
     return std::find(m_PressedKeys.begin(), m_PressedKeys.end(), Key) != m_PressedKeys.end();
 }
 
+Application& Application::KeyPressed(Keyboard::Key Key)
+{
+    if (std::find(m_PressedKeys.begin(), m_PressedKeys.end(), Key) == m_PressedKeys.end())
+    {
+        m_PressedKeys.push_back(Key);
+    }
+    return *this;
+}
+
+Application& Application::KeyReleased(Keyboard::Key Key)
+{
+    std::vector<Keyboard::Key>::iterator Iter = std::remove(m_PressedKeys.begin(), m_PressedKeys.end(), Key);
+    if (Iter != m_PressedKeys.end())
+    {
+        m_PressedKeys.erase(Iter);
+    }
+    return *this;
+}
+
+Application& Application::ClearKeys()
+{
+    m_PressedKeys.clear();
+    return *this;
+}
+
 void Application::SetClipboardContents(const std::u32string& Contents)
 {
     if (m_OnSetClipboardContents)
@@ -638,10 +663,7 @@ int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
     {
         Keyboard::Key Code = E.GetData().m_Key.m_Code;
         Item->OnKeyPressed(Code);
-        if (std::find(m_PressedKeys.begin(), m_PressedKeys.end(), Code) == m_PressedKeys.end())
-        {
-            m_PressedKeys.push_back(Code);
-        }
+        KeyPressed(Code);
     }
     break;
 
@@ -649,11 +671,7 @@ int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
     {
         Keyboard::Key Code = E.GetData().m_Key.m_Code;
         Item->OnKeyReleased(Code);
-        std::vector<Keyboard::Key>::iterator Iter = std::remove(m_PressedKeys.begin(), m_PressedKeys.end(), Code);
-        if (Iter != m_PressedKeys.end())
-        {
-            m_PressedKeys.erase(Iter);
-        }
+        KeyReleased(Code);
     }
     break;
 
