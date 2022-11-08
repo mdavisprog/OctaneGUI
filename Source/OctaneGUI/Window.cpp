@@ -382,7 +382,7 @@ Window& Window::SetFocused(bool Focused)
     {
         UnsetFlags(WindowFlags::Focused);
     }
-    
+
     m_Container->SetFocused(Focused);
 
     return *this;

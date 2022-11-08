@@ -149,7 +149,7 @@ public:
     /// control. The OnResized function will be called on this control before the layout occurs.
     ///
     /// @param Size Vector2 of the new size for this control.
-    /// @return 
+    /// @return This Control Reference.
     Control& SetSize(const Vector2& Size);
 
     /// @brief Returns the size of this control.
