@@ -104,8 +104,11 @@
                                 ]}
                             ]},
                             {"Type": "HorizontalContainer", "Controls": [
-                                {"Type": "GroupBox", "Text": "List Box", "Controls": [
-                                    {"Type": "ListBox", "ID": "ListBox"}
+                                {"Type": "GroupBox", "ID": "ListBox", "Text": "List Box", "Controls": [
+                                    {"Type": "VerticalContainer", "Controls": [
+                                        {"Type": "CheckBox", "ID": "MultiSelect", "Text": {"Text": "Multi-Select"}},
+                                        {"Type": "ListBox", "ID": "ListBox"}
+                                    ]}
                                 ]},
                                 {"Type": "GroupBox", "Text": "Vertical Splitter", "Controls": [
                                     {"Type": "Splitter", "Orientation": "Vertical",

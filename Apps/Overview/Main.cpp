@@ -118,7 +118,12 @@ int main(int argc, char **argv)
     }
     ThemesComboBox->SetSelected(OctaneGUI::String::ToUTF32(Theme).c_str());
 
-    std::shared_ptr<OctaneGUI::ListBox> ListBox = List.To<OctaneGUI::ListBox>("ListBox");
+    std::shared_ptr<OctaneGUI::ListBox> ListBox = List.To<OctaneGUI::ListBox>("ListBox.ListBox");
+    List.To<OctaneGUI::CheckBox>("ListBox.MultiSelect")->SetOnClicked([ListBox](const OctaneGUI::Button&) -> void
+        {
+            ListBox->Deselect();
+            ListBox->SetMultiSelect(!ListBox->MultiSelect());
+        });
     for (int I = 0; I < 15; I++)
     {
         const std::string Text { std::string("Item ") + std::to_string(I) };
