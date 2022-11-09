@@ -157,10 +157,10 @@ bool Control::ShouldForwardKeyEvents() const
     return m_ForwardKeyEvents;
 }
 
-Control* Control::SetID(const char* ID)
+Control& Control::SetID(const char* ID)
 {
     m_ID = ID;
-    return this;
+    return *this;
 }
 
 const char* Control::GetID() const

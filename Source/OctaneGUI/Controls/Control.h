@@ -144,9 +144,9 @@ public:
 
     /// @brief Sets the size of this control.
     ///
-    /// Sets the size of this control. If the size is different, a layout invalidate request is
-    /// sent and the owning container will re-layout its contents with this new size for this
-    /// control. The OnResized function will be called on this control before the layout occurs.
+    /// If the size is different, a layout invalidate request is sent and the owning container
+    /// will re-layout its contents with this new size for this control. The OnResized function
+    /// will be called on this control before the layout occurs.
     ///
     /// @param Size Vector2 of the new size for this control.
     /// @return This Control Reference.
@@ -158,8 +158,7 @@ public:
 
     /// @brief Sets the parent for this control.
     ///
-    /// Sets the parent for this control. The parent is usually a Container by in some cases
-    /// may be another control.
+    /// The parent is usually a Container by in some cases may be another control.
     ///
     /// @param Parent The parent control for this control. Can be NULL.
     /// @return This Control reference.
@@ -186,10 +185,9 @@ public:
 
     /// @brief Sets whether the parent control should be notified of this control's key events.
     ///
-    /// Sets whether this control's key events should notify the parent control. Containers
-    /// may want to handle key events but due to the architecture only allowing Controls to have
-    /// focus, Containers will not be able to directly receive these events. Setting this flag
-    /// will allow for this to occur.
+    /// Containers may want to handle key events but due to the architecture only allowing
+    /// Controls to have focus, Containers will not be able to directly receive these events.
+    /// Setting this flag will allow for this to occur.
     ///
     /// @param Forward Boolean to set whether key events should be forwarded.
     /// @return This Control reference.
@@ -199,21 +197,78 @@ public:
     /// @return Boolean value.
     bool ShouldForwardKeyEvents() const;
 
-    Control* SetID(const char* ID);
+    /// @brief Sets the ID for this control.
+    ///
+    /// Giving a control an ID uniquely identifies this control. The full ID
+    /// path to this control takes into account the parent ID. For example, if
+    /// the parent control has an ID of 'Parent' and this control has an ID of
+    /// 'Child', the full ID would be 'Parent.Child'.
+    ///
+    /// The main usage for giving control's an ID is to retrieve a reference to
+    /// this control whenever an API that accepts a ControlList object is called.
+    /// This object will retrieve all controls that have a specified ID and add them
+    /// for retrieval by the caller. This allows for altering any additional settings
+    /// and registering callbacks.
+    ///
+    /// @param ID String defining the unique identifier for this control.
+    /// @return This Control reference.
+    Control& SetID(const char* ID);
+
+    /// @brief Retrieves the ID for this control.
+    /// @return String pointer to the control's ID.
     const char* GetID() const;
+
+    /// @brief Retrieves the fully qualified ID for this control. This will include
+    /// all parent control's ID.
+    /// @return String object with the full ID.
     std::string GetFullID() const;
+
+    /// @brief Determines if this control has a valid ID.
+    /// @return True if the control has an ID. False otherwise.
     bool HasID() const;
 
+    /// @brief Determines if the given point is contained within the bounds of this control.
+    /// @param Position The point to query if it is within the bounds.
+    /// @return True if the point is in bounds. False otherwise.
     bool Contains(const Vector2& Position) const;
+
+    /// @brief Retrieves the local bounds for this control. No transformations are applied.
+    /// @return The Rect that defines the local bounds for this control.
     Rect GetBounds() const;
+
+    /// @brief Retrieves the absolute bounds for this control. All parent transformations
+    /// are applied to this control's local bounds.
+    /// @return The Rect that defines the absolute bounds for this control.
     Rect GetAbsoluteBounds() const;
 
+    /// @brief Sets the owning window for this control.
+    ///
+    /// This function is defined to be virtual as some controls may need to perform
+    /// additional logic when the owning window has changed.
+    ///
+    /// @param InWindow The new owning Window object for this control.
     virtual void SetWindow(Window* InWindow);
+
+    /// @brief Retrieves the owning window for this control.
+    /// @return Pointer to the Window object for this control.
     Window* GetWindow() const;
+
+    /// @brief Returns the render scale to use. This is usually (1, 1) but may be larger
+    /// on platforms with high DPI displays such as the Mac's Retina display.
+    /// @return The Vector2 scale for rendering.
     Vector2 RenderScale() const;
 
+    /// @brief Returns the current mouse position within the owning Window.
+    /// @return The Vector2 mouse position.
     Vector2 GetMousePosition() const;
+
+    /// @brief Returns the currently active application Theme object.
+    /// @return Shared pointer to the Theme object.
     std::shared_ptr<Theme> GetTheme() const;
+
+    /// @brief Determines if the given key is currently pressed.
+    /// @param Key The key to check if it is pressed.
+    /// @return True if the given key is pressed. False otherwise.
     bool IsKeyPressed(Keyboard::Key Key) const;
 
     Control* SetOnInvalidate(OnInvalidateSignature Fn);
