@@ -116,6 +116,7 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
     }
 
     m_Theme->Load(Root["Theme"]);
+    Assert(m_Theme->GetFont() != nullptr, "No font loaded with theme!");
 
     m_FileSystem.SetUseSystemFileDialog(Root["UseSystemFileDialog"].Boolean());
 
