@@ -34,7 +34,7 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
-bool AssertFunc(bool Condition, const char* Format, ...)
+bool AssertFunc(const char* File, int Line, bool Condition, const char* Format, ...)
 {
 #if !NDEBUG
     if (!Condition)
@@ -48,7 +48,7 @@ bool AssertFunc(bool Condition, const char* Format, ...)
 
         va_end(List);
 
-        printf("Assertion failed: %s:%d\n", __FILE__, __LINE__);
+        printf("Assertion failed: %s:%d\n", File, Line);
         printf("%s\n", Buffer.c_str());
         std::abort();
     }

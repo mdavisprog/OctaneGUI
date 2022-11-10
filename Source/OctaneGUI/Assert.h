@@ -29,12 +29,12 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
-bool AssertFunc(bool Condition, const char* Format, ...);
+bool AssertFunc(const char* File, int Line, bool Condition, const char* Format, ...);
 
 }
 
 #if NDEBUG
     #define Assert(Condition, Format, ...)
 #else
-    #define Assert(Condition, Format, ...) OctaneGUI::AssertFunc(Condition, Format, ##__VA_ARGS__);
+    #define Assert(Condition, Format, ...) OctaneGUI::AssertFunc(__FILE__, __LINE__, Condition, Format, ##__VA_ARGS__);
 #endif
