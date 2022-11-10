@@ -286,9 +286,27 @@ public:
     /// @return This Control reference.
     Control& Invalidate(InvalidateType Type = InvalidateType::Paint);
 
+    /// @brief Overrides a theme property for this control.
+    ///
+    /// Theme properties the control uses are read from the current Theme
+    /// object if no property of the given type exists within this control.
+    ///
+    /// @param Property The theme property to override.
+    /// @param Value The value to override the property with.
+    /// @return This Control reference.
     Control& SetProperty(ThemeProperties::Property Property, const Variant& Value);
+
+    /// @brief Retrieves the value of the given Theme property. This may be defined
+    /// in the theme or overridden for this control.
+    /// @param Property The property to retrieve.
+    /// @return The Variant that contains the value for the property.
     const Variant& GetProperty(ThemeProperties::Property Property) const;
-    void ClearProperty(ThemeProperties::Property Property);
+
+    /// @brief Removes the property from this control. Reverts back to using the
+    /// value defined in the current Theme object.
+    /// @param Property The property to clear from this control.
+    /// @return This Control reference.
+    Control& ClearProperty(ThemeProperties::Property Property);
 
     std::shared_ptr<Control> Share();
     std::shared_ptr<Control const> Share() const;

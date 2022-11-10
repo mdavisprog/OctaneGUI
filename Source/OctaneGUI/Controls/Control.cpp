@@ -288,9 +288,10 @@ const Variant& Control::GetProperty(ThemeProperties::Property Property) const
     return GetTheme()->Get(Property);
 }
 
-void Control::ClearProperty(ThemeProperties::Property Property)
+Control& Control::ClearProperty(ThemeProperties::Property Property)
 {
     m_ThemeProperties.Clear(Property);
+    return *this;
 }
 
 std::shared_ptr<Control> Control::Share()
