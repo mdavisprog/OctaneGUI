@@ -271,8 +271,20 @@ public:
     /// @return True if the given key is pressed. False otherwise.
     bool IsKeyPressed(Keyboard::Key Key) const;
 
-    Control* SetOnInvalidate(OnInvalidateSignature Fn);
-    void Invalidate(InvalidateType Type = InvalidateType::Paint);
+    /// @brief Sets the callback for when this control is invalidated.
+    ///
+    /// The callback is invoked whenever a request for invalidation of
+    /// this control occurs. The callback accepts the control and the
+    /// type of invalidation requested.
+    ///
+    /// @param Fn The callback to invoke.
+    /// @return This Control reference.
+    Control& SetOnInvalidate(OnInvalidateSignature Fn);
+
+    /// @brief Request this control to be invalidated.
+    /// @param Type Can either be a Paint or Layout request.
+    /// @return This Control reference.
+    Control& Invalidate(InvalidateType Type = InvalidateType::Paint);
 
     Control& SetProperty(ThemeProperties::Property Property, const Variant& Value);
     const Variant& GetProperty(ThemeProperties::Property Property) const;

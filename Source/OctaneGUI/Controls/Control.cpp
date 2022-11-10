@@ -249,18 +249,20 @@ bool Control::IsKeyPressed(Keyboard::Key Key) const
     return m_Window->IsKeyPressed(Key);
 }
 
-Control* Control::SetOnInvalidate(OnInvalidateSignature Fn)
+Control& Control::SetOnInvalidate(OnInvalidateSignature Fn)
 {
     m_OnInvalidate = Fn;
-    return this;
+    return *this;
 }
 
-void Control::Invalidate(InvalidateType Type)
+Control& Control::Invalidate(InvalidateType Type)
 {
     if (m_OnInvalidate)
     {
         m_OnInvalidate(Share(), Type);
     }
+
+    return *this;
 }
 
 Control& Control::SetProperty(ThemeProperties::Property Property, const Variant& Value)
