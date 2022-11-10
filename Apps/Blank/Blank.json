@@ -1,5 +1,5 @@
 {
-    "Theme": "./Themes/Dark.json",
+    "Theme": "Resources/Themes/Dark.json",
     "Windows": {
         "Main": {"Title": "Blank", "Width": 1280, "Height": 720,
             "MenuBar": {},
