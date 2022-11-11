@@ -50,8 +50,10 @@ public:
     Vector2 operator*(const Vector2& Other) const;
     Vector2 operator/(const Vector2& Other) const;
 
+    Vector2 operator+(float Other) const;
     Vector2 operator-(float Other) const;
     Vector2 operator*(float Other) const;
+    Vector2 operator/(float Other) const;
 
     Vector2& operator+=(const Vector2& Other);
     Vector2& operator-=(const Vector2& Other);
