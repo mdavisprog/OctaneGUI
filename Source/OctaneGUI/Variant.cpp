@@ -28,6 +28,7 @@ SOFTWARE.
 #include "Json.h"
 
 #include <cstring>
+#include <utility>
 
 namespace OctaneGUI
 {

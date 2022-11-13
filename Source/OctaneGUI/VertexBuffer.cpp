@@ -26,6 +26,8 @@ SOFTWARE.
 
 #include "VertexBuffer.h"
 
+#include <cstddef>
+
 namespace OctaneGUI
 {
 
