@@ -309,6 +309,8 @@ OctaneGUI::Event HandleEvent(SDL_Event& Event, const uint32_t WindowID, bool IsP
 
         case SDL_WINDOWEVENT_FOCUS_LOST: return OctaneGUI::Event(
             OctaneGUI::Event::Type::WindowLostFocus);
+        case SDL_WINDOWEVENT_EXPOSED: return OctaneGUI::Event(
+            OctaneGUI::Event::Type::WindowRepaint);
         }
     }
     break;

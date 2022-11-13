@@ -56,6 +56,7 @@ public:
         WindowMaximized,
         WindowGainedFocus,
         WindowLostFocus,
+        WindowRepaint,
     };
 
     struct Key

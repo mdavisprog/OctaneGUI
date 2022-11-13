@@ -709,6 +709,11 @@ void Window::DoPaint(Paint& Brush)
     }
 }
 
+void Window::Repaint()
+{
+    m_Repaint = true;
+}
+
 void Window::Load(const char* JsonStream)
 {
     Load(Json::Parse(JsonStream));

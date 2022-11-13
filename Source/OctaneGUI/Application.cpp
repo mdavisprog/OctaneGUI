@@ -723,6 +723,9 @@ int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
     case Event::Type::WindowLostFocus:
         Item->SetFocused(false);
         break;
+    case Event::Type::WindowRepaint:
+        Item->Repaint();
+        break;
 
     case Event::Type::None:
     default: Processed--; break;
