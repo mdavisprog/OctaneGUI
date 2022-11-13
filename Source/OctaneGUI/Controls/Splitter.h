@@ -35,10 +35,10 @@ class BoxContainer;
 class Separator;
 class SplitterInteraction;
 
-/// @brief Container that holds two containers with a draggable splitter in between.
+/// @brief Container that holds multiple containers with a draggable splitter in between each.
 ///
-/// Splitter container has two sub-containers that can be populated with controls.
-/// They can oriented either horiztonally or vertically.
+/// Splitter containers has can container multiple sub-containers that can be populated with controls.
+/// They can be oriented either horiztonally or vertically.
 class Splitter : public Container
 {
     friend SplitterInteraction;
@@ -51,32 +51,37 @@ public:
     Splitter& SetOrientation(Orientation InOrientation);
     Orientation GetOrientation() const;
 
-    Splitter& SetSplitterPosition(float Position);
-    float SplitterPosition() const;
+    const std::shared_ptr<Container>& Get(size_t Index) const;
 
-    std::shared_ptr<Container> First() const;
-    std::shared_ptr<Container> Second() const;
+    const std::shared_ptr<Container>& AddContainer();
+    Splitter& AddContainers(int Count);
 
     virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
-    virtual Vector2 DesiredSize() const override;
 
     virtual void Update() override;
     virtual void OnLoad(const Json& Root) override;
-    virtual void OnResized() override;
 
 private:
-    void UpdateLayout();
-    void UpdateSplitterPosition(float Position);
-    float ToAbsolute(float Normalized) const;
-    float ToNormalized(float Absolute) const;
+    struct Item
+    {
+    public:
+        std::shared_ptr<Container> Data { nullptr };
+        std::shared_ptr<Separator> Handle { nullptr };
+    };
 
-    std::shared_ptr<Separator> m_Separator { nullptr };
-    std::shared_ptr<Container> m_First { nullptr };
-    std::shared_ptr<Container> m_Second { nullptr };
+    void UpdateLayout();
+    void Resize();
+    void Resize(const std::shared_ptr<Container>& Target, const Vector2& Size);
+    std::shared_ptr<Separator> GetSeparator(const Vector2& Point) const;
+    std::shared_ptr<Container> GetContainer(const std::shared_ptr<Separator>& Handle) const;
+    bool IsSeparator(const std::shared_ptr<Control>& Handle) const;
+    std::shared_ptr<Container> CreateContainer();
+
     std::shared_ptr<SplitterInteraction> m_Interaction { nullptr };
     std::shared_ptr<BoxContainer> m_Split { nullptr };
+    std::vector<Item> m_Items {};
     bool m_UpdateLayout { false };
-    float m_SplitterPosition { 0.5f };
+    Orientation m_Orientation { Orientation::Horizontal };
 };
 
 }

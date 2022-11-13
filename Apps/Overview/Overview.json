@@ -111,16 +111,16 @@
                                     ]}
                                 ]},
                                 {"Type": "GroupBox", "Text": "Vertical Splitter", "Controls": [
-                                    {"Type": "Splitter", "Orientation": "Vertical",
-                                        "First": {"Size": [100, 50], "Controls": [{"Type": "Text", "Text": "First"}]},
-                                        "Second": {"Size": [100, 50], "Controls": [{"Type": "Text", "Text": "Second"}]}
-                                    }
+                                    {"Type": "Splitter", "Orientation": "Vertical", "Size": [200, 50], "Containers": [
+                                        {"Controls": [{"Type": "Text", "Text": "First"}]},
+                                        {"Controls": [{"Type": "Text", "Text": "Second"}]}
+                                    ]}
                                 ]},
                                 {"Type": "GroupBox", "Text": "Horizontal Splitter", "Controls": [
-                                    {"Type": "Splitter", "Expand": "Width",
-                                        "First": {"Size": [50, 50], "Controls": [{"Type": "Text", "Text": "First"}]},
-                                        "Second": {"Size": [50, 50], "Controls": [{"Type": "Text", "Text": "Second"}]}
-                                    }
+                                    {"Type": "Splitter", "Size": [50, 100], "Containers": [
+                                        {"Controls": [{"Type": "Text", "Text": "First"}]},
+                                        {"Controls": [{"Type": "Text", "Text": "Second"}]}
+                                    ]}
                                 ]}
                             ]}
                         ]}

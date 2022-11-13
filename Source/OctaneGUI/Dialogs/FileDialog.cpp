@@ -97,17 +97,17 @@ FileDialog::FileDialog(Window* InWindow)
     const std::shared_ptr<Splitter> BodySplitter = Body->AddControl<Splitter>();
     BodySplitter
         ->SetOrientation(Orientation::Vertical)
-        .SetSplitterPosition(0.3f)
+        .AddContainers(2)
         .SetExpand(Expand::Both);
 
     // Need to disable the clipping on these containers since ScrollableViewControls will be added
     // to them and they already handle clipping. If these are not disabled, then the ScrollableViewControls
     // themselves will be clipped.
-    BodySplitter->First()->SetClip(false);
-    BodySplitter->Second()->SetClip(false);
+    BodySplitter->Get(0)->SetClip(false);
+    BodySplitter->Get(1)->SetClip(false);
 
     // The left pane that contains the directory tree.
-    m_DirectoryView = BodySplitter->First()->AddControl<ScrollableViewControl>();
+    m_DirectoryView = BodySplitter->Get(0)->AddControl<ScrollableViewControl>();
     m_DirectoryView->SetExpand(Expand::Both);
     m_DirectoryTree = m_DirectoryView->Scrollable()->AddControl<Tree>();
     m_DirectoryTree
@@ -127,7 +127,7 @@ FileDialog::FileDialog(Window* InWindow)
             });
 
     // The right pane that contains the list of files in the selected directory.
-    m_DirectoryList = BodySplitter->Second()->AddControl<ListBox>();
+    m_DirectoryList = BodySplitter->Get(1)->AddControl<ListBox>();
     m_DirectoryList
         ->SetOnSelect([this](int, std::weak_ptr<Control> Item) -> void
             {
