@@ -84,13 +84,22 @@ public:
         {
             m_Hovered = m_Owner->GetSeparator(Position);
 
-            Mouse::Cursor Cursor = Mouse::Cursor::Arrow;
             if (!m_Hovered.expired())
             {
-                Cursor = MouseCursor();
+                GetWindow()->SetMouseCursor(MouseCursor());
             }
-
-            GetWindow()->SetMouseCursor(Cursor);
+            else
+            {
+                // TODO: Find a better way of reverting mouse cursor to arrow while still
+                // allowing hovered control to perform its own mouse cursor setting i.e. TextInput controls.
+                // Not a fan of the atomic lock of the weak pointer to shared pointer for checking
+                // the control.
+                const std::weak_ptr<Control>& Hovered = GetWindow()->Hovered();
+                if (!Hovered.expired() && Hovered.lock().get() == this)
+                {
+                    GetWindow()->SetMouseCursor(Mouse::Cursor::Arrow);
+                }
+            }
         }
     }
 
