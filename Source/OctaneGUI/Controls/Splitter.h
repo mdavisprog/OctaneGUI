@@ -54,6 +54,7 @@ public:
     Splitter& SetSplitterPosition(size_t Index, float Position);
 
     const std::shared_ptr<Container>& Get(size_t Index) const;
+    size_t Count() const;
 
     const std::shared_ptr<Container>& AddContainer();
     Splitter& AddContainers(int Count);

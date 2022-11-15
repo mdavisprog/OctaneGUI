@@ -191,6 +191,11 @@ const std::shared_ptr<Container>& Splitter::Get(size_t Index) const
     return m_Items[Index].Data;
 }
 
+size_t Splitter::Count() const
+{
+    return m_Items.size();
+}
+
 const std::shared_ptr<Container>& Splitter::AddContainer()
 {
     if (m_Items.empty())
