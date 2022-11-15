@@ -372,6 +372,16 @@ Window& Window::SetFocus(const std::shared_ptr<Control>& Focus)
     return *this;
 }
 
+const std::weak_ptr<Control>& Window::Focus() const
+{
+    return m_Focus;
+}
+
+const std::weak_ptr<Control>& Window::Hovered() const
+{
+    return m_Hovered;
+}
+
 Window& Window::SetFocused(bool Focused)
 {
     if (Focused)

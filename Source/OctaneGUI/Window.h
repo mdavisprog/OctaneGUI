@@ -149,6 +149,8 @@ public:
     Window& UnsetFlags(uint64_t Flags);
 
     Window& SetFocus(const std::shared_ptr<Control>& Focus);
+    const std::weak_ptr<Control>& Focus() const;
+    const std::weak_ptr<Control>& Hovered() const;
 
     Window& SetFocused(bool Focused);
     bool Focused() const;
