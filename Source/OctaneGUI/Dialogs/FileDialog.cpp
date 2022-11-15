@@ -98,6 +98,7 @@ FileDialog::FileDialog(Window* InWindow)
     BodySplitter
         ->SetOrientation(Orientation::Vertical)
         .AddContainers(2)
+        .SetSplitterPosition(0, 0.3f)
         .SetExpand(Expand::Both);
 
     // Need to disable the clipping on these containers since ScrollableViewControls will be added
