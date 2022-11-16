@@ -28,6 +28,8 @@ SOFTWARE.
 #include "TestSuite.h"
 #include "Utility.h"
 
+#include <cmath>
+
 namespace Tests
 {
 
