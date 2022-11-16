@@ -168,6 +168,7 @@ Splitter& Splitter::SetOrientation(Orientation InOrientation)
 
     m_Orientation = InOrientation;
     UpdateLayout();
+    Resize();
     InvalidateLayout();
     return *this;
 }
