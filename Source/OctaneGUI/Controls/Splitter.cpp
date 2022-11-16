@@ -186,6 +186,16 @@ Splitter& Splitter::SetSplitterPosition(size_t Index, float Position)
     return *this;
 }
 
+Vector2 Splitter::SplitterSize() const
+{
+    if (m_Items.size() < 2)
+    {
+        return {};
+    }
+
+    return m_Items.front().Handle->GetSize();
+}
+
 const std::shared_ptr<Container>& Splitter::Get(size_t Index) const
 {
     Assert(Index >= 0 && Index < m_Items.size(), "Invalid index %zu given! Maximum number of containers is %zu.", Index, m_Items.size());
@@ -308,7 +318,7 @@ void Splitter::UpdateLayout()
 void Splitter::Resize()
 {
     Vector2 Size {};
-    Vector2 Available { GetSize() };
+    Vector2 Available { AvailableSize() };
     size_t Index = 0;
     for (Item& Item_ : m_Items)
     {
@@ -338,10 +348,6 @@ void Splitter::Resize()
         }
 
         Available -= Size;
-        if (Item_.Handle)
-        {
-            Available -= Item_.Handle->GetSize();
-        }
         Index++;
     }
 }
@@ -350,7 +356,7 @@ void Splitter::Resize(const std::shared_ptr<Container>& Target, const Vector2& S
 {
     Target->SetSize(Size);
 
-    Vector2 Remaining { GetSize() };
+    Vector2 Remaining { AvailableSize() };
     bool Reallocate = false;
     for (Item& Item_ : m_Items)
     {
@@ -374,11 +380,6 @@ void Splitter::Resize(const std::shared_ptr<Container>& Target, const Vector2& S
         }
 
         Remaining -= Item_.Data->GetSize();
-
-        if (Item_.Handle)
-        {
-            Remaining -= Item_.Handle->GetSize();
-        }
     }
 
     Invalidate(InvalidateType::Both);
@@ -432,6 +433,17 @@ std::shared_ptr<Container> Splitter::CreateContainer()
     return Result;
 }
 
+Vector2 Splitter::AvailableSize() const
+{
+    Vector2 Result { GetSize() };
 
+    if (m_Items.size() >= 2)
+    {
+        const Vector2 SplitterSize { m_Items.front().Handle->GetSize() };
+        Result -= SplitterSize * (float)(m_Items.size() - 1);
+    }
+
+    return Result;
+}
 
 }

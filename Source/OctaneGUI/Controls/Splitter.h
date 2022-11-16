@@ -52,6 +52,7 @@ public:
     Orientation GetOrientation() const;
 
     Splitter& SetSplitterPosition(size_t Index, float Position);
+    Vector2 SplitterSize() const;
 
     const std::shared_ptr<Container>& Get(size_t Index) const;
     size_t Count() const;
@@ -80,6 +81,7 @@ private:
     std::shared_ptr<Container> GetContainer(const std::shared_ptr<Separator>& Handle) const;
     bool IsSeparator(const std::shared_ptr<Control>& Handle) const;
     std::shared_ptr<Container> CreateContainer();
+    Vector2 AvailableSize() const;
 
     std::shared_ptr<SplitterInteraction> m_Interaction { nullptr };
     std::shared_ptr<BoxContainer> m_Split { nullptr };
