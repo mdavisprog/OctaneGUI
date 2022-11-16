@@ -14,6 +14,7 @@ add_executable(
     RadioButton.cpp
     Rect.cpp
     Scrollable.cpp
+    Splitter.cpp
     TestSuite.cpp
     Text.cpp
     TextInput.cpp
