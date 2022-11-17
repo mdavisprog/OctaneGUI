@@ -354,11 +354,11 @@ Vector2 Container::ChildrenSize() const
         const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
         if (ItemContainer)
         {
-            Size = ItemContainer->DesiredSize();
+            Size = ItemContainer->ChildrenSize();
         }
 
-        Result.X = std::max<float>(Result.X, Item->GetBounds().Max.X);
-        Result.Y = std::max<float>(Result.Y, Item->GetBounds().Max.Y);
+        Result.X = std::max<float>(Result.X, Size.X);
+        Result.Y = std::max<float>(Result.Y, Size.Y);
     }
 
     return Result;
