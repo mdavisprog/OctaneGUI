@@ -32,7 +32,7 @@
                 {"Type": "MarginContainer", "Margins": [4, 4, 4, 4], "Expand": "Both", "Controls": [
                     {"Type": "VerticalContainer", "Expand": "Both", "Controls": [
                         {"Type": "Container", "ID": "Editor", "Expand": "Both", "Controls": [
-                            {"Type": "Splitter", "ID": "Splitter", "Expand": "Both", "Orientation": "Vertical", "Containers": [
+                            {"Type": "Splitter", "ID": "Splitter", "Expand": "Both", "Orientation": "Vertical", "Fit": true, "Containers": [
                                 {"Clip": false, "Controls": [
                                     {"Type": "TextEditor", "ID": "Document", "Expand": "Both", "Text": {"Font": "Resources/SourceCodePro-Regular.ttf", "FontSize": 14}}
                                 ]},

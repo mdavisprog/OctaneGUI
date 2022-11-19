@@ -95,17 +95,13 @@ FileDialog::FileDialog(Window* InWindow)
         .SetExpand(Expand::Both);
 
     const std::shared_ptr<Splitter> BodySplitter = Body->AddControl<Splitter>();
+    // TODO: Need to set the expansion type before setting orientation. Should look into making this order independent.
+    BodySplitter->SetExpand(Expand::Both);
     BodySplitter
-        ->SetOrientation(Orientation::Vertical)
-        .AddContainers(2)
+        ->AddContainers(2)
+        .SetFit(true)
         .SetSplitterPosition(0, 0.3f)
-        .SetExpand(Expand::Both);
-
-    // Need to disable the clipping on these containers since ScrollableViewControls will be added
-    // to them and they already handle clipping. If these are not disabled, then the ScrollableViewControls
-    // themselves will be clipped.
-    BodySplitter->Get(0)->SetClip(false);
-    BodySplitter->Get(1)->SetClip(false);
+        .SetOrientation(Orientation::Vertical);
 
     // The left pane that contains the directory tree.
     m_DirectoryView = BodySplitter->Get(0)->AddControl<ScrollableViewControl>();

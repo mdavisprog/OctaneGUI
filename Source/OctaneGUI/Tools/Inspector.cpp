@@ -229,7 +229,7 @@ void Inspector::Inspect(Window* Target)
     {"Type": "Panel", "Expand": "Both"},
     {"Type": "VerticalContainer", "Expand": "Both", "Controls": [
         {"Type": "CheckBox", "ID": "Picker", "Text": {"Text": "Picker"}},
-        {"Type": "Splitter", "Orientation": "Vertical", "Expand": "Both", "Containers": [
+        {"Type": "Splitter", "Orientation": "Vertical", "Expand": "Both", "Fit": true, "Containers": [
             {"Clip": false, "Controls": [
                 {"Type": "ScrollableViewControl", "ID": "TreeView", "Expand": "Both"}
             ]},

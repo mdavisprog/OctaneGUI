@@ -102,10 +102,12 @@ public:
         AddControl<Panel>()->SetExpand(Expand::Both);
 
         const std::shared_ptr<Splitter> Split = AddControl<Splitter>();
+        // TODO: Need to set the expansion type before setting orientation. Should look into making this order independent.
+        Split->SetExpand(Expand::Both);
         Split
-            ->SetOrientation(Orientation::Vertical)
-            .AddContainers(2)
-            .SetExpand(Expand::Both);
+            ->AddContainers(2)
+            .SetFit(true)
+            .SetOrientation(Orientation::Vertical);
 
         m_List = Split->Get(0)->AddControl<ListBox>();
         m_List

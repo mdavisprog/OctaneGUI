@@ -33,9 +33,11 @@ SOFTWARE.
 namespace Tests
 {
 
-void LoadSplitter(OctaneGUI::Application& Application, const char* Containers, OctaneGUI::ControlList& List)
+void LoadSplitter(OctaneGUI::Application& Application, const char* Containers, OctaneGUI::ControlList& List, bool Fit)
 {
-    std::string JSON = R"({"Type": "Splitter", "ID": "Splitter", "Expand": "Both", "Containers": [)";
+    std::string JSON = R"({"Type": "Splitter", "ID": "Splitter", "Expand": "Both")";
+    JSON += std::string(R"(, "Fit": )") + (Fit ? "true" : "false");
+    JSON += R"(, "Containers": [)";
     JSON += Containers;
     JSON += "]}";
     Utility::Load(Application, JSON.c_str(), List);
@@ -46,21 +48,21 @@ TEST_SUITE(Splitter,
 TEST_CASE(TwoContainers,
 {
     OctaneGUI::ControlList List;
-    LoadSplitter(Application, R"({}, {})", List);
+    LoadSplitter(Application, R"({}, {})", List, false);
     return List.To<OctaneGUI::Splitter>("Splitter")->Count() == 2;
 })
 
 TEST_CASE(FourContainers,
 {
     OctaneGUI::ControlList List;
-    LoadSplitter(Application, R"({}, {}, {}, {})", List);
+    LoadSplitter(Application, R"({}, {}, {}, {})", List, false);
     return List.To<OctaneGUI::Splitter>("Splitter")->Count() == 4;
 })
 
-TEST_CASE(SplitterHorizontalSize,
+TEST_CASE(SplitterHorizontalSizeFit,
 {
     OctaneGUI::ControlList List;
-    LoadSplitter(Application, R"({}, {})", List);
+    LoadSplitter(Application, R"({}, {})", List, true);
 
     const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
     const std::shared_ptr<OctaneGUI::Splitter> Splitter = List.To<OctaneGUI::Splitter>("Splitter");
@@ -71,10 +73,10 @@ TEST_CASE(SplitterHorizontalSize,
     return std::floor(Top->GetSize().Y) == CenterY;
 })
 
-TEST_CASE(ChangeSplitterVertical,
+TEST_CASE(ChangeSplitterVerticalFit,
 {
     OctaneGUI::ControlList List;
-    LoadSplitter(Application, R"({}, {})", List);
+    LoadSplitter(Application, R"({}, {})", List, true);
 
     const std::shared_ptr<OctaneGUI::Splitter> Splitter = List.To<OctaneGUI::Splitter>("Splitter");
     Splitter->SetOrientation(OctaneGUI::Orientation::Vertical);
@@ -86,10 +88,10 @@ TEST_CASE(ChangeSplitterVertical,
     return Left->GetSize().X == Right->GetSize().X && Left->GetSize().X == Splitter->GetSize().X * 0.5f - SplitterSize.X * 0.5f;
 })
 
-TEST_CASE(SplitterHorizontalMove,
+TEST_CASE(SplitterHorizontalMoveFit,
 {
     OctaneGUI::ControlList List;
-    LoadSplitter(Application, R"({}, {})", List);
+    LoadSplitter(Application, R"({}, {})", List, true);
 
     const std::shared_ptr<OctaneGUI::Splitter> Splitter = List.To<OctaneGUI::Splitter>("Splitter");
     const OctaneGUI::Vector2 Size { Splitter->GetSize() };
@@ -115,10 +117,10 @@ TEST_CASE(SplitterHorizontalMove,
         Bottom->GetSize().Y == (Size.Y * 0.5f) - (SplitterSize.Y * 0.5f) + 5.0f;
 })
 
-TEST_CASE(SplitterVerticalMove,
+TEST_CASE(SplitterVerticalMoveFit,
 {
     OctaneGUI::ControlList List;
-    LoadSplitter(Application, R"({}, {})", List);
+    LoadSplitter(Application, R"({}, {})", List, true);
 
     const std::shared_ptr<OctaneGUI::Splitter> Splitter = List.To<OctaneGUI::Splitter>("Splitter");
     Splitter->SetOrientation(OctaneGUI::Orientation::Vertical);
@@ -150,7 +152,7 @@ TEST_CASE(SplitterVerticalMove,
 TEST_CASE(SplitterHoveredControl,
 {
     OctaneGUI::ControlList List;
-    LoadSplitter(Application, R"({"Controls": [{"Type": "TextButton", "ID": "Button", "Text": {"Text": "Hello"}}]}, {})", List);
+    LoadSplitter(Application, R"({"Controls": [{"Type": "TextButton", "ID": "Button", "Text": {"Text": "Hello"}}]}, {})", List, false);
 
     const std::shared_ptr<OctaneGUI::Splitter> Splitter = List.To<OctaneGUI::Splitter>("Splitter");
     const std::shared_ptr<OctaneGUI::Button> Button = List.To<OctaneGUI::Button>("Splitter.Button");
@@ -172,10 +174,10 @@ TEST_CASE(SplitterHoveredControl,
     return Clicked;
 })
 
-TEST_CASE(SplitterPosition,
+TEST_CASE(SplitterPositionFit,
 {
     OctaneGUI::ControlList List;
-    LoadSplitter(Application, R"({"Position": 0.3}, {})", List);
+    LoadSplitter(Application, R"({"Position": 0.3}, {})", List, true);
 
     const std::shared_ptr<OctaneGUI::Splitter> Splitter = List.To<OctaneGUI::Splitter>("Splitter");
     const std::shared_ptr<OctaneGUI::Container> Top = Splitter->Get(0);

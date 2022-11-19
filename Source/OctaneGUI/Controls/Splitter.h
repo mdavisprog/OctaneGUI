@@ -54,6 +54,9 @@ public:
     Splitter& SetSplitterPosition(size_t Index, float Position);
     Vector2 SplitterSize() const;
 
+    Splitter& SetFit(bool Fit);
+    bool Fit() const;
+
     const std::shared_ptr<Container>& Get(size_t Index) const;
     size_t Count() const;
 
@@ -61,6 +64,7 @@ public:
     Splitter& AddContainers(int Count);
 
     virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
+    virtual Vector2 DesiredSize() const override;
 
     virtual void Update() override;
     virtual void OnLoad(const Json& Root) override;
@@ -88,6 +92,7 @@ private:
     std::vector<Item> m_Items {};
     bool m_Resize { false };
     Orientation m_Orientation { Orientation::Horizontal };
+    bool m_Fit { false };
 };
 
 }
