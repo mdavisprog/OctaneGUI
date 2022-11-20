@@ -271,15 +271,6 @@ Vector2 Splitter::DesiredSize() const
     return m_Split->DesiredSize();
 }
 
-void Splitter::Update()
-{
-    if (m_Resize)
-    {
-        Resize();
-        m_Resize = false;
-    }
-}
-
 void Splitter::OnLoad(const Json& Root)
 {
     Container::OnLoad(Root);
@@ -299,6 +290,15 @@ void Splitter::OnLoad(const Json& Root)
     }
 
     UpdateLayout();
+}
+
+void Splitter::OnLayoutComplete()
+{
+    if (m_Resize)
+    {
+        Resize();
+        m_Resize = false;
+    }
 }
 
 void Splitter::UpdateLayout()

@@ -66,8 +66,10 @@ public:
     virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
     virtual Vector2 DesiredSize() const override;
 
-    virtual void Update() override;
     virtual void OnLoad(const Json& Root) override;
+
+protected:
+    virtual void OnLayoutComplete() override;
 
 private:
     struct Item
