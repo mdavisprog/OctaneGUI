@@ -57,7 +57,7 @@ public:
     Splitter& SetFit(bool Fit);
     bool Fit() const;
 
-    const std::shared_ptr<Container>& Get(size_t Index) const;
+    const std::shared_ptr<Container>& GetSplit(size_t Index) const;
     size_t Count() const;
 
     const std::shared_ptr<Container>& AddContainer();

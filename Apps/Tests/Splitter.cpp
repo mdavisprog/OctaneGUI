@@ -66,7 +66,7 @@ TEST_CASE(SplitterHorizontalSizeFit,
 
     const OctaneGUI::Vector2 WindowSize = Application.GetMainWindow()->GetSize();
     const std::shared_ptr<OctaneGUI::Splitter> Splitter = List.To<OctaneGUI::Splitter>("Splitter");
-    const std::shared_ptr<OctaneGUI::Container> Top = Splitter->Get(0);
+    const std::shared_ptr<OctaneGUI::Container> Top = Splitter->GetSplit(0);
     const OctaneGUI::Vector2 SplitterSize = Splitter->SplitterSize();
     const float CenterY = (WindowSize.Y * 0.5f) - (SplitterSize.Y * 0.5f);
 
@@ -80,9 +80,10 @@ TEST_CASE(ChangeSplitterVerticalFit,
 
     const std::shared_ptr<OctaneGUI::Splitter> Splitter = List.To<OctaneGUI::Splitter>("Splitter");
     Splitter->SetOrientation(OctaneGUI::Orientation::Vertical);
+    Application.Update();
 
-    const std::shared_ptr<OctaneGUI::Container> Left = Splitter->Get(0);
-    const std::shared_ptr<OctaneGUI::Container> Right = Splitter->Get(1);
+    const std::shared_ptr<OctaneGUI::Container> Left = Splitter->GetSplit(0);
+    const std::shared_ptr<OctaneGUI::Container> Right = Splitter->GetSplit(1);
     const OctaneGUI::Vector2 SplitterSize { Splitter->SplitterSize() };
 
     return Left->GetSize().X == Right->GetSize().X && Left->GetSize().X == Splitter->GetSize().X * 0.5f - SplitterSize.X * 0.5f;
@@ -96,8 +97,8 @@ TEST_CASE(SplitterHorizontalMoveFit,
     const std::shared_ptr<OctaneGUI::Splitter> Splitter = List.To<OctaneGUI::Splitter>("Splitter");
     const OctaneGUI::Vector2 Size { Splitter->GetSize() };
     const OctaneGUI::Vector2 SplitterSize  { Splitter->SplitterSize() };
-    const std::shared_ptr<OctaneGUI::Container> Top = Splitter->Get(0);
-    const std::shared_ptr<OctaneGUI::Container> Bottom = Splitter->Get(1);
+    const std::shared_ptr<OctaneGUI::Container> Top = Splitter->GetSplit(0);
+    const std::shared_ptr<OctaneGUI::Container> Bottom = Splitter->GetSplit(1);
 
     VERIFYF(Top->GetSize().Y == Size.Y * 0.5f - SplitterSize.Y * 0.5f, "Top container size is not split in half!");
     VERIFYF(Bottom->GetSize().Y == Size.Y * 0.5f - SplitterSize.Y * 0.5f, "Bottom container size is not split in half!");
@@ -128,8 +129,8 @@ TEST_CASE(SplitterVerticalMoveFit,
 
     const OctaneGUI::Vector2 Size { Splitter->GetSize() };
     const OctaneGUI::Vector2 SplitterSize  { Splitter->SplitterSize() };
-    const std::shared_ptr<OctaneGUI::Container> Left = Splitter->Get(0);
-    const std::shared_ptr<OctaneGUI::Container> Right = Splitter->Get(1);
+    const std::shared_ptr<OctaneGUI::Container> Left = Splitter->GetSplit(0);
+    const std::shared_ptr<OctaneGUI::Container> Right = Splitter->GetSplit(1);
 
     VERIFYF(Left->GetSize().X == Size.X * 0.5f - SplitterSize.X * 0.5f, "Left container size is not split in half!\n");
     VERIFYF(Right->GetSize().X == Size.X * 0.5f - SplitterSize.X * 0.5f, "Right container size is not split in half!\n");
@@ -156,7 +157,7 @@ TEST_CASE(SplitterHoveredControl,
 
     const std::shared_ptr<OctaneGUI::Splitter> Splitter = List.To<OctaneGUI::Splitter>("Splitter");
     const std::shared_ptr<OctaneGUI::Button> Button = List.To<OctaneGUI::Button>("Splitter.Button");
-    const std::shared_ptr<OctaneGUI::Container> Top = Splitter->Get(0);
+    const std::shared_ptr<OctaneGUI::Container> Top = Splitter->GetSplit(0);
 
     Utility::MouseClick(Application, {5.0f, Top->GetSize().Y + 1.0f});
     Application.Update();
@@ -180,7 +181,7 @@ TEST_CASE(SplitterPositionFit,
     LoadSplitter(Application, R"({"Position": 0.3}, {})", List, true);
 
     const std::shared_ptr<OctaneGUI::Splitter> Splitter = List.To<OctaneGUI::Splitter>("Splitter");
-    const std::shared_ptr<OctaneGUI::Container> Top = Splitter->Get(0);
+    const std::shared_ptr<OctaneGUI::Container> Top = Splitter->GetSplit(0);
 
     const OctaneGUI::Vector2 Size { Splitter->GetSize() };
     const OctaneGUI::Vector2 SplitterSize { Splitter->SplitterSize() };

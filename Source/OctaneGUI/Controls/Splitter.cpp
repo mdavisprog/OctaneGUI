@@ -211,7 +211,7 @@ bool Splitter::Fit() const
     return m_Fit;
 }
 
-const std::shared_ptr<Container>& Splitter::Get(size_t Index) const
+const std::shared_ptr<Container>& Splitter::GetSplit(size_t Index) const
 {
     Assert(Index >= 0 && Index < m_Items.size(), "Invalid index %zu given! Maximum number of containers is %zu.", Index, m_Items.size());
     return m_Items[Index].Data;

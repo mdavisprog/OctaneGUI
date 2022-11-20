@@ -109,7 +109,7 @@ public:
             .SetFit(true)
             .SetOrientation(Orientation::Vertical);
 
-        m_List = Split->Get(0)->AddControl<ListBox>();
+        m_List = Split->GetSplit(0)->AddControl<ListBox>();
         m_List
             ->SetOnSelect([this](int Index, std::weak_ptr<Control> Item) -> void
                 {
@@ -124,7 +124,7 @@ public:
                 })
             .SetExpand(Expand::Both);
 
-        const std::shared_ptr<ScrollableViewControl> PreviewView = Split->Get(1)->AddControl<ScrollableViewControl>();
+        const std::shared_ptr<ScrollableViewControl> PreviewView = Split->GetSplit(1)->AddControl<ScrollableViewControl>();
         PreviewView->SetExpand(Expand::Both);
         m_Preview = PreviewView->Scrollable()->AddControl<ImagePreview>();
     }

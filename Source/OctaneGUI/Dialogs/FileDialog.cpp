@@ -104,7 +104,7 @@ FileDialog::FileDialog(Window* InWindow)
         .SetOrientation(Orientation::Vertical);
 
     // The left pane that contains the directory tree.
-    m_DirectoryView = BodySplitter->Get(0)->AddControl<ScrollableViewControl>();
+    m_DirectoryView = BodySplitter->GetSplit(0)->AddControl<ScrollableViewControl>();
     m_DirectoryView->SetExpand(Expand::Both);
     m_DirectoryTree = m_DirectoryView->Scrollable()->AddControl<Tree>();
     m_DirectoryTree
@@ -124,7 +124,7 @@ FileDialog::FileDialog(Window* InWindow)
             });
 
     // The right pane that contains the list of files in the selected directory.
-    m_DirectoryList = BodySplitter->Get(1)->AddControl<ListBox>();
+    m_DirectoryList = BodySplitter->GetSplit(1)->AddControl<ListBox>();
     m_DirectoryList
         ->SetOnSelect([this](int, std::weak_ptr<Control> Item) -> void
             {
