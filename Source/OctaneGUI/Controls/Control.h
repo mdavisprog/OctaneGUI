@@ -308,26 +308,71 @@ public:
     /// @return This Control reference.
     Control& ClearProperty(ThemeProperties::Property Property);
 
+    /// @brief Create a shared_ptr object from this.
+    /// @return A newly created shared_ptr object.
     std::shared_ptr<Control> Share();
+
+    /// @brief Create a const shared_ptr object from this.
+    /// @return A newly created const shared_ptr object.
     std::shared_ptr<Control const> Share() const;
 
+    /// @brief Create a shared_ptr object from this of a specific type.
+    /// @tparam T The Control type to cast to.
+    /// @return A newly created casted shared_ptr object.
     template <class T>
     std::shared_ptr<T> TShare()
     {
         return std::dynamic_pointer_cast<T>(Share());
     }
 
+    /// @brief Create a const shared_ptr object from this of a specific type.
+    /// @tparam T The Control type to cast to.
+    /// @return A newly created casted const shared_ptr object.
     template <class T>
     std::shared_ptr<T const> TShare() const
     {
         return std::dynamic_pointer_cast<T const>(Share());
     }
 
+    /// @brief Notifies the control to paint into a given brush.
+    ///
+    /// This is called for all controls of a given Window when a repaint request
+    /// is issued. This can come from another control or from outside the library
+    /// such as an event fired from the frontend.
+    ///
+    /// @param Brush The object to add painting commands to.
     virtual void OnPaint(Paint& Brush) const;
+
+    /// @brief Notifies the control that it's layout is complete within a given container.
     virtual void Update();
+
+    /// @brief Notifies the control that is has received focus.
+    ///
+    /// A control may receive focus within a Window if its OnMousePressed function returns
+    /// true. This tells the frontend that a focus request has occurred. A specific control
+    /// can also be requested through the Window::SetFocus function.
     virtual void OnFocused();
+
+    /// @brief Notifies the control that is losing focus.
     virtual void OnUnfocused();
+
+    /// @brief Notifies the control to load any properties from the given JSON object.
+    ///
+    /// A Window may have its controls defined within a JSON stream. The Window will
+    /// parse the stream into a hierarchy of JSON objects and is passed to each control
+    /// to give them an opportunity to load any properties that define the control. The
+    /// stream can come from a list of places such as a disk, memory, or network stream.
+    ///
+    /// @param Root The Json object containing the properties to load for this control.
     virtual void OnLoad(const Json& Root);
+
+    /// @brief Notifies the control to save any properties to the given JSON object.
+    ///
+    /// This may be called from any number of places which may wish to get information
+    /// about controls. This JSON object can then be used to serialize the information
+    /// to disk or be displayed in some other output device.
+    ///
+    /// @param Root The Json object to write properties of this control into.
     virtual void OnSave(Json& Root) const;
     virtual bool OnKeyPressed(Keyboard::Key Key);
     virtual void OnKeyReleased(Keyboard::Key Key);
