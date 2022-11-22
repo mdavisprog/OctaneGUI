@@ -254,6 +254,12 @@ Splitter& Splitter::AddContainers(int Count)
     return *this;
 }
 
+Splitter& Splitter::SetOnResized(OnSplitterSignature&& Fn)
+{
+    m_OnResized = std::move(Fn);
+    return *this;
+}
+
 std::weak_ptr<Control> Splitter::GetControl(const Vector2& Point) const
 {
     std::weak_ptr<Control> Result = Container::GetControl(Point);
@@ -385,6 +391,11 @@ void Splitter::Resize()
             Item_.Data->SetSize(Size);
         }
     }
+
+    if (m_OnResized)
+    {
+        m_OnResized(*this);
+    }
 }
 
 void Splitter::Resize(const std::shared_ptr<Container>& Target, const Vector2& Size)
@@ -421,6 +432,11 @@ void Splitter::Resize(const std::shared_ptr<Container>& Target, const Vector2& S
     }
 
     Invalidate(InvalidateType::Both);
+
+    if (m_OnResized)
+    {
+        m_OnResized(*this);
+    }
 }
 
 std::shared_ptr<Separator> Splitter::GetSeparator(const Vector2& Point) const

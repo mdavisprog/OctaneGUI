@@ -46,6 +46,8 @@ class Splitter : public Container
     CLASS(Splitter)
 
 public:
+    typedef std::function<void(Splitter&)> OnSplitterSignature;
+
     Splitter(Window* InWindow);
 
     Splitter& SetOrientation(Orientation InOrientation);
@@ -62,6 +64,8 @@ public:
 
     const std::shared_ptr<Container>& AddContainer();
     Splitter& AddContainers(int Count);
+
+    Splitter& SetOnResized(OnSplitterSignature&& Fn);
 
     virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
     virtual Vector2 DesiredSize() const override;
@@ -95,6 +99,7 @@ private:
     bool m_Resize { false };
     Orientation m_Orientation { Orientation::Horizontal };
     bool m_Fit { false };
+    OnSplitterSignature m_OnResized { nullptr };
 };
 
 }
