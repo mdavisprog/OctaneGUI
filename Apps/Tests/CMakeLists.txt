@@ -15,6 +15,7 @@ add_executable(
     Rect.cpp
     Scrollable.cpp
     Splitter.cpp
+    Table.cpp
     TestSuite.cpp
     Text.cpp
     TextInput.cpp
