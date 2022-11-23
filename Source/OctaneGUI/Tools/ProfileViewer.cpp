@@ -357,31 +357,32 @@ void ProfileViewer::View(Window* InWindow)
 
         std::shared_ptr<Table> FrameDesc = FrameDescView->Scrollable()->AddControl<Table>();
         FrameDesc
-            ->SetColumns(4)
-            .SetHeader(0, "Frame")
-            .SetHeader(1, "Time (ms)")
-            .SetHeader(2, "Inclusive Count")
-            .SetHeader(3, "Exclusive Count")
-            .SetColumnSpacing(8.0f);
-
-        m_Tree = FrameDesc->Column(0)->AddControl<Tree>();
-        m_Tree.lock()
-            ->SetOnToggled([this](Tree& Root) -> void
-                {
-                    UpdateFrameInfo();
-                })
-            .SetExpand(Expand::Width);
-
-        const std::shared_ptr<BoxContainer>& FrameTimes = std::static_pointer_cast<BoxContainer>(FrameDesc->Column(1));
-        FrameTimes->SetSpacing({ 0.0f, 0.0f });
+            ->AddColumn(U"Frame")
+            .AddColumn(U"Time (ms)")
+            .AddColumn(U"Inclusive Count")
+            .AddColumn(U"Exclusive Count");
+        m_Table = FrameDesc;
+        
+        m_Tree = FrameDesc
+            ->AddRow()
+            .Cell(0, 0)
+            ->AddControl<Tree>();
+        
+        m_Tree.lock()->SetOnToggled([this](Tree&) -> void
+            {
+                UpdateFrameInfo();
+            });
+        
+        std::shared_ptr<VerticalContainer> FrameTimes = FrameDesc->Cell(0, 1)->AddControl<VerticalContainer>();
+        FrameTimes->SetSpacing({});
         m_FrameTimes = FrameTimes;
 
-        const std::shared_ptr<BoxContainer>& InclusiveEventCount = std::static_pointer_cast<BoxContainer>(FrameDesc->Column(2));
-        InclusiveEventCount->SetSpacing({ 0.0f, 0.0f });
+        std::shared_ptr<VerticalContainer> InclusiveEventCount = FrameDesc->Cell(0, 2)->AddControl<VerticalContainer>();
+        InclusiveEventCount->SetSpacing({});
         m_InclusiveEventCount = InclusiveEventCount;
 
-        const std::shared_ptr<BoxContainer>& ExclusiveEventCount = std::static_pointer_cast<BoxContainer>(FrameDesc->Column(3));
-        ExclusiveEventCount->SetSpacing({ 0.0f, 0.0f });
+        std::shared_ptr<VerticalContainer> ExclusiveEventCount = FrameDesc->Cell(0, 3)->AddControl<VerticalContainer>();
+        ExclusiveEventCount->SetSpacing({});
         m_ExclusiveEventCount = ExclusiveEventCount;
     }
 
@@ -509,6 +510,10 @@ void ProfileViewer::UpdateFrameInfo()
             UpdateRow(Child, Frame.Events()[Index], m_FrameTimes.lock(), m_InclusiveEventCount.lock(), m_ExclusiveEventCount.lock());
             Index++;
         });
+    
+    // TODO: Would like to invalidate just the row that was changed. Also ran into an issue where if the tree size gets samller, the tree
+    // row's height is not updated until a column is resized.
+    m_Table.lock()->InvalidateLayout();
 }
 
 }

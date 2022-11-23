@@ -25,14 +25,143 @@ SOFTWARE.
 */
 
 #include "Table.h"
+#include "../Assert.h"
+#include "../Json.h"
+#include "../String.h"
 #include "HorizontalContainer.h"
+#include "Splitter.h"
 #include "Text.h"
 #include "VerticalContainer.h"
 
-#include <cassert>
-
 namespace OctaneGUI
 {
+
+//
+// TableCell
+//
+
+class TableCell : public Container
+{
+    CLASS(TableCell)
+
+public:
+    TableCell(Window* InWindow)
+        : Container(InWindow)
+    {
+        SetClip(true);
+    }
+
+    virtual Vector2 DesiredSize() const override
+    {
+        return { GetSize().X, ChildrenSize().Y };
+    }
+};
+
+//
+// TableRow
+//
+
+class TableRow : public HorizontalContainer
+{
+    CLASS(TableRow)
+
+public:
+    TableRow(Window* InWindow)
+        : HorizontalContainer(InWindow)
+    {
+        SetSpacing({});
+        SetExpand(Expand::Width);
+    }
+
+    std::shared_ptr<Container> AddCell()
+    {
+        if (!m_Cells.empty())
+        {
+            Cell& Back = m_Cells.back();
+            Back.Separator = AddControl<Container>();
+            Back.Separator->SetExpand(Expand::Height);
+        }
+
+        std::shared_ptr<TableCell> Result = AddControl<TableCell>();
+        m_Cells.push_back({ Result, nullptr });
+        return Result;
+    }
+
+    TableRow& SetCellSize(size_t Index, float Width, float SeparatorWidth)
+    {
+        const Cell& Item = GetCell(Index);
+
+        const Vector2 ContentsSize = Item.Contents->ChildrenSize();
+        Item.Contents->SetSize({ Width, ContentsSize.Y });
+
+        if (Item.Separator)
+        {
+            Item.Separator->SetSize({ SeparatorWidth, 0.0f });
+        }
+
+        return *this;
+    }
+
+    size_t Cells() const
+    {
+        return m_Cells.size();
+    }
+
+    std::shared_ptr<Container> GetCellContainer(size_t Index) const
+    {
+        return GetCell(Index).Contents;
+    }
+
+private:
+    struct Cell
+    {
+    public:
+        std::shared_ptr<TableCell> Contents { nullptr };
+        std::shared_ptr<Container> Separator { nullptr };
+    };
+
+    const Cell& GetCell(size_t Index) const
+    {
+        Assert(Index < m_Cells.size(), "Invalid column given %zu! Number of columns: %zu.\n", Index, m_Cells.size());
+        return m_Cells[Index];
+    }
+
+    std::vector<Cell> m_Cells {};
+};
+
+//
+// TableRows
+//
+
+class TableRows : public VerticalContainer
+{
+    CLASS(TableRows)
+
+public:
+    TableRows(Window* InWindow)
+        : VerticalContainer(InWindow)
+    {
+        SetSpacing({});
+        SetExpand(Expand::Width);
+    }
+
+    std::shared_ptr<TableRow> AddRow()
+    {
+        std::shared_ptr<TableRow> Result = AddControl<TableRow>();
+        return Result;
+    }
+
+    std::shared_ptr<TableRow> Row(size_t Index) const
+    {
+        Assert(Index < NumControls(), "Invalid row given %zu! Number of rows: %zu.\n", Index, NumControls());
+        return std::static_pointer_cast<TableRow>(Get(Index));
+    }
+
+    size_t Rows() const
+    {
+        return NumControls();
+    }
+};
 
 //
 // Table
@@ -41,117 +170,107 @@ namespace OctaneGUI
 Table::Table(Window* InWindow)
     : Container(InWindow)
 {
-    m_Row = AddControl<HorizontalContainer>();
-    m_Row->SetSpacing({ 0.0f, 0.0f });
-}
+    m_Contents = AddControl<VerticalContainer>();
+    m_Contents
+        ->SetSpacing({})
+        ->SetExpand(Expand::Both);
 
-Table& Table::SetColumns(int Columns)
-{
-    if (m_Row->Controls().size() == Columns)
-    {
-        return *this;
-    }
-
-    // TODO: Look into only remove/adding necessary controls.
-    m_Row->ClearControls();
-    for (int I = 0; I < Columns; I++)
-    {
-        m_Row->AddControl<TableColumn>()->SetOnInvalidate([this](std::shared_ptr<Control> Focus, InvalidateType Type) -> void
+    m_Header = m_Contents->AddControl<Splitter>();
+    m_Header
+        ->SetOrientation(Orientation::Vertical)
+        .SetOnResized([this](Splitter&) -> void
             {
-                if (Type != InvalidateType::Paint)
-                {
-                    Invalidate(Type);
-                }
-                else
-                {
-                    HandleInvalidate(Focus, Type);
-                }
-            });
+                SyncSize();
+            })
+        .SetExpand(Expand::Width);
+    
+    m_Rows = m_Contents->AddControl<TableRows>();
+}
+
+Table& Table::AddColumn(const char32_t* Label)
+{
+    const std::shared_ptr<Container>& Column = m_Header->AddContainer();
+    const std::shared_ptr<Text> TextComponent = Column
+        ->SetClip(true)
+        .AddControl<Text>();
+    TextComponent->SetText(Label);
+    return *this;
+}
+
+size_t Table::Columns() const
+{
+    return m_Header->Count();
+}
+
+Table& Table::AddRow()
+{
+    std::shared_ptr<TableRow> Row = m_Rows->AddRow();
+
+    for (size_t I = 0; I < m_Header->Count(); I++)
+    {
+        Row->AddCell();
     }
 
     return *this;
 }
 
-int Table::Columns() const
+size_t Table::Rows() const
 {
-    return m_Row->Controls().size();
+    return m_Rows->NumControls();
 }
 
-const std::shared_ptr<Container>& Table::Column(int Index) const
+std::shared_ptr<Container> Table::Cell(size_t Row, size_t Column) const
 {
-    assert(Columns() > 0);
-    assert(Index >= 0 && Index < Columns());
-
-    std::shared_ptr<TableColumn> Column = std::static_pointer_cast<TableColumn>(m_Row->Controls()[Index]);
-    return Column->Body();
-}
-
-Table& Table::SetColumnSpacing(float Spacing)
-{
-    m_Row->SetSpacing({ Spacing, 0.0f });
-    return *this;
-}
-
-Table& Table::SetHeader(int Index, const char* Text)
-{
-    assert(Columns() > 0);
-    assert(Index >= 0 && Index < Columns());
-
-    std::shared_ptr<TableColumn> Column = std::static_pointer_cast<TableColumn>(m_Row->Controls()[Index]);
-    Column->SetHeader(Text);
-    return *this;
+    std::shared_ptr<TableRow> RowContainer = m_Rows->Row(Row);
+    return RowContainer->GetCellContainer(Column);
 }
 
 Vector2 Table::DesiredSize() const
 {
-    return m_Row->DesiredSize();
+    return m_Contents->DesiredSize();
 }
 
-//
-// TableColumn
-//
-
-Table::TableColumn::TableColumn(Window* InWindow)
-    : Container(InWindow)
+void Table::OnLoad(const Json& Root)
 {
-    std::shared_ptr<BoxContainer> m_Outer = AddControl<VerticalContainer>();
-    m_Outer->SetSpacing({ 0.0f, 0.0f });
+    Container::OnLoad(Root);
 
-    std::shared_ptr<BoxContainer> HeaderOuter = m_Outer->AddControl<HorizontalContainer>();
-    HeaderOuter
-        ->SetGrow(Grow::Center)
-        ->SetExpand(Expand::Width);
-    m_Header = HeaderOuter->AddControl<Text>();
-
-    m_Body = m_Outer->AddControl<VerticalContainer>();
-    m_Body->SetExpand(Expand::Width);
-}
-
-Table::TableColumn& Table::TableColumn::SetHeader(const char* Header)
-{
-    m_Header->SetText(Header);
-    return *this;
-}
-
-const std::shared_ptr<Container>& Table::TableColumn::Body() const
-{
-    return m_Body;
-}
-
-Vector2 Table::TableColumn::DesiredSize() const
-{
-    Vector2 Result = m_Header->GetSize();
-
-    if (m_Body->Controls().size() == 0)
+    const Json& Columns = Root["Header"];
+    Columns.ForEach([this](const Json& Item) -> void
+        {
+            AddColumn(String::ToUTF32(Item["Label"].String()).c_str());
+        });
+    
+    const Json& Rows = Root["Rows"];
+    for (unsigned int RowIdx = 0; RowIdx < Rows.Count(); RowIdx++)
     {
-        return Result;
+        AddRow();
+
+        const Json& Row = Rows[RowIdx];
+        const Json& Columns = Row["Columns"];
+        for (unsigned int ColumnIdx = 0; ColumnIdx < Columns.Count(); ColumnIdx++)
+        {
+            const Json& Column = Columns[ColumnIdx];
+            std::shared_ptr<Container> Cell = this->Cell(RowIdx, ColumnIdx);
+            Cell->OnLoad(Column);
+        }
     }
 
-    Vector2 BodySize = m_Body->DesiredSize();
-    Result.X = std::max<float>(Result.X, BodySize.X);
-    Result.Y += BodySize.Y;
+    SyncSize();
+}
 
-    return Result;
+void Table::SyncSize()
+{
+    const Vector2 SplitterSize { m_Header->SplitterSize() };
+
+    for (size_t RowIdx = 0; RowIdx < m_Rows->Rows(); RowIdx++)
+    {
+        std::shared_ptr<TableRow> Row = m_Rows->Row(RowIdx);
+        for (size_t ColumnIdx = 0; ColumnIdx < Row->Cells(); ColumnIdx++)
+        {
+            const std::shared_ptr<Container>& Header = m_Header->GetSplit(ColumnIdx);
+            Row->SetCellSize(ColumnIdx, Header->GetSize().X, SplitterSize.X);
+        }
+    }
 }
 
 }

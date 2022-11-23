@@ -31,8 +31,9 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
-class BoxContainer;
-class Text;
+class Splitter;
+class TableRows;
+class VerticalContainer;
 
 class Table : public Container
 {
@@ -41,37 +42,24 @@ class Table : public Container
 public:
     Table(Window* InWindow);
 
-    Table& SetColumns(int Columns);
-    int Columns() const;
-    const std::shared_ptr<Container>& Column(int Index) const;
+    Table& AddColumn(const char32_t* Label);
+    size_t Columns() const;
 
-    Table& SetColumnSpacing(float Spacing);
+    Table& AddRow();
+    size_t Rows() const;
 
-    Table& SetHeader(int Index, const char* Header);
+    std::shared_ptr<Container> Cell(size_t Row, size_t Column) const;
 
     virtual Vector2 DesiredSize() const override;
 
+    virtual void OnLoad(const Json& Root) override;
+
 private:
-    class TableColumn : public Container
-    {
-        CLASS(TableColumn)
+    void SyncSize();
 
-    public:
-        TableColumn(Window* InWindow);
-
-        TableColumn& SetHeader(const char* Header);
-
-        const std::shared_ptr<Container>& Body() const;
-
-        virtual Vector2 DesiredSize() const override;
-
-    private:
-        std::shared_ptr<Container> m_Outer { nullptr };
-        std::shared_ptr<Text> m_Header { nullptr };
-        std::shared_ptr<Container> m_Body { nullptr };
-    };
-
-    std::shared_ptr<BoxContainer> m_Row { nullptr };
+    std::shared_ptr<VerticalContainer> m_Contents { nullptr };
+    std::shared_ptr<Splitter> m_Header { nullptr };
+    std::shared_ptr<TableRows> m_Rows { nullptr };
 };
 
 }

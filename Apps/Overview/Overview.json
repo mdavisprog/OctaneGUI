@@ -122,6 +122,21 @@
                                         {"Controls": [{"Type": "Text", "Text": "Second"}]}
                                     ]}
                                 ]}
+                            ]},
+                            {"Type": "Table", "Expand": "Width", "Size": [0, 150], "Header": [
+                                {"Label": "Column One"},
+                                {"Label": "Column Two"},
+                                {"Label": "Column Three"}
+                            ], "Rows": [
+                                {"Columns": [
+                                    {"Controls": [{"Type": "Text", "Text": "Cell 1, 1"}]},
+                                    {"Controls": [{"Type": "Text", "Text": "Cell 1, 2"}]}
+                                ]},
+                                {"Columns": [
+                                    {"Controls": [{"Type": "Text", "Text": "Cell 2, 1"}]},
+                                    {"Controls": [{"Type": "Text", "Text": "Cell 2, 1"}]},
+                                    {"Controls": [{"Type": "Text", "Text": "Cell 2, 3"}]}
+                                ]}
                             ]}
                         ]}
                     ]}
