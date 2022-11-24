@@ -26,6 +26,7 @@ SOFTWARE.
 
 #pragma once
 
+#include "../Alignment.h"
 #include "Control.h"
 
 namespace OctaneGUI

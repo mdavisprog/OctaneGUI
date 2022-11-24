@@ -26,6 +26,7 @@ SOFTWARE.
 
 #pragma once
 
+#include "../Orientation.h"
 #include "HorizontalContainer.h"
 
 namespace OctaneGUI

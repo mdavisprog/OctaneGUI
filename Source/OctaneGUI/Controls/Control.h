@@ -53,59 +53,6 @@ enum class Expand : uint8_t
     Both
 };
 
-enum class HorizontalAlignment : uint8_t
-{
-    Left,
-    Center,
-    Right
-};
-
-enum class VerticalAlignment : uint8_t
-{
-    Top,
-    Center,
-    Bottom
-};
-
-enum class Orientation : uint8_t
-{
-    Horizontal,
-    Vertical
-};
-
-static const char* ToString(Orientation Type)
-{
-    if (Type == Orientation::Vertical)
-    {
-        return "Vertical";
-    }
-
-    return "Horizontal";
-}
-
-static Orientation ToOrientation(const std::string& Type)
-{
-    if (Type == "Vertical")
-    {
-        return Orientation::Vertical;
-    }
-
-    return Orientation::Horizontal;
-}
-
-static const char* ToString(HorizontalAlignment Type)
-{
-    switch (Type)
-    {
-    case HorizontalAlignment::Center: return "Center";
-    case HorizontalAlignment::Right: return "Right";
-    case HorizontalAlignment::Left:
-    default: break;
-    }
-
-    return "Left";
-}
-
 /// @brief Base class for all controls in the library.
 ///
 /// Controls are the base objects that make up a GUI element. All controls must be

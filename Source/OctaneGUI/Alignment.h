@@ -26,36 +26,25 @@ SOFTWARE.
 
 #pragma once
 
-#include "../Orientation.h"
-#include "Control.h"
+#include <cstdint>
 
 namespace OctaneGUI
 {
 
-/// @brief Control that adds a separator which paints a line.
-///
-/// Separators can be oriented either horizontally or vertically.
-class Separator : public Control
+enum class HorizontalAlignment : uint8_t
 {
-    CLASS(Separator)
-
-public:
-    Separator(Window* InWindow);
-
-    Separator& SetOnHover(OnControlSignature&& Fn);
-
-    Separator& SetOrientation(Orientation InOrientation);
-    Orientation GetOrientation() const;
-
-    virtual void OnPaint(Paint& Brush) const override;
-    virtual void OnLoad(const Json& Root) override;
-    virtual void OnMouseEnter() override;
-
-private:
-    void UpdateLayout();
-
-    OnControlSignature m_OnHover { nullptr };
-    Orientation m_Orientation { Orientation::Horizontal };
+    Left,
+    Center,
+    Right
 };
+
+enum class VerticalAlignment : uint8_t
+{
+    Top,
+    Center,
+    Bottom
+};
+
+const char* ToString(HorizontalAlignment Type);
 
 }

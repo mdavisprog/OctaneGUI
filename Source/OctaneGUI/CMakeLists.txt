@@ -38,6 +38,7 @@ set(SOURCE
     Controls/WindowContainer.cpp
     Dialogs/FileDialog.cpp
     Dialogs/MessageBox.cpp
+    Alignment.cpp
     Application.cpp
     Assert.cpp
     Class.cpp
@@ -50,6 +51,7 @@ set(SOURCE
     Font.cpp
     Icons.cpp
     Json.cpp
+    Orientation.cpp
     Paint.cpp
     Popup.cpp
     Rect.cpp
