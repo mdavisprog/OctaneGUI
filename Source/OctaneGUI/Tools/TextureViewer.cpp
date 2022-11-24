@@ -111,9 +111,9 @@ public:
 
         m_List = Split->GetSplit(0)->AddControl<ListBox>();
         m_List
-            ->SetOnSelect([this](int Index, std::weak_ptr<Control> Item) -> void
+            ->SetOnSelect([this](int Index, std::weak_ptr<Control>) -> void
                 {
-                    if (Index < m_Textures.size())
+                    if (Index < (int)m_Textures.size())
                     {
                         const std::weak_ptr<Texture> Selected = m_Textures[Index];
                         if (!Selected.expired())
@@ -139,7 +139,7 @@ public:
 
         Application& App = GetWindow()->App();
 
-        for (const std::pair<std::string, std::shared_ptr<Texture>>& Item : App.GetTextureCache().Cache())
+        for (const std::pair<std::string, std::shared_ptr<Texture>> Item : App.GetTextureCache().Cache())
         {
             if (Item.second && Item.second->IsValid())
             {
@@ -192,7 +192,7 @@ void TextureViewer::Show(Application& App)
             {
                 FileSystem& FS = Item.GetWindow()->App().FS();
 
-                FS.SetOnFileDialogResult([&App](FileDialogType Type, const std::u32string& Path) -> void
+                FS.SetOnFileDialogResult([&App](FileDialogType, const std::u32string& Path) -> void
                     {
                         if (!Path.empty())
                         {

@@ -87,7 +87,7 @@ TEST_CASE(MoveCursorRightNextLine,
         Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Right);
 
         VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line (%zu) is not 0!\n", TextInput->LineNumber());
-        VERIFYF(TextInput->Column() == I + 1, "TextInput cursor column (%zu) is not %d\n", TextInput->Column(), I + 1);
+        VERIFYF(TextInput->Column() == (size_t)(I + 1), "TextInput cursor column (%zu) is not %d\n", TextInput->Column(), I + 1);
     }
 
     Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Right);

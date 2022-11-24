@@ -109,7 +109,7 @@ SDL_SystemCursor GetMouseCursor(OctaneGUI::Mouse::Cursor Cursor)
 
 OctaneGUI::Window* WindowID(const char* ID)
 {
-    for (const std::pair<OctaneGUI::Window*, SDL_Window*>& Item : g_Windows)
+    for (const std::pair<OctaneGUI::Window*, SDL_Window*> Item : g_Windows)
     {
         const std::string WinID { Item.first->ID() };
         if (WinID == ID)
@@ -171,7 +171,7 @@ bool AddUnhandledEvent(SDL_Event& Event, const uint32_t EventWindowID, const uin
 
 OctaneGUI::Event HandleEvent(SDL_Event& Event, const uint32_t WindowID, bool IsPumping)
 {
-    SDL_Window* Window = SDL_GetWindowFromID(Event.window.windowID);
+    SDL_Window* Window = SDL_GetWindowFromID(WindowID);
 
     // If windowID for any event is 0, then that event should affect all windows.
     switch (Event.type)
@@ -199,7 +199,7 @@ OctaneGUI::Event HandleEvent(SDL_Event& Event, const uint32_t WindowID, bool IsP
         }
 
         return OctaneGUI::Event(
-            OctaneGUI::Event::MouseMove(Event.motion.x, Event.motion.y));
+            OctaneGUI::Event::MouseMove((float)Event.motion.x, (float)Event.motion.y));
     }
 
     case SDL_MOUSEBUTTONDOWN:
@@ -321,7 +321,7 @@ OctaneGUI::Event HandleEvent(SDL_Event& Event, const uint32_t WindowID, bool IsP
     return OctaneGUI::Event(OctaneGUI::Event::Type::None);
 }
 
-SDL_HitTestResult SDLCALL OnHitTest(SDL_Window* Window, SDL_Point* Area, void* Data)
+SDL_HitTestResult SDLCALL OnHitTest(SDL_Window* Window, SDL_Point* Area, void*)
 {
     OctaneGUI::Window* Target { nullptr };
     for (std::unordered_map<OctaneGUI::Window*, SDL_Window*>::const_iterator It = g_Windows.begin(); It != g_Windows.end(); ++It)
@@ -563,6 +563,8 @@ void ToggleWindow(OctaneGUI::Window* Window, bool Enable)
 #if defined(APPLE)
     Mac::SetMovable(Handle, Enable);
 #endif
+
+    (void)Handle;
 }
 
 void NewFrame()
@@ -617,12 +619,12 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 
 void Exit()
 {
-    for (const std::pair<SDL_SystemCursor, SDL_Cursor*>& SystemCursor : g_SystemCursors)
+    for (const std::pair<SDL_SystemCursor, SDL_Cursor*> SystemCursor : g_SystemCursors)
     {
         SDL_FreeCursor(SystemCursor.second);
     }
 
-    for (const std::pair<OctaneGUI::Window*, SDL_Window*>& Item : g_Windows)
+    for (const std::pair<OctaneGUI::Window*, SDL_Window*> Item : g_Windows)
     {
         SDL_DestroyWindow(Item.second);
     }

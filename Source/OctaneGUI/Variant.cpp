@@ -415,7 +415,7 @@ void Variant::Move(Variant&& Other)
     switch (m_Type)
     {
     case Type::Bool: m_Data.Bool = std::exchange(Other.m_Data.Bool, false); break;
-    case Type::Byte: m_Data.Byte = std::exchange(Other.m_Data.Byte, 0); break;
+    case Type::Byte: m_Data.Byte = std::exchange(Other.m_Data.Byte, (unsigned char)0); break;
     case Type::Int: m_Data.Int = std::exchange(Other.m_Data.Int, 0); break;
     case Type::Float: m_Data.Float = std::exchange(Other.m_Data.Float, 0.0f); break;
     case Type::String: m_Data.String = std::exchange(Other.m_Data.String, nullptr); break;

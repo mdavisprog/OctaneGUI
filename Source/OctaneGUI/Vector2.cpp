@@ -39,7 +39,7 @@ Json Vector2::ToJson(const Vector2& Value)
     Json Result(Json::Type::Array);
     Result.Push(Value.X);
     Result.Push(Value.Y);
-    return std::move(Result);
+    return Result;
 }
 
 Vector2 Vector2::FromJson(const Json& Value, const Vector2& Default)

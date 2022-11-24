@@ -180,7 +180,7 @@ public:
         }
     }
 
-    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override
+    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button, Mouse::Count) override
     {
         if (m_Toggle->Contains(Position))
         {
@@ -435,7 +435,7 @@ bool Tree::IsExpanded() const
     return m_Expand;
 }
 
-Tree& Tree::SetSelected(bool Selected)
+Tree& Tree::SetSelected(bool)
 {
     m_Item->Select();
     return *this;
@@ -508,7 +508,7 @@ std::vector<std::shared_ptr<Tree>> Tree::Children() const
         Result.push_back(std::static_pointer_cast<Tree>(Item));
     }
 
-    return std::move(Result);
+    return Result;
 }
 
 const Tree& Tree::ForEachChild(OnTreeSignature Callback) const

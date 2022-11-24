@@ -196,7 +196,6 @@ void Profiler::Disable()
     printf("Profiler has ended. Elapsed: %f\n", Elapsed);
     printf("Number of frames captured: %d\n", (int)m_Frames.size());
     printf("Coalescing samples...\n");
-    uint32_t Count = 1;
     for (Frame& Frame_ : m_Frames)
     {
         Frame_.CoalesceEvents();

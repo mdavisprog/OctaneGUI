@@ -369,7 +369,7 @@ private:
 
 #if TOOLS
     bool m_IgnoreModals { false };
-    Tools::Interface m_Tools { *this };
+    Tools::Interface m_Tools {};
 #endif
 
     OnWindowActionSignature m_OnWindowAction { nullptr };

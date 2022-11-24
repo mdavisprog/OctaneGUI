@@ -149,6 +149,8 @@ std::u32string OnFileDialog(OctaneGUI::FileDialogType Type, const std::vector<Oc
 #elif defined(APPLE)
     return Windowing::Mac::FileDialog(Type, Filters, nullptr);
 #else
+    (void)Type;
+    (void)Filters;
     return U"";
 #endif
 }

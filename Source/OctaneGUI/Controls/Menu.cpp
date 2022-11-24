@@ -187,7 +187,7 @@ void Menu::OnLoad(const Json& Root)
     Container::OnLoad(Root);
 
     const Json& Items = Root["Items"];
-    for (int I = 0; I < Items.Count(); I++)
+    for (unsigned int I = 0; I < Items.Count(); I++)
     {
         const Json& Item = Items[I];
         const Json& Type = Item["Type"];

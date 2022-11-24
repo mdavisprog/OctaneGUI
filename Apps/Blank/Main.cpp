@@ -21,7 +21,7 @@ std::string GetContents(const char* Filename)
     return Result;
 }
 
-int main(int argc, char **argv)
+int main(int, char**)
 {
     OctaneGUI::Application Application;
     Frontend::Initialize(Application);

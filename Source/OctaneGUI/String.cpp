@@ -107,7 +107,7 @@ std::string String::ToLower(const std::string& Value)
 
     for (const char Ch : Value)
     {
-        Result += std::tolower(Ch);
+        Result += (char)std::tolower(Ch);
     }
 
     return Result;

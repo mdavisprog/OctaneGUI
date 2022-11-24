@@ -37,8 +37,8 @@ namespace OctaneGUI
 
 ScrollBarHandle::ScrollBarHandle(Window* InWindow, ScrollBar* InScrollBar, Orientation InOrientation)
     : Control(InWindow)
-    , m_ScrollBar(InScrollBar)
     , m_Orientation(InOrientation)
+    , m_ScrollBar(InScrollBar)
 {
 }
 
@@ -182,7 +182,7 @@ void ScrollBarHandle::OnMouseMove(const Vector2& Position)
     }
 }
 
-bool ScrollBarHandle::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
+bool ScrollBarHandle::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count)
 {
     if (m_Hovered && Button == Mouse::Button::Left)
     {

@@ -129,7 +129,7 @@ public:
         }
     }
 
-    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override
+    virtual bool OnMousePressed(const Vector2&, Mouse::Button Button, Mouse::Count) override
     {
         if (m_Hovered.expired())
         {
@@ -182,7 +182,7 @@ private:
         }
 
         const std::vector<std::shared_ptr<Control>>& Controls = Root->Controls();
-        for (int I = Controls.size() - 1; I >= 0; I--)
+        for (size_t I = Controls.size() - 1; (int)I >= 0; I--)
         {
             const std::shared_ptr<Control>& Item = Controls[I];
             const std::shared_ptr<Container>& ItemContainer = std::dynamic_pointer_cast<Container>(Item);
@@ -243,7 +243,7 @@ void Inspector::Inspect(Window* Target)
         ControlList List;
         std::shared_ptr<Window> NewWindow = Target->App().NewWindow("Inspector", Stream, List);
         NewWindow
-            ->SetOnClose([this](Window& InWindow) -> void
+            ->SetOnClose([this](Window&) -> void
                 {
                     Close();
                 });
@@ -306,7 +306,7 @@ void Inspector::Inspect(Window* Target)
             {
                 Close();
             })
-        .SetOnLayout([this](Window&) -> void
+        .SetOnLayout([](Window&) -> void
             {
                 // TODO: This causes an issue where when the inspector window is opened and this
                 // callback is registered, an update is kicked off for all windows. The inspected window will
@@ -315,6 +315,9 @@ void Inspector::Inspect(Window* Target)
                 // new ones to be processed, but the layout requests array has not been cleared.
                 // A proper fix for this race condition is to convert the layout requests array to
                 // be weak references to controls, as currently they are raw pointers.
+                // 11/25/22: Layout requests are now weak references to controls. Need to revisit this.
+                //           Need to take into account performance and if a smarter process is needed
+                //           e.g. only update visible nodes.
                 // Populate();
             });
     Target->App().DisplayWindow("Inspector");

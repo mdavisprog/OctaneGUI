@@ -232,9 +232,9 @@ std::u32string TextEditor::ConvertTabs(const std::u32string& Pending) const
     return Result;
 }
 
-void TextEditor::PaintLineColors(std::shared_ptr<TextInput const>& Input, Paint& Brush) const
+void TextEditor::PaintLineColors(std::shared_ptr<TextInput const>&, Paint& Brush) const
 {
-    for (const std::pair<size_t, Color>& Line : m_LineColors)
+    for (const std::pair<size_t, Color> Line : m_LineColors)
     {
         Rect Bounds { Scrollable()->GetAbsoluteBounds() };
         Bounds.Max.X = Bounds.Min.X + Scrollable()->ContentSize().X;

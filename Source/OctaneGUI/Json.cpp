@@ -266,12 +266,12 @@ unsigned int Json::Count() const
 {
     if (IsObject())
     {
-        return m_Data.Object->size();
+        return (unsigned int)m_Data.Object->size();
     }
 
     if (IsArray())
     {
-        return m_Data.Array->size();
+        return (unsigned int)m_Data.Array->size();
     }
 
     return 0;
@@ -284,7 +284,7 @@ void Json::ForEach(std::function<void(const std::string&, const Json&)> Callback
         return;
     }
 
-    for (const std::pair<std::string, Json>& Item : *m_Data.Object)
+    for (const std::pair<std::string, Json> Item : *m_Data.Object)
     {
         Callback(Item.first, Item.second);
     }
@@ -673,8 +673,6 @@ void Json::ParseObject(Lexer& InLexer, Json& Root, bool& IsError)
             }
         }
 
-        unsigned char Ch = InLexer.Current();
-
         InLexer.ConsumeSpaces();
 
         if (InLexer.Current() == '}')
@@ -809,7 +807,7 @@ bool Json::Equals(const Json& Other) const
     if (IsArray() && Other.IsArray())
     {
         bool Result = true;
-        for (int I = 0; I < Count(); I++)
+        for (unsigned int I = 0; I < Count(); I++)
         {
             Result &= (*this)[I].Equals(Other[I]);
         }
@@ -884,7 +882,7 @@ std::string Json::ToString(bool Pretty, int Depth) const
             Result += "\n";
             Depth++;
         }
-        for (int I = 0; I < Count(); I++)
+        for (unsigned int I = 0; I < Count(); I++)
         {
             const Json& Item = m_Data.Array->at((size_t)I);
             Result += std::string(Depth * 4, ' ') + Item.ToString(Pretty, Depth);

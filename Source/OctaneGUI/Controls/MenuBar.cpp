@@ -145,7 +145,7 @@ void MenuBar::OnLoad(const Json& Root)
     Container::OnLoad(Root);
 
     const Json& Menus = Root["Items"];
-    for (int I = 0; I < Menus.Count(); I++)
+    for (unsigned int I = 0; I < Menus.Count(); I++)
     {
         const Json& Item = Menus[I];
 

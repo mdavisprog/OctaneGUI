@@ -161,7 +161,7 @@ void TextSelectable::OnSave(Json& Root) const
     Root["Text"] = std::move(TextRoot);
 }
 
-bool TextSelectable::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
+bool TextSelectable::OnMousePressed(const Vector2&, Mouse::Button, Mouse::Count)
 {
     if (m_OnPressed)
     {

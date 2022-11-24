@@ -119,7 +119,7 @@ bool TestSuite::Run(OctaneGUI::Application& Application, const TestSuite& Suite,
 
     Passed = 0;
     Failed = 0;
-    for (const std::pair<std::string, OnTestCaseSignature>& Item : Suite.m_TestCases)
+    for (const std::pair<std::string, OnTestCaseSignature> Item : Suite.m_TestCases)
     {
         Application.ClearKeys();
         Application.GetMainWindow()->Clear();

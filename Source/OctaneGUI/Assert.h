@@ -36,5 +36,14 @@ bool AssertFunc(const char* File, int Line, bool Condition, const char* Format, 
 #if NDEBUG
     #define Assert(Condition, Format, ...)
 #else
+    #if __APPLE__
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
+    #endif
+
     #define Assert(Condition, Format, ...) OctaneGUI::AssertFunc(__FILE__, __LINE__, Condition, Format, ##__VA_ARGS__);
+
+    #if __APPLE__
+        #pragma clang diagnostic pop
+    #endif
 #endif

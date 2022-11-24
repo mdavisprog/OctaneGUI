@@ -71,7 +71,7 @@ std::weak_ptr<Control> ControlList::Get(const char* ID) const
     if (!Contains(ID))
     {
         std::string List;
-        for (const std::pair<std::string, std::weak_ptr<Control>>& Item : m_Controls)
+        for (const std::pair<std::string, std::weak_ptr<Control>> Item : m_Controls)
         {
             List += Item.first + "\n";
         }

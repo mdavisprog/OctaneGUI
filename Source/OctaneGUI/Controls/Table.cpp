@@ -183,16 +183,15 @@ Table::Table(Window* InWindow)
                 SyncSize();
             })
         .SetExpand(Expand::Width);
-    
+
     m_Rows = m_Contents->AddControl<TableRows>();
 }
 
 Table& Table::AddColumn(const char32_t* Label)
 {
     const std::shared_ptr<Container>& Column = m_Header->AddContainer();
-    const std::shared_ptr<Text> TextComponent = Column
-        ->SetClip(true)
-        .AddControl<Text>();
+    Column->SetClip(true);
+    const std::shared_ptr<Text> TextComponent = Column->AddControl<Text>();
     TextComponent->SetText(Label);
     return *this;
 }
@@ -239,17 +238,17 @@ void Table::OnLoad(const Json& Root)
         {
             AddColumn(String::ToUTF32(Item["Label"].String()).c_str());
         });
-    
+
     const Json& Rows = Root["Rows"];
     for (unsigned int RowIdx = 0; RowIdx < Rows.Count(); RowIdx++)
     {
         AddRow();
 
         const Json& Row = Rows[RowIdx];
-        const Json& Columns = Row["Columns"];
-        for (unsigned int ColumnIdx = 0; ColumnIdx < Columns.Count(); ColumnIdx++)
+        const Json& RowColumns = Row["Columns"];
+        for (unsigned int ColumnIdx = 0; ColumnIdx < RowColumns.Count(); ColumnIdx++)
         {
-            const Json& Column = Columns[ColumnIdx];
+            const Json& Column = RowColumns[ColumnIdx];
             std::shared_ptr<Container> Cell = this->Cell(RowIdx, ColumnIdx);
             Cell->OnLoad(Column);
         }

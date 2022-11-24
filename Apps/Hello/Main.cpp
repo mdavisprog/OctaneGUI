@@ -27,7 +27,7 @@ SOFTWARE.
 #include "Frontend.h"
 #include "OctaneGUI/OctaneGUI.h"
 
-int main(int argc, char** argv)
+int main(int, char**)
 {
     const char* Stream = R"({
     "Theme": "Resources/Themes/Dark.json",

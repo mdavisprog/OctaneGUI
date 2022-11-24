@@ -58,7 +58,7 @@ TEST_CASE(Selection,
     const std::shared_ptr<OctaneGUI::ListBox> ListBox = List.To<OctaneGUI::ListBox>("ListBox");
 
     int Selected = -1;
-    ListBox->SetOnSelect([&](int Index, std::weak_ptr<OctaneGUI::Control> Control) -> void
+    ListBox->SetOnSelect([&](int Index, std::weak_ptr<OctaneGUI::Control>) -> void
         {
             Selected = Index;
         });
@@ -102,7 +102,7 @@ TEST_CASE(HScrollSelection,
     Application.Update();
 
     int Selected = -1;
-    ListBox->SetOnSelect([&](int Index, std::weak_ptr<OctaneGUI::Control> Item) -> void
+    ListBox->SetOnSelect([&](int Index, std::weak_ptr<OctaneGUI::Control>) -> void
         {
             Selected = Index;
         });
@@ -136,7 +136,7 @@ TEST_CASE(VScrollSelection,
     Application.Update();
 
     int Selected = -1;
-    ListBox->SetOnSelect([&](int Index, std::weak_ptr<OctaneGUI::Control> Item) -> void
+    ListBox->SetOnSelect([&](int Index, std::weak_ptr<OctaneGUI::Control>) -> void
         {
             Selected = Index;
         });

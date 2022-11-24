@@ -46,7 +46,7 @@ std::vector<TextSpan> JsonHighlighter::Update(const std::u32string_view& Span) c
     size_t Pos = 0;
     LexerUTF32 Lex {};
     Lex
-        .SetOnEmitToken([&](const LexerUTF32::Token& Token) -> void
+        .SetOnEmitToken([&](const LexerUTF32::Token&) -> void
             {
             })
         .SetOnEmitSymbol([&](const char32_t Symbol) -> void
@@ -56,7 +56,7 @@ std::vector<TextSpan> JsonHighlighter::Update(const std::u32string_view& Span) c
                     Result.push_back({ Pos, Lex.Index(), DefaultColor() });
                     Pos = Lex.Index();
                     Lex.Next();
-                    LexerUTF32::Token Token = Lex.ParseUntil(U'"');
+                    Lex.ParseUntil(U'"');
 
                     const char32_t Next = Lex.PeekNextValid();
                     Color Tint { 255, 255, 255, 255 };

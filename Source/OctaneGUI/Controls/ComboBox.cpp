@@ -212,7 +212,7 @@ void ComboBox::OnLoad(const Json& Root)
     Container::OnLoad(List);
 
     const Json& Items = Root["Items"];
-    for (int I = 0; I < Items.Count(); I++)
+    for (unsigned int I = 0; I < Items.Count(); I++)
     {
         const Json& Item = Items[I];
 

@@ -122,7 +122,7 @@ bool Font::Load(const char* Path, float Size, const std::vector<Range>& Ranges)
 
     // 2. Begin our pack context. This initializes the stbtt_pack_context struct
     stbtt_pack_context PackContext {};
-    stbtt_PackBegin(&PackContext, nullptr, TextureSize.X, TextureSize.Y, 0, 1, nullptr);
+    stbtt_PackBegin(&PackContext, nullptr, (int)TextureSize.X, (int)TextureSize.Y, 0, 1, nullptr);
 
     // 3. Gather all rects to be rendered based on the desired character ranges.
     std::vector<stbtt_packedchar> Chars;
@@ -142,7 +142,7 @@ bool Font::Load(const char* Path, float Size, const std::vector<Range>& Ranges)
         std::vector<stbrp_rect> Rects;
         Rects.resize(PackRange.num_chars);
 
-        int PackedCount = stbtt_PackFontRangesGatherRects(&PackContext, &Info, &PackRange, 1, Rects.data());
+        stbtt_PackFontRangesGatherRects(&PackContext, &Info, &PackRange, 1, Rects.data());
         AllRects.insert(AllRects.end(), Rects.begin(), Rects.end());
 
         // Turn on skipping missing codepoints after the first range.
@@ -156,8 +156,8 @@ bool Font::Load(const char* Path, float Size, const std::vector<Range>& Ranges)
         stbrp_context Context {};
         std::vector<stbrp_node> Nodes;
         Nodes.resize((int)TextureSize.X - PackContext.padding);
-        stbrp_init_target(&Context, (int)TextureSize.X - PackContext.padding, (int)TextureSize.Y - PackContext.padding, Nodes.data(), Nodes.size());
-        Success = stbrp_pack_rects(&Context, AllRects.data(), AllRects.size());
+        stbrp_init_target(&Context, (int)TextureSize.X - PackContext.padding, (int)TextureSize.Y - PackContext.padding, Nodes.data(), (int)Nodes.size());
+        Success = stbrp_pack_rects(&Context, AllRects.data(), (int)AllRects.size());
         if (Success == 0)
         {
             IncreaseSize(TextureSize, 128.0f);
@@ -185,7 +185,7 @@ bool Font::Load(const char* Path, float Size, const std::vector<Range>& Ranges)
     }
 
     // 5. Perform the render.
-    Success = stbtt_PackFontRangesRenderIntoRects(&PackContext, &Info, PackRanges.data(), PackRanges.size(), AllRects.data());
+    Success = stbtt_PackFontRangesRenderIntoRects(&PackContext, &Info, PackRanges.data(), (int)PackRanges.size(), AllRects.data());
 
     stbtt_PackEnd(&PackContext);
 

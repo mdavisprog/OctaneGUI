@@ -56,7 +56,7 @@ Json Rect::ToJson(const Rect& Value)
     Result.Push(Value.Max.X);
     Result.Push(Value.Max.Y);
 
-    return std::move(Result);
+    return Result;
 }
 
 Rect::Rect()

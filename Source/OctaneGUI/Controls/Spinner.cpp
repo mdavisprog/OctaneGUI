@@ -88,10 +88,10 @@ void Spinner::OnLoad(const Json& Root)
     HorizontalContainer::OnLoad(Root);
 
     m_MinSet = (Root["Range"].Contains("Min"));
-    m_Min = Root["Range"]["Min"].Number();
+    m_Min = (int32_t)Root["Range"]["Min"].Number();
 
     m_MaxSet = (Root["Range"].Contains("Max"));
-    m_Max = Root["Range"]["Max"].Number();
+    m_Max = (int32_t)Root["Range"]["Max"].Number();
 
     SetValue(static_cast<int32_t>(Root["Value"].Number()));
 
@@ -126,7 +126,7 @@ int32_t Spinner::RangeValue(const int32_t InValue)
     return Value;
 }
 
-void Spinner::InternalSetText(int32_t Value)
+void Spinner::InternalSetText(int32_t)
 {
     m_Input->SetText(std::to_string(m_Value).c_str());
 }

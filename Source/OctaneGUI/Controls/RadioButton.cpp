@@ -146,7 +146,7 @@ void RadioButton::Layout()
 {
     const Vector2 TextSize = m_Text->GetSize();
     m_Radius = std::round(TextSize.Y * 0.5f);
-    const float Offset = m_Radius * 2.5;
+    const float Offset = m_Radius * 2.5f;
     m_Text->SetPosition({ Offset, 0.0f });
     SetSize({ m_Radius + Offset + TextSize.X, TextSize.Y });
 }

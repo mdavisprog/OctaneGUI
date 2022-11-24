@@ -35,8 +35,7 @@ namespace OctaneGUI
 namespace Tools
 {
 
-Interface::Interface(Application& App)
-    : m_App(App)
+Interface::Interface()
 {
     m_Inspector = std::make_shared<Inspector>();
     m_ProfileViewer = std::make_shared<ProfileViewer>();

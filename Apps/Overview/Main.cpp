@@ -100,7 +100,7 @@ int main(int argc, char **argv)
         Application.DisplayWindow("About");
     });
     
-    List.To<OctaneGUI::Button>("FlipSpinners")->SetOnClicked([List](const OctaneGUI::Button& Button) -> void
+    List.To<OctaneGUI::Button>("FlipSpinners")->SetOnClicked([List](const OctaneGUI::Button&) -> void
     {
         List.To<OctaneGUI::Spinner>("SpinnerV")->SetOrientation(List.To<OctaneGUI::Spinner>("SpinnerV")->GetOppositeOrientation());
         List.To<OctaneGUI::Spinner>("SpinnerH")->SetOrientation(List.To<OctaneGUI::Spinner>("SpinnerH")->GetOppositeOrientation());
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
             const std::string Name = OctaneGUI::String::ToMultiByte(Selected);
             LoadTheme(Application, Name.c_str());
         });
-    for (const std::pair<std::string, std::string>& Item : Themes)
+    for (const std::pair<std::string, std::string> Item : Themes)
     {
         ThemesComboBox->AddItem(Item.first.c_str());
     }

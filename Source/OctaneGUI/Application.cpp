@@ -357,7 +357,7 @@ bool Application::DisplayWindow(const char* ID)
     {
         // Notify all windows the mouse has left the window as they will not be receiving
         // events and any focused control will need to be unfocused.
-        for (const std::pair<std::string, std::shared_ptr<Window>>& Item : m_Windows)
+        for (const std::pair<std::string, std::shared_ptr<Window>> Item : m_Windows)
         {
             if (Item.second->IsVisible())
             {
@@ -605,9 +605,9 @@ void Application::DestroyWindow(const std::shared_ptr<Window>& Item)
     }
     else
     {
-        for (const std::pair<std::string, std::shared_ptr<Window>>& Item : m_Windows)
+        for (const std::pair<std::string, std::shared_ptr<Window>> Window_ : m_Windows)
         {
-            OnWindowAction(Item.second.get(), WindowAction::Enable);
+            OnWindowAction(Window_.second.get(), WindowAction::Enable);
         }
     }
 
@@ -746,7 +746,7 @@ bool Application::Initialize()
     m_Theme = std::make_shared<Theme>();
     m_Theme->SetOnThemeLoaded([this]() -> void
         {
-            for (const std::pair<std::string, std::shared_ptr<Window>>& Item : m_Windows)
+            for (const std::pair<std::string, std::shared_ptr<Window>> Item : m_Windows)
             {
                 Item.second->ThemeLoaded();
                 Item.second->GetRootContainer()->InvalidateLayout();
@@ -793,7 +793,7 @@ void Application::FocusWindow(const std::shared_ptr<Window>& Focus)
 {
     Focus->SetFocused(true);
 
-    for (const std::pair<std::string, std::shared_ptr<Window>>& Item : m_Windows)
+    for (const std::pair<std::string, std::shared_ptr<Window>> Item : m_Windows)
     {
         if (Item.second != Focus)
         {

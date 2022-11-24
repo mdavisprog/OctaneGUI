@@ -250,7 +250,7 @@ bool CommandPalette::Process(const std::u32string& Command, const std::vector<st
             }
 
             MessageBox::Show(
-                GetWindow()->App(), Title.c_str(), Message.c_str(), [this](MessageBox::Response Response) -> void
+                GetWindow()->App(), Title.c_str(), Message.c_str(), [](MessageBox::Response Response) -> void
                 {
                     printf("Response: %d\n", (int)Response);
                 },

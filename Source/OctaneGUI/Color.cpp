@@ -57,7 +57,7 @@ Json Color::ToJson(const Color& Value)
     Result.Push((float)Value.B);
     Result.Push((float)Value.A);
 
-    return std::move(Result);
+    return Result;
 }
 
 Color::Color()

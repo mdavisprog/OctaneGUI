@@ -77,7 +77,7 @@ void MarginContainer::OnSave(Json& Root) const
 {
     Container::OnSave(Root);
 
-    Root["Margins"] = std::move(Rect::ToJson(m_Margins));
+    Root["Margins"] = Rect::ToJson(m_Margins);
 }
 
 void MarginContainer::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const

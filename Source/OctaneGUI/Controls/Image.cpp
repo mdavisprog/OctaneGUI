@@ -148,7 +148,7 @@ void Image::OnSave(Json& Root) const
     UVs["Bottom"] = m_UVs.Max.Y;
     Root["UVs"] = std::move(UVs);
 
-    Root["Tint"] = std::move(Color::ToJson(m_Tint));
+    Root["Tint"] = Color::ToJson(m_Tint);
 }
 
 bool Image::IsFixedSize() const

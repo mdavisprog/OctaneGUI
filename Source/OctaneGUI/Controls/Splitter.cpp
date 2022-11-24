@@ -108,7 +108,7 @@ public:
         }
     }
 
-    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override
+    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button, Mouse::Count) override
     {
         if (!m_Hovered.expired())
         {
@@ -120,7 +120,7 @@ public:
         return false;
     }
 
-    virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override
+    virtual void OnMouseReleased(const Vector2& Position, Mouse::Button) override
     {
         m_Drag = false;
 
@@ -213,7 +213,7 @@ bool Splitter::Fit() const
 
 const std::shared_ptr<Container>& Splitter::GetSplit(size_t Index) const
 {
-    Assert(Index >= 0 && Index < m_Items.size(), "Invalid index %zu given! Maximum number of containers is %zu.", Index, m_Items.size());
+    Assert(Index < m_Items.size(), "Invalid index %zu given! Maximum number of containers is %zu.", Index, m_Items.size());
     return m_Items[Index].Data;
 }
 
@@ -325,7 +325,7 @@ void Splitter::UpdateLayout()
     m_Split
         ->SetSpacing({ 0.0f, 0.0f })
         ->SetExpand(GetExpand());
-    
+
     for (const Item& Item_ : m_Items)
     {
         if (Fit())
@@ -481,7 +481,7 @@ bool Splitter::IsSeparator(const std::shared_ptr<Control>& Handle) const
 std::shared_ptr<Container> Splitter::CreateContainer()
 {
     std::shared_ptr<Container> Result = m_Split->AddControl<Container>();
-    
+
     if (Fit())
     {
         Result->SetExpand(GetOrientation() == Orientation::Horizontal ? Expand::Width : Expand::Height);

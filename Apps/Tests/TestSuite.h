@@ -67,8 +67,25 @@ private:
 };
 
 #define TEST_SUITE(Name, Cases) TestSuite Name(#Name, {Cases});
-#define TEST_CASE(Name, Fn) {#Name, [](OctaneGUI::Application& Application) -> bool Fn},
-#define VERIFY(Condition) if (Condition == false) { return false; }
-#define VERIFYF(Condition, Message, ...) if (Condition == false) { printf(Message, ##__VA_ARGS__); return false; }
+// Disables unreferenced local variable 'Application' for test cases.
+// TODO: Find a way to pass Application object into test case to fix this warning.
+#if _MSC_VER
+    #pragma warning(disable: 4100)
+    #define TEST_CASE(Name, Fn) {#Name, [](OctaneGUI::Application& Application) -> bool Fn},
+#else
+    #define TEST_CASE(Name, Fn) {#Name, [](__attribute__((unused)) OctaneGUI::Application& Application) -> bool Fn},
+#endif
+#define VERIFY(Condition) if ((Condition) == false) { return false; }
+
+#if __APPLE__
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
+#endif
+
+#define VERIFYF(Condition, Message, ...) if ((Condition) == false) { printf(Message, ##__VA_ARGS__); return false; }
+
+#if __APPLE__
+    #pragma clang diagnostic pop
+#endif
 
 }

@@ -65,7 +65,7 @@ void ShowMinimize(void* Handle, bool Show)
 	[Minimize setHidden:Show ? NO : YES];
 }
 
-std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters, void* Handle)
+std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters, void*)
 {
 	NSString* Title = Type == OctaneGUI::FileDialogType::Open
 		? @"Open File" : @"Save File";

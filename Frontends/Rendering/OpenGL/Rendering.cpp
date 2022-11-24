@@ -126,7 +126,7 @@ bool CompileResult(GLuint Shader)
         Buffer.resize(Length);
 
         GLsizei Size;
-        glGetShaderInfoLog(Shader, Buffer.size(), &Size, Buffer.data());
+        glGetShaderInfoLog(Shader, (GLsizei)Buffer.size(), &Size, Buffer.data());
 
         printf("Failed to compile shader: %s\n", Buffer.data());
         return false;
@@ -148,7 +148,7 @@ bool LinkResult(GLuint Program)
         Buffer.resize(Length);
 
         GLsizei Size;
-        glGetProgramInfoLog(Program, Buffer.size(), &Size, Buffer.data());
+        glGetProgramInfoLog(Program, (GLsizei)Buffer.size(), &Size, Buffer.data());
 
         printf("Failed to link program: %s\n", Buffer.data());
         return false;
@@ -311,7 +311,7 @@ void CreateRenderer(OctaneGUI::Window* Window)
     }
 }
 
-void DestroyRenderer(OctaneGUI::Window* Window)
+void DestroyRenderer(OctaneGUI::Window*)
 {
 }
 
@@ -441,7 +441,7 @@ void Exit()
         g_Program = 0;
     }
 
-    glDeleteTextures(g_Textures.size(), g_Textures.data());
+    glDeleteTextures((GLsizei)g_Textures.size(), g_Textures.data());
     g_Textures.clear();
 
 #if SDL2

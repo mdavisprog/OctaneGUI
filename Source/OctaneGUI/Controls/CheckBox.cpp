@@ -223,7 +223,6 @@ Vector2 CheckBox::BoxSize() const
 
 void CheckBox::UpdateSize()
 {
-    const Rect TexCoords = GetWindow()->GetIcons()->GetUVs(Icons::Type::Check);
     const Vector2 Padding = GetProperty(ThemeProperties::TextSelectable_Padding).Vector();
     Vector2 Size(m_Text->GetPosition().X + m_Text->GetSize().X, m_Text->GetSize().Y + Padding.Y * 2.0f);
     SetSize(Size);

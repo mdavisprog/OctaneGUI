@@ -29,20 +29,20 @@ SOFTWARE.
 
 uint32_t TextureID = 0;
 
-void OnWindowAction(OctaneGUI::Window* Window, OctaneGUI::WindowAction Action)
+void OnWindowAction(OctaneGUI::Window*, OctaneGUI::WindowAction)
 {
 }
 
-OctaneGUI::Event OnEvent(OctaneGUI::Window* Window)
+OctaneGUI::Event OnEvent(OctaneGUI::Window*)
 {
     return OctaneGUI::Event(OctaneGUI::Event::Type::WindowClosed);
 }
 
-void OnPaint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& Buffers)
+void OnPaint(OctaneGUI::Window*, const OctaneGUI::VertexBuffer&)
 {
 }
 
-uint32_t OnLoadTexture(const std::vector<uint8_t>& Data, uint32_t Width, uint32_t Height)
+uint32_t OnLoadTexture(const std::vector<uint8_t>&, uint32_t, uint32_t)
 {
     return ++TextureID;
 }

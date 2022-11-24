@@ -175,7 +175,7 @@ void Button::OnSave(Json& Root) const
     Root["State"] = ToString(m_State);
 }
 
-bool Button::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
+bool Button::OnMousePressed(const Vector2&, Mouse::Button, Mouse::Count)
 {
     if (m_State == State::Hovered)
     {
@@ -194,7 +194,7 @@ bool Button::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse
     return false;
 }
 
-void Button::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
+void Button::OnMouseReleased(const Vector2& Position, Mouse::Button)
 {
     if (m_Disabled)
     {

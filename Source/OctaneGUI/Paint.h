@@ -83,9 +83,9 @@ private:
 
     int GatherGlyphs(const std::shared_ptr<Font>& InFont, Vector2& Position, const Vector2& Origin, const std::u32string_view& Contents, std::vector<Rect>& Rects, std::vector<Rect>& UVs, bool ShouldClip = true);
 
-    std::shared_ptr<Theme> m_Theme;
-    std::vector<Rect> m_ClipStack;
-    VertexBuffer m_Buffer;
+    std::shared_ptr<Theme> m_Theme { nullptr };
+    std::vector<Rect> m_ClipStack {};
+    VertexBuffer m_Buffer {};
 };
 
 }

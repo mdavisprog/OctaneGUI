@@ -786,7 +786,7 @@ void Window::Clear()
 std::shared_ptr<Timer> Window::CreateTimer(int Interval, bool Repeat, OnEmptySignature&& Callback)
 {
     std::shared_ptr Result = std::make_unique<Timer>(Interval, Repeat, this, std::move(Callback));
-    return std::move(Result);
+    return Result;
 }
 
 void Window::StartTimer(const std::shared_ptr<Timer>& Object)

@@ -304,7 +304,7 @@ std::shared_ptr<Control const> Control::Share() const
     return shared_from_this();
 }
 
-void Control::OnPaint(Paint& Brush) const
+void Control::OnPaint(Paint&) const
 {
 }
 
@@ -335,8 +335,8 @@ void Control::OnSave(Json& Root) const
 {
     Root["ID"] = m_ID;
     Root["Expand"] = ToString(m_Expand);
-    Root["Position"] = std::move(Vector2::ToJson(GetPosition()));
-    Root["Size"] = std::move(Vector2::ToJson(GetSize()));
+    Root["Position"] = Vector2::ToJson(GetPosition());
+    Root["Size"] = Vector2::ToJson(GetSize());
     Root["Type"] = GetType();
 }
 
@@ -358,16 +358,16 @@ void Control::OnKeyReleased(Keyboard::Key Key)
     }
 }
 
-void Control::OnMouseMove(const Vector2& Position)
+void Control::OnMouseMove(const Vector2&)
 {
 }
 
-bool Control::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
+bool Control::OnMousePressed(const Vector2&, Mouse::Button, Mouse::Count)
 {
     return false;
 }
 
-void Control::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
+void Control::OnMouseReleased(const Vector2&, Mouse::Button)
 {
 }
 
@@ -391,7 +391,7 @@ void Control::OnResized()
 {
 }
 
-void Control::OnText(uint32_t Code)
+void Control::OnText(uint32_t)
 {
 }
 

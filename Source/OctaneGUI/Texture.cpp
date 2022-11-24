@@ -28,8 +28,19 @@ SOFTWARE.
 #define NANOSVGRAST_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #include "Texture.h"
+
+#if _MSC_VER
+    #pragma warning(push)
+    #pragma warning(disable : 4244 4456 4702)
+#endif
+
 #include "External/nanosvg/nanosvg.h"
 #include "External/nanosvg/nanosvgrast.h"
+
+#if _MSC_VER
+    #pragma warning(pop)
+#endif
+
 #include "External/stb/stb_image.h"
 #include "FileSystem.h"
 
@@ -48,10 +59,10 @@ std::vector<uint8_t> RasterSVG(NSVGimage* Image, float Width, float Height)
         const float ScaleH = (float)Height / Image->height;
         const float Scale = std::max<float>(ScaleW, ScaleH);
 
-        Result.resize(Width * Height * 4);
+        Result.resize((size_t)(Width * Height * 4));
 
         NSVGrasterizer* Raster = nsvgCreateRasterizer();
-        nsvgRasterize(Raster, Image, 0.0f, 0.0f, Scale, Result.data(), Width, Height, Width * 4);
+        nsvgRasterize(Raster, Image, 0.0f, 0.0f, Scale, Result.data(), (int)Width, (int)Height, (int)(Width * 4));
         nsvgDeleteRasterizer(Raster);
         nsvgDelete(Image);
     }
@@ -78,8 +89,8 @@ std::shared_ptr<Texture> Texture::Load(const std::vector<uint8_t>& Data, uint32_
         {
             Result = std::make_shared<Texture>();
             Result->m_ID = ID;
-            Result->m_Size.X = Width;
-            Result->m_Size.Y = Height;
+            Result->m_Size.X = (float)Width;
+            Result->m_Size.Y = (float)Height;
         }
     }
 
@@ -158,7 +169,7 @@ std::vector<uint8_t> Texture::LoadSVGData(const char* Path, uint32_t Width, uint
     NSVGimage* Image = nsvgParseFromFile(Path, "px", 96);
     if (Image != nullptr)
     {
-        Result = RasterSVG(Image, Width, Height);
+        Result = RasterSVG(Image, (float)Width, (float)Height);
     }
 
     return Result;

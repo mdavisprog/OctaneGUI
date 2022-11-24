@@ -42,11 +42,11 @@ void Initialize()
 {
 }
 
-void CreateRenderer(OctaneGUI::Window* Window)
+void CreateRenderer(OctaneGUI::Window*)
 {
 }
 
-void DestroyRenderer(OctaneGUI::Window* Window)
+void DestroyRenderer(OctaneGUI::Window*)
 {
 }
 
@@ -111,7 +111,7 @@ void Paint(OctaneGUI::Window* Window, const OctaneGUI::VertexBuffer& Buffer)
         }
 
         RenderWindow->draw(Array, RenderStates);
-        RenderWindow->setView(sf::View(sf::FloatRect(0.0f, 0.0f, WindowSize.x, WindowSize.y)));
+        RenderWindow->setView(sf::View(sf::FloatRect(0.0f, 0.0f, (float)WindowSize.x, (float)WindowSize.y)));
     }
 
     RenderWindow->display();

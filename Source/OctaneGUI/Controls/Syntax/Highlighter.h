@@ -45,6 +45,7 @@ class Highlighter
 {
 public:
     Highlighter();
+    virtual ~Highlighter();
 
     Highlighter& SetInput(const std::weak_ptr<TextInput>& Input);
     Color DefaultColor() const;

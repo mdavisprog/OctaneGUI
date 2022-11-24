@@ -298,8 +298,8 @@ void ScrollableContainer::OnSave(Json& Root) const
 {
     Container::OnSave(Root);
 
-    Root["ContentSize"] = std::move(Vector2::ToJson(m_ContentSize));
-    Root["ScrollOffset"] = std::move(Vector2::ToJson(m_ScrollOffset));
+    Root["ContentSize"] = Vector2::ToJson(m_ContentSize);
+    Root["ScrollOffset"] = Vector2::ToJson(m_ScrollOffset);
 }
 
 void ScrollableContainer::OnMouseMove(const Vector2& Position)

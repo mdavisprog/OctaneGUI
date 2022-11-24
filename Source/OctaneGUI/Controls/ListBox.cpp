@@ -128,7 +128,7 @@ public:
         }
 
         int NewIndex = -1;
-        if (Index < List->Controls().size())
+        if (Index < (int)List->Controls().size())
         {
             NewIndex = Index;
         }
@@ -140,7 +140,7 @@ public:
         SetHoveredIndex(NewIndex);
     }
 
-    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override
+    virtual bool OnMousePressed(const Vector2&, Mouse::Button Button, Mouse::Count) override
     {
         if (m_Hovered_Index == -1)
         {
@@ -307,7 +307,7 @@ Vector2 ListBox::ListSize() const
 
 const std::shared_ptr<Control>& ListBox::Item(size_t Index) const
 {
-    Assert(Index >= 0 && Index < Count(), "Index '%d' is not the valid range [0..%d)!", Index, Count());
+    Assert(Index < (size_t)Count(), "Index '%d' is not the valid range [0..%d)!", Index, Count());
     return m_List->Controls()[Index];
 }
 

@@ -84,7 +84,7 @@ void GroupBox::OnLoad(const Json& Root)
 
     Rect Margins = Rect::FromJson(Root["Margins"], m_Margins->Margins());
     Margins.Min.Y = TopMargin();
-    Copy["Margins"] = std::move(Rect::ToJson(Margins));
+    Copy["Margins"] = Rect::ToJson(Margins);
 
     m_Margins->OnLoad(Copy);
     m_Margins->SetExpand(Expand::Both);

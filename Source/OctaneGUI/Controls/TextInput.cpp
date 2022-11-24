@@ -172,19 +172,19 @@ bool TextInput::TextPosition::operator<(const TextInput::TextPosition& Other) co
 
 void TextInput::TextPosition::Invalidate()
 {
-    m_Line = -1;
-    m_Column = -1;
-    m_Index = -1;
+    m_Line = (uint32_t)-1;
+    m_Column = (uint32_t)-1;
+    m_Index = (uint32_t)-1;
 }
 
 bool TextInput::TextPosition::IsValid() const
 {
-    return m_Line != -1 && m_Column != -1 && m_Index != -1;
+    return m_Line != (uint32_t)-1 && m_Column != (uint32_t)-1 && m_Index != (uint32_t)-1;
 }
 
 bool TextInput::TextPosition::IsValidIndex() const
 {
-    return m_Index != -1;
+    return m_Index != (uint32_t)-1;
 }
 
 void TextInput::TextPosition::SetLine(uint32_t Line)
@@ -328,7 +328,7 @@ const std::u32string_view TextInput::SelectedText() const
 TextInput& TextInput::SelectAll()
 {
     m_Anchor = { 0, 0, 0 };
-    SetPosition(0, LineEndIndex(m_Text->Length() - 1), m_Text->Length());
+    SetPosition(0, LineEndIndex((uint32_t)m_Text->Length() - 1), (uint32_t)m_Text->Length());
     return *this;
 }
 
@@ -624,7 +624,7 @@ void TextInput::OnLoad(const Json& Root)
 {
     Container::OnLoad(Root);
 
-    m_MaxCharacters = Root["MaxCharacters"].Number(m_MaxCharacters);
+    m_MaxCharacters = (uint32_t)Root["MaxCharacters"].Number((float)m_MaxCharacters);
     m_NumbersOnly = Root["NumbersOnly"].Boolean(m_NumbersOnly);
     SetMultiline(Root["Multiline"].Boolean());
     if (m_Multiline)
@@ -720,11 +720,11 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor, bool 
 
         if (Pos == std::string::npos)
         {
-            Column = Reverse ? 0 : String.length();
+            Column = Reverse ? 0 : (int32_t)String.length();
         }
         else
         {
-            Column = Pos - m_Position.Index();
+            Column = (int32_t)Pos - (int32_t)m_Position.Index();
         }
     }
 
@@ -765,7 +765,7 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor, bool 
 
         if (Index == String.size())
         {
-            NewIndex = String.size();
+            NewIndex = (int32_t)String.size();
             break;
         }
         // Catching an edge case here where the first line could end up being a single newline.
@@ -795,7 +795,6 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor, bool 
     // have been accounted for.
     const bool ColumnBack = Column < 0;
     Column = std::abs(Column);
-    int32_t ColumnIndex = NewIndex + Column;
     while (Column != 0)
     {
         // Find the line character based on if the cursor is moving forward or backward.
@@ -826,7 +825,7 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor, bool 
         // Clamp to [0, Stirng.size]
         NewIndex = ColumnBack
             ? std::max<int>(NewIndex - Diff, 0)
-            : std::min<int>(NewIndex + Diff, String.size());
+            : std::min<int>(NewIndex + Diff, (int32_t)String.size());
 
         // Set the new column index. This will move the column index to either the beginning
         // or end of a line if the column exceeds the line size.
@@ -850,11 +849,11 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor, bool 
     ResetCursorTimer();
 }
 
-void TextInput::TextAdded(const std::u32string& Contents)
+void TextInput::TextAdded(const std::u32string&)
 {
 }
 
-void TextInput::TextDeleted(const std::u32string_view& Contents)
+void TextInput::TextDeleted(const std::u32string_view&)
 {
 }
 
@@ -875,7 +874,7 @@ void TextInput::MouseMove(const Vector2& Position)
     }
 }
 
-bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
+bool TextInput::MousePressed(const Vector2& Position, Mouse::Button, Mouse::Count Count)
 {
     m_Position = GetPosition(Position);
     m_Anchor = m_Position;
@@ -897,7 +896,7 @@ bool TextInput::MousePressed(const Vector2& Position, Mouse::Button Button, Mous
     return true;
 }
 
-void TextInput::MouseReleased(const Vector2& Position, Mouse::Button Button)
+void TextInput::MouseReleased(const Vector2&, Mouse::Button)
 {
     if (m_Anchor == m_Position)
     {
@@ -920,8 +919,6 @@ void TextInput::AddText(uint32_t Code)
 
 void Remove(std::u32string& Contents, char32_t Character)
 {
-    size_t Length = Contents.length();
-
     size_t Offset = Contents.find(Character);
     while (Offset != std::string::npos)
     {
@@ -1008,10 +1005,10 @@ void TextInput::AddText(const std::u32string& Contents)
     Scrollable()->Update();
 
     // Need to update the last visible line index as it has changed to the length of the string changing.
-    const uint32_t Index = std::min<uint32_t>(m_LastVisibleLine.Index() + Length, m_Text->Length());
+    const uint32_t Index = std::min<uint32_t>(m_LastVisibleLine.Index() + Length, (uint32_t)m_Text->Length());
     m_LastVisibleLine = { m_LastVisibleLine.Line(), LineEndIndex(Index) - LineStartIndex(Index), Index };
 
-    MovePosition(0, Length);
+    MovePosition(0, (int32_t)Length);
 
     TextAdded(Stripped);
 }
@@ -1039,7 +1036,7 @@ void TextInput::Delete(int32_t Range)
     Min = std::max<int32_t>(0, Min);
 
     int32_t Max = std::max<int32_t>(Index, Index + (int32_t)Range);
-    Max = std::min<int32_t>(m_Text->Length(), Max);
+    Max = std::min<int32_t>((int32_t)m_Text->Length(), Max);
 
     // Only move the cursor if deleting characters to the left of the cursor.
     // Move the position before updating the text object. This should place
@@ -1131,7 +1128,7 @@ TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
         {
             // Reached the end of the string. Mark the column to be the end
             // of the final line and make the index be the size of the string.
-            Column = String.size() - StartIndex;
+            Column = (uint32_t)(String.size() - StartIndex);
             Index = String.size();
             break;
         }
@@ -1140,8 +1137,8 @@ TextInput::TextPosition TextInput::GetPosition(const Vector2& Position) const
     // Find the character on the line that is after the given position.
     for (; Index < String.size(); Index++, Column++)
     {
-        const char Ch = String[Index];
-        if (Ch == '\n')
+        const char32_t Ch = String[Index];
+        if (Ch == U'\n')
         {
             break;
         }
@@ -1200,7 +1197,7 @@ uint32_t TextInput::LineStartIndex(uint32_t Index) const
     // before this one.
     const uint32_t Offset = String[Index] == '\n' ? std::max<int>(Index - 1, 0) : Index;
     size_t Result = String.rfind('\n', Offset);
-    return Result == std::string::npos ? 0 : Result;
+    return Result == std::string::npos ? 0 : (uint32_t)Result;
 }
 
 uint32_t TextInput::LineEndIndex(uint32_t Index) const
@@ -1213,7 +1210,7 @@ uint32_t TextInput::LineEndIndex(uint32_t Index) const
     }
 
     size_t Result = String.find('\n', Index);
-    return Result == std::string::npos ? String.size() : Result;
+    return Result == std::string::npos ? (uint32_t)String.size() : (uint32_t)Result;
 }
 
 uint32_t TextInput::LineSize(uint32_t Index) const
@@ -1291,7 +1288,7 @@ void TextInput::UpdateSpans()
         TextPosition Max = m_Anchor < m_Position ? m_Position : m_Anchor;
 
         const uint32_t First = m_FirstVisibleLine.IsValid() ? m_FirstVisibleLine.Index() : 0;
-        const uint32_t Last = m_LastVisibleLine.IsValid() ? m_LastVisibleLine.Index() : m_Text->Length();
+        const uint32_t Last = m_LastVisibleLine.IsValid() ? m_LastVisibleLine.Index() : (uint32_t)m_Text->Length();
 
         uint32_t MinIndex = std::max<uint32_t>(First, Min.Index());
         uint32_t MaxIndex = std::min<uint32_t>(Last, Max.Index());
@@ -1346,8 +1343,8 @@ void TextInput::UpdateVisibleLines()
     const float LineHeight = m_Text->GetFont()->Size();
     const float Y = -Position.Y;
 
-    const uint32_t Line = Y / LineHeight;
-    const uint32_t NumLines = GetSize().Y / LineHeight;
+    const uint32_t Line = (uint32_t)(Y / LineHeight);
+    const uint32_t NumLines = (uint32_t)(GetSize().Y / LineHeight);
     uint32_t LastLine = Line + NumLines;
 
     if (m_FirstVisibleLine.Line() == Line)
@@ -1376,7 +1373,7 @@ void TextInput::UpdateVisibleLines()
         Count++;
     }
 
-    Index = std::min<uint32_t>(Index, String.length());
+    Index = std::min<uint32_t>((uint32_t)Index, (uint32_t)String.length());
     m_FirstVisibleLine = { Line, 0, (uint32_t)Index };
 
     // Find index of the last line.
@@ -1401,11 +1398,11 @@ void TextInput::UpdateVisibleLines()
     }
     else
     {
-        Index = LineEndIndex(Index);
+        Index = (size_t)LineEndIndex((uint32_t)Index);
     }
 
-    Index = std::min<uint32_t>(Index, String.length());
-    m_LastVisibleLine = { LastLine, (uint32_t)Index - LineStartIndex(Index), (uint32_t)Index };
+    Index = std::min<uint32_t>((uint32_t)Index, (uint32_t)String.length());
+    m_LastVisibleLine = { LastLine, (uint32_t)Index - LineStartIndex((uint32_t)Index), (uint32_t)Index };
 
     m_Text->SetPosition({ 0.0f, m_FirstVisibleLine.Line() * LineHeight });
 }
@@ -1444,17 +1441,17 @@ void TextInput::SelectWord()
         End = m_Text->Length();
     }
 
-    MovePosition(0, Start - Index());
+    MovePosition(0, (uint32_t)(Start - Index()));
     m_Anchor = m_Position;
-    MovePosition(0, End - Start, true);
+    MovePosition(0, (uint32_t)(End - Start), true);
 }
 
 void TextInput::SelectLine()
 {
-    const size_t Start = LineStartIndex(Index());
-    const size_t End = LineEndIndex(Index());
-    MovePosition(0, Start - Index());
-    MovePosition(0, End - Index(), true);
+    const size_t Start = LineStartIndex((uint32_t)Index());
+    const size_t End = LineEndIndex((uint32_t)Index());
+    MovePosition(0, (int32_t)(Start - Index()));
+    MovePosition(0, (int32_t)(End - Index()), true);
 }
 
 }

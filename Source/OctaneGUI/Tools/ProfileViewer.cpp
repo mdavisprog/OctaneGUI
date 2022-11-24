@@ -65,7 +65,7 @@ public:
 
     void Initialize(Profiler& Profile)
     {
-        Update(Profile);
+        UpdateValues(Profile);
         SetSelected(0);
     }
 
@@ -77,7 +77,7 @@ public:
         }
 
         m_ViewMode = Mode;
-        Update(Profiler::Get());
+        UpdateValues(Profiler::Get());
     }
 
     TimelineTrack& SetOnSelected(OnIndexSignature&& Fn)
@@ -99,17 +99,17 @@ public:
         const Color HoveredColor = GetProperty(ThemeProperties::Button_Hovered).ToColor();
         const Color SelectedColor = Color(255, 255, 0, 255);
 
-        const size_t StartColumn = (size_t)m_Offset / m_ColumnSize;
+        const size_t StartColumn = (size_t)m_Offset / (size_t)m_ColumnSize;
 
         float Offset = 0.0f;
         for (size_t I = StartColumn; I < Frames.size(); I++)
         {
             Color EventColor = BaseColor;
-            if (m_SelectedIndex == I)
+            if (m_SelectedIndex == (int)I)
             {
                 EventColor = SelectedColor;
             }
-            else if (m_HoveredIndex == I)
+            else if (m_HoveredIndex == (int)I)
             {
                 EventColor = HoveredColor;
             }
@@ -166,7 +166,7 @@ public:
         m_Anchor = Position;
     }
 
-    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override
+    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count) override
     {
         if (Button == Mouse::Button::Left)
         {
@@ -181,7 +181,7 @@ public:
         return true;
     }
 
-    virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override
+    virtual void OnMouseReleased(const Vector2&, Mouse::Button Button) override
     {
         if (Button == Mouse::Button::Right)
         {
@@ -193,7 +193,7 @@ private:
     int GetIndex(const Vector2& Position) const
     {
         const Vector2 Local = Position - GetAbsolutePosition();
-        return (Local.X + m_Offset) / m_ColumnSize;
+        return (int)((Local.X + m_Offset) / m_ColumnSize);
     }
 
     void SetSelected(int Index)
@@ -211,7 +211,7 @@ private:
         }
     }
 
-    void Update(Profiler& Profile)
+    void UpdateValues(Profiler& Profile)
     {
         m_MaxValue = 50;
         const std::vector<Profiler::Frame>& Frames = Profile.Frames();
@@ -343,7 +343,7 @@ void ProfileViewer::View(Window* InWindow)
             .SetOnHovered([this](int Index)
                 {
                     const std::vector<Profiler::Frame>& Frames = Profiler::Get().Frames();
-                    if (Index < Frames.size())
+                    if (Index < (int)Frames.size())
                     {
                         std::string Contents = std::string("Frame [") + std::to_string(Index) + "]: " + std::to_string(Frames[Index].Elapsed());
                         Contents += " " + std::to_string(Frames[Index].InclusiveCount());
@@ -362,17 +362,16 @@ void ProfileViewer::View(Window* InWindow)
             .AddColumn(U"Inclusive Count")
             .AddColumn(U"Exclusive Count");
         m_Table = FrameDesc;
-        
-        m_Tree = FrameDesc
+
+        FrameDesc
             ->AddRow()
-            .Cell(0, 0)
-            ->AddControl<Tree>();
-        
+            .Cell(0, 0);
+        m_Tree = FrameDesc->AddControl<Tree>();
         m_Tree.lock()->SetOnToggled([this](Tree&) -> void
             {
                 UpdateFrameInfo();
             });
-        
+
         std::shared_ptr<VerticalContainer> FrameTimes = FrameDesc->Cell(0, 1)->AddControl<VerticalContainer>();
         FrameTimes->SetSpacing({});
         m_FrameTimes = FrameTimes;
@@ -421,7 +420,7 @@ void AddEvents(const std::shared_ptr<Tree>& Root, const Profiler::Event& Event)
 
 const Profiler::Frame& GetFrame(size_t Index)
 {
-    assert(Index >= 0 && Index < Profiler::Get().Frames().size());
+    assert(Index < Profiler::Get().Frames().size());
     return Profiler::Get().Frames()[Index];
 }
 
@@ -510,7 +509,7 @@ void ProfileViewer::UpdateFrameInfo()
             UpdateRow(Child, Frame.Events()[Index], m_FrameTimes.lock(), m_InclusiveEventCount.lock(), m_ExclusiveEventCount.lock());
             Index++;
         });
-    
+
     // TODO: Would like to invalidate just the row that was changed. Also ran into an issue where if the tree size gets samller, the tree
     // row's height is not updated until a column is resized.
     m_Table.lock()->InvalidateLayout();

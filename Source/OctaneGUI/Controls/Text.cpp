@@ -69,7 +69,7 @@ const std::u32string& Text::GetString() const
     return m_Contents;
 }
 
-uint32_t Text::Length() const
+size_t Text::Length() const
 {
     return m_Contents.length();
 }
@@ -189,7 +189,7 @@ void Text::OnSave(Json& Root) const
     Control::OnSave(Root);
 
     Root["Text"] = String::ToMultiByte(m_Contents);
-    Root["ContentSize"] = std::move(Vector2::ToJson(m_ContentSize));
+    Root["ContentSize"] = Vector2::ToJson(m_ContentSize);
     Root["Font"] = m_Font->Path();
     Root["FontSize"] = GetProperty(ThemeProperties::FontSize).Float();
     Root["Wrap"] = m_Wrap;

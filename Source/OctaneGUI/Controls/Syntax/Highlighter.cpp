@@ -38,6 +38,10 @@ Highlighter::Highlighter()
 {
 }
 
+Highlighter::~Highlighter()
+{
+}
+
 Highlighter& Highlighter::SetInput(const std::weak_ptr<TextInput>& Input)
 {
     m_Input = Input;

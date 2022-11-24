@@ -55,7 +55,7 @@ public:
     Text& SetText(const char32_t* InContents);
     const char32_t* GetText() const;
     const std::u32string& GetString() const;
-    uint32_t Length() const;
+    size_t Length() const;
     const std::shared_ptr<Font>& GetFont() const;
     float LineHeight() const;
 

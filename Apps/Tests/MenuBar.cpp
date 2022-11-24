@@ -114,7 +114,7 @@ TEST_CASE(SubMenu,
     VERIFYF(Window->IsPopupOpen(), "Help menu is not open!");
 
     bool IsSubMenuOpen = false;
-    OneMenu->SetOnOpenMenu([&](std::shared_ptr<OctaneGUI::MenuItem const> MenumItem) -> void
+    OneMenu->SetOnOpenMenu([&](std::shared_ptr<OctaneGUI::MenuItem const>) -> void
         {
             IsSubMenuOpen = true;
         });

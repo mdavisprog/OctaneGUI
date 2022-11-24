@@ -78,12 +78,12 @@ const std::vector<uint32_t>& VertexBuffer::GetIndices() const
 
 uint32_t VertexBuffer::GetVertexCount() const
 {
-    return m_Vertices.size();
+    return (uint32_t)m_Vertices.size();
 }
 
 uint32_t VertexBuffer::GetIndexCount() const
 {
-    return m_Indices.size();
+    return (uint32_t)m_Indices.size();
 }
 
 DrawCommand& VertexBuffer::PushCommand(uint32_t IndexCount, uint32_t TextureID, Rect Clip)

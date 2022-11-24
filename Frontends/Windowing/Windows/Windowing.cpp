@@ -239,7 +239,7 @@ std::u32string FileDialog(OctaneGUI::FileDialogType Type, const std::vector<Octa
         OpenFileName.Flags |= OFN_OVERWRITEPROMPT;
     }
     OpenFileName.lpstrFile = FileName.data();
-    OpenFileName.nMaxFile = FileName.size();
+    OpenFileName.nMaxFile = (DWORD)FileName.size();
     if (!WFilters.empty())
     {
         OpenFileName.lpstrFilter = &WFilters[0];

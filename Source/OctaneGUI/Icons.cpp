@@ -167,10 +167,10 @@ void Icons::Initialize()
 
 void Icons::Initialize(const std::vector<Definition>& Definitions, const Vector2& IconSize)
 {
-    const size_t IconW = (size_t)IconSize.X;
-    const size_t IconH = (size_t)IconSize.Y;
-    const size_t Width = IconW;
-    const size_t Height = IconH * (size_t)Type::Max;
+    const uint32_t IconW = (uint32_t)IconSize.X;
+    const uint32_t IconH = (uint32_t)IconSize.Y;
+    const uint32_t Width = IconW;
+    const uint32_t Height = IconH * (uint32_t)Type::Max;
     std::vector<uint8_t> Data;
     Data.resize(Width * Height * 4);
 

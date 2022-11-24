@@ -79,8 +79,6 @@ std::vector<Vector2> GetCirclePoints(const Vector2& Center, float Radius, int St
 }
 
 Paint::Paint()
-    : m_Buffer()
-    , m_Theme(nullptr)
 {
 }
 
@@ -171,7 +169,7 @@ void Paint::RectangleRounded(const Rect& Bounds, const Color& Col, const Rect& R
     const float RadiusBL = Radius.Max.X;
     const float RadiusBR = Radius.Max.Y;
 
-    size_t Offset = 0;
+    uint32_t Offset = 0;
 
     Vector2 Min {};
     Vector2 Max {};
@@ -460,7 +458,7 @@ void Paint::AddTriangles(const std::vector<Rect>& Rects, const std::vector<Rect>
         return;
     }
 
-    PushCommand(6 * Rects.size(), TextureID);
+    PushCommand(6 * (uint32_t)Rects.size(), TextureID);
 
     uint32_t Offset = 0;
     for (size_t I = 0; I < Rects.size(); I++)
@@ -483,8 +481,8 @@ void Paint::AddTrianglesCircle(const Vector2& Center, const std::vector<Vector2>
     for (size_t I = 0; I < Vertices.size() - 1; I++)
     {
         m_Buffer.AddIndex(0);
-        m_Buffer.AddIndex(Offset + I + 1);
-        m_Buffer.AddIndex(Offset + I + 2);
+        m_Buffer.AddIndex(Offset + (uint32_t)I + 1);
+        m_Buffer.AddIndex(Offset + (uint32_t)I + 2);
     }
 }
 

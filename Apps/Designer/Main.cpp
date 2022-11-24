@@ -5,7 +5,7 @@
 #include <fstream>
 #include <string>
 
-int main(int argc, char **argv)
+int main(int, char**)
 {
     OctaneGUI::Application Application;
     Frontend::Initialize(Application);
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
     std::shared_ptr<OctaneGUI::MenuItem> FontMenu = MainList.To<OctaneGUI::MenuItem>("Font");
     std::shared_ptr<OctaneGUI::TextInput> FontSizeMenu = MainList.To<OctaneGUI::TextInput>("Font.FontSize");
 
-    FontMenu->SetOnOpenMenu([&](std::shared_ptr<OctaneGUI::MenuItem const> MenuItem) -> void
+    FontMenu->SetOnOpenMenu([&](std::shared_ptr<OctaneGUI::MenuItem const>) -> void
         {
             const float FontSize = Document->LineHeight();
             FontSizeMenu->SetText(OctaneGUI::String::ToMultiByte(FontSize).c_str());
@@ -152,7 +152,7 @@ int main(int argc, char **argv)
         });
 
     std::shared_ptr<OctaneGUI::MenuItem> QuitMenu = MainList.To<OctaneGUI::MenuItem>("File.Quit");
-    QuitMenu->SetOnPressed([&](OctaneGUI::TextSelectable& Item) -> void
+    QuitMenu->SetOnPressed([&](OctaneGUI::TextSelectable&) -> void
         {
             Application.Quit();
         });
@@ -183,7 +183,7 @@ int main(int argc, char **argv)
     StatusText->SetText(U"New Document");
 
     PreviewWindow = Application.NewWindow("PreviewWindow", OctaneGUI::String::ToMultiByte(Document->GetText()).c_str());
-    PreviewWindow->SetOnClose([&](OctaneGUI::Window& Target) -> void
+    PreviewWindow->SetOnClose([&](OctaneGUI::Window&) -> void
         {
             PreviewWindowMenu->SetChecked(false);
             Application.CloseWindow("PreviewWindow");

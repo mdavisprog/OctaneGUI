@@ -247,7 +247,7 @@ size_t Container::NumControls() const
 
 const std::shared_ptr<Control>& Container::Get(size_t Index) const
 {
-    assert(Index >= 0 && Index < m_Controls.size());
+    assert(Index < m_Controls.size());
     return m_Controls[Index];
 }
 
@@ -430,7 +430,7 @@ void Container::OnLoad(const Json& Root)
 
     const Json& Controls = Root["Controls"];
 
-    for (int I = 0; I < Controls.Count(); I++)
+    for (unsigned int I = 0; I < Controls.Count(); I++)
     {
         const Json& Item = Controls[I];
 
@@ -524,11 +524,11 @@ void Container::PlaceControls(const std::vector<std::shared_ptr<Control>>& Contr
     }
 }
 
-void Container::OnInsertControl(const std::shared_ptr<Control>& Item)
+void Container::OnInsertControl(const std::shared_ptr<Control>&)
 {
 }
 
-void Container::OnRemoveControl(const std::shared_ptr<Control>& Item)
+void Container::OnRemoveControl(const std::shared_ptr<Control>&)
 {
 }
 
