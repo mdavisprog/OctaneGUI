@@ -4,6 +4,13 @@ message("Building configuration: ${CMAKE_BUILD_TYPE}")
 
 project(OctaneGUI)
 
+set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
+if(MSVC)
+    add_compile_options(/W4 /WX)
+else()
+    add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(BIN_DIR ${PROJECT_SOURCE_DIR}/bin)
 

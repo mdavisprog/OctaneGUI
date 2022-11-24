@@ -31,6 +31,10 @@ SOFTWARE.
 #include <string>
 #include <vector>
 
+// Disables unreferenced local variable 'Application' for test cases.
+// TODO: Find a way to pass Application object into test case to fix this warning.
+#pragma warning(disable: 4100)
+
 namespace OctaneGUI
 {
 
