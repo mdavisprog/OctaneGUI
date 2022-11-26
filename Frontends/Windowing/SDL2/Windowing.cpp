@@ -171,8 +171,6 @@ bool AddUnhandledEvent(SDL_Event& Event, const uint32_t EventWindowID, const uin
 
 OctaneGUI::Event HandleEvent(SDL_Event& Event, const uint32_t WindowID, bool IsPumping)
 {
-    SDL_Window* Window = SDL_GetWindowFromID(WindowID);
-
     // If windowID for any event is 0, then that event should affect all windows.
     switch (Event.type)
     {
@@ -270,6 +268,7 @@ OctaneGUI::Event HandleEvent(SDL_Event& Event, const uint32_t WindowID, bool IsP
 
         case SDL_WINDOWEVENT_MOVED:
         {
+            SDL_Window* Window = SDL_GetWindowFromID(WindowID);
 #if defined(LINUX)
             // On X11, no maximize event is sent, so manual detection is needed here.
             // If the window was moved and SDL reports that the window is maximized, then
@@ -290,6 +289,8 @@ OctaneGUI::Event HandleEvent(SDL_Event& Event, const uint32_t WindowID, bool IsP
                     OctaneGUI::Event::Type::WindowMaximized,
                     OctaneGUI::Event::WindowMoved({ (float)Event.window.data1, (float)Event.window.data2 }));
             }
+#else
+            (void)Window;
 #endif
             return OctaneGUI::Event(
                 OctaneGUI::Event::WindowMoved({ (float)Event.window.data1, (float)Event.window.data2 }));
