@@ -96,9 +96,9 @@ public:
         return m_Text->GetAbsoluteBounds();
     }
 
-    float TextOffset() const
+    Vector2 Offset() const
     {
-        return m_Text->GetPosition().X;
+        return { GetUVs(true).GetSize().X, m_Text->GetSize().Y };
     }
 
     TreeItem& SetToggle(bool Expand)
@@ -813,8 +813,7 @@ Tree& Tree::UpdateListOffset()
 {
     if (m_List)
     {
-        const Vector2 Offset { m_Item->TextOffset(), m_Item->GetSize().Y };
-        m_List->SetPosition(Offset);
+        m_List->SetPosition(m_Item->Offset());
     }
 
     return *this;
