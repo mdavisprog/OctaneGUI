@@ -144,6 +144,20 @@ public:
     /// @return Boolean value.
     bool ShouldForwardKeyEvents() const;
 
+    /// @brief Sets whether the parent control should be notified of this control's mouse events.
+    ///
+    /// Containers may want to handle mouse events but due to the architecture only allowing
+    /// Controls to have focus, Containers will not be able to directly receive these events.
+    /// Setting this flag will allow for this to occur.
+    ///
+    /// @param Forward Boolean to set whether mouse events should be forwarded.
+    /// @return This Control reference.
+    Control& SetForwardMouseEvents(bool Forward);
+
+    /// @brief Returns whether this control should forward mouse events.
+    /// @return Boolean value.
+    bool ShouldForwardMouseEvents() const;
+
     /// @brief Sets the ID for this control.
     ///
     /// Giving a control an ID uniquely identifies this control. The full ID
@@ -350,6 +364,7 @@ private:
     ThemeProperties m_ThemeProperties {};
 
     bool m_ForwardKeyEvents { false };
+    bool m_ForwardMouseEvents { false };
 };
 
 }

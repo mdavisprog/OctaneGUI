@@ -157,6 +157,17 @@ bool Control::ShouldForwardKeyEvents() const
     return m_ForwardKeyEvents;
 }
 
+Control& Control::SetForwardMouseEvents(bool Forward)
+{
+    m_ForwardMouseEvents = Forward;
+    return *this;
+}
+
+bool Control::ShouldForwardMouseEvents() const
+{
+    return m_ForwardMouseEvents;
+}
+
 Control& Control::SetID(const char* ID)
 {
     m_ID = ID;
@@ -358,17 +369,30 @@ void Control::OnKeyReleased(Keyboard::Key Key)
     }
 }
 
-void Control::OnMouseMove(const Vector2&)
+void Control::OnMouseMove(const Vector2& Position)
 {
+    if (m_ForwardMouseEvents && m_Parent != nullptr)
+    {
+        m_Parent->OnMouseMove(Position);
+    }
 }
 
-bool Control::OnMousePressed(const Vector2&, Mouse::Button, Mouse::Count)
+bool Control::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
 {
+    if (m_ForwardMouseEvents && m_Parent != nullptr)
+    {
+        return m_Parent->OnMousePressed(Position, Button, Count);
+    }
+
     return false;
 }
 
-void Control::OnMouseReleased(const Vector2&, Mouse::Button)
+void Control::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 {
+    if (m_ForwardMouseEvents && m_Parent != nullptr)
+    {
+        m_Parent->OnMouseReleased(Position, Button);
+    }
 }
 
 void Control::OnMouseWheel(const Vector2& Delta)
@@ -381,10 +405,18 @@ void Control::OnMouseWheel(const Vector2& Delta)
 
 void Control::OnMouseEnter()
 {
+    if (m_ForwardMouseEvents && m_Parent != nullptr)
+    {
+        m_Parent->OnMouseEnter();
+    }
 }
 
 void Control::OnMouseLeave()
 {
+    if (m_ForwardMouseEvents && m_Parent != nullptr)
+    {
+        m_Parent->OnMouseLeave();
+    }
 }
 
 void Control::OnResized()
