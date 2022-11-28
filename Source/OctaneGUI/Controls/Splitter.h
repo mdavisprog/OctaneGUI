@@ -55,6 +55,7 @@ public:
     Orientation GetOrientation() const;
 
     Splitter& SetSplitterPosition(size_t Index, float Position);
+    Splitter& SetSplitterWidth(size_t Index, float Width);
     Vector2 SplitterSize() const;
 
     Splitter& SetFit(bool Fit);

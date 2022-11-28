@@ -190,6 +190,15 @@ Splitter& Splitter::SetSplitterPosition(size_t Index, float Position)
     return *this;
 }
 
+Splitter& Splitter::SetSplitterWidth(size_t Index, float Width)
+{
+    Assert(Width >= 0.0f, "Width must be positive! Given width is %f.\n", Width);
+    Assert(Index < m_Items.size(), "Invalid index %zu given. Maximum number of containers is %zu.", Index, m_Items.size());
+    Item& Item = m_Items[Index];
+    Resize(Item.Data, { Width, Item.Data->GetSize().Y });
+    return *this;
+}
+
 Vector2 Splitter::SplitterSize() const
 {
     if (m_Items.size() < 2)
