@@ -196,6 +196,23 @@ Table& Table::AddColumn(const char32_t* Label)
     return *this;
 }
 
+Table& Table::FitColumn(size_t Column)
+{
+    const std::shared_ptr<Container>& Heading = m_Header->GetSplit(Column);
+
+    float Width = Heading->GetSize().X;
+    for (size_t Row = 0; Row < Rows(); Row++)
+    {
+        const std::shared_ptr<Container> Cell = this->Cell(Row, Column);
+        const Vector2 Size = Cell->ChildrenSize();
+        Width = std::max<float>(Width, Size.X);
+    }
+
+    m_Header->SetSplitterWidth(Column, Width);
+
+    return *this;
+}
+
 size_t Table::Columns() const
 {
     return m_Header->Count();

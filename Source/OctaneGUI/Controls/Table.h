@@ -43,6 +43,7 @@ public:
     Table(Window* InWindow);
 
     Table& AddColumn(const char32_t* Label);
+    Table& FitColumn(size_t Column);
     size_t Columns() const;
 
     Table& AddRow();
