@@ -411,7 +411,7 @@ void Table::SyncSize(size_t Row)
 
 void Table::OnPaintSelection(Paint& Brush, size_t Index) const
 {
-    if (Index >= 0 && Index < m_Rows->Rows())
+    if (Index < m_Rows->Rows())
     {
         Color Background { GetProperty(ThemeProperties::TextSelectable_Hovered).ToColor() };
         Background.A = 128;
