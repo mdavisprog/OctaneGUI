@@ -40,6 +40,8 @@ class Table : public Container
     CLASS(Table)
 
 public:
+    typedef std::function<void(Table&, size_t)> OnSelectedSignature;
+
     Table(Window* InWindow);
 
     Table& AddColumn(const char32_t* Label);
@@ -54,6 +56,8 @@ public:
     bool RowSelectable() const;
 
     std::shared_ptr<Container> Cell(size_t Row, size_t Column) const;
+
+    Table& SetOnSelected(OnSelectedSignature&& Fn);
 
     virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
     virtual Vector2 DesiredSize() const override;
@@ -76,6 +80,7 @@ private:
     std::shared_ptr<Splitter> m_Header { nullptr };
     std::shared_ptr<TableRows> m_Rows { nullptr };
     std::shared_ptr<Control> m_Interaction { nullptr };
+    OnSelectedSignature m_OnSelected { nullptr };
 };
 
 }

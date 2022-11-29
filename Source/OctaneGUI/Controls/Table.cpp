@@ -267,6 +267,12 @@ std::shared_ptr<Container> Table::Cell(size_t Row, size_t Column) const
     return RowContainer->GetCellContainer(Column);
 }
 
+Table& Table::SetOnSelected(OnSelectedSignature&& Fn)
+{
+    m_OnSelected = std::move(Fn);
+    return *this;
+}
+
 std::weak_ptr<Control> Table::GetControl(const Vector2& Point) const
 {
     std::weak_ptr<Control> Result = Container::GetControl(Point);
@@ -365,6 +371,11 @@ bool Table::OnMousePressed(const Vector2&, Mouse::Button Button, Mouse::Count)
             {
                 m_Selected = m_Hovered;
                 Invalidate(InvalidateType::Paint);
+
+                if (m_OnSelected)
+                {
+                    m_OnSelected(*this, (size_t)m_Selected);
+                }
             }
         }
     }
