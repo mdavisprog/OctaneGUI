@@ -34,8 +34,8 @@ namespace OctaneGUI
 
 class Application;
 class ComboBox;
-class ListBox;
 class ScrollableViewControl;
+class Table;
 class TextButton;
 class TextInput;
 class Tree;
@@ -66,6 +66,7 @@ private:
     void PopulateTree();
     void PopulateChildren(const std::shared_ptr<Tree>& Parent, const std::u32string& Directory) const;
     void PopulateList();
+    void AddListItem(const char32_t* Name, size_t Size);
     void Close(bool Success);
 
     std::u32string Path(const std::shared_ptr<Tree>& Item) const;
@@ -80,7 +81,7 @@ private:
 
     std::shared_ptr<ScrollableViewControl> m_DirectoryView { nullptr };
     std::shared_ptr<Tree> m_DirectoryTree { nullptr };
-    std::shared_ptr<ListBox> m_DirectoryList { nullptr };
+    std::shared_ptr<Table> m_DirectoryList { nullptr };
     std::shared_ptr<TextInput> m_FileName { nullptr };
     std::shared_ptr<ComboBox> m_FilterBox { nullptr };
     std::shared_ptr<TextButton> m_ConfirmButton { nullptr };

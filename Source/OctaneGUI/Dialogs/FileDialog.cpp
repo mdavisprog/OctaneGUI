@@ -34,6 +34,8 @@ SOFTWARE.
 #include "../Controls/ScrollableContainer.h"
 #include "../Controls/ScrollableViewControl.h"
 #include "../Controls/Splitter.h"
+#include "../Controls/Table.h"
+#include "../Controls/Text.h"
 #include "../Controls/TextButton.h"
 #include "../Controls/TextInput.h"
 #include "../Controls/TextSelectable.h"
@@ -89,11 +91,6 @@ FileDialog::FileDialog(Window* InWindow)
         ->SetMargins({ 4.0f, 0.0f, 4.0f, 0.0f })
         .SetExpand(Expand::Both);
 
-    const std::shared_ptr<Panel> BodyBackground = Body->AddControl<Panel>();
-    BodyBackground
-        ->SetProperty(ThemeProperties::Panel, Color::Black)
-        .SetExpand(Expand::Both);
-
     const std::shared_ptr<Splitter> BodySplitter = Body->AddControl<Splitter>();
     // TODO: Need to set the expansion type before setting orientation. Should look into making this order independent.
     BodySplitter->SetExpand(Expand::Both);
@@ -124,20 +121,20 @@ FileDialog::FileDialog(Window* InWindow)
             });
 
     // The right pane that contains the list of files in the selected directory.
-    m_DirectoryList = BodySplitter->GetSplit(1)->AddControl<ListBox>();
+    const std::shared_ptr<ScrollableViewControl> DirectoryScrollable = BodySplitter->GetSplit(1)->AddControl<ScrollableViewControl>();
+    DirectoryScrollable->SetExpand(Expand::Both);
+    m_DirectoryList = DirectoryScrollable->Scrollable()->AddControl<Table>();
     m_DirectoryList
-        ->SetOnSelect([this](int, std::weak_ptr<Control> Item) -> void
+        ->AddColumn(U"Name")
+        .AddColumn(U"Size")
+        .SetRowSelectable(true)
+        .SetOnSelected([this](Table& Ref, size_t Selected) -> void
             {
-                if (Item.expired())
-                {
-                    return;
-                }
-
-                const std::shared_ptr<TextSelectable> Selected = std::static_pointer_cast<TextSelectable>(Item.lock());
-                m_Selected = Selected->GetText();
+                const std::shared_ptr<Container> Cell = Ref.Cell(Selected, 0);
+                const std::shared_ptr<Text>& Contents = std::static_pointer_cast<Text>(Cell->Get(0));
+                m_Selected = Contents->GetText();
                 m_FileName->SetText(GetWindow()->App().FS().CombinePath(m_Directory, m_Selected).c_str());
-            })
-        .SetExpand(Expand::Both);
+            });
 
     const std::shared_ptr<MarginContainer> FileInfo = Root->AddControl<MarginContainer>();
     FileInfo
@@ -321,7 +318,7 @@ void FileDialog::PopulateChildren(const std::shared_ptr<Tree>& Parent, const std
 
 void FileDialog::PopulateList()
 {
-    m_DirectoryList->ClearItems();
+    m_DirectoryList->ClearRows();
 
     FileDialogFilter Filter {};
     const int Index = m_FilterBox->SelectedIndex();
@@ -354,9 +351,27 @@ void FileDialog::PopulateList()
 
         if (IsValidExtension)
         {
-            m_DirectoryList->AddItem<TextSelectable>()->SetText(Item.c_str());
+            AddListItem(Item.c_str(), 0ul);
         }
     }
+}
+
+void FileDialog::AddListItem(const char32_t* Name, size_t Size)
+{
+    const size_t Row = m_DirectoryList->Rows();
+    m_DirectoryList->AddRow();
+
+    // Set name
+    m_DirectoryList
+        ->Cell(Row, 0)
+        ->AddControl<Text>()
+        ->SetText(Name);
+
+    // Set size
+    m_DirectoryList
+        ->Cell(Row, 1)
+        ->AddControl<Text>()
+        ->SetText(std::to_string(Size).c_str());
 }
 
 void FileDialog::Close(bool Success)
