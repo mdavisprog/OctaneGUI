@@ -47,6 +47,7 @@ public:
     size_t Columns() const;
 
     Table& AddRow();
+    Table& ClearRows();
     size_t Rows() const;
 
     std::shared_ptr<Container> Cell(size_t Row, size_t Column) const;

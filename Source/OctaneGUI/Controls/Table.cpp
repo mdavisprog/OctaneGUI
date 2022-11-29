@@ -230,6 +230,12 @@ Table& Table::AddRow()
     return *this;
 }
 
+Table& Table::ClearRows()
+{
+    m_Rows->ClearControls();
+    return *this;
+}
+
 size_t Table::Rows() const
 {
     return m_Rows->NumControls();
