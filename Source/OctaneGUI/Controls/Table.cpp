@@ -27,7 +27,9 @@ SOFTWARE.
 #include "Table.h"
 #include "../Assert.h"
 #include "../Json.h"
+#include "../Paint.h"
 #include "../String.h"
+#include "../ThemeProperties.h"
 #include "HorizontalContainer.h"
 #include "Splitter.h"
 #include "Text.h"
@@ -185,6 +187,9 @@ Table::Table(Window* InWindow)
         .SetExpand(Expand::Width);
 
     m_Rows = m_Contents->AddControl<TableRows>();
+
+    m_Interaction = AddControl<Control>();
+    m_Interaction->SetForwardMouseEvents(true);
 }
 
 Table& Table::AddColumn(const char32_t* Label)
@@ -236,6 +241,7 @@ Table& Table::AddRow()
 Table& Table::ClearRows()
 {
     m_Rows->ClearControls();
+    m_Selected = -1;
     return *this;
 }
 
@@ -244,15 +250,53 @@ size_t Table::Rows() const
     return m_Rows->NumControls();
 }
 
+Table& Table::SetRowSelectable(bool Value)
+{
+    m_RowSelectable = Value;
+    return *this;
+}
+
+bool Table::RowSelectable() const
+{
+    return m_RowSelectable;
+}
+
 std::shared_ptr<Container> Table::Cell(size_t Row, size_t Column) const
 {
     std::shared_ptr<TableRow> RowContainer = m_Rows->Row(Row);
     return RowContainer->GetCellContainer(Column);
 }
 
+std::weak_ptr<Control> Table::GetControl(const Vector2& Point) const
+{
+    std::weak_ptr<Control> Result = Container::GetControl(Point);
+    if (!Result.expired() && m_Header->HasControl(Result.lock()))
+    {
+        return Result;
+    }
+
+    if (Contains(Point))
+    {
+        Result = m_Interaction;
+    }
+
+    return Result;
+}
+
 Vector2 Table::DesiredSize() const
 {
     return m_Contents->DesiredSize();
+}
+
+void Table::OnPaint(Paint& Brush) const
+{
+    OnPaintSelection(Brush, (size_t)m_Hovered);
+    if (m_Hovered != m_Selected)
+    {
+        OnPaintSelection(Brush, (size_t)m_Selected);
+    }
+
+    Container::OnPaint(Brush);
 }
 
 void Table::OnLoad(const Json& Root)
@@ -280,7 +324,58 @@ void Table::OnLoad(const Json& Root)
         }
     }
 
+    SetRowSelectable(Root["RowSelectable"].Boolean(RowSelectable()));
+
     SyncSize();
+}
+
+void Table::OnMouseMove(const Vector2& Position)
+{
+    if (!m_RowSelectable)
+    {
+        return;
+    }
+
+    int32_t Hovered { -1 };
+    for (size_t I = 0; I < m_Rows->Rows(); I++)
+    {
+        const std::shared_ptr<Control>& Row = m_Rows->Get(I);
+
+        if (Row->Contains(Position))
+        {
+            Hovered = (int32_t)I;
+            break;
+        }
+    }
+
+    if (m_Hovered != Hovered)
+    {
+        m_Hovered = Hovered;
+        Invalidate(InvalidateType::Paint);
+    }
+}
+
+bool Table::OnMousePressed(const Vector2&, Mouse::Button Button, Mouse::Count)
+{
+    if (Button == Mouse::Button::Left)
+    {
+        if (m_Hovered != -1)
+        {
+            if (m_Selected != m_Hovered)
+            {
+                m_Selected = m_Hovered;
+                Invalidate(InvalidateType::Paint);
+            }
+        }
+    }
+
+    return false;
+}
+
+void Table::OnMouseLeave()
+{
+    m_Hovered = -1;
+    Invalidate(InvalidateType::Paint);
 }
 
 void Table::SyncSize()
@@ -300,6 +395,17 @@ void Table::SyncSize(size_t Row)
     {
         const std::shared_ptr<Container>& Header = m_Header->GetSplit(Column);
         RowContainer->SetCellSize(Column, Header->GetSize().X, SplitterSize.X);
+    }
+}
+
+void Table::OnPaintSelection(Paint& Brush, size_t Index) const
+{
+    if (Index >= 0 && Index < m_Rows->Rows())
+    {
+        Color Background { GetProperty(ThemeProperties::TextSelectable_Hovered).ToColor() };
+        Background.A = 128;
+        const std::shared_ptr<Control>& Row = m_Rows->Get(Index);
+        Brush.Rectangle(Row->GetAbsoluteBounds(), Background);
     }
 }
 

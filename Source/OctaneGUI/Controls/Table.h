@@ -50,19 +50,32 @@ public:
     Table& ClearRows();
     size_t Rows() const;
 
+    Table& SetRowSelectable(bool Value);
+    bool RowSelectable() const;
+
     std::shared_ptr<Container> Cell(size_t Row, size_t Column) const;
 
+    virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
     virtual Vector2 DesiredSize() const override;
 
+    virtual void OnPaint(Paint& Brush) const override;
     virtual void OnLoad(const Json& Root) override;
+    virtual void OnMouseMove(const Vector2& Position) override;
+    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;
+    virtual void OnMouseLeave() override;
 
 private:
     void SyncSize();
     void SyncSize(size_t Row);
+    void OnPaintSelection(Paint& Brush, size_t Index) const;
 
+    bool m_RowSelectable { false };
+    int32_t m_Hovered { -1 };
+    int32_t m_Selected { -1 };
     std::shared_ptr<VerticalContainer> m_Contents { nullptr };
     std::shared_ptr<Splitter> m_Header { nullptr };
     std::shared_ptr<TableRows> m_Rows { nullptr };
+    std::shared_ptr<Control> m_Interaction { nullptr };
 };
 
 }
