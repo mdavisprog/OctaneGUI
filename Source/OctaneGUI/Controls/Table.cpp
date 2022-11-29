@@ -220,12 +220,15 @@ size_t Table::Columns() const
 
 Table& Table::AddRow()
 {
+    const size_t Index = m_Rows->Rows();
     std::shared_ptr<TableRow> Row = m_Rows->AddRow();
 
     for (size_t I = 0; I < m_Header->Count(); I++)
     {
         Row->AddCell();
     }
+
+    SyncSize(Index);
 
     return *this;
 }
@@ -282,16 +285,21 @@ void Table::OnLoad(const Json& Root)
 
 void Table::SyncSize()
 {
+    for (size_t Row = 0; Row < m_Rows->Rows(); Row++)
+    {
+        SyncSize(Row);
+    }
+}
+
+void Table::SyncSize(size_t Row)
+{
     const Vector2 SplitterSize { m_Header->SplitterSize() };
 
-    for (size_t RowIdx = 0; RowIdx < m_Rows->Rows(); RowIdx++)
+    std::shared_ptr<TableRow> RowContainer = m_Rows->Row(Row);
+    for (size_t Column = 0; Column < RowContainer->Cells(); Column++)
     {
-        std::shared_ptr<TableRow> Row = m_Rows->Row(RowIdx);
-        for (size_t ColumnIdx = 0; ColumnIdx < Row->Cells(); ColumnIdx++)
-        {
-            const std::shared_ptr<Container>& Header = m_Header->GetSplit(ColumnIdx);
-            Row->SetCellSize(ColumnIdx, Header->GetSize().X, SplitterSize.X);
-        }
+        const std::shared_ptr<Container>& Header = m_Header->GetSplit(Column);
+        RowContainer->SetCellSize(Column, Header->GetSize().X, SplitterSize.X);
     }
 }
 

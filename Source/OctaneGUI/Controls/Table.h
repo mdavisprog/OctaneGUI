@@ -58,6 +58,7 @@ public:
 
 private:
     void SyncSize();
+    void SyncSize(size_t Row);
 
     std::shared_ptr<VerticalContainer> m_Contents { nullptr };
     std::shared_ptr<Splitter> m_Header { nullptr };
