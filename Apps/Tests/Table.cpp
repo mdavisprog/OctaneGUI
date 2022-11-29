@@ -93,6 +93,39 @@ R"("Header": [{"Label": "One"}, {"Label": "Two"}], "Rows": [
     return Cell->GetSize().X == std::floor(HeaderSize.X) + 5.0f;
 })
 
+TEST_CASE(RowSelectable,
+{
+    const char* Stream = 
+R"("RowSelectable": true, "Header": [{"Label": "One"}, {"Label": "Two"}], "Rows": [
+    {"Columns": [
+        {"Controls": [{"Type": "Text","Text": "Hello"}]}
+    ]},
+    {"Columns": [
+        {"Controls": [{"Type": "Text","Text": "World"}]}
+    ]},
+    {"Columns": [
+        {"Controls": [{"Type": "Text","Text": "Foo"}]}
+    ]}
+])";
+
+    OctaneGUI::ControlList List;
+    LoadTable(Application, Stream, List);
+
+    size_t Result = 0;
+    const std::shared_ptr<OctaneGUI::Table> Table = List.To<OctaneGUI::Table>("Table");
+    Table->SetOnSelected([&](OctaneGUI::Table&, size_t Selected) -> void
+        {
+            Result = Selected;
+        });
+    const OctaneGUI::Vector2 Size = Table->Cell(0, 0)->GetSize();
+    
+    // Take into account height of header + Row 1 + Row 2.
+    Utility::MousePress(Application, {2.0f, Size.Y * 3.0f});
+    Application.Update();
+
+    return Result == 1;
+})
+
 )
 
 }
