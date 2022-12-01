@@ -134,7 +134,7 @@
                                 ]},
                                 {"Columns": [
                                     {"Controls": [{"Type": "Text", "Text": "Cell 2, 1"}]},
-                                    {"Controls": [{"Type": "Text", "Text": "Cell 2, 1"}]},
+                                    {"Controls": [{"Type": "Text", "Text": "Cell 2, 2"}]},
                                     {"Controls": [{"Type": "Text", "Text": "Cell 2, 3"}]}
                                 ]}
                             ]}
