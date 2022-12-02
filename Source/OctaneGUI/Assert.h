@@ -29,7 +29,9 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+#if !NDEBUG
 bool AssertFunc(const char* File, int Line, bool Condition, const char* Format, ...);
+#endif
 
 }
 

@@ -34,9 +34,9 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+#if !NDEBUG
 bool AssertFunc(const char* File, int Line, bool Condition, const char* Format, ...)
 {
-#if !NDEBUG
     if (!Condition)
     {
         va_list List;
@@ -52,9 +52,9 @@ bool AssertFunc(const char* File, int Line, bool Condition, const char* Format, 
         printf("%s\n", Buffer.c_str());
         std::abort();
     }
-#endif
 
     return Condition;
 }
+#endif
 
 }
