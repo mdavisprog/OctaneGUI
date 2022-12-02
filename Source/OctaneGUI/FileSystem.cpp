@@ -103,15 +103,15 @@ std::u32string FileSystem::Extension(const std::u32string& Location) const
     return Path.extension().u32string();
 }
 
-std::vector<std::u32string> FileSystem::DirectoryItems(const std::u32string& Location) const
+std::vector<FileSystem::DirectoryItem> FileSystem::DirectoryItems(const std::u32string& Location) const
 {
-    std::vector<std::u32string> Result;
+    std::vector<DirectoryItem> Result;
 
     const std::filesystem::directory_options Options { std::filesystem::directory_options::skip_permission_denied };
     std::error_code Error;
     for (const std::filesystem::directory_entry& Entry : std::filesystem::directory_iterator(Location, Options, Error))
     {
-        Result.push_back(Entry.path().filename().u32string());
+        Result.push_back({ Entry.path().filename().u32string(), Entry.file_size() });
     }
 
     return Result;

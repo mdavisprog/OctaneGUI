@@ -298,15 +298,18 @@ void FileDialog::PopulateChildren(const std::shared_ptr<Tree>& Parent, const std
 {
     const FileSystem& FS = GetWindow()->App().FS();
 
-    std::vector<std::u32string> Items = FS.DirectoryItems(Directory.c_str());
-    std::sort(Items.begin(), Items.end());
-    for (const std::u32string& Item : Items)
+    std::vector<FileSystem::DirectoryItem> Items = FS.DirectoryItems(Directory.c_str());
+    std::sort(Items.begin(), Items.end(), [](const FileSystem::DirectoryItem& A, const FileSystem::DirectoryItem& B) -> bool
+        {
+            return A.FileName < B.FileName;
+        });
+    for (const FileSystem::DirectoryItem& Item : Items)
     {
-        const std::u32string Path = FS.CombinePath(Directory, Item);
+        const std::u32string Path = FS.CombinePath(Directory, Item.FileName);
 
         if (FS.IsDirectory(Path))
         {
-            const std::shared_ptr<Tree> Child = Parent->AddChild(Item.c_str());
+            const std::shared_ptr<Tree> Child = Parent->AddChild(Item.FileName.c_str());
 
             if (HasDirectories(Path.c_str()))
             {
@@ -329,11 +332,14 @@ void FileDialog::PopulateList()
 
     const FileSystem& FS = GetWindow()->App().FS();
 
-    std::vector<std::u32string> Items = FS.DirectoryItems(m_Directory);
-    std::sort(Items.begin(), Items.end());
-    for (const std::u32string& Item : Items)
+    std::vector<FileSystem::DirectoryItem> Items = FS.DirectoryItems(m_Directory);
+    std::sort(Items.begin(), Items.end(), [](const FileSystem::DirectoryItem& A, const FileSystem::DirectoryItem& B) -> bool
+        {
+            return A.FileName < B.FileName;
+        });
+    for (const FileSystem::DirectoryItem& Item : Items)
     {
-        std::u32string Extension = String::ToLower(FS.Extension(Item));
+        std::u32string Extension = String::ToLower(FS.Extension(Item.FileName));
         if (!Extension.empty())
         {
             Extension = Extension.substr(1);
@@ -351,7 +357,7 @@ void FileDialog::PopulateList()
 
         if (IsValidExtension)
         {
-            AddListItem(Item.c_str(), 0ul);
+            AddListItem(Item.FileName.c_str(), (size_t)Item.FileSize);
         }
     }
 }
@@ -442,11 +448,11 @@ bool FileDialog::IsEmpty(const std::shared_ptr<Tree>& Item) const
 bool FileDialog::HasDirectories(const std::u32string& Directory) const
 {
     const FileSystem& FS = GetWindow()->App().FS();
-    const std::vector<std::u32string> Items = FS.DirectoryItems(Directory.c_str());
+    const std::vector<FileSystem::DirectoryItem> Items = FS.DirectoryItems(Directory.c_str());
 
-    for (const std::u32string& Item : Items)
+    for (const FileSystem::DirectoryItem& Item : Items)
     {
-        const std::u32string Path { FS.CombinePath(Directory, Item) };
+        const std::u32string Path { FS.CombinePath(Directory, Item.FileName) };
         if (FS.IsDirectory(Path))
         {
             return true;

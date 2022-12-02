@@ -42,6 +42,13 @@ struct FileDialogFilter;
 class FileSystem
 {
 public:
+    struct DirectoryItem
+    {
+    public:
+        std::u32string FileName {};
+        uintmax_t FileSize { 0 };
+    };
+
     typedef std::function<std::u32string(FileDialogType, const std::vector<FileDialogFilter>&)> OnFileDialogSignature;
     typedef std::function<void(FileDialogType, const std::u32string&)> OnFileDialogResultSignature;
 
@@ -59,7 +66,7 @@ public:
     std::u32string RootDirectory(const std::u32string& Location) const;
     std::u32string CombinePath(const std::u32string& Left, const std::u32string& Right) const;
     std::u32string Extension(const std::u32string& Location) const;
-    std::vector<std::u32string> DirectoryItems(const std::u32string& Location) const;
+    std::vector<DirectoryItem> DirectoryItems(const std::u32string& Location) const;
 
     std::string LoadContents(const std::string& Location) const;
     std::string LoadContents(const std::u32string& Location) const;
