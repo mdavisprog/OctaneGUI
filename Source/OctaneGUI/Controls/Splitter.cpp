@@ -233,19 +233,13 @@ size_t Splitter::Count() const
 
 const std::shared_ptr<Container>& Splitter::AddContainer()
 {
-    if (m_Items.empty())
-    {
-        m_Items.push_back({ CreateContainer(), nullptr });
-    }
-    else
-    {
-        Item& Back = m_Items.back();
-        Back.Handle = m_Split->AddControl<Separator>();
-        Back.Handle
-            ->SetOrientation(m_Orientation)
-            .SetProperty(ThemeProperties::Separator_Margins, 0.0f);
-        m_Items.push_back({ CreateContainer(), nullptr });
-    }
+    Item NewItem;
+    NewItem.Data = CreateContainer();
+    NewItem.Handle = m_Split->AddControl<Separator>();
+    NewItem.Handle
+        ->SetOrientation(m_Orientation)
+        .SetProperty(ThemeProperties::Separator_Margins, 0.0f);
+    m_Items.push_back(NewItem);
 
     m_Resize = true;
 
