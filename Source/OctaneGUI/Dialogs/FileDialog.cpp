@@ -376,9 +376,14 @@ void FileDialog::AddListItem(const char32_t* Name, size_t Size)
         ->SetText(Name);
 
     // Set size
-    m_DirectoryList
+    std::shared_ptr<HorizontalContainer> Outer = m_DirectoryList
         ->Cell(Row, 1)
-        ->AddControl<Text>()
+        ->AddControl<HorizontalContainer>();
+    
+    Outer->SetGrow(Grow::End)
+        ->SetExpand(Expand::Width);
+    
+    Outer->AddControl<Text>()
         ->SetText(std::to_string(Size).c_str());
 }
 
