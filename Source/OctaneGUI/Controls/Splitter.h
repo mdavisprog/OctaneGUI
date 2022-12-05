@@ -54,8 +54,7 @@ public:
     Splitter& SetOrientation(Orientation InOrientation);
     Orientation GetOrientation() const;
 
-    Splitter& SetSplitterPosition(size_t Index, float Position);
-    Splitter& SetSplitterWidth(size_t Index, float Width);
+    Splitter& SetSplitterSize(size_t Index, float Size);
     Vector2 SplitterSize() const;
 
     Splitter& SetFit(bool Fit);
@@ -81,9 +80,9 @@ private:
     struct Item
     {
     public:
+        bool Initialized { false };
         std::shared_ptr<Container> Data { nullptr };
         std::shared_ptr<Separator> Handle { nullptr };
-        float Position { -1.0f };
     };
 
     void UpdateLayout();

@@ -213,8 +213,14 @@ Table& Table::FitColumn(size_t Column)
         Width = std::max<float>(Width, Size.X);
     }
 
-    m_Header->SetSplitterWidth(Column, Width);
+    m_Header->SetSplitterSize(Column, Width);
 
+    return *this;
+}
+
+Table& Table::SetColumnSize(size_t Column, float Size)
+{
+    m_Header->SetSplitterSize(Column, Size);
     return *this;
 }
 

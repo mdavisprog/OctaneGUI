@@ -175,19 +175,41 @@ TEST_CASE(SplitterHoveredControl,
     return Clicked;
 })
 
-TEST_CASE(SplitterPositionFit,
+TEST_CASE(SplitterSetSize,
 {
     OctaneGUI::ControlList List;
-    LoadSplitter(Application, R"({"Position": 0.3}, {})", List, true);
+    LoadSplitter(Application, R"({}, {})", List, false);
 
     const std::shared_ptr<OctaneGUI::Splitter> Splitter = List.To<OctaneGUI::Splitter>("Splitter");
+    Splitter->SetOrientation(OctaneGUI::Orientation::Vertical);
+    Application.Update();
+    const std::shared_ptr<OctaneGUI::Container> Left = Splitter->GetSplit(0);
+
+    VERIFYF(Left->GetSize().X == 0.0f, "Left container's size should be 0 but it is %.2f\n", Left->GetSize().X);
+
+    Splitter->SetSplitterSize(0, 100.0f);
+    Application.Update();
+
+    return Left->GetSize().X == 100.0f;
+})
+
+TEST_CASE(InitialSplitterSize,
+{
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, "", List);
+
+    const std::shared_ptr<OctaneGUI::Splitter> Splitter = Application.GetMainWindow()->GetContainer()->AddControl<OctaneGUI::Splitter>();
+    Splitter
+        ->AddContainers(2)
+        .SetSplitterSize(0, 100.0f)
+        .SetExpand(OctaneGUI::Expand::Both);
+    Application.Update();
+
+    VERIFYF(Splitter->GetSize().X == 1280.0f && Splitter->GetSize().Y == 720.0f, 
+        "Splitter size is not expanded! Size is %.2f %.2f.\n", Splitter->GetSize().X, Splitter->GetSize().Y);
+    
     const std::shared_ptr<OctaneGUI::Container> Top = Splitter->GetSplit(0);
-
-    const OctaneGUI::Vector2 Size { Splitter->GetSize() };
-    const OctaneGUI::Vector2 SplitterSize { Splitter->SplitterSize() };
-    const float Expected { (Size.Y - SplitterSize.Y) * 0.3f };
-
-    return Top->GetSize().Y == Expected;
+    return Top->GetSize().Y == 100.0f;
 })
 
 )

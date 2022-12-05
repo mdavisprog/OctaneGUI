@@ -97,8 +97,8 @@ FileDialog::FileDialog(Window* InWindow)
     BodySplitter
         ->AddContainers(2)
         .SetFit(true)
-        .SetSplitterPosition(0, 0.3f)
-        .SetOrientation(Orientation::Vertical);
+        .SetOrientation(Orientation::Vertical)
+        .SetSplitterSize(0, 200.0f);
 
     // The left pane that contains the directory tree.
     m_DirectoryView = BodySplitter->GetSplit(0)->AddControl<ScrollableViewControl>();
@@ -134,7 +134,9 @@ FileDialog::FileDialog(Window* InWindow)
                 const std::shared_ptr<Text>& Contents = std::static_pointer_cast<Text>(Cell->Get(0));
                 m_Selected = Contents->GetText();
                 m_FileName->SetText(GetWindow()->App().FS().CombinePath(m_Directory, m_Selected).c_str());
-            });
+            })
+        .SetColumnSize(0, 200.0f)
+        .SetColumnSize(1, 100.0f);
 
     const std::shared_ptr<MarginContainer> FileInfo = Root->AddControl<MarginContainer>();
     FileInfo

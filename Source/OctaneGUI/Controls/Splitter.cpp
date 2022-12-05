@@ -182,20 +182,20 @@ Orientation Splitter::GetOrientation() const
     return m_Orientation;
 }
 
-Splitter& Splitter::SetSplitterPosition(size_t Index, float Position)
+Splitter& Splitter::SetSplitterSize(size_t Index, float Size)
 {
-    Assert(Index < m_Items.size(), "Invalid index %zu given. Maximum number of containers is %zu.", Index, m_Items.size());
-    Item& Item_ = m_Items[Index];
-    Item_.Position = Position;
-    return *this;
-}
-
-Splitter& Splitter::SetSplitterWidth(size_t Index, float Width)
-{
-    Assert(Width >= 0.0f, "Width must be positive! Given width is %f.\n", Width);
+    Assert(Size >= 0.0f, "Size must be positive! Given size is %f.\n", Size);
     Assert(Index < m_Items.size(), "Invalid index %zu given. Maximum number of containers is %zu.", Index, m_Items.size());
     Item& Item = m_Items[Index];
-    Resize(Item.Data, { Width, Item.Data->GetSize().Y });
+    Item.Initialized = true;
+    if (GetOrientation() == Orientation::Vertical)
+    {
+        Resize(Item.Data, { Size, Item.Data->GetSize().Y });
+    }
+    else
+    {
+        Resize(Item.Data, { Item.Data->GetSize().X, Size });
+    }
     return *this;
 }
 
@@ -293,9 +293,6 @@ void Splitter::OnLoad(const Json& Root)
         const Json& Sub = Containers[I];
         const std::shared_ptr<Container>& Split = AddContainer();
         Split->OnLoad(Sub);
-
-        Item& Item_ = m_Items.back();
-        Item_.Position = Sub["Position"].Number(-1.0f);
     }
 
     UpdateLayout();
@@ -329,7 +326,7 @@ void Splitter::UpdateLayout()
         ->SetSpacing({ 0.0f, 0.0f })
         ->SetExpand(GetExpand());
 
-    for (const Item& Item_ : m_Items)
+    for (Item& Item_ : m_Items)
     {
         if (Fit())
         {
@@ -343,6 +340,8 @@ void Splitter::UpdateLayout()
             Item_.Handle->SetOrientation(GetOrientation());
             m_Split->InsertControl(Item_.Handle);
         }
+
+        Item_.Initialized = false;
     }
 
     m_Resize = true;
@@ -352,46 +351,52 @@ void Splitter::Resize()
 {
     if (Fit())
     {
-        Vector2 Size {};
         Vector2 Available { AvailableSize() };
+        const Vector2 Partition { Available / (float)m_Items.size() };
         size_t Index = 0;
         for (Item& Item_ : m_Items)
         {
-            const Vector2 ItemSize = Item_.Data->GetSize();
-
-            // Auto-resize.
-            if (Item_.Position < 0.0f)
-            {
-                Item_.Position = 1.0f / (float)(m_Items.size() - Index);
-            }
-
-            // The final container will occupy the remaning size.
-            if (Index == m_Items.size() - 1)
-            {
-                Item_.Position = 1.0f;
-            }
-
-            Size = Available * Item_.Position;
+            const bool IsLast = m_Items.back().Data == Item_.Data;
+            Vector2 ItemSize = Item_.Data->GetSize();
 
             if (m_Orientation == Orientation::Horizontal)
             {
-                Item_.Data->SetSize({ ItemSize.X, Size.Y });
+                ItemSize.Y = Item_.Initialized
+                    ? std::min<float>(ItemSize.Y, Available.Y)
+                    : IsLast ? Available.Y
+                             : Partition.Y;
             }
             else
             {
-                Item_.Data->SetSize({ Size.X, ItemSize.Y });
+                ItemSize.X = Item_.Initialized
+                    ? std::min<float>(ItemSize.X, Available.X)
+                    : IsLast ? Available.X
+                             : Partition.X;
             }
 
-            Available -= Size;
+            Item_.Data->SetSize(ItemSize);
+            Available -= ItemSize;
             Index++;
+            Item_.Initialized = true;
         }
     }
     else
     {
-        for (const Item& Item_ : m_Items)
+        for (Item& Item_ : m_Items)
         {
-            const Vector2 Size = Item_.Data->ChildrenSize();
+            Vector2 Size = Item_.Data->ChildrenSize();
+
+            if (GetOrientation() == Orientation::Horizontal)
+            {
+                Size.Y = Item_.Initialized ? Item_.Data->GetSize().Y : Size.Y;
+            }
+            else
+            {
+                Size.X = Item_.Initialized ? Item_.Data->GetSize().X : Size.X;
+            }
+
             Item_.Data->SetSize(Size);
+            Item_.Initialized = true;
         }
     }
 
@@ -411,22 +416,12 @@ void Splitter::Resize(const std::shared_ptr<Container>& Target, const Vector2& S
         bool Reallocate = false;
         for (Item& Item_ : m_Items)
         {
-            if (GetOrientation() == Orientation::Horizontal)
-            {
-                Item_.Position = Item_.Data->GetSize().Y / Remaining.Y;
-            }
-            else
-            {
-                Item_.Position = Item_.Data->GetSize().X / Remaining.X;
-            }
-
             if (!Reallocate)
             {
                 Reallocate = Item_.Data == Target;
             }
             else if (m_Items.back().Data == Item_.Data)
             {
-                Item_.Position = 1.0f;
                 Item_.Data->SetSize(Remaining);
             }
 

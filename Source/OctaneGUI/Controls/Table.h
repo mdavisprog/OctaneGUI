@@ -46,6 +46,7 @@ public:
 
     Table& AddColumn(const char32_t* Label);
     Table& FitColumn(size_t Column);
+    Table& SetColumnSize(size_t Column, float Size);
     size_t Columns() const;
 
     Table& AddRow();
