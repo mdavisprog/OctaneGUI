@@ -111,7 +111,8 @@ std::vector<FileSystem::DirectoryItem> FileSystem::DirectoryItems(const std::u32
     std::error_code Error;
     for (const std::filesystem::directory_entry& Entry : std::filesystem::directory_iterator(Location, Options, Error))
     {
-        Result.push_back({ Entry.path().filename().u32string(), Entry.file_size() });
+        size_t Size = Entry.is_regular_file() ? Entry.file_size() : 0;
+        Result.push_back({ Entry.path().filename().u32string(), Size });
     }
 
     return Result;
