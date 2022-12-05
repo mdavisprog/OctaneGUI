@@ -364,6 +364,32 @@ void FileDialog::PopulateList()
     }
 }
 
+enum class MemoryUnit : uint8_t
+{
+    B,
+    KB,
+    MB,
+    GB,
+    TB,
+    PB
+};
+
+const char* ToString(MemoryUnit Value)
+{
+    switch (Value)
+    {
+    case MemoryUnit::KB: return "KB";
+    case MemoryUnit::MB: return "MB";
+    case MemoryUnit::GB: return "GB";
+    case MemoryUnit::TB: return "TB";
+    case MemoryUnit::PB: return "PB";
+    case MemoryUnit::B:
+    default: break;
+    }
+
+    return "B";
+}
+
 void FileDialog::AddListItem(const char32_t* Name, size_t Size)
 {
     const size_t Row = m_DirectoryList->Rows();
@@ -383,8 +409,30 @@ void FileDialog::AddListItem(const char32_t* Name, size_t Size)
     Outer->SetGrow(Grow::End)
         ->SetExpand(Expand::Width);
     
+    MemoryUnit Unit = MemoryUnit::B;
+    while (Size > 10000)
+    {
+        Size /= 1024;
+
+        switch (Unit)
+        {
+        case MemoryUnit::B: Unit = MemoryUnit::KB; break;
+        case MemoryUnit::KB: Unit = MemoryUnit::MB; break;
+        case MemoryUnit::MB: Unit = MemoryUnit::GB; break;
+        case MemoryUnit::GB: Unit = MemoryUnit::TB; break;
+        case MemoryUnit::TB:
+        default:
+            Unit = MemoryUnit::PB;
+        }
+
+        if (Unit == MemoryUnit::PB)
+        {
+            break;
+        }
+    }
+    
     Outer->AddControl<Text>()
-        ->SetText(std::to_string(Size).c_str());
+        ->SetText((std::to_string(Size) + " " + ToString(Unit)).c_str());
 }
 
 void FileDialog::Close(bool Success)
