@@ -834,7 +834,7 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor, bool 
         if (ColumnBack)
         {
             // Column is going negative, so need to push to the end of the previous line.
-            if (Diff > NewColumn)
+            if (Diff > (int32_t)NewColumn)
             {
                 if (NewLine > 0)
                 {
