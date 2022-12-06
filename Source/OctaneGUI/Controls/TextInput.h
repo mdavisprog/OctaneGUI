@@ -63,7 +63,7 @@ public:
     {
     public:
         TextPosition();
-        TextPosition(uint32_t Line, uint32_t Column, uint32_t Index);
+        TextPosition(size_t Line, size_t Column, size_t Index);
 
         bool operator==(const TextPosition& Other) const;
         bool operator!=(const TextPosition& Other) const;
@@ -73,19 +73,19 @@ public:
         bool IsValid() const;
         bool IsValidIndex() const;
 
-        void SetLine(uint32_t Line);
-        uint32_t Line() const;
+        void SetLine(size_t Line);
+        size_t Line() const;
 
-        void SetColumn(uint32_t Column);
-        uint32_t Column() const;
+        void SetColumn(size_t Column);
+        size_t Column() const;
 
-        void SetIndex(uint32_t Index);
-        uint32_t Index() const;
+        void SetIndex(size_t Index);
+        size_t Index() const;
 
     private:
-        uint32_t m_Line { (uint32_t)-1 };
-        uint32_t m_Column { (uint32_t)-1 };
-        uint32_t m_Index { (uint32_t)-1 };
+        size_t m_Line { (size_t)-1 };
+        size_t m_Column { (size_t)-1 };
+        size_t m_Index { (size_t)-1 };
     };
 
     TextInput(Window* InWindow);
@@ -167,7 +167,7 @@ private:
     void Delete(int32_t Range);
     void MoveHome();
     void MoveEnd();
-    void SetPosition(uint32_t Line, uint32_t Column, uint32_t Index);
+    void SetPosition(size_t Line, size_t Column, size_t Index);
     Vector2 GetPositionLocation(const TextPosition& Position, bool OffsetFirstLine = true) const;
     TextPosition GetPosition(const Vector2& Position) const;
     bool IsShiftPressed() const;
@@ -175,9 +175,9 @@ private:
     bool IsAltPressed() const;
     bool ShouldSkipWords() const;
     int32_t GetRangeOr(int32_t Value) const;
-    uint32_t LineStartIndex(uint32_t Index) const;
-    uint32_t LineEndIndex(uint32_t Index) const;
-    uint32_t LineSize(uint32_t Index) const;
+    size_t LineStartIndex(size_t Index) const;
+    size_t LineEndIndex(size_t Index) const;
+    size_t LineSize(size_t Index) const;
     void ScrollIntoView();
     void UpdateSpans();
     void InternalSetText(const char32_t* InText);
