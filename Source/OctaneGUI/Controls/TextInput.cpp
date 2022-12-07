@@ -756,7 +756,7 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor, bool 
         LineIndex = String[LineIndex] == '\n' ? LineIndex + 1 : LineIndex;
     }
 
-    for (int32_t I = 0; I < std::abs(Line) && NewLine >= 0; I++)
+    for (int32_t I = 0; I < std::abs(Line); I++)
     {
         // Need to adjust the starting search position for finding the next newline character.
         // Want to avoid cases where the same index is returned.
@@ -783,9 +783,24 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor, bool 
             Index = String[Index] == '\n' ? Index + 1 : Index;
         }
 
-        NewLine = LineBack ? NewLine - 1 : NewLine + 1;
         NewIndex = Index;
         LineIndex = Index;
+
+        if (LineBack)
+        {
+            if (NewLine > 0)
+            {
+                NewLine--;
+            }
+            else
+            {
+                break;
+            }
+        }
+        else
+        {
+            NewLine += 1;
+        }
     }
 
     NewColumn = std::min<size_t>(NewColumn, LineSize(LineIndex));
