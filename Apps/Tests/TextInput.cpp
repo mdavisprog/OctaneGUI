@@ -121,6 +121,49 @@ TEST_CASE(MoveCursorLeftPrevLine,
     return true;
 })
 
+TEST_CASE(MoveCursorDownLastLine,
+{
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, R"({"Type": "TextInput", "ID": "TextInput", "Multiline": true, "Text": {"Text": "Hello\nFriends"}})", List);
+
+    const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+    Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
+    Application.Update();
+
+    VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line (%zu) is not 0!", TextInput->LineNumber());
+
+    Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Down);
+    VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line (%zu) is not 1!", TextInput->LineNumber());
+
+    Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Down);
+    VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line (%zu) is not 1 again!", TextInput->LineNumber());
+
+    return true;
+})
+
+TEST_CASE(MoveCursorUpFirstLine,
+{
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, R"({"Type": "TextInput", "ID": "TextInput", "Multiline": true, "Text": {"Text": "Hello\nFriends"}})", List);
+
+    const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+    Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
+    Application.Update();
+
+    VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line (%zu) is not 0!", TextInput->LineNumber());
+
+    Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Down);
+    VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line (%zu) is not 1!", TextInput->LineNumber());
+
+    Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Up);
+    VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line (%zu) is not 0!", TextInput->LineNumber());
+
+    Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Up);
+    VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line (%zu) is not 0 again!", TextInput->LineNumber());
+
+    return true;
+})
+
 TEST_CASE(HomeEnd_SingleLine,
 {
     OctaneGUI::ControlList List;
