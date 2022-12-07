@@ -55,6 +55,8 @@ public:
         Enter,
         Tilde,
         Tab,
+        PageUp,
+        PageDown,
     };
 };
 

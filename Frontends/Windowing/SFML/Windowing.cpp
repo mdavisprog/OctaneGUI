@@ -71,6 +71,8 @@ OctaneGUI::Keyboard::Key GetKeyCode(sf::Keyboard::Key Key)
     case sf::Keyboard::Enter: return OctaneGUI::Keyboard::Key::Enter;
     case sf::Keyboard::Tilde: return OctaneGUI::Keyboard::Key::Tilde;
     case sf::Keyboard::Tab: return OctaneGUI::Keyboard::Key::Tab;
+    case sf::Keyboard::PageUp: return OctaneGUI::Keyboard::Key::PageUp;
+    case sf::Keyboard::PageDown: return OctaneGUI::Keyboard::Key::PageDown;
     default: break;
     }
 

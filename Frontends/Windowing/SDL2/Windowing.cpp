@@ -74,6 +74,8 @@ OctaneGUI::Keyboard::Key GetKey(SDL_Keycode Code)
     case SDLK_RALT: return OctaneGUI::Keyboard::Key::RightAlt;
     case SDLK_RETURN: return OctaneGUI::Keyboard::Key::Enter;
     case SDLK_TAB: return OctaneGUI::Keyboard::Key::Tab;
+    case SDLK_PAGEUP: return OctaneGUI::Keyboard::Key::PageUp;
+    case SDLK_PAGEDOWN: return OctaneGUI::Keyboard::Key::PageDown;
     default: break;
     }
 
