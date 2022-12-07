@@ -96,6 +96,8 @@ public:
         case Keyboard::Key::End: m_Input->MoveEnd(); return true;
         case Keyboard::Key::Enter: m_Input->EnterPressed(); return true;
         case Keyboard::Key::Tab: m_Input->AddText('\t'); return true;
+        case Keyboard::Key::PageUp: m_Input->MovePosition(-(int32_t)m_Input->NumVisibleLines(), 0, m_Input->IsShiftPressed()); return true;
+        case Keyboard::Key::PageDown: m_Input->MovePosition((int32_t)m_Input->NumVisibleLines(), 0, m_Input->IsShiftPressed()); return true;
         default: break;
         }
 
@@ -381,6 +383,11 @@ size_t TextInput::FirstVisibleIndex() const
 size_t TextInput::LastVisibleIndex() const
 {
     return m_LastVisibleLine.Index();
+}
+
+size_t TextInput::NumVisibleLines() const
+{
+    return m_LastVisibleLine.Line() - m_FirstVisibleLine.Line();
 }
 
 TextInput& TextInput::SetReadOnly(bool Value)

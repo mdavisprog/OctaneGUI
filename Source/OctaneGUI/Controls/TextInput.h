@@ -111,6 +111,8 @@ public:
     size_t FirstVisibleIndex() const;
     size_t LastVisibleIndex() const;
 
+    size_t NumVisibleLines() const;
+
     TextInput& SetReadOnly(bool Value);
     bool ReadOnly() const;
 
