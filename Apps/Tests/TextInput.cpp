@@ -281,6 +281,77 @@ TEST_CASE(MouseSelect,
     return true;
 })
 
+TEST_CASE(PageDown,
+{
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, R"({"Type": "TextInput", "ID": "TextInput", "Multiline": true})", List);
+
+    const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+
+    std::string Text;
+    const int NumLines = 100;
+    for (int I = 0; I < NumLines; I++)
+    {
+        Text += "Item " + std::to_string(I) + "\n";
+    }
+    TextInput->SetText(Text.c_str());
+
+    Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
+    Application.Update();
+    const size_t NumVisibleLines = TextInput->NumVisibleLines();
+    size_t CurrentLine = 0;
+
+    VERIFYF(TextInput->LineNumber() == CurrentLine, "TextInput cursor line (%zu) is not %zu!", TextInput->LineNumber(), CurrentLine);
+
+    for (int I = 1; I < 10; I++)
+    {
+        Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::PageDown);
+        CurrentLine = std::min<size_t>(NumLines, CurrentLine + NumVisibleLines);
+        VERIFYF(TextInput->LineNumber() == CurrentLine, "TextInput cursor line (%zu) is not %zu after %d page down!", TextInput->LineNumber(), CurrentLine, I);
+    }
+
+    return true;
+})
+
+TEST_CASE(PageUp,
+{
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, R"({"Type": "TextInput", "ID": "TextInput", "Multiline": true})", List);
+
+    const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+
+    std::string Text;
+    const int NumLines = 100;
+    for (int I = 0; I < NumLines; I++)
+    {
+        Text += "Item " + std::to_string(I) + "\n";
+    }
+    TextInput->SetText(Text.c_str());
+
+    Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
+    Application.Update();
+    const size_t NumVisibleLines = TextInput->NumVisibleLines();
+    size_t CurrentLine = 0;
+
+    VERIFYF(TextInput->LineNumber() == CurrentLine, "TextInput cursor line (%zu) is not %zu!", TextInput->LineNumber(), CurrentLine);
+
+    for (int I = 1; I < 10; I++)
+    {
+        Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::PageDown);
+        CurrentLine = std::min<size_t>(NumLines, CurrentLine + NumVisibleLines);
+        VERIFYF(TextInput->LineNumber() == CurrentLine, "TextInput cursor line (%zu) is not %zu after %d page down!", TextInput->LineNumber(), CurrentLine, I);
+    }
+
+    for (int I = 1; I < 10; I++)
+    {
+        Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::PageUp);
+        CurrentLine = CurrentLine > NumVisibleLines ? CurrentLine - NumVisibleLines : 0;
+        VERIFYF(TextInput->LineNumber() == CurrentLine, "TextInput cursor line (%zu) is not %zu after %d page up!", TextInput->LineNumber(), CurrentLine, I);
+    }
+
+    return true;
+})
+
 )
 
 }
