@@ -228,10 +228,21 @@ bool Container::HasControl(const std::shared_ptr<Control>& Item) const
 
 bool Container::HasControlRecurse(const std::shared_ptr<Control>& Item) const
 {
-    std::vector<std::shared_ptr<Control>> AllControls;
-    GetControls(AllControls);
-    auto Iter = std::find(AllControls.begin(), AllControls.end(), Item);
-    return Iter != AllControls.end();
+    if (HasControl(Item))
+    {
+        return true;
+    }
+
+    for (const std::shared_ptr<Control>& Child : Controls())
+    {
+        const std::shared_ptr<Container>& ChildContainer = std::dynamic_pointer_cast<Container>(Child);
+        if (ChildContainer && ChildContainer->HasControlRecurse(Item))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void Container::ClearControls()
