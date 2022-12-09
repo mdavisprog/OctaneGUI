@@ -169,7 +169,7 @@ TEST_CASE(SplitterHoveredControl,
         {
             Clicked = true;
         });
-    
+
     Utility::MouseClick(Application, Button->GetAbsolutePosition());
 
     return Clicked;

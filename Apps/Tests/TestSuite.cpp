@@ -40,18 +40,25 @@ void TestSuite::Run(OctaneGUI::Application& Application, int Argc, char** Argv)
     }
 
     std::string SuiteName;
+    std::string TestName;
     if (Argc > 1)
     {
         for (int I = 1; I < Argc; I++)
         {
-            if (std::string(Argv[I]) == "Verbose")
+            const std::string Arg { Argv[I] };
+            if (Arg == "Verbose")
             {
                 s_Verbose = true;
             }
+            else if (Arg == "--Suite" && I + 1 < Argc)
+            {
+                SuiteName = Argv[I + 1];
+            }
+            else if (Arg == "--Test" && I + 1 < Argc)
+            {
+                TestName = Argv[I + 1];
+            }
         }
-
-        SuiteName = Argv[Argc - 1];
-        SuiteName = SuiteName == "Verbose" ? "" : SuiteName;
     }
 
     if (!SuiteName.empty())
@@ -61,9 +68,17 @@ void TestSuite::Run(OctaneGUI::Application& Application, int Argc, char** Argv)
         {
             if (SuiteName == TS->m_Name)
             {
-                uint32_t Passed = 0;
-                uint32_t Failed = 0;
-                Run(Application, *TS, Passed, Failed);
+                if (TestName.empty())
+                {
+                    uint32_t Passed = 0;
+                    uint32_t Failed = 0;
+                    Run(Application, *TS, Passed, Failed);
+                }
+                else
+                {
+                    Run(Application, *TS, TestName);
+                }
+
                 Found = true;
                 break;
             }
@@ -148,6 +163,24 @@ bool TestSuite::Run(OctaneGUI::Application& Application, const TestSuite& Suite,
         Failed
     );
 
+    return true;
+}
+
+bool TestSuite::Run(OctaneGUI::Application& Application, const TestSuite& Suite, const std::string& Test)
+{
+    if (Suite.m_TestCases.find(Test) == Suite.m_TestCases.end())
+    {
+        printf("Test case '%s' does not exist in test suite '%s'!\n", Test.c_str(), Suite.m_Name.c_str());
+        return false;
+    }
+
+    printf("Running test case '%s' in test suite '%s'\n", Test.c_str(), Suite.m_Name.c_str());
+
+    OctaneGUI::Clock Clock;
+
+    bool Result = Suite.m_TestCases.at(Test)(Application);
+
+    printf("Test %s in %f seconds.\n", Result ? "PASSED" : "FAILED", Clock.Measure());
     return true;
 }
 

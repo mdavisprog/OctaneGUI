@@ -54,6 +54,7 @@ public:
 
 private:
     static bool Run(OctaneGUI::Application& Application, const TestSuite& Suite, uint32_t& Passed, uint32_t& Failed);
+    static bool Run(OctaneGUI::Application& Application, const TestSuite& Suite, const std::string& Test);
 
     TestSuite();
 
