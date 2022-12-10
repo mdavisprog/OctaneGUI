@@ -298,12 +298,31 @@ void Splitter::OnLoad(const Json& Root)
     UpdateLayout();
 }
 
+void Splitter::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
+{
+    Container::PlaceControls(Controls);
+
+    if (m_Resize)
+    {
+        Resize();
+    }
+}
+
 void Splitter::OnLayoutComplete()
 {
     if (m_Resize)
     {
-        Resize();
+        if (m_OnResized)
+        {
+            m_OnResized(*this);
+        }
+
         m_Resize = false;
+    }
+
+    for (Item& Item_ : m_Items)
+    {
+        Item_.Initialized = true;
     }
 }
 
@@ -347,14 +366,14 @@ void Splitter::UpdateLayout()
     m_Resize = true;
 }
 
-void Splitter::Resize()
+void Splitter::Resize() const
 {
     if (Fit())
     {
         Vector2 Available { AvailableSize() };
         const Vector2 Partition { Available / (float)m_Items.size() };
         size_t Index = 0;
-        for (Item& Item_ : m_Items)
+        for (const Item& Item_ : m_Items)
         {
             const bool IsLast = m_Items.back().Data == Item_.Data;
             Vector2 ItemSize = Item_.Data->GetSize();
@@ -377,12 +396,11 @@ void Splitter::Resize()
             Item_.Data->SetSize(ItemSize);
             Available -= ItemSize;
             Index++;
-            Item_.Initialized = true;
         }
     }
     else
     {
-        for (Item& Item_ : m_Items)
+        for (const Item& Item_ : m_Items)
         {
             Vector2 Size = Item_.Data->ChildrenSize();
 
@@ -396,13 +414,7 @@ void Splitter::Resize()
             }
 
             Item_.Data->SetSize(Size);
-            Item_.Initialized = true;
         }
-    }
-
-    if (m_OnResized)
-    {
-        m_OnResized(*this);
     }
 }
 

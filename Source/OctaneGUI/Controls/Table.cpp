@@ -198,6 +198,7 @@ Table& Table::AddColumn(const char32_t* Label)
     Column->SetClip(true);
     const std::shared_ptr<Text> TextComponent = Column->AddControl<Text>();
     TextComponent->SetText(Label);
+    Column->SetSize(TextComponent->GetSize());
     return *this;
 }
 

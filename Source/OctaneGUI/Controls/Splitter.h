@@ -74,6 +74,7 @@ public:
     virtual void OnLoad(const Json& Root) override;
 
 protected:
+    virtual void PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const override;
     virtual void OnLayoutComplete() override;
 
 private:
@@ -86,7 +87,7 @@ private:
     };
 
     void UpdateLayout();
-    void Resize();
+    void Resize() const;
     void Resize(const std::shared_ptr<Container>& Target, const Vector2& Size);
     std::shared_ptr<Separator> GetSeparator(const Vector2& Point) const;
     std::shared_ptr<Container> GetContainer(const std::shared_ptr<Separator>& Handle) const;
