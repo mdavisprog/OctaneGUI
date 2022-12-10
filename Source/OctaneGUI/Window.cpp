@@ -900,10 +900,14 @@ void Window::RequestLayout(std::shared_ptr<Container> Request)
     bool Found = false;
     for (const std::weak_ptr<Container>& Item : m_LayoutRequests)
     {
-        if (!Item.expired() && Item.lock() == Request)
+        if (!Item.expired())
         {
-            Found = true;
-            break;
+            const std::shared_ptr<Container> ItemContainer = Item.lock();
+            if (ItemContainer == Request || ItemContainer->HasControlRecurse(Request))
+            {
+                Found = true;
+                break;
+            }
         }
     }
 
