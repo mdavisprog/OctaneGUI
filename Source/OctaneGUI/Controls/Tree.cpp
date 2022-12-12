@@ -561,7 +561,7 @@ std::weak_ptr<Control> Tree::GetControl(const Vector2& Point) const
 
 Vector2 Tree::DesiredSize() const
 {
-    Vector2 Result = m_Item->GetSize();
+    Vector2 Result = m_Item->DesiredSize();
 
     if (m_List && m_Expand)
     {
