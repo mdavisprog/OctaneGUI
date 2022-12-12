@@ -366,7 +366,7 @@ void ProfileViewer::View(Window* InWindow)
         FrameDesc
             ->AddRow()
             .Cell(0, 0);
-        m_Tree = FrameDesc->AddControl<Tree>();
+        m_Tree = FrameDesc->Cell(0, 0)->AddControl<Tree>();
         m_Tree.lock()->SetOnToggled([this](Tree&) -> void
             {
                 UpdateFrameInfo();
