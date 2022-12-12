@@ -261,6 +261,10 @@ bool CommandPalette::Process(const std::u32string& Command, const std::vector<st
             printf("Not enough arguments given for displaying message box.");
         }
     }
+    else if (Lower == U"quit" || Lower == U"exit")
+    {
+        GetWindow()->App().CloseWindow("Main");
+    }
     else
     {
         Result = false;
