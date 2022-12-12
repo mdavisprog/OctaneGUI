@@ -56,6 +56,7 @@ Text& Text::SetText(const char32_t* InContents)
 {
     m_Contents = InContents;
     UpdateSize();
+    Invalidate(InvalidateType::Paint);
     return *this;
 }
 
