@@ -283,9 +283,18 @@ Table& Table::SetOnSelected(OnSelectedSignature&& Fn)
 std::weak_ptr<Control> Table::GetControl(const Vector2& Point) const
 {
     std::weak_ptr<Control> Result = Container::GetControl(Point);
-    if (!Result.expired() && m_Header->HasControl(Result.lock()))
+    if (!m_RowSelectable)
     {
         return Result;
+    }
+
+    if (!Result.expired())
+    {
+        const std::shared_ptr<Control> Item { Result.lock() };
+        if (m_Header->HasControl(Item))
+        {
+            return Result;
+        }
     }
 
     if (Contains(Point))
