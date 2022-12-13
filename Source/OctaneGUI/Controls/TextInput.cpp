@@ -900,6 +900,7 @@ void TextInput::MouseMove(const Vector2& Position)
         m_Position = GetPosition(Position);
         Invalidate();
         UpdateSpans();
+        ScrollIntoView();
     }
 
     if (Contains(Position))
