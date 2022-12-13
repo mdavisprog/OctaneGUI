@@ -80,7 +80,7 @@ R"("Header": [{"Label": "One"}, {"Label": "Two"}], "Rows": [
     const std::shared_ptr<OctaneGUI::Font> Font = Application.GetTheme()->GetFont();
     const OctaneGUI::Vector2 HeaderSize = Font->Measure(U"One");
 
-    VERIFYF(Cell->GetSize().X == HeaderSize.X, "First cell width %.2f does not match header width %.2f!\n", Cell->GetSize().X, HeaderSize.X);
+    VERIFYF(Cell->GetSize().X == HeaderSize.X, "First cell width %.2f does not match header width %.2f!", Cell->GetSize().X, HeaderSize.X);
 
     OctaneGUI::Vector2 MousePos(HeaderSize.X + 2.0f, 2.0f);
     Utility::MousePress(Application, MousePos);

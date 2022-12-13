@@ -78,7 +78,7 @@ TEST_CASE(IsString,
 TEST_CASE(BooleanArray,
 {
     OctaneGUI::Json Root = OctaneGUI::Json::Parse("[true, false, false]");
-    VERIFYF(Root.Count() == 3, "Incorrect number of elements: %d\n", Root.Count())
+    VERIFYF(Root.Count() == 3, "Incorrect number of elements: %d", Root.Count())
     VERIFY(Root[0u].Boolean() == true)
     VERIFY(Root[1u].Boolean() == false)
     VERIFY(Root[2u].Boolean() == false)
@@ -88,7 +88,7 @@ TEST_CASE(BooleanArray,
 TEST_CASE(NumberArray,
 {
     OctaneGUI::Json Root = OctaneGUI::Json::Parse("[3.14, -1.0, 42]");
-    VERIFYF(Root.Count() == 3, "Incorrect number of elements: %d\n", Root.Count())
+    VERIFYF(Root.Count() == 3, "Incorrect number of elements: %d", Root.Count())
     VERIFY(Root[0u].Number() == 3.14f)
     VERIFY(Root[1u].Number() == -1.0f)
     VERIFY(Root[2u].Number() == 42.0f)
@@ -98,7 +98,7 @@ TEST_CASE(NumberArray,
 TEST_CASE(StringArray,
 {
     OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"(["Apple", "Orange", "Banana"])");
-    VERIFYF(Root.Count() == 3, "Incorrect number of elements: %d\n", Root.Count())
+    VERIFYF(Root.Count() == 3, "Incorrect number of elements: %d", Root.Count())
     VERIFY(std::string(Root[0u].String()) == "Apple")
     VERIFY(std::string(Root[1u].String()) == "Orange")
     VERIFY(std::string(Root[2u].String()) == "Banana")
@@ -108,7 +108,7 @@ TEST_CASE(StringArray,
 TEST_CASE(ObjectArray,
 {
     OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"([{"Key": "One"}, {"Key": "Two"}, {"Key": "Three"}])");
-    VERIFYF(Root.Count() == 3, "Incorrect number of objects: %d\n", Root.Count())
+    VERIFYF(Root.Count() == 3, "Incorrect number of objects: %d", Root.Count())
 
     const OctaneGUI::Json& One = Root[0u];
     VERIFY(std::string(One["Key"].String()) == "One")
@@ -127,15 +127,15 @@ TEST_CASE(Object,
     OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"({"Number": 1, "Boolean": true, "String": "Hello World"})");
 
     float Number = Root["Number"].Number();
-    VERIFYF(Number == 1.0f, "Number field is incorrect: %f\n", Number)
+    VERIFYF(Number == 1.0f, "Number field is incorrect: %f", Number)
 
     bool Boolean = Root["Boolean"].Boolean();
-    VERIFYF(Boolean == true, "Boolean field is incorrect\n")
+    VERIFYF(Boolean == true, "Boolean field is incorrect")
 
     std::string String = Root["String"].String();
-    VERIFYF(String == "Hello World", "String field is incorrect: %s\n", String.c_str())
+    VERIFYF(String == "Hello World", "String field is incorrect: %s", String.c_str())
 
-    VERIFYF(Root["Invalid"].IsNull(), "Invalid field should not exist!\n")
+    VERIFYF(Root["Invalid"].IsNull(), "Invalid field should not exist!")
 
     return true;
 })
@@ -144,9 +144,9 @@ TEST_CASE(SubObject,
 {
     OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"({"Sub": {"Value": 255}})");
     const OctaneGUI::Json& Sub = Root["Sub"];
-    VERIFYF(Sub.IsObject(), "Sub value is not an object!\n")
+    VERIFYF(Sub.IsObject(), "Sub value is not an object!")
     const float Value = Sub["Value"].Number();
-    VERIFYF(Value == 255.0f, "Value %f != 255\n", Value)
+    VERIFYF(Value == 255.0f, "Value %f != 255", Value)
     return true;
 })
 
@@ -201,8 +201,8 @@ TEST_CASE(EmptyObject,
     OctaneGUI::Json Root = OctaneGUI::Json::Parse(R"({"Empty": {}, "Filled": {"Property": "One"}})");
     const OctaneGUI::Json& Empty = Root["Empty"];
     const OctaneGUI::Json& Filled = Root["Filled"];
-    VERIFYF(Empty.IsObject() && Empty.Count() == 0, "Empty object is not empty!\n");
-    VERIFYF(Filled.IsObject() && Filled.Count() == 1, "Filled object is incorrect!\n");
+    VERIFYF(Empty.IsObject() && Empty.Count() == 0, "Empty object is not empty!");
+    VERIFYF(Filled.IsObject() && Filled.Count() == 1, "Filled object is incorrect!");
     return std::string(Filled["Property"].String()) == "One";
 })
 

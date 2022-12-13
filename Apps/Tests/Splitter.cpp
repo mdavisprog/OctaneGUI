@@ -132,8 +132,8 @@ TEST_CASE(SplitterVerticalMoveFit,
     const std::shared_ptr<OctaneGUI::Container> Left = Splitter->GetSplit(0);
     const std::shared_ptr<OctaneGUI::Container> Right = Splitter->GetSplit(1);
 
-    VERIFYF(Left->GetSize().X == Size.X * 0.5f - SplitterSize.X * 0.5f, "Left container size is not split in half!\n");
-    VERIFYF(Right->GetSize().X == Size.X * 0.5f - SplitterSize.X * 0.5f, "Right container size is not split in half!\n");
+    VERIFYF(Left->GetSize().X == Size.X * 0.5f - SplitterSize.X * 0.5f, "Left container size is not split in half!");
+    VERIFYF(Right->GetSize().X == Size.X * 0.5f - SplitterSize.X * 0.5f, "Right container size is not split in half!");
 
     OctaneGUI::Vector2 Mouse(Left->GetSize().X + 1.0f, 2.0f);
     Utility::MousePress(Application, Mouse);
@@ -162,7 +162,7 @@ TEST_CASE(SplitterHoveredControl,
     Utility::MouseClick(Application, {5.0f, Top->GetSize().Y + 1.0f});
     Application.Update();
 
-    VERIFYF(!Application.GetMainWindow()->Focus().expired(), "No control is focused!\n");
+    VERIFYF(!Application.GetMainWindow()->Focus().expired(), "No control is focused!");
 
     bool Clicked = false;
     Button->SetOnClicked([&](const OctaneGUI::Button&) -> void
@@ -185,7 +185,7 @@ TEST_CASE(SplitterSetSize,
     Application.Update();
     const std::shared_ptr<OctaneGUI::Container> Left = Splitter->GetSplit(0);
 
-    VERIFYF(Left->GetSize().X == 0.0f, "Left container's size should be 0 but it is %.2f\n", Left->GetSize().X);
+    VERIFYF(Left->GetSize().X == 0.0f, "Left container's size should be 0 but it is %.2f", Left->GetSize().X);
 
     Splitter->SetSplitterSize(0, 100.0f);
     Application.Update();
@@ -206,7 +206,7 @@ TEST_CASE(InitialSplitterSize,
     Application.Update();
 
     VERIFYF(Splitter->GetSize().X == 1280.0f && Splitter->GetSize().Y == 720.0f, 
-        "Splitter size is not expanded! Size is %.2f %.2f.\n", Splitter->GetSize().X, Splitter->GetSize().Y);
+        "Splitter size is not expanded! Size is %.2f %.2f.", Splitter->GetSize().X, Splitter->GetSize().Y);
     
     const std::shared_ptr<OctaneGUI::Container> Top = Splitter->GetSplit(0);
     return Top->GetSize().Y == 100.0f;

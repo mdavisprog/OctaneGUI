@@ -86,13 +86,13 @@ TEST_CASE(MoveCursorRightNextLine,
     {
         Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Right);
 
-        VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line (%zu) is not 0!\n", TextInput->LineNumber());
-        VERIFYF(TextInput->Column() == (size_t)(I + 1), "TextInput cursor column (%zu) is not %d\n", TextInput->Column(), I + 1);
+        VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line (%zu) is not 0!", TextInput->LineNumber());
+        VERIFYF(TextInput->Column() == (size_t)(I + 1), "TextInput cursor column (%zu) is not %d", TextInput->Column(), I + 1);
     }
 
     Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Right);
-    VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line (%zu) is not 1!\n", TextInput->LineNumber());
-    VERIFYF(TextInput->Column() == 0, "TextInput cursor line (%zu) is not 0\n", TextInput->Column());
+    VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line (%zu) is not 1!", TextInput->LineNumber());
+    VERIFYF(TextInput->Column() == 0, "TextInput cursor line (%zu) is not 0", TextInput->Column());
 
     return true;
 })
@@ -111,12 +111,12 @@ TEST_CASE(MoveCursorLeftPrevLine,
         Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Right);
     }
 
-    VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line (%zu) is not 1!\n", TextInput->LineNumber());
-    VERIFYF(TextInput->Column() == 0, "TextInput cursor line (%zu) is not 0\n", TextInput->Column());
+    VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line (%zu) is not 1!", TextInput->LineNumber());
+    VERIFYF(TextInput->Column() == 0, "TextInput cursor line (%zu) is not 0", TextInput->Column());
 
     Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Left);
-    VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line (%zu) is not 0!\n", TextInput->LineNumber());
-    VERIFYF(TextInput->Column() == 5, "TextInput cursor line (%zu) is not 5\n", TextInput->Column());
+    VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line (%zu) is not 0!", TextInput->LineNumber());
+    VERIFYF(TextInput->Column() == 5, "TextInput cursor line (%zu) is not 5", TextInput->Column());
 
     return true;
 })

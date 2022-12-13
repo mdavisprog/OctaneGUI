@@ -179,7 +179,7 @@ TEST_CASE(MultiSelect,
     Utility::MouseClick(Application, { 5.0f, Height * 2.0f });
     Utility::MouseClick(Application, { 5.0f, Height * 3.0f });
 
-    VERIFYF(ListBox->Selected().size() == 3, "Number of selected items is not 3. Number selected is %zu!\n", ListBox->Selected().size());
+    VERIFYF(ListBox->Selected().size() == 3, "Number of selected items is not 3. Number selected is %zu!", ListBox->Selected().size());
 
     return true;
 })

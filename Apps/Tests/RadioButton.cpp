@@ -57,21 +57,21 @@ TEST_CASE(OneGroup,
 
     One->SetSelected(true);
 
-    VERIFYF(One->IsSelected(), "'One' is not selected when it should be!\n");
-    VERIFYF(!Two->IsSelected(), "'Two' is selected when it should not be!\n");
-    VERIFYF(!Three->IsSelected(), "'Three' is selected when it should not be!\n");
+    VERIFYF(One->IsSelected(), "'One' is not selected when it should be!");
+    VERIFYF(!Two->IsSelected(), "'Two' is selected when it should not be!");
+    VERIFYF(!Three->IsSelected(), "'Three' is selected when it should not be!");
 
     Two->SetSelected(true);
 
-    VERIFYF(!One->IsSelected(), "'One' is selected when it should not be!\n");
-    VERIFYF(Two->IsSelected(), "'Two' is not selected when it should be!\n");
-    VERIFYF(!Three->IsSelected(), "'Three' is selected when it should not be!\n");
+    VERIFYF(!One->IsSelected(), "'One' is selected when it should not be!");
+    VERIFYF(Two->IsSelected(), "'Two' is not selected when it should be!");
+    VERIFYF(!Three->IsSelected(), "'Three' is selected when it should not be!");
 
     Three->SetSelected(true);
 
-    VERIFYF(!One->IsSelected(), "'One' is selected when it should not be!\n");
-    VERIFYF(!Two->IsSelected(), "'Two' is selected when it should not be!\n");
-    VERIFYF(Three->IsSelected(), "'Three' is not selected when it should be!\n");
+    VERIFYF(!One->IsSelected(), "'One' is selected when it should not be!");
+    VERIFYF(!Two->IsSelected(), "'Two' is selected when it should not be!");
+    VERIFYF(Three->IsSelected(), "'Three' is not selected when it should be!");
 
     return true;
 })
@@ -97,18 +97,18 @@ TEST_CASE(TwoGroups,
     One->SetSelected(true);
     Three->SetSelected(true);
 
-    VERIFYF(One->IsSelected(), "One is not selected when it should be!\n");
-    VERIFYF(!Two->IsSelected(), "Two is selected when it should not be!\n");
-    VERIFYF(Three->IsSelected(), "Three is not selected when it should be!\n");
-    VERIFYF(!Four->IsSelected(), "Four is selected when it should not be!\n");
+    VERIFYF(One->IsSelected(), "One is not selected when it should be!");
+    VERIFYF(!Two->IsSelected(), "Two is selected when it should not be!");
+    VERIFYF(Three->IsSelected(), "Three is not selected when it should be!");
+    VERIFYF(!Four->IsSelected(), "Four is selected when it should not be!");
 
     Two->SetSelected(true);
     Four->SetSelected(true);
 
-    VERIFYF(!One->IsSelected(), "One is selected when it should not be!\n");
-    VERIFYF(Two->IsSelected(), "Two is not selected when it should be!\n");
-    VERIFYF(!Three->IsSelected(), "Three is selected when it should not be!\n");
-    VERIFYF(Four->IsSelected(), "Four is not selected when it should be!\n");
+    VERIFYF(!One->IsSelected(), "One is selected when it should not be!");
+    VERIFYF(Two->IsSelected(), "Two is not selected when it should be!");
+    VERIFYF(!Three->IsSelected(), "Three is selected when it should not be!");
+    VERIFYF(Four->IsSelected(), "Four is not selected when it should be!");
 
     return true;
 })
@@ -127,13 +127,13 @@ TEST_CASE(MouseClick,
 
     Utility::MouseClick(Application, One->GetAbsolutePosition());
 
-    VERIFYF(One->IsSelected(), "One is not selected when it should be!\n");
-    VERIFYF(!Two->IsSelected(), "Two is selected when it should not be!\n");
+    VERIFYF(One->IsSelected(), "One is not selected when it should be!");
+    VERIFYF(!Two->IsSelected(), "Two is selected when it should not be!");
 
     Utility::MouseClick(Application, Two->GetAbsolutePosition());
 
-    VERIFYF(!One->IsSelected(), "One is selected when it should not be!\n");
-    VERIFYF(Two->IsSelected(), "Two is not selected when it should be!\n");
+    VERIFYF(!One->IsSelected(), "One is selected when it should not be!");
+    VERIFYF(Two->IsSelected(), "Two is not selected when it should be!");
 
     return true;
 })

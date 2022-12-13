@@ -73,12 +73,12 @@ TEST_CASE(TriState,
     Application.GetMainWindow()->OnMousePressed(Position, OctaneGUI::Mouse::Button::Left);
     Application.GetMainWindow()->OnMouseReleased(Position, OctaneGUI::Mouse::Button::Left);
 
-    VERIFYF(CheckBox->GetState() == OctaneGUI::CheckBox::State::Intermediate, "TriState: CheckBox is not intermediate!\n");
+    VERIFYF(CheckBox->GetState() == OctaneGUI::CheckBox::State::Intermediate, "TriState: CheckBox is not intermediate!");
 
     Application.GetMainWindow()->OnMousePressed(Position, OctaneGUI::Mouse::Button::Left);
     Application.GetMainWindow()->OnMouseReleased(Position, OctaneGUI::Mouse::Button::Left);
 
-    VERIFYF(CheckBox->GetState() == OctaneGUI::CheckBox::State::Checked, "TriState: CheckBox is not checked!\n");
+    VERIFYF(CheckBox->GetState() == OctaneGUI::CheckBox::State::Checked, "TriState: CheckBox is not checked!");
 
     Application.GetMainWindow()->OnMousePressed(Position, OctaneGUI::Mouse::Button::Left);
     Application.GetMainWindow()->OnMouseReleased(Position, OctaneGUI::Mouse::Button::Left);
