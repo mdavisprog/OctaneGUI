@@ -88,7 +88,8 @@ private:
     Vector2 GetContentSize(const std::vector<std::shared_ptr<Control>>& Controls) const;
     Vector2 GetOverflow() const;
     void SetOffset(const Vector2& Offset, bool UpdateSBHandles);
-    void UpdateScrollBars();
+    void UpdateScrollBarSizes();
+    void UpdateScrollBarPositions();
     bool IsScrollBarControl(Control* Focus) const;
 
     std::shared_ptr<ScrollBar> m_HorizontalSB { nullptr };
