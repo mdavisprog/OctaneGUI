@@ -121,7 +121,7 @@ TEST_CASE(HScrollOffsetUpdate,
     Container->SetSize({ 220.0f, 200.0f });
     Application.Update();
     VERIFYF(View->Scrollable()->Overflow().X == View->Scrollable()->VerticalScrollBar()->GetSize().X + 20.0f,
-        "Horizontal overflow is %.2f when it should be %.2f\n",
+        "Second Horizontal overflow is %.2f when it should be %.2f\n",
         View->Scrollable()->Offset().X, View->Scrollable()->VerticalScrollBar()->GetSize().X + 20.0f);
     VERIFYF(View->Scrollable()->Offset().X == View->Scrollable()->Overflow().X,
         "Horizontal offset is %.2f when it should be %.2f\n",
@@ -152,6 +152,24 @@ TEST_CASE(VScrollOffsetUpdate,
     VERIFYF(View->Scrollable()->Offset().Y == View->Scrollable()->Overflow().Y,
         "Vertical offset is %.2f when it should be %.2f\n",
         View->Scrollable()->Offset().Y, View->Scrollable()->Overflow().Y);
+    return true;
+})
+
+TEST_CASE(ScrollBarPositions,
+{
+    OctaneGUI::ControlList List;
+    Load(Application, R"({"Type": "Container", "Size": [300, 300]})", List, 200, 200);
+    const std::shared_ptr<OctaneGUI::ScrollableViewControl> View = List.To<OctaneGUI::ScrollableViewControl>("View");
+    const float SBSize = View->Scrollable()->ScrollBarPropertySize();
+
+    const std::shared_ptr<OctaneGUI::ScrollBar>& HScrollBar = View->Scrollable()->HorizontalScrollBar();
+    VERIFYF(HScrollBar->GetPosition().Y == View->GetSize().Y - SBSize, "HScrollBar is not positioned at %.2f. Positioned at %.2f.",
+        View->GetSize().Y - SBSize, HScrollBar->GetPosition().Y);
+
+    const std::shared_ptr<OctaneGUI::ScrollBar>& VScrollBar = View->Scrollable()->VerticalScrollBar();
+    VERIFYF(VScrollBar->GetPosition().X == View->GetSize().X - SBSize, "VScrollBar is not positioned at %.2f. Positioned at %.2f",
+        View->GetSize().X - SBSize, VScrollBar->GetPosition().X);
+
     return true;
 })
 

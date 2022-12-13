@@ -193,7 +193,6 @@ TEST_CASE(MoveObject,
 TEST_CASE(Spaces,
 {
     OctaneGUI::Json Root = OctaneGUI::Json::Parse("([\n{\n\"One\": 1\n},{\n\"Two\": 2\n}\n]");
-    printf("Root: %s\n", Root.ToString().c_str());
     return Root.IsArray() && Root[0u]["One"].Number() == 1.0f && Root[1u]["Two"].Number() == 2.0f;
 })
 
