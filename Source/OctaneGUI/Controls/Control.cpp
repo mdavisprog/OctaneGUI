@@ -83,7 +83,6 @@ Control::~Control()
 Control& Control::SetPosition(const Vector2& Position)
 {
     m_Bounds.SetPosition(Position);
-    Invalidate(InvalidateType::Layout);
     return *this;
 }
 
