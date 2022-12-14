@@ -37,6 +37,7 @@ SOFTWARE.
 #include "Controls/Container.h"
 #include "Controls/Control.h"
 #include "Controls/ControlList.h"
+#include "Controls/CustomControl.h"
 #include "Controls/GroupBox.h"
 #include "Controls/HorizontalContainer.h"
 #include "Controls/Image.h"
