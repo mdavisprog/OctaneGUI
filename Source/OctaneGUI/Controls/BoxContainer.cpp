@@ -31,7 +31,7 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
-static Grow ToGrow(const std::string& Value)
+static Grow ToGrow(const std::string& Value, Grow Default = Grow::Begin)
 {
     const std::string Lower = String::ToLower(Value);
     if (Lower == "center")
@@ -43,7 +43,7 @@ static Grow ToGrow(const std::string& Value)
         return Grow::End;
     }
 
-    return Grow::Begin;
+    return Default;
 }
 
 const char* ToString(Grow Type)
@@ -136,7 +136,7 @@ void BoxContainer::OnLoad(const Json& Root)
 {
     Container::OnLoad(Root);
 
-    m_Grow = ToGrow(Root["Grow"].String());
+    m_Grow = ToGrow(Root["Grow"].String(), m_Grow);
     m_Spacing = Variant(Root["Spacing"]).Vector(m_Spacing);
 }
 
