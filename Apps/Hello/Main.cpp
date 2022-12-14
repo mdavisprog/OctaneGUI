@@ -33,8 +33,10 @@ int main(int, char**)
     "Theme": "Resources/Themes/Dark.json",
     "Windows": {
         "Main": {"Title": "Hello", "Width": 300, "Height": 200, "Body": {"Controls": [
-            {"ID": "Container", "Type": "VerticalContainer", "Controls": [
-                {"ID": "Button", "Type": "TextButton", "Text": {"Text": "Hello Friends"}}
+            {"ID": "Container", "Type": "VerticalContainer", "Expand": "Both", "Grow": "Center", "Controls": [
+                {"Type": "HorizontalContainer", "Expand": "Width", "Grow": "Center", "Controls": [
+                    {"ID": "Button", "Type": "TextButton", "Text": {"Text": "Hello Friends"}}
+                ]}
             ]}
         ]}}
     }
@@ -52,7 +54,14 @@ int main(int, char**)
         static bool DidClick = false;
         if (!DidClick)
         {
-            List.To<OctaneGUI::Container>("Container")->AddControl<OctaneGUI::Text>()->SetText("Welcome to the program :^)!");
+            const char* Stream = R"({
+                "Controls": [
+                    {"Type": "HorizontalContainer", "Expand": "Width", "Grow": "Center", "Controls": [
+                        {"Type": "Text", "Text": "Well Hello Friends!"}
+                    ]}
+                ]
+            })";
+            List.To<OctaneGUI::Container>("Container")->Load(Stream);
             DidClick = true;
         }
     });
