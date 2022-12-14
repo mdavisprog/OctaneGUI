@@ -6,6 +6,7 @@ add_executable(
     CheckBox.cpp
     ComboBox.cpp
     Container.cpp
+    CustomControl.cpp
     FlyString.cpp
     Json.cpp
     ListBox.cpp

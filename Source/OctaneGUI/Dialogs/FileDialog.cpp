@@ -402,13 +402,10 @@ void FileDialog::AddListItem(const char32_t* Name, size_t Size)
         ->SetText(Name);
 
     // Set size
-    std::shared_ptr<HorizontalContainer> Outer = m_DirectoryList
-        ->Cell(Row, 1)
-        ->AddControl<HorizontalContainer>();
-    
+    std::shared_ptr<HorizontalContainer> Outer = m_DirectoryList->Cell(Row, 1)->AddControl<HorizontalContainer>();
     Outer->SetGrow(Grow::End)
         ->SetExpand(Expand::Width);
-    
+
     MemoryUnit Unit = MemoryUnit::B;
     while (Size > 10000)
     {
@@ -430,7 +427,7 @@ void FileDialog::AddListItem(const char32_t* Name, size_t Size)
             break;
         }
     }
-    
+
     Outer->AddControl<Text>()
         ->SetText((std::to_string(Size) + " " + ToString(Unit)).c_str());
 }
