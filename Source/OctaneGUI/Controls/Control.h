@@ -295,6 +295,15 @@ public:
         return std::dynamic_pointer_cast<T const>(Share());
     }
 
+    /// @brief Load contents of a JSON stream for this control.
+    ///
+    /// This function provides a quick method of altering control properties
+    /// after the control has been created. This is useful for adding additional
+    /// controls to containers without using the API.
+    ///
+    /// @param Stream JSON string.
+    void Load(const char* Stream);
+
     /// @brief Notifies the control to paint into a given brush.
     ///
     /// This is called for all controls of a given Window when a repaint request

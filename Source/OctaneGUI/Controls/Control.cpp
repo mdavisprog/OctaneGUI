@@ -314,6 +314,12 @@ std::shared_ptr<Control const> Control::Share() const
     return shared_from_this();
 }
 
+void Control::Load(const char* Stream)
+{
+    const Json Root = Json::Parse(Stream);
+    OnLoad(Root);
+}
+
 void Control::OnPaint(Paint&) const
 {
 }
