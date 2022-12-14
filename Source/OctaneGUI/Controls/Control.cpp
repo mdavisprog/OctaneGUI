@@ -37,7 +37,7 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
-Expand ToExpand(const std::string& Value)
+Expand ToExpand(const std::string& Value, Expand Default = Expand::None)
 {
     const std::string Lower = String::ToLower(Value);
     if (Lower == "width")
@@ -53,7 +53,7 @@ Expand ToExpand(const std::string& Value)
         return Expand::Both;
     }
 
-    return Expand::None;
+    return Default;
 }
 
 const char* ToString(Expand Value)
@@ -337,7 +337,7 @@ void Control::OnLoad(const Json& Root)
 
     if (!IsFixedSize())
     {
-        m_Expand = ToExpand(Root["Expand"].String());
+        m_Expand = ToExpand(Root["Expand"].String(), m_Expand);
     }
 }
 
