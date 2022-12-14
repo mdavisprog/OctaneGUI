@@ -46,6 +46,8 @@ class Button : public Control
     CLASS(Button)
 
 public:
+    typedef std::function<void(Button&)> OnButtonSignature;
+
     Button(Window* InWindow);
 
     Button& SetOnPressed(OnButtonSignature&& Fn);

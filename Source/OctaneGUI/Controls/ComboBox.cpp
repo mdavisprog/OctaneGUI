@@ -55,7 +55,7 @@ ComboBox::ComboBox(Window* InWindow)
     m_Button
         ->SetTexture(InWindow->GetIcons()->GetTexture())
         .SetUVs(InWindow->GetIcons()->GetUVs(Icons::Type::ArrowDown))
-        .SetOnPressed([this](const Button&)
+        .SetOnPressed([this](Button&)
             {
                 if (GetWindow()->GetPopup() == m_List)
                 {

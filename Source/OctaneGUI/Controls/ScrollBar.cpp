@@ -469,14 +469,14 @@ void ScrollBar::OnThemeLoaded()
         {
             m_MinButton = AddControl<ImageButton>();
             m_MinButton
-                ->SetOnPressed([this](const Button&) -> void
+                ->SetOnPressed([this](Button&) -> void
                     {
                         if (m_OnScrollMin)
                         {
                             m_OnScrollMin(*this);
                         }
                     })
-                .SetOnReleased([this](const Button&) -> void
+                .SetOnReleased([this](Button&) -> void
                     {
                         if (m_OnRelease)
                         {

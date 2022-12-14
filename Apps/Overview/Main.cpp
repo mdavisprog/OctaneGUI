@@ -100,7 +100,7 @@ int main(int argc, char **argv)
         Application.DisplayWindow("About");
     });
     
-    List.To<OctaneGUI::Button>("FlipSpinners")->SetOnClicked([List](const OctaneGUI::Button&) -> void
+    List.To<OctaneGUI::Button>("FlipSpinners")->SetOnClicked([List](OctaneGUI::Button&) -> void
     {
         List.To<OctaneGUI::Spinner>("SpinnerV")->SetOrientation(List.To<OctaneGUI::Spinner>("SpinnerV")->GetOppositeOrientation());
         List.To<OctaneGUI::Spinner>("SpinnerH")->SetOrientation(List.To<OctaneGUI::Spinner>("SpinnerH")->GetOppositeOrientation());
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
     ThemesComboBox->SetSelected(OctaneGUI::String::ToUTF32(Theme).c_str());
 
     std::shared_ptr<OctaneGUI::ListBox> ListBox = List.To<OctaneGUI::ListBox>("ListBox.ListBox");
-    List.To<OctaneGUI::CheckBox>("ListBox.MultiSelect")->SetOnClicked([ListBox](const OctaneGUI::Button&) -> void
+    List.To<OctaneGUI::CheckBox>("ListBox.MultiSelect")->SetOnClicked([ListBox](OctaneGUI::Button&) -> void
         {
             ListBox->Deselect();
             ListBox->SetMultiSelect(!ListBox->MultiSelect());
@@ -131,7 +131,7 @@ int main(int argc, char **argv)
     }
 
     const OctaneGUI::ControlList& AboutList = WindowControls["About"];
-    AboutList.To<OctaneGUI::Button>("OK")->SetOnClicked([](const OctaneGUI::Button& Button) -> void
+    AboutList.To<OctaneGUI::Button>("OK")->SetOnClicked([](OctaneGUI::Button& Button) -> void
     {
         Button.GetWindow()->RequestClose();
     });

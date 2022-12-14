@@ -45,7 +45,7 @@ TEST_CASE(Press,
     std::shared_ptr<OctaneGUI::Button> Button = List.To<OctaneGUI::Button>("Button");
 
     bool Pressed = false;
-    Button->SetOnPressed([&](const OctaneGUI::Button&) -> void
+    Button->SetOnPressed([&](OctaneGUI::Button&) -> void
     {
         Pressed = true;
     });
@@ -71,7 +71,7 @@ TEST_CASE(Click,
     std::shared_ptr<OctaneGUI::Button> Button = List.To<OctaneGUI::Button>("Button");
 
     bool Clicked = false;
-    Button->SetOnClicked([&](const OctaneGUI::Button&) -> void
+    Button->SetOnClicked([&](OctaneGUI::Button&) -> void
     {
         Clicked = true;
     });
@@ -96,7 +96,7 @@ TEST_CASE(Disabled,
     Application.GetMainWindow()->Update();
 
     bool Pressed = false;
-    List.To<OctaneGUI::Button>("Button")->SetOnPressed([&](const OctaneGUI::Button&) -> void
+    List.To<OctaneGUI::Button>("Button")->SetOnPressed([&](OctaneGUI::Button&) -> void
     {
         Pressed = true;
     })

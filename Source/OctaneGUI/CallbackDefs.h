@@ -48,7 +48,6 @@ enum class InvalidateType : unsigned char
 };
 
 typedef std::function<void()> OnEmptySignature;
-typedef std::function<void(const Button&)> OnButtonSignature;
 typedef std::function<void(const Container&)> OnContainerSignature;
 typedef std::function<void(const Control&)> OnControlSignature;
 typedef std::function<void(std::shared_ptr<Control>, InvalidateType)> OnInvalidateSignature;

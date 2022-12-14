@@ -165,7 +165,7 @@ TEST_CASE(SplitterHoveredControl,
     VERIFYF(!Application.GetMainWindow()->Focus().expired(), "No control is focused!");
 
     bool Clicked = false;
-    Button->SetOnClicked([&](const OctaneGUI::Button&) -> void
+    Button->SetOnClicked([&](OctaneGUI::Button&) -> void
         {
             Clicked = true;
         });

@@ -172,7 +172,7 @@ FileDialog::FileDialog(Window* InWindow)
     m_ConfirmButton = ButtonsLayout->AddControl<TextButton>();
     m_ConfirmButton
         ->SetText("Open")
-        ->SetOnClicked([this](const Button&) -> void
+        ->SetOnClicked([this](Button&) -> void
             {
                 Close(true);
             });
@@ -180,7 +180,7 @@ FileDialog::FileDialog(Window* InWindow)
     const std::shared_ptr<TextButton> CancelBtn = ButtonsLayout->AddControl<TextButton>();
     CancelBtn
         ->SetText("Cancel")
-        ->SetOnClicked([this](const Button&) -> void
+        ->SetOnClicked([this](Button&) -> void
             {
                 Close(false);
             });

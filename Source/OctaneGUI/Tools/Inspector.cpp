@@ -251,7 +251,7 @@ void Inspector::Inspect(Window* Target)
 
         List.To<CheckBox>("Picker")
             ->SetState(CheckBox::State::Checked)
-            .SetOnClicked([this](const Button& Btn) -> void
+            .SetOnClicked([this](Button& Btn) -> void
                 {
                     const CheckBox& CB = static_cast<const CheckBox&>(Btn);
                     const bool Enabled = CB.GetState() == CheckBox::State::Checked;

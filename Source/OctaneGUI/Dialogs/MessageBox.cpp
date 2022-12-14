@@ -133,7 +133,7 @@ private:
         const std::shared_ptr<TextButton> Btn = m_Buttons->AddControl<TextButton>();
         Btn
             ->SetText(Label)
-            ->SetOnClicked([this, InResponse](const Button&) -> void
+            ->SetOnClicked([this, InResponse](Button&) -> void
                 {
                     if (m_OnResponse)
                     {

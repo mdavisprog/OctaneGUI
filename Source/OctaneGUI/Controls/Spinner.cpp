@@ -175,12 +175,12 @@ void Spinner::UpdateLayout()
     m_DecrementButton->SetSize(ButtonSize);
     m_IncrementButton->SetSize(ButtonSize);
 
-    m_DecrementButton->SetOnPressed([this](const Button&)
+    m_DecrementButton->SetOnPressed([this](Button&)
         {
             SetValue(m_Value - 1);
         });
 
-    m_IncrementButton->SetOnPressed([this](const Button&)
+    m_IncrementButton->SetOnPressed([this](Button&)
         {
             SetValue(m_Value + 1);
         });

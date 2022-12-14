@@ -76,7 +76,7 @@ public:
         if (GetWindow()->CanMinimize())
         {
             m_Minimize = AddButton(Icons::Type::Minimize, Buttons);
-            m_Minimize->SetOnClicked([this](const Button&) -> void
+            m_Minimize->SetOnClicked([this](Button&) -> void
                 {
                     GetWindow()->Minimize();
                 });
@@ -85,7 +85,7 @@ public:
         if (GetWindow()->IsResizable())
         {
             m_Maximize = AddButton(Icons::Type::Maximize, Buttons);
-            m_Maximize->SetOnClicked([this](const Button&) -> void
+            m_Maximize->SetOnClicked([this](Button&) -> void
                 {
                     GetWindow()->Maximize();
                 });
@@ -93,7 +93,7 @@ public:
         }
 
         m_Close = AddButton(Icons::Type::Close, Buttons);
-        m_Close->SetOnClicked([this](const Button&) -> void
+        m_Close->SetOnClicked([this](Button&) -> void
             {
                 GetWindow()->RequestClose();
             });
