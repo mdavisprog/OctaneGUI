@@ -312,7 +312,7 @@ TEST_CASE(OnText,
     Utility::Load(Application, "", "", List, 200, 200);
     bool OnText = false;
     Application.GetMainWindow()->GetContainer()->AddControl<OctaneGUI::CustomControl>()
-        ->SetOnText([&](OctaneGUI::CustomControl&, uint32_t Code) -> void
+        ->SetOnText([&](OctaneGUI::CustomControl&, uint32_t) -> void
             {
                 OnText = true;
             })
