@@ -80,27 +80,16 @@ ComboBox::ComboBox(Window* InWindow)
                     GetWindow()->ClosePopup();
                 }
 
-                if (Item.expired())
+                if (Index == SelectedIndex())
                 {
                     return;
                 }
 
-                std::shared_ptr<Text> TextItem = std::dynamic_pointer_cast<Text>(Item.lock());
-                std::u32string ItemText;
-                if (TextItem)
-                {
-                    ItemText = TextItem->GetText();
-                }
-                else
-                {
-                    ItemText = String::ToUTF32(std::string("Item ") + std::to_string(Index));
-                }
-
-                SetSelected(ItemText.c_str());
+                SetSelectedIndex(Index);
 
                 if (m_OnSelected)
                 {
-                    m_OnSelected(ItemText);
+                    m_OnSelected(m_Input->GetText());
                 }
             })
         .SetParent(this)
@@ -141,8 +130,17 @@ ComboBox& ComboBox::SetSelectedIndex(int Index)
 {
     Assert(Index >= 0 && Index < m_List->Count(), "Index out of range! Index: %d Count: %d", Index, m_List->Count());
     m_SelectedIndex = Index;
-    const std::shared_ptr<Text>& Item = std::static_pointer_cast<Text>(m_List->Item((size_t)Index));
-    m_Input->SetText(Item->GetText());
+    std::shared_ptr<Text> TextItem = std::dynamic_pointer_cast<Text>(m_List->Item((size_t)Index));
+    std::u32string ItemText;
+    if (TextItem)
+    {
+        ItemText = TextItem->GetText();
+    }
+    else
+    {
+        ItemText = String::ToUTF32(std::string("Item ") + std::to_string(Index));
+    }
+    SetSelected(ItemText.c_str());
     return *this;
 }
 

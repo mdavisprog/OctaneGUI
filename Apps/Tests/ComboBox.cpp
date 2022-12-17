@@ -60,6 +60,7 @@ TEST_CASE(Select,
     ComboBox->OnLoad(Root);
     Application.GetMainWindow()->Update();
 
+    VERIFYF(ComboBox->SelectedIndex() == -1, "1. Selected index (%d) is not -1!", ComboBox->SelectedIndex());
     OctaneGUI::Vector2 Position = ComboBox->GetAbsolutePosition() + OctaneGUI::Vector2(2.0f, 2.0f);
     Utility::MouseClick(Application, Position);
     VERIFY(!ComboBox->IsOpen())
@@ -74,6 +75,7 @@ TEST_CASE(Select,
     Application.GetMainWindow()->Update();
 
     VERIFYF(Selected == U"Red", "Selected item does not match the expected result: %s != Red", OctaneGUI::String::ToMultiByte(Selected).c_str());
+    VERIFYF(ComboBox->SelectedIndex() == 0, "2. Selected index (%d) is not 0!", ComboBox->SelectedIndex());
     VERIFY(!ComboBox->IsOpen());
 
     Selected = U"";
@@ -88,6 +90,7 @@ TEST_CASE(Select,
     Application.GetMainWindow()->Update();
 
     VERIFYF(Selected == U"Green", "Selected item does not match the expected result: %s != Green", OctaneGUI::String::ToMultiByte(Selected).c_str());
+    VERIFYF(ComboBox->SelectedIndex() == 1, "3. Selected index (%d) is not 1!", ComboBox->SelectedIndex());
     VERIFY(!ComboBox->IsOpen());
 
     return true;
