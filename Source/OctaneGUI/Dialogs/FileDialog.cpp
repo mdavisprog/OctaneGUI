@@ -155,7 +155,12 @@ FileDialog::FileDialog(Window* InWindow)
         .SetExpand(Expand::Width);
 
     m_FilterBox = FileInfoLayout->AddControl<ComboBox>();
-    m_FilterBox->SetWidth(200.0f);
+    m_FilterBox
+        ->SetWidth(200.0f)
+        .SetOnSelected([this](const std::u32string&) -> void
+            {
+                PopulateList();
+            });
 
     // The confirm and cancel button container which should be right-aligned.
     const std::shared_ptr<MarginContainer> Buttons = Root->AddControl<MarginContainer>();
