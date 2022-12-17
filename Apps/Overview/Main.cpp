@@ -90,6 +90,11 @@ int main(int argc, char **argv)
     LoadTheme(Application, Theme.c_str());
     
     const OctaneGUI::ControlList& List = WindowControls["Main"];
+    List.To<OctaneGUI::MenuItem>("File.OpenFile")->SetOnPressed([&](const OctaneGUI::TextSelectable&) -> void
+        {
+            Application.FS().FileDialog(OctaneGUI::FileDialogType::Open, {{{U"*"}, U"All Files"}, {{U"txt"}, U"Text Files"}});
+        });
+
     List.To<OctaneGUI::MenuItem>("File.Quit")->SetOnPressed([&](const OctaneGUI::TextSelectable&) -> void
     {
         Application.Quit();

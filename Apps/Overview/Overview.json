@@ -7,6 +7,8 @@
         "Main": { "Title": "Overview", "Width": 800, "Height": 400,
             "MenuBar": {"Items": [
                 {"ID": "File", "Text": "File", "Items": [
+                    {"ID": "OpenFile", "Text": "Open File"},
+                    {"Type": "Separator"},
                     {"ID": "Quit", "Text": "Quit"}
                 ]},
                 {"ID": "Help", "Text": "Help", "Items": [
