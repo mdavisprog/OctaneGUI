@@ -31,6 +31,8 @@ SOFTWARE.
 #include "../String.h"
 #include "../ThemeProperties.h"
 #include "HorizontalContainer.h"
+#include "ScrollableContainer.h"
+#include "ScrollableViewControl.h"
 #include "Splitter.h"
 #include "Text.h"
 #include "VerticalContainer.h"
@@ -135,34 +137,68 @@ private:
 // TableRows
 //
 
-class TableRows : public VerticalContainer
+class TableRows : public ScrollableViewControl
 {
     CLASS(TableRows)
 
 public:
     TableRows(Window* InWindow)
-        : VerticalContainer(InWindow)
+        : ScrollableViewControl(InWindow)
     {
-        SetSpacing({});
-        SetExpand(Expand::Width);
+        SetExpand(Expand::Both);
+
+        m_Rows = Scrollable()->AddControl<VerticalContainer>();
+        m_Rows->SetSpacing({});
     }
 
     std::shared_ptr<TableRow> AddRow()
     {
-        std::shared_ptr<TableRow> Result = AddControl<TableRow>();
+        std::shared_ptr<TableRow> Result = m_Rows->AddControl<TableRow>();
         return Result;
+    }
+
+    TableRows& TableRows::ClearRows()
+    {
+        m_Rows->ClearControls();
+        return *this;
     }
 
     std::shared_ptr<TableRow> Row(size_t Index) const
     {
-        Assert(Index < NumControls(), "Invalid row given %zu! Number of rows: %zu.\n", Index, NumControls());
-        return std::static_pointer_cast<TableRow>(Get(Index));
+        Assert(Index < Rows(), "Invalid row given %zu! Number of rows: %zu.\n", Index, Rows());
+        return std::static_pointer_cast<TableRow>(m_Rows->Get(Index));
+    }
+
+    bool IsInRow(size_t Index, const Vector2& Position) const
+    {
+        const std::shared_ptr<TableRow> Row = this->Row(Index);
+        Rect Bounds { Row->GetAbsoluteBounds() };
+        Bounds.SetSize({ GetSize().X > Bounds.Width() ? GetSize().X : Bounds.Width(), Bounds.Height() });
+        return Bounds.Contains(Position);
     }
 
     size_t Rows() const
     {
-        return NumControls();
+        return m_Rows->NumControls();
     }
+
+    bool IsInScrollBar(const Vector2& Position) const
+    {
+        return Scrollable()->IsInScrollBar(Position);
+    }
+
+    bool IsScrolling() const
+    {
+        return Scrollable()->IsScrolling();
+    }
+
+    virtual Vector2 DesiredSize() const override
+    {
+        return m_Rows->DesiredSize();
+    }
+
+private:
+    std::shared_ptr<VerticalContainer> m_Rows { nullptr };
 };
 
 //
@@ -172,6 +208,8 @@ public:
 Table::Table(Window* InWindow)
     : Container(InWindow)
 {
+    SetClip(true);
+
     m_Contents = AddControl<VerticalContainer>();
     m_Contents
         ->SetSpacing({})
@@ -187,6 +225,10 @@ Table::Table(Window* InWindow)
         .SetExpand(Expand::Width);
 
     m_Rows = m_Contents->AddControl<TableRows>();
+    m_Rows->Scrollable()->SetOnScroll([this](const Vector2&) -> void
+        {
+            m_Header->SetPosition({ m_Rows->Scrollable()->GetPosition().X, m_Header->GetPosition().Y });
+        });
 
     m_Interaction = AddControl<Control>();
     m_Interaction->SetForwardMouseEvents(true);
@@ -247,14 +289,14 @@ Table& Table::AddRow()
 
 Table& Table::ClearRows()
 {
-    m_Rows->ClearControls();
+    m_Rows->ClearRows();
     m_Selected = -1;
     return *this;
 }
 
 size_t Table::Rows() const
 {
-    return m_Rows->NumControls();
+    return m_Rows->Rows();
 }
 
 Table& Table::SetRowSelectable(bool Value)
@@ -307,16 +349,32 @@ std::weak_ptr<Control> Table::GetControl(const Vector2& Point) const
 
 Vector2 Table::DesiredSize() const
 {
-    return m_Contents->DesiredSize();
+    Vector2 Result { m_Contents->DesiredSize() };
+    if (GetExpand() == Expand::Width || GetExpand() == Expand::Both)
+    {
+        Result.X = GetSize().X;
+    }
+    if (GetExpand() == Expand::Height || GetExpand() == Expand::Both)
+    {
+        Result.Y = GetSize().Y;
+    }
+    return Result;
 }
 
 void Table::OnPaint(Paint& Brush) const
 {
+    Rect Clip { GetAbsoluteBounds() };
+    Clip.Move({ 0.0f, m_Header->GetSize().Y });
+    Clip.SetSize({ Clip.Width(), Clip.Height() - m_Header->GetSize().Y });
+    Brush.PushClip(Clip);
+
     OnPaintSelection(Brush, (size_t)m_Hovered);
     if (m_Hovered != m_Selected)
     {
         OnPaintSelection(Brush, (size_t)m_Selected);
     }
+
+    Brush.PopClip();
 
     Container::OnPaint(Brush);
 }
@@ -353,32 +411,35 @@ void Table::OnLoad(const Json& Root)
 
 void Table::OnMouseMove(const Vector2& Position)
 {
+    m_Rows->OnMouseMove(Position);
+    if (m_Rows->IsInScrollBar(Position) || m_Rows->IsScrolling())
+    {
+        SetHovered(-1);
+        return;
+    }
+
     if (!m_RowSelectable)
     {
         return;
     }
 
-    int32_t Hovered { -1 };
     for (size_t I = 0; I < m_Rows->Rows(); I++)
     {
-        const std::shared_ptr<Control>& Row = m_Rows->Get(I);
-
-        if (Row->Contains(Position))
+        if (m_Rows->IsInRow(I, Position))
         {
-            Hovered = (int32_t)I;
+            SetHovered((int32_t)I);
             break;
         }
     }
-
-    if (m_Hovered != Hovered)
-    {
-        m_Hovered = Hovered;
-        Invalidate(InvalidateType::Paint);
-    }
 }
 
-bool Table::OnMousePressed(const Vector2&, Mouse::Button Button, Mouse::Count)
+bool Table::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count)
 {
+    if (m_Rows->OnMousePressed(Position, Button, Count))
+    {
+        return true;
+    }
+
     if (Button == Mouse::Button::Left)
     {
         if (m_Hovered != -1)
@@ -397,6 +458,11 @@ bool Table::OnMousePressed(const Vector2&, Mouse::Button Button, Mouse::Count)
     }
 
     return false;
+}
+
+void Table::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
+{
+    m_Rows->OnMouseReleased(Position, Button);
 }
 
 void Table::OnMouseLeave()
@@ -431,8 +497,19 @@ void Table::OnPaintSelection(Paint& Brush, size_t Index) const
     {
         Color Background { GetProperty(ThemeProperties::TextSelectable_Hovered).ToColor() };
         Background.A = 128;
-        const std::shared_ptr<Control>& Row = m_Rows->Get(Index);
-        Brush.Rectangle(Row->GetAbsoluteBounds(), Background);
+        const std::shared_ptr<Control>& Row = m_Rows->Row(Index);
+        Rect Bounds { Row->GetAbsoluteBounds() };
+        Bounds.SetSize({ m_Rows->GetSize().X > Bounds.Width() ? m_Rows->GetSize().X : Bounds.Width(), Bounds.Height() });
+        Brush.Rectangle(Bounds, Background);
+    }
+}
+
+void Table::SetHovered(int32_t Value)
+{
+    if (m_Hovered != Value)
+    {
+        m_Hovered = Value;
+        Invalidate(InvalidateType::Paint);
     }
 }
 
