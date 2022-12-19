@@ -121,9 +121,7 @@ FileDialog::FileDialog(Window* InWindow)
             });
 
     // The right pane that contains the list of files in the selected directory.
-    const std::shared_ptr<ScrollableViewControl> DirectoryScrollable = BodySplitter->GetSplit(1)->AddControl<ScrollableViewControl>();
-    DirectoryScrollable->SetExpand(Expand::Both);
-    m_DirectoryList = DirectoryScrollable->Scrollable()->AddControl<Table>();
+    m_DirectoryList = BodySplitter->GetSplit(1)->AddControl<Table>();
     m_DirectoryList
         ->AddColumn(U"Name")
         .AddColumn(U"Size")
@@ -136,7 +134,8 @@ FileDialog::FileDialog(Window* InWindow)
                 m_FileName->SetText(GetWindow()->App().FS().CombinePath(m_Directory, m_Selected).c_str());
             })
         .SetColumnSize(0, 200.0f)
-        .SetColumnSize(1, 100.0f);
+        .SetColumnSize(1, 100.0f)
+        .SetExpand(Expand::Both);
 
     const std::shared_ptr<MarginContainer> FileInfo = Root->AddControl<MarginContainer>();
     FileInfo
