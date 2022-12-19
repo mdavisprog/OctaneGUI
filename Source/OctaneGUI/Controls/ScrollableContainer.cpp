@@ -140,6 +140,21 @@ bool ScrollableContainer::IsScrollBarVisible(const std::shared_ptr<Control>& Ite
     return false;
 }
 
+bool ScrollableContainer::IsScrolling() const
+{
+    if (m_HorizontalSB->Handle()->Drag())
+    {
+        return true;
+    }
+
+    if (m_VerticalSB->Handle()->Drag())
+    {
+        return true;
+    }
+
+    return false;
+}
+
 Vector2 ScrollableContainer::ContentSize() const
 {
     return m_ContentSize;
