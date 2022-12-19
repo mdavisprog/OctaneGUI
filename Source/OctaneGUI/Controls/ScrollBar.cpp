@@ -118,6 +118,11 @@ bool ScrollBarHandle::HasHandle() const
     return m_HandleSize > 0.0f;
 }
 
+bool ScrollBarHandle::Drag() const
+{
+    return m_Drag;
+}
+
 void ScrollBarHandle::OnPaint(Paint& Brush) const
 {
     if (m_HandleSize > 0.0f)

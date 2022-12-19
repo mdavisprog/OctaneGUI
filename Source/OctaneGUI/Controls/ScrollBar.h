@@ -56,6 +56,7 @@ public:
     float Offset() const;
     float OffsetPct() const;
     bool HasHandle() const;
+    bool Drag() const;
 
     virtual void OnPaint(Paint& Brush) const override;
     virtual void OnSave(Json& Root) const override;
