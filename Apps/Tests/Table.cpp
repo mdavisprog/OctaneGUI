@@ -126,6 +126,87 @@ R"("RowSelectable": true, "Header": [{"Label": "One"}, {"Label": "Two"}], "Rows"
     return Result == 1;
 })
 
+TEST_CASE(Scrolling,
+{\
+    const char* Stream = R"("RowSelectable": true, "Header": [{"Label": "One"}, {"Label": "The quick brown fox jumped over the lazy dog"}])";
+
+    OctaneGUI::ControlList List;
+    LoadTable(Application, Stream, List);
+
+    const std::shared_ptr<OctaneGUI::Table> Table = List.To<OctaneGUI::Table>("Table");
+    const OctaneGUI::Vector2 WindowSize { Application.GetMainWindow()->GetSize() };
+
+    // Add enough rows to extend the rows height to overflow the table's height and display the vertical scroll bar.
+    for (size_t I = 0; I < 50; I++)
+    {
+        Table->AddRow();
+        const std::shared_ptr<OctaneGUI::Container> Cell = Table->Cell(I, 0);
+        Cell->AddControl<OctaneGUI::Text>()->SetText(U"Hello");
+    }
+    Application.Update();
+
+    const std::shared_ptr<OctaneGUI::Font> Font = Application.GetTheme()->GetFont();
+    const OctaneGUI::Vector2 HeaderSize = Font->Measure(U"One");
+
+    // Scroll the rows vertically.
+    std::shared_ptr<OctaneGUI::Container> Cell = Table->Cell(0, 1);
+    OctaneGUI::Vector2 MousePos(WindowSize.X - 2.0f, Cell->GetAbsolutePosition().Y);
+    Utility::MousePress(Application, MousePos);
+    MousePos.Y += Cell->GetAbsolutePosition().Y;
+    Utility::MouseMove(Application, MousePos);
+    Utility::MouseRelease(Application, MousePos);
+    Application.Update();
+    VERIFYF(Cell->GetAbsolutePosition().Y == 0.0f, "First cell Y position (%.2f) is not 0.0 after scrolling!", Cell->GetAbsolutePosition().Y);
+
+    // Expand the middle column to the size of the window. This will push the last column to the overflow, which should
+    // display the horizontal scroll bar.
+    // The header control should not have scrolled from the above, so the separator should be clickable at the top of the control.
+    MousePos = OctaneGUI::Vector2(Cell->GetAbsolutePosition().X - 2.0f, 2.0f);
+    Utility::MousePress(Application, MousePos);
+    MousePos.X = WindowSize.X - 10.0f;
+    Utility::MouseMove(Application, MousePos);
+    Utility::MouseRelease(Application, MousePos);
+    Application.Update();
+
+    Cell = Table->Cell(0, 0);
+    VERIFYF(Cell->GetAbsolutePosition().X == 0.0f, "First cell X position (%.2f) is not at 0!", Cell->GetAbsolutePosition().X);
+    // Attempt to click on and move the horizontal scroll bar.
+    MousePos = OctaneGUI::Vector2(2.0f, WindowSize.Y - 2.0f);
+    Utility::MousePress(Application, MousePos);
+    MousePos.X += 5.0f;
+    Utility::MouseMove(Application, MousePos);
+    Utility::MouseRelease(Application, MousePos);
+    Application.Update();
+    VERIFYF(Cell->GetAbsolutePosition().X == -5.0f, "First cell X position (%.2f) is not -5!", Cell->GetAbsolutePosition().X);
+
+    return true;
+})
+
+TEST_CASE(CellInput,
+{
+    const char* Stream = R"("Header": [{"Label": "One"}], "Rows": [
+        {"Columns": [
+            {"Controls": [{"Type": "TextButton", "ID": "Button", "Text": {"Text": "Button"}}]}
+        ]}
+    ])";
+
+    OctaneGUI::ControlList List;
+    LoadTable(Application, Stream, List);
+
+    const std::shared_ptr<OctaneGUI::Table> Table = List.To<OctaneGUI::Table>("Table");
+    const std::shared_ptr<OctaneGUI::Button> Button = List.To<OctaneGUI::Button>("Table.Button");
+
+    bool Clicked = false;
+    Button->SetOnClicked([&](OctaneGUI::Button&) -> void
+        {
+            Clicked = true;
+        });
+    
+    Utility::MouseClick(Application, Button->GetAbsolutePosition());
+
+    return Clicked;
+})
+
 )
 
 }
