@@ -71,6 +71,9 @@ public:
     std::string LoadContents(const std::string& Location) const;
     std::string LoadContents(const std::u32string& Location) const;
 
+    bool WriteContents(const std::string& Location, const std::string& Contents) const;
+    bool WriteContents(const std::u32string& Location, const std::u32string& Contents) const;
+
     bool IsFile(const std::u32string& Location) const;
     bool IsDirectory(const std::u32string& Location) const;
     bool IsEmpty(const std::u32string& Location) const;

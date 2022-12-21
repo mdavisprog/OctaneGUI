@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "FileSystem.h"
 #include "Dialogs/FileDialog.h"
+#include "String.h"
 
 #include <filesystem>
 #include <fstream>
@@ -142,6 +143,28 @@ std::string FileSystem::LoadContents(const std::u32string& Location) const
 {
     std::filesystem::path Path { Location };
     return LoadContents(Path.u8string());
+}
+
+bool FileSystem::WriteContents(const std::string& Location, const std::string& Contents) const
+{
+    std::fstream Stream {};
+
+    Stream.open(Location.c_str(), std::ios_base::out | std::ios_base::trunc);
+    if (!Stream.is_open())
+    {
+        return false;
+    }
+
+    Stream.write(&Contents[0], Contents.size());
+    Stream.close();
+
+    return true;
+}
+
+bool FileSystem::WriteContents(const std::u32string& Location, const std::u32string& Contents) const
+{
+    std::filesystem::path Path { Location };
+    return WriteContents(Path.u8string(), String::ToMultiByte(Contents.c_str()));
 }
 
 bool FileSystem::IsFile(const std::u32string& Location) const
