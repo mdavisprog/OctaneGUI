@@ -137,6 +137,10 @@ int main(int, char**)
                     const std::string Contents = Application.FS().LoadContents(OctaneGUI::String::ToMultiByte(FileName).c_str());
                     Document->SetText(Contents.c_str());
                 }
+                else
+                {
+                    Application.FS().WriteContents(FileName, Document->GetText());
+                }
             }
         });
     
