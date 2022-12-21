@@ -73,7 +73,7 @@ ComboBox::ComboBox(Window* InWindow)
 
     m_List = std::make_shared<ListBox>(InWindow);
     m_List
-        ->SetOnSelect([this](int Index, std::weak_ptr<Control> Item) -> void
+        ->SetOnSelect([this](int Index, std::weak_ptr<Control>) -> void
             {
                 if (GetWindow()->GetContainer() == m_List)
                 {

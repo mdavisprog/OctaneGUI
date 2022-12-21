@@ -145,9 +145,6 @@ TEST_CASE(Scrolling,
     }
     Application.Update();
 
-    const std::shared_ptr<OctaneGUI::Font> Font = Application.GetTheme()->GetFont();
-    const OctaneGUI::Vector2 HeaderSize = Font->Measure(U"One");
-
     // Scroll the rows vertically.
     std::shared_ptr<OctaneGUI::Container> Cell = Table->Cell(0, 1);
     OctaneGUI::Vector2 MousePos(WindowSize.X - 2.0f, Cell->GetAbsolutePosition().Y);

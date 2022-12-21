@@ -157,7 +157,7 @@ public:
         return Result;
     }
 
-    TableRows& TableRows::ClearRows()
+    TableRows& ClearRows()
     {
         m_Rows->ClearControls();
         return *this;
