@@ -108,6 +108,7 @@ The repository provides shell scripts and batch files to make building the proje
 * noapps - Only compiles the library.
 * sfml - Builds the apps using the SFML library. The SFML_DIR variable must be set for the generator to locate the library.
 * sdl2 - Builds the app using the SDL library. The SDL2 cmake and library paths must be locatable by the generator through either the environment variables or the SDL2_DIR and SDL2_MODULE_PATH variables.
+* xcode - Builds an project for use within the Xcode IDE (.xcodeproj)
 * help - Displays this help message.
 
 On Windows, a VCVars.bat file is called which will load Visual Studio tools into the current environment. This will attempt to load Visual Studio 2019 first, then 2017. More versions of Visual Studio will be added in the future.
