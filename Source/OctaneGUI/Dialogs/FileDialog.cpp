@@ -43,6 +43,7 @@ SOFTWARE.
 #include "../Controls/VerticalContainer.h"
 #include "../String.h"
 #include "../Window.h"
+#include "MessageBox.h"
 
 #include <algorithm>
 
@@ -178,7 +179,23 @@ FileDialog::FileDialog(Window* InWindow)
         ->SetText("Open")
         ->SetOnClicked([this](Button&) -> void
             {
-                Close(true);
+                Application& App = GetWindow()->App();
+                if (m_Type == FileDialogType::Save && App.FS().Exists(m_FileName->GetText()))
+                {
+                    std::u32string Message { App.FS().FileName(m_FileName->GetText()) };
+                    Message += U" already exists.\nDo you want to replace it?";
+                    MessageBox::Show(App, U"Confirm Save As", Message.c_str(), [this](MessageBox::Response Response) -> void
+                        {
+                            if (Response == MessageBox::Response::Accept)
+                            {
+                                Close(true);
+                            }
+                        });
+                }
+                else
+                {
+                    Close(true);
+                }
             });
 
     const std::shared_ptr<TextButton> CancelBtn = ButtonsLayout->AddControl<TextButton>();
