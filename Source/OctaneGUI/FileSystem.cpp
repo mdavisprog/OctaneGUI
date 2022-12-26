@@ -104,6 +104,12 @@ std::u32string FileSystem::Extension(const std::u32string& Location) const
     return Path.extension().u32string();
 }
 
+std::u32string FileSystem::FileName(const std::u32string& Location) const
+{
+    std::filesystem::path Path { Location };
+    return Path.filename().u32string();
+}
+
 std::vector<FileSystem::DirectoryItem> FileSystem::DirectoryItems(const std::u32string& Location) const
 {
     std::vector<DirectoryItem> Result;
@@ -182,6 +188,11 @@ bool FileSystem::IsEmpty(const std::u32string& Location) const
     std::error_code Error;
     bool Result = std::filesystem::is_empty(Location, Error);
     return Result && Error.value() == 0;
+}
+
+bool FileSystem::Exists(const std::u32string& Location) const
+{
+    return std::filesystem::exists({ Location });
 }
 
 void FileSystem::FileDialog(FileDialogType Type, const std::vector<FileDialogFilter>& Filters) const

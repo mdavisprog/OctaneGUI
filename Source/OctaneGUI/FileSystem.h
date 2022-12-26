@@ -66,6 +66,7 @@ public:
     std::u32string RootDirectory(const std::u32string& Location) const;
     std::u32string CombinePath(const std::u32string& Left, const std::u32string& Right) const;
     std::u32string Extension(const std::u32string& Location) const;
+    std::u32string FileName(const std::u32string& Location) const;
     std::vector<DirectoryItem> DirectoryItems(const std::u32string& Location) const;
 
     std::string LoadContents(const std::string& Location) const;
@@ -77,6 +78,7 @@ public:
     bool IsFile(const std::u32string& Location) const;
     bool IsDirectory(const std::u32string& Location) const;
     bool IsEmpty(const std::u32string& Location) const;
+    bool Exists(const std::u32string& Location) const;
 
     void FileDialog(FileDialogType Type, const std::vector<FileDialogFilter>& Filters = {}) const;
 
