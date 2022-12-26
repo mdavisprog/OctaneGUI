@@ -20,6 +20,7 @@ int main(int, char**)
     std::shared_ptr<OctaneGUI::WindowContainer> PreviewPane { nullptr };
     std::shared_ptr<OctaneGUI::Container> Editor { nullptr };
     std::shared_ptr<OctaneGUI::Splitter> Splitter { nullptr };
+    std::u32string OpenFileName {};
 
     std::shared_ptr<OctaneGUI::Window> MainWindow = Application.GetWindow("Main");
     std::shared_ptr<OctaneGUI::Timer> CompileTimer = MainWindow->CreateTimer(500, false, [&]() -> void
@@ -132,6 +133,7 @@ int main(int, char**)
         {
             if (!FileName.empty())
             {
+                OpenFileName = FileName;
                 if (Type == OctaneGUI::FileDialogType::Open)
                 {
                     const std::string Contents = Application.FS().LoadContents(OctaneGUI::String::ToMultiByte(FileName).c_str());
@@ -152,7 +154,14 @@ int main(int, char**)
     
     MainList.To<OctaneGUI::MenuItem>("File.Save")->SetOnPressed([&](OctaneGUI::TextSelectable&) -> void
         {
-            Application.FS().FileDialog(OctaneGUI::FileDialogType::Save, Filters);
+            if (OpenFileName.empty())
+            {
+                Application.FS().FileDialog(OctaneGUI::FileDialogType::Save, Filters);
+            }
+            else
+            {
+                Application.FS().WriteContents(OpenFileName, Document->GetText());
+            }
         });
 
     std::shared_ptr<OctaneGUI::MenuItem> QuitMenu = MainList.To<OctaneGUI::MenuItem>("File.Quit");
