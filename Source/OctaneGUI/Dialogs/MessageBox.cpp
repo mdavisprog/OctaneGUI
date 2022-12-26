@@ -170,6 +170,7 @@ void Show(Application& App, const char32_t* Title, const char32_t* Message, OnRe
         .SetMessage(Message)
         .SetResponse(std::move(Fn))
         .InvalidateLayout();
+    MBWindow->Update();
 
     App.DisplayWindow(ID);
 }
