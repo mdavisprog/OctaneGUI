@@ -15,6 +15,7 @@
                     {"Type": "Separator"},
                     {"Text": "Open", "ID": "Open"},
                     {"Text": "Save", "ID": "Save"},
+                    {"Text": "Save As", "ID": "SaveAs"},
                     {"Type": "Separator"},
                     {"Text": "Quit", "ID": "Quit"}
                 ]},

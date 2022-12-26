@@ -163,6 +163,11 @@ int main(int, char**)
                 Application.FS().WriteContents(OpenFileName, Document->GetText());
             }
         });
+    
+    MainList.To<OctaneGUI::MenuItem>("File.SaveAs")->SetOnPressed([&](OctaneGUI::TextSelectable&) -> void
+        {
+            Application.FS().FileDialog(OctaneGUI::FileDialogType::Save, Filters);
+        });
 
     std::shared_ptr<OctaneGUI::MenuItem> QuitMenu = MainList.To<OctaneGUI::MenuItem>("File.Quit");
     QuitMenu->SetOnPressed([&](OctaneGUI::TextSelectable&) -> void
