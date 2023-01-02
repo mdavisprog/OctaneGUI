@@ -1,5 +1,5 @@
 # OctaneGUI
-Latest update: [November 2022](https://github.com/mdavisprog/OctaneGUI/wiki/November22)
+Latest update: [December 2022](https://github.com/mdavisprog/OctaneGUI/wiki/December22)
 
 <img src=https://github.com/mdavisprog/OctaneGUI/wiki/Images/September22/Window_High_Res.png width=50%>
 
