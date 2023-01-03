@@ -68,7 +68,7 @@ public:
     virtual void OnLoad(const Json& Root) override;
     virtual void OnMouseMove(const Vector2& Position) override;
     virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;
-    virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button);
+    virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
     virtual void OnMouseLeave() override;
 
 private:
