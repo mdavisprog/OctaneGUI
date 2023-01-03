@@ -128,6 +128,9 @@ public:
     TextInput& SetMaxCharacters(uint32_t MaxCharacters);
     uint32_t MaxCharacters() const;
 
+    TextInput& SetWordDelimiters(const char32_t* Delimiters);
+    TextInput& AddWordDelimiters(const char32_t* Delimiters);
+
     template <class T>
     TextInput& CreateHighlighter()
     {
@@ -198,6 +201,7 @@ private:
     bool m_ReadOnly { false };
     bool m_NumbersOnly { false };
     uint32_t m_MaxCharacters { 0 };
+    std::u32string m_WordDelimiters { U" \t\r\n" };
 
     std::shared_ptr<Timer> m_BlinkTimer { nullptr };
     bool m_DrawCursor { false };

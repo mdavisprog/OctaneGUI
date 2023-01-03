@@ -458,6 +458,18 @@ uint32_t TextInput::MaxCharacters() const
     return m_MaxCharacters;
 }
 
+TextInput& TextInput::SetWordDelimiters(const char32_t* Delimiters)
+{
+    m_WordDelimiters = Delimiters;
+    return *this;
+}
+
+TextInput& TextInput::AddWordDelimiters(const char32_t* Delimiters)
+{
+    m_WordDelimiters += Delimiters;
+    return *this;
+}
+
 void TextInput::Focus()
 {
     if (!m_Position.IsValid())
@@ -1457,16 +1469,16 @@ void TextInput::SetVisibleLineSpan()
 
 void TextInput::SelectWord()
 {
-    const char32_t* SpaceChars = U" \t\n\r";
+    const char32_t* Delimiters = m_WordDelimiters.c_str();
 
     const bool IsSpace = std::isspace(Right());
     size_t Start = IsSpace
-        ? String::FirdFirstNotOfReverse(GetString(), SpaceChars, Index())
-        : String::FindFirstOfReverse(GetString(), SpaceChars, Index());
+        ? String::FirdFirstNotOfReverse(GetString(), Delimiters, Index())
+        : String::FindFirstOfReverse(GetString(), Delimiters, Index());
 
     size_t End = IsSpace
-        ? GetString().find_first_not_of(SpaceChars, Index() + 1)
-        : GetString().find_first_of(SpaceChars, Index() + 1);
+        ? GetString().find_first_not_of(Delimiters, Index() + 1)
+        : GetString().find_first_of(Delimiters, Index() + 1);
 
     if (Start == std::string::npos)
     {
