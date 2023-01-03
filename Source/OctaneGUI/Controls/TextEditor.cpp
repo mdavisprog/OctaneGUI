@@ -48,6 +48,8 @@ TextEditor::TextEditor(Window* InWindow)
         {
             PaintLineColors(Input, Brush);
         });
+    
+    AddWordDelimiters(U"\",");
 }
 
 TextEditor& TextEditor::SetMatchIndent(bool MatchIndent)
