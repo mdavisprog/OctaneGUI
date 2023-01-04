@@ -39,14 +39,14 @@ TextEditor::TextEditor(Window* InWindow)
 {
     SetMultiline(true);
 
-    SetOnModifyText([this](std::shared_ptr<TextInput>, const std::u32string& Pending) -> std::u32string
+    SetOnModifyText([this](TextInput&, const std::u32string& Pending) -> std::u32string
         {
             return ModifyText(Pending);
         });
 
-    SetOnPrePaintText([this](std::shared_ptr<TextInput const> Input, Paint& Brush) -> void
+    SetOnPrePaintText([this](const TextInput&, Paint& Brush) -> void
         {
-            PaintLineColors(Input, Brush);
+            PaintLineColors(Brush);
         });
     
     AddWordDelimiters(U"\",");
@@ -234,7 +234,7 @@ std::u32string TextEditor::ConvertTabs(const std::u32string& Pending) const
     return Result;
 }
 
-void TextEditor::PaintLineColors(std::shared_ptr<TextInput const>&, Paint& Brush) const
+void TextEditor::PaintLineColors(Paint& Brush) const
 {
     for (const std::pair<size_t, Color> Line : m_LineColors)
     {

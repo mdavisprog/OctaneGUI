@@ -560,7 +560,7 @@ void TextInput::OnPaint(Paint& Brush) const
 
     if (m_OnPrePaintText)
     {
-        m_OnPrePaintText(TShare<TextInput>(), Brush);
+        m_OnPrePaintText(*this, Brush);
     }
 
     if (m_Anchor.IsValid() && m_Anchor != m_Position)
@@ -1024,7 +1024,7 @@ void TextInput::AddText(const std::u32string& Contents)
     std::u32string Pending = std::move(Contents);
     if (m_OnModifyText)
     {
-        Pending = m_OnModifyText(TShare<TextInput>(), Pending);
+        Pending = m_OnModifyText(*this, Pending);
     }
 
     std::u32string Stripped = std::move(Pending);
@@ -1072,7 +1072,7 @@ void TextInput::EnterPressed()
     {
         if (m_OnConfirm)
         {
-            m_OnConfirm(TShare<TextInput>());
+            m_OnConfirm(*this);
         }
     }
 }
@@ -1370,7 +1370,7 @@ void TextInput::InternalSetText(const char32_t* InText)
 
     if (m_OnTextChanged)
     {
-        m_OnTextChanged(TShare<TextInput>());
+        m_OnTextChanged(*this);
     }
 }
 

@@ -55,9 +55,9 @@ class TextInput : public ScrollableViewControl
     CLASS(TextInput)
 
 public:
-    typedef std::function<void(std::shared_ptr<TextInput>)> OnTextInputSignature;
-    typedef std::function<std::u32string(std::shared_ptr<TextInput>, const std::u32string&)> OnModifyTextSignature;
-    typedef std::function<void(std::shared_ptr<TextInput const>, Paint&)> OnPaintSignature;
+    typedef std::function<void(TextInput&)> OnTextInputSignature;
+    typedef std::function<std::u32string(TextInput&, const std::u32string&)> OnModifyTextSignature;
+    typedef std::function<void(const TextInput&, Paint&)> OnPaintSignature;
 
     class TextPosition
     {

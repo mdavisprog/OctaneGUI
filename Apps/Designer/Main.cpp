@@ -119,14 +119,14 @@ int main(int, char**)
             FontSizeMenu->SetText(OctaneGUI::String::ToMultiByte(FontSize).c_str());
         });
 
-    FontSizeMenu->SetOnConfirm([&](std::shared_ptr<OctaneGUI::TextInput> Input) -> void
+    FontSizeMenu->SetOnConfirm([&](OctaneGUI::TextInput& Input) -> void
         {
             if (!FontSizeMenu->GetString().empty())
             {
                 const float FontSize = OctaneGUI::String::ToFloat(FontSizeMenu->GetText());
                 Document->SetFontSize(FontSize);
             }
-            Input->GetWindow()->ClosePopup();
+            Input.GetWindow()->ClosePopup();
         });
     
     Application.FS().SetOnFileDialogResult([&](OctaneGUI::FileDialogType Type, const std::u32string& FileName) -> void
@@ -181,7 +181,7 @@ int main(int, char**)
     Document = MainList.To<OctaneGUI::TextEditor>("Editor.Splitter.Document");
     Document
         ->CreateHighlighter<OctaneGUI::Syntax::JsonHighlighter>()
-        .SetOnTextChanged([&](std::shared_ptr<OctaneGUI::TextInput>) -> void
+        .SetOnTextChanged([&](OctaneGUI::TextInput&) -> void
         {
             CompileTimer->Start();
         })
