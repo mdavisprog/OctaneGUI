@@ -513,6 +513,12 @@ TextInput& TextInput::SetOnPrePaintText(OnPaintSignature&& Fn)
     return *this;
 }
 
+TextInput& TextInput::SetOnTextAdded(OnTextInputTextSignature&& Fn)
+{
+    m_OnTextAdded = std::move(Fn);
+    return *this;
+}
+
 TextInput& TextInput::SetFontSize(float FontSize)
 {
     if (FontSize == m_Text->LineHeight())
@@ -897,8 +903,12 @@ void TextInput::MovePosition(int32_t Line, int32_t Column, bool UseAnchor, bool 
     ResetCursorTimer();
 }
 
-void TextInput::TextAdded(const std::u32string&)
+void TextInput::TextAdded(const std::u32string& Contents)
 {
+    if (m_OnTextAdded)
+    {
+        m_OnTextAdded(*this, Contents);
+    }
 }
 
 void TextInput::TextDeleted(const std::u32string_view&)

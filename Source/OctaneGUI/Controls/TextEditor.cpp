@@ -102,6 +102,8 @@ void TextEditor::TextAdded(const std::u32string& Contents)
     {
         MovePosition(0, -1);
     }
+
+    TextInput::TextAdded(Contents);
 }
 
 std::u32string TextEditor::ModifyText(const std::u32string& Pending)

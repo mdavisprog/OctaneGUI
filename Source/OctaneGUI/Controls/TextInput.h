@@ -58,6 +58,7 @@ public:
     typedef std::function<void(TextInput&)> OnTextInputSignature;
     typedef std::function<std::u32string(TextInput&, const std::u32string&)> OnModifyTextSignature;
     typedef std::function<void(const TextInput&, Paint&)> OnPaintSignature;
+    typedef std::function<void(TextInput&, const std::u32string&)> OnTextInputTextSignature;
 
     class TextPosition
     {
@@ -144,6 +145,7 @@ public:
     TextInput& SetOnConfirm(OnTextInputSignature&& Fn);
     TextInput& SetOnModifyText(OnModifyTextSignature&& Fn);
     TextInput& SetOnPrePaintText(OnPaintSignature&& Fn);
+    TextInput& SetOnTextAdded(OnTextInputTextSignature&& Fn);
 
     TextInput& SetFontSize(float FontSize);
     float LineHeight() const;
@@ -215,6 +217,7 @@ private:
     OnTextInputSignature m_OnConfirm { nullptr };
     OnModifyTextSignature m_OnModifyText { nullptr };
     OnPaintSignature m_OnPrePaintText { nullptr };
+    OnTextInputTextSignature m_OnTextAdded { nullptr };
 };
 
 }
