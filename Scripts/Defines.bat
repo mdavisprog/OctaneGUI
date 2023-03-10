@@ -10,6 +10,7 @@ SET WINDOWING=SFML
 SET RENDERING=SFML
 SET NO_APPS=OFF
 SET HELP=FALSE
+SET WITH_LSTALK=OFF
 
 SET BIN_PATH=..\bin
 SET BUILD_PATH=..\Build
@@ -25,6 +26,7 @@ IF NOT "%1" == "" (
     IF /I "%1" == "CLEAN" SET CLEAN=TRUE
     IF /I "%1" == "NOAPPS" SET NO_APPS=ON
     IF /I "%1" == "HELP" SET HELP=TRUE
+    IF /I "%1" == "LSTALK" SET WITH_LSTALK=ON
     SHIFT
     GOTO :PARSE_ARGS
 )
@@ -59,6 +61,7 @@ IF "%HELP%" == "TRUE" (
     ECHO sdl2           Builds the app using the SDL library. The SDL2 cmake and library paths must
     ECHO                be locatable by the generator through either the environment variables or the 
     ECHO                SDL2_DIR and SDL2_MODULE_PATH variables.
+    ECHO lstalk         Compiles the 'lstalk' library.
     ECHO help           Displays this help message.
     EXIT 0
 )

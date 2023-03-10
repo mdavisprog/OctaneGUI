@@ -1,5 +1,7 @@
 set(TARGET OctaneGUI)
 
+set(DEFINES "")
+
 set(SOURCE
     Controls/Syntax/Highlighter.cpp
     Controls/Syntax/JsonHighlighter.cpp
@@ -69,6 +71,12 @@ set(SOURCE
     Window.cpp
 )
 
+if(WITH_LSTALK)
+    message("Compiling LSTalk library...")
+    set(SOURCE ${SOURCE} External/lstalk/lstalk.c)
+    set(DEFINES ${DEFINES} WITH_LSTALK=1)
+endif()
+
 if(TOOLS)
     set(SOURCE
         ${SOURCE}
@@ -86,4 +94,9 @@ add_library(
     ${TARGET}
     STATIC
     ${SOURCE}
+)
+
+target_compile_definitions(
+    ${TARGET}
+    PUBLIC ${DEFINES}
 )
