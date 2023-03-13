@@ -47,6 +47,8 @@ public:
     TextEditor& ClearLineColor(const size_t Line);
     TextEditor& ClearLineColors();
 
+    TextEditor& OpenFile(const char32_t* FileName);
+
     virtual void OnLoad(const Json& Root) override;
 
 protected:

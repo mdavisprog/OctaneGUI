@@ -25,10 +25,12 @@ SOFTWARE.
 */
 
 #include "TextEditor.h"
+#include "../Application.h"
 #include "../Font.h"
 #include "../Json.h"
 #include "../Paint.h"
 #include "../String.h"
+#include "../Window.h"
 #include "ScrollableContainer.h"
 
 namespace OctaneGUI
@@ -78,6 +80,13 @@ TextEditor& TextEditor::ClearLineColor(const size_t Line)
 TextEditor& TextEditor::ClearLineColors()
 {
     m_LineColors.clear();
+    return *this;
+}
+
+TextEditor& TextEditor::OpenFile(const char32_t* FileName)
+{
+    std::string Contents = GetWindow()->App().FS().LoadContents(FileName);
+    SetText(Contents.c_str());
     return *this;
 }
 
