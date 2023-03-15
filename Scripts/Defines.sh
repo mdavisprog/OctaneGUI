@@ -11,6 +11,7 @@ RENDERING=OpenGL
 CLEAN=false
 NO_APPS=OFF
 HELP=false
+WITH_LSTALK=OFF
 
 BIN_PATH=../bin
 BUILD_PATH=../Build
@@ -29,6 +30,7 @@ do
         noapps) NO_APPS=ON ;;
         help) HELP=true ;;
         xcode) XCODE=true ;;
+        lstalk) WITH_LSTALK=ON ;;
         *) break
     esac
 done
@@ -66,6 +68,7 @@ if [ "$HELP" = true ] ; then
     echo "sdl2           Builds the app using the SDL library. The SDL2 cmake and library paths must"
     echo "               be locatable by the generator through either the environment variables or the "
     echo "               SDL2_DIR and SDL2_MODULE_PATH variables."
+    echo "lstalk         Compiles the 'lstalk' library."
     echo "help           Displays this help message."
     exit 0
 fi
