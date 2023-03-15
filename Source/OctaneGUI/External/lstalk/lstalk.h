@@ -159,7 +159,7 @@ LSTALK_API void lstalk_version(int* major, int* minor, int* revision);
  * @param version - A pointer to the version of the client. This function will
  *                  allocate its own copy of the string.
  */
-LSTALK_API void lstalk_set_client_info(struct LSTalk_Context* context, char* name, char* version);
+LSTALK_API void lstalk_set_client_info(struct LSTalk_Context* context, const char* name, const char* version);
 
 /**
  * Sets the locale of the client. The default value is 'en'.

@@ -7146,7 +7146,7 @@ void lstalk_version(int* major, int* minor, int* revision) {
     }
 }
 
-void lstalk_set_client_info(LSTalk_Context* context, char* name, char* version) {
+void lstalk_set_client_info(LSTalk_Context* context, const char* name, const char* version) {
     if (context == NULL) {
         return;
     }
