@@ -26,46 +26,36 @@ SOFTWARE.
 
 #pragma once
 
-#include "TextInput.h"
-
+#include <string>
 #include <unordered_map>
+
+#if WITH_LSTALK
+    #include "External/lstalk/lstalk.h"
+#endif
 
 namespace OctaneGUI
 {
 
-class TextEditor : public TextInput
+/// @brief Interface for communicating with a language server.
+class LanguageServer
 {
-    CLASS(TextEditor)
-
 public:
-    TextEditor(Window* InWindow);
+    LanguageServer();
+    ~LanguageServer();
 
-    TextEditor& SetMatchIndent(bool MatchIndent);
-    bool MatchIndent() const;
-
-    TextEditor& SetLineColor(const size_t Line, const Color& _Color);
-    TextEditor& ClearLineColor(const size_t Line);
-    TextEditor& ClearLineColors();
-
-    TextEditor& OpenFile(const char32_t* FileName);
-
-    TextEditor& EnableLanguageServer();
-
-    virtual void OnLoad(const Json& Root) override;
-
-protected:
-    virtual void TextAdded(const std::u32string& Contents) override;
+    bool Initialize();
+    void Shutdown();
+    bool IsInitialized() const;
+    bool Connect(const char32_t* Name, const char32_t* Path, bool SearchEnvironmentPaths);
+    bool Close(const char32_t* Name);
 
 private:
-    std::u32string ModifyText(const std::u32string& Pending);
-    std::u32string MatchIndent(const std::u32string& Pending) const;
-    std::u32string MatchCharacter(const std::u32string& Pending, char32_t Character) const;
-    std::u32string ConvertTabs(const std::u32string& Pending) const;
-    void PaintLineColors(Paint& Brush) const;
-    bool InsertSpaces() const;
+    bool m_Initialized { false };
 
-    bool m_MatchIndent { true };
-    std::unordered_map<size_t, Color> m_LineColors {};
+#if WITH_LSTALK
+    struct LSTalk_Context* m_Context { nullptr };
+    std::unordered_map<std::u32string, LSTalk_ServerID> m_Servers;
+#endif
 };
 
 }

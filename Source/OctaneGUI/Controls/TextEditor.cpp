@@ -90,6 +90,12 @@ TextEditor& TextEditor::OpenFile(const char32_t* FileName)
     return *this;
 }
 
+TextEditor& TextEditor::EnableLanguageServer()
+{
+    GetWindow()->App().LS().Initialize();
+    return *this;
+}
+
 void TextEditor::OnLoad(const Json& Root)
 {
     TextInput::OnLoad(Root);

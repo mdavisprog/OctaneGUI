@@ -151,6 +151,8 @@ void Application::Shutdown()
     {
         m_OnExit();
     }
+
+    m_LanguageServer.Shutdown();
 }
 
 void Application::Update()
@@ -467,6 +469,16 @@ const FileSystem& Application::FS() const
 FileSystem& Application::FS()
 {
     return m_FileSystem;
+}
+
+const LanguageServer& Application::LS() const
+{
+    return m_LanguageServer;
+}
+
+LanguageServer& Application::LS()
+{
+    return m_LanguageServer;
 }
 
 #if TOOLS

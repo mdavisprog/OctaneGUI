@@ -29,6 +29,7 @@ SOFTWARE.
 #include "CallbackDefs.h"
 #include "FileSystem.h"
 #include "Keyboard.h"
+#include "LanguageServer.h"
 #include "Mouse.h"
 #include "TextureCache.h"
 #include "Vector2.h"
@@ -257,6 +258,14 @@ public:
     /// @return FileSystem reference.
     FileSystem& FS();
 
+    /// @brief Const version of the LanguageServer object.
+    /// @return const LanguageServer reference.
+    const LanguageServer& LS() const;
+
+    /// @brief Mutable version of the Language
+    /// @return LanguageServer reference.
+    LanguageServer& LS();
+
 #if TOOLS
     Tools::Interface& Tools();
     Application& SetIgnoreModals(bool IgnoreModals);
@@ -366,6 +375,7 @@ private:
     FileSystem m_FileSystem { *this };
     bool m_HighDPI { true };
     bool m_CustomTitleBar { false };
+    LanguageServer m_LanguageServer {};
 
 #if TOOLS
     bool m_IgnoreModals { false };

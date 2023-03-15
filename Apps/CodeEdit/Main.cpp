@@ -13,6 +13,7 @@ int main(int, char**)
 
     const OctaneGUI::ControlList& ControlList = WindowControls["Main"];
     std::shared_ptr<OctaneGUI::TextEditor> Editor = ControlList.To<OctaneGUI::TextEditor>("Editor");
+    Editor->EnableLanguageServer();
 
     Application.FS().SetOnFileDialogResult([&](OctaneGUI::FileDialogType Type, const std::u32string& FileName) -> void
         {

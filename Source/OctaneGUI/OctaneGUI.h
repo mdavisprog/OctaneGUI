@@ -72,6 +72,7 @@ SOFTWARE.
 #include "Font.h"
 #include "Json.h"
 #include "Keyboard.h"
+#include "LanguageServer.h"
 #include "Mouse.h"
 #include "Paint.h"
 #include "Rect.h"
