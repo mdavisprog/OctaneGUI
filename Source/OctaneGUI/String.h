@@ -62,6 +62,8 @@ public:
 
     static std::vector<std::u32string> Tokenize(const std::u32string& Stream, const std::u32string& Delim);
     static std::vector<std::u32string> ParseArguments(const std::u32string& Stream);
+
+    static std::u32string Replace(const std::u32string& Contents, const std::u32string& What, const std::u32string& With);
 };
 
 }

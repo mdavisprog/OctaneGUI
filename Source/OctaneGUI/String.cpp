@@ -358,4 +358,16 @@ std::vector<std::u32string> String::ParseArguments(const std::u32string& Stream)
     return Result;
 }
 
+std::u32string String::Replace(const std::u32string& Contents, const std::u32string& What, const std::u32string& With)
+{
+    std::u32string Result = Contents;
+
+    for (size_t Pos = 0; (Pos = Result.find(What.c_str(), Pos, What.length())) != std::u32string::npos; Pos += What.length())
+    {
+        Result.replace(Pos, What.length(), With.c_str(), With.length());
+    }
+
+    return Result;
+}
+
 }
