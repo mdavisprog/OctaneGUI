@@ -110,6 +110,8 @@ static int strncpy_s(char* restrict dest, size_t destsz, const char* src, size_t
     return EXIT_SUCCESS;
 }
 
+#if LSTALK_TESTS
+// This function is currently only used in testing. Add to main library when needed.
 static int strncat_s(char* restrict dest, size_t destsz, const char* restrict src, size_t count) {
     (void)destsz;
 
@@ -119,6 +121,7 @@ static int strncat_s(char* restrict dest, size_t destsz, const char* restrict sr
     }
     return EXIT_SUCCESS;
 }
+#endif
 
 static int fopen_s(FILE* restrict* restrict streamptr, const char* restrict filename, const char* restrict mode) {
     *streamptr = fopen(filename, mode);
@@ -419,6 +422,8 @@ static char* file_async_read(int handle) {
 }
 #endif
 
+#if LSTALK_TESTS
+// These functions are currently only used in testing. Add to main library when needed.
 static void file_get_directory(char* path, char* out, size_t out_size) {
     char* anchor = path;
     char* ptr = anchor;
@@ -468,6 +473,7 @@ static char* file_async_read_stdin() {
     #error "Not implemented for current platform!"
 #endif
 }
+#endif
 
 //
 // Process Management
@@ -4207,6 +4213,8 @@ static WorkDoneProgressOptions work_done_progress_parse(JSONValue* value) {
     return result;
 }
 
+#if LSTALK_TESTS
+// These functions are currently only used in testing. Add to main library when needed.
 static JSONValue work_done_progress_json_make(WorkDoneProgressOptions* options) {
     if (options == NULL) {
         return json_make_null();
@@ -4224,6 +4232,7 @@ static void work_done_progress_json_set(WorkDoneProgressOptions* options, JSONVa
 
     json_object_const_key_set(value, WORK_DONE_PROGRESS_NAME, json_make_boolean(options->value));
 }
+#endif
 
 /**
  * Static registration options to be returned in the initialize request.
@@ -4253,6 +4262,8 @@ static StaticRegistrationOptions static_registration_options_parse(JSONValue* va
     return result;
 }
 
+#if LSTALK_TESTS
+// This function is currently only used in testing. Add to main library when needed.
 static void static_registration_options_json_set(StaticRegistrationOptions* options, JSONValue* value) {
     if (options == NULL || value == NULL) {
         return;
@@ -4260,6 +4271,7 @@ static void static_registration_options_json_set(StaticRegistrationOptions* opti
 
     json_object_const_key_set(value, "id", json_make_string(options->id));
 }
+#endif
 
 static void static_registration_options_free(StaticRegistrationOptions* static_registration) {
     if (static_registration == NULL || static_registration->id == NULL) {
@@ -4551,6 +4563,8 @@ static TextDocumentRegistrationOptions text_document_registration_options_parse(
     return result;
 }
 
+#if LSTALK_TESTS
+// This function is currently only used in testing. Add to main library when needed.
 static void text_document_registration_options_json_set(TextDocumentRegistrationOptions* options, JSONValue* value) {
     if (options == NULL || value == NULL || value->type != JSON_VALUE_OBJECT) {
         return;
@@ -4578,6 +4592,7 @@ static void text_document_registration_options_json_set(TextDocumentRegistration
     }
     json_object_const_key_set(value, "documentFilter", array);
 }
+#endif
 
 static void text_document_registration_options_free(TextDocumentRegistrationOptions* text_document_registration) {
     if (text_document_registration == NULL) {
@@ -5180,6 +5195,8 @@ static FileOperationRegistrationOptions file_operation_registration_options_pars
     return result;
 }
 
+#if LSTALK_TESTS
+// This function is currently only used in testing. Add to main library when needed.
 static JSONValue file_operation_registration_json(FileOperationRegistrationOptions* options) {
     if (options == NULL) {
         return json_make_null();
@@ -5214,6 +5231,7 @@ static JSONValue file_operation_registration_json(FileOperationRegistrationOptio
 
     return value;
 }
+#endif
 
 static void file_operation_registration_options_free(FileOperationRegistrationOptions* file_operation_registration) {
     if (file_operation_registration == NULL) {
@@ -6003,6 +6021,8 @@ static ServerCapabilities server_capabilities_parse(JSONValue* value) {
     return result;
 }
 
+#if LSTALK_TESTS
+// This function is currently only used in testing. Add to main library when needed.
 static JSONValue server_capabilities_json(ServerCapabilities* capabilities) {
     JSONValue result = json_make_null();
 
@@ -6282,6 +6302,7 @@ static JSONValue server_capabilities_json(ServerCapabilities* capabilities) {
 
     return result;
 }
+#endif
 
 static void server_capabilities_free(ServerCapabilities* capabilities) {
     for (int i = 0; i < capabilities->notebook_document_sync.notebook_selector_count; i++) {
@@ -7179,6 +7200,7 @@ LSTalk_ServerID lstalk_connect(LSTalk_Context* context, const char* uri, LSTalk_
     memset(&server.info, 0, sizeof(server.info));
     server.text_documents = vector_create(sizeof(TextDocumentItem));
     server.notifications = vector_create(sizeof(LSTalk_Notification));
+    server.pending_message = message_create();
 
     JSONValue params = json_make_object();
     json_object_const_key_set(&params, "processId", json_make_int(process_get_current_id()));
