@@ -157,6 +157,8 @@ void Application::Shutdown()
 
 void Application::Update()
 {
+    m_LanguageServer.Process();
+
     for (auto& Item : m_Windows)
     {
         if (Item.second->IsVisible())

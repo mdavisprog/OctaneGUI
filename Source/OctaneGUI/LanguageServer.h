@@ -36,11 +36,13 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+class Application;
+
 /// @brief Interface for communicating with a language server.
 class LanguageServer
 {
 public:
-    LanguageServer();
+    LanguageServer(Application& App);
     ~LanguageServer();
 
     bool Initialize();
@@ -48,8 +50,10 @@ public:
     bool IsInitialized() const;
     bool Connect(const char32_t* Name, const char32_t* Path, bool SearchEnvironmentPaths);
     bool Close(const char32_t* Name);
+    void Process();
 
 private:
+    Application& m_App;
     bool m_Initialized { false };
 
 #if WITH_LSTALK

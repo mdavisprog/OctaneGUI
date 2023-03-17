@@ -30,7 +30,8 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
-LanguageServer::LanguageServer()
+LanguageServer::LanguageServer(Application& App)
+    : m_App(App)
 {
 }
 
@@ -110,4 +111,7 @@ bool LanguageServer::Close(const char32_t* Name)
     return false;
 }
 
+void LanguageServer::Process()
+{
+}
 }
