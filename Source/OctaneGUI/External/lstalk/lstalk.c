@@ -7024,6 +7024,21 @@ static void server_close(Server* server) {
     message_free(&server->pending_message);
 }
 
+static int server_has_text_document(Server* server, const char* uri) {
+    if (server == NULL) {
+        return 0;
+    }
+
+    for (size_t i = 0; i < server->text_documents.length; i++) {
+        TextDocumentItem* item = (TextDocumentItem*)vector_get(&server->text_documents, i);
+        if (strcmp(item->uri, uri) == 0) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 typedef struct ClientInfo {
     char* name;
     char* version;
@@ -7371,14 +7386,21 @@ int lstalk_text_document_did_open(LSTalk_Context* context, LSTalk_ServerID id, c
         return 0;
     }
 
+    char* uri = file_uri(path);
+    TextDocumentItem item;
+    item.uri = json_escape_string(uri);
+
+    if (server_has_text_document(server, item.uri)) {
+        free(uri);
+        free(item.uri);
+        return 1;
+    }
+
     char* contents = file_get_contents(path);
     if (contents == NULL) {
         return 0;
     }
 
-    TextDocumentItem item;
-    char* uri = file_uri(path);
-    item.uri = json_escape_string(uri);
     item.language_id = file_extension(path);
     item.version = 1;
     item.text = json_escape_string(contents);
@@ -7411,6 +7433,7 @@ int lstalk_text_document_did_close(LSTalk_Context* context, LSTalk_ServerID id, 
     for (size_t i = 0; i < server->text_documents.length; i++) {
         TextDocumentItem* item = (TextDocumentItem*)vector_get(&server->text_documents, i);
         if (strcmp(item->uri, escaped_uri) == 0) {
+            text_document_item_free(item);
             vector_remove(&server->text_documents, i);
             break;
         }
