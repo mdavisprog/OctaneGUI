@@ -39,6 +39,17 @@ LanguageServer::~LanguageServer()
 {
 }
 
+LanguageServer& LanguageServer::SetSearchEnvironmentPath(bool Value)
+{
+    m_SearchEnvironmentPath = Value;
+    return *this;
+}
+
+bool LanguageServer::SearchEnvironmentPath() const
+{
+    return m_SearchEnvironmentPath;
+}
+
 bool LanguageServer::Initialize()
 {
     if (m_Initialized)
@@ -70,26 +81,37 @@ bool LanguageServer::IsInitialized() const
     return m_Initialized;
 }
 
-bool LanguageServer::Connect(const char32_t* Name, const char32_t* Path, bool SearchEnvironmentPaths)
+bool LanguageServer::Connect(const char32_t* Name, const char32_t* Path)
 {
-    bool Result = false;
+    if (std::u32string(Name).empty() || std::u32string(Path).empty())
+    {
+        return false;
+    }
+
 #if WITH_LSTALK
     if (m_Context == nullptr)
     {
-        return Result;
+        return false;
     }
+
+#ifdef WINDOWS
+    const std::u32string FullPath = FileSystem::SetExtension(Path, U"exe");
+#else
+    const std::u32string FullPath { Path };
+#endif
 
     LSTalk_ConnectParams Params;
     Params.root_uri = nullptr;
-    Params.seek_path_env = SearchEnvironmentPaths ? lstalk_true : lstalk_false;
-    LSTalk_ServerID Server = lstalk_connect(m_Context, String::ToMultiByte(Path).c_str(), &Params);
+    Params.seek_path_env = m_SearchEnvironmentPath ? lstalk_true : lstalk_false;
+    LSTalk_ServerID Server = lstalk_connect(m_Context, String::ToMultiByte(FullPath).c_str(), &Params);
     if (Server != LSTALK_INVALID_SERVER_ID)
     {
         m_Servers[Name] = Server;
-        Result = true;
+        return true;
     }
 #endif
-    return Result;
+
+    return false;
 }
 
 bool LanguageServer::Close(const char32_t* Name)

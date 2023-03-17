@@ -45,15 +45,19 @@ public:
     LanguageServer(Application& App);
     ~LanguageServer();
 
+    LanguageServer& SetSearchEnvironmentPath(bool Value);
+    bool SearchEnvironmentPath() const;
+
     bool Initialize();
     void Shutdown();
     bool IsInitialized() const;
-    bool Connect(const char32_t* Name, const char32_t* Path, bool SearchEnvironmentPaths);
+    bool Connect(const char32_t* Name, const char32_t* Path);
     bool Close(const char32_t* Name);
     void Process();
 
 private:
     Application& m_App;
+    bool m_SearchEnvironmentPath { true };
     bool m_Initialized { false };
 
 #if WITH_LSTALK
