@@ -39,7 +39,7 @@ SOFTWARE.
 //
 
 #define LSTALK_MAJOR 0
-#define LSTALK_MINOR 1
+#define LSTALK_MINOR 2
 #define LSTALK_REVISION 0
 
 //
@@ -270,7 +270,7 @@ static void string_free_array(char** array, size_t count) {
 //
 // This section contains utility functions when operating on files.
 
-static char* file_get_contents(char* path) {
+static char* file_get_contents(const char* path) {
     if (path == NULL) {
         return NULL;
     }
@@ -298,7 +298,7 @@ static char* file_get_contents(char* path) {
     return result;
 }
 
-static char* file_uri(char* path) {
+static char* file_uri(const char* path) {
     if (path == NULL) {
         return NULL;
     }
@@ -309,20 +309,20 @@ static char* file_uri(char* path) {
     Vector result = vector_create(sizeof(char));
     vector_resize(&result, scheme_length + path_length + 1);
     vector_append(&result, scheme, scheme_length);
-    vector_append(&result, path, path_length);
+    vector_append(&result, (void*)path, path_length);
     result.data[scheme_length + path_length] = 0;
     return result.data;
 }
 
-static char* file_extension(char* path) {
+static char* file_extension(const char* path) {
     if (path == NULL) {
         return NULL;
     }
 
     char* result = NULL;
-    char* ptr = path;
+    const char* ptr = path;
     while (ptr != NULL) {
-        char* start = ptr;
+        const char* start = ptr;
         ptr = strchr(ptr + 1, '.');
         if (ptr == NULL) {
             result = string_alloc_copy(start + 1);
@@ -1738,7 +1738,7 @@ static char* trace_to_string(LSTalk_Trace trace) {
     return "off";
 }
 
-static LSTalk_Trace trace_from_string(char* trace) {
+static LSTalk_Trace trace_from_string(const char* trace) {
     if (strcmp(trace, "messages") == 0) {
         return LSTALK_TRACE_MESSAGES;
     } else if (strcmp(trace, "verbose") == 0) {
@@ -7162,7 +7162,7 @@ void lstalk_set_client_info(LSTalk_Context* context, const char* name, const cha
     }
 }
 
-void lstalk_set_locale(LSTalk_Context* context, char* locale) {
+void lstalk_set_locale(LSTalk_Context* context, const char* locale) {
     if (context == NULL) {
         return;
     }
@@ -7255,7 +7255,7 @@ int lstalk_process_responses(LSTalk_Context* context) {
 
         if (response != NULL) {
             if (context->debug_flags & LSTALK_DEBUGFLAGS_PRINT_RESPONSES) {
-                printf("%s\n", response);
+                printf("Response: %s\n", response);
             }
 
             char* anchor = response;
@@ -7361,11 +7361,11 @@ int lstalk_set_trace(LSTalk_Context* context, LSTalk_ServerID id, LSTalk_Trace t
     return 1;
 }
 
-int lstalk_set_trace_from_string(LSTalk_Context* context, LSTalk_ServerID id, char* trace) {
+int lstalk_set_trace_from_string(LSTalk_Context* context, LSTalk_ServerID id, const char* trace) {
     return lstalk_set_trace(context, id, trace_from_string(trace));
 }
 
-int lstalk_text_document_did_open(LSTalk_Context* context, LSTalk_ServerID id, char* path) {
+int lstalk_text_document_did_open(LSTalk_Context* context, LSTalk_ServerID id, const char* path) {
     Server* server = context_get_server(context, id);
     if (server == NULL) {
         return 0;
@@ -7399,7 +7399,7 @@ int lstalk_text_document_did_open(LSTalk_Context* context, LSTalk_ServerID id, c
     return 1;
 }
 
-int lstalk_text_document_did_close(LSTalk_Context* context, LSTalk_ServerID id, char* path) {
+int lstalk_text_document_did_close(LSTalk_Context* context, LSTalk_ServerID id, const char* path) {
     Server* server = context_get_server(context, id);
     if (server == NULL) {
         return 0;
@@ -7427,7 +7427,7 @@ int lstalk_text_document_did_close(LSTalk_Context* context, LSTalk_ServerID id, 
     return 1;
 }
 
-int lstalk_text_document_symbol(LSTalk_Context* context, LSTalk_ServerID id, char* path) {
+int lstalk_text_document_symbol(LSTalk_Context* context, LSTalk_ServerID id, const char* path) {
     Server* server = context_get_server(context, id);
     if (server == NULL) {
         return 0;
@@ -8292,7 +8292,7 @@ static void test_server_send_response(JSONValue* response) {
 
     JSONEncoder encoder = json_encode(response);
     if (encoder.string.length > 0) {
-        printf("Content-Length: %zu\r\n%s", encoder.string.length, encoder.string.data);
+        printf("Content-Length: %zu\r\n%s\r\n", encoder.string.length, encoder.string.data);
         fflush(stdout);
     }
 

@@ -167,7 +167,7 @@ LSTALK_API void lstalk_set_client_info(struct LSTalk_Context* context, const cha
  * @param context - An initialized LSTalk_Context object.
  * @param locale - This is an IETF tag. The string is copied.
  */
-LSTALK_API void lstalk_set_locale(struct LSTalk_Context* context, char* locale);
+LSTALK_API void lstalk_set_locale(struct LSTalk_Context* context, const char* locale);
 
 /**
  * Sets debug flags for the given context object.
@@ -279,7 +279,7 @@ LSTALK_API int lstalk_set_trace(struct LSTalk_Context* context, LSTalk_ServerID 
  * 
  * @return - Non-zero if the request was sent. 0 if it failed.
  */
-LSTALK_API int lstalk_set_trace_from_string(struct LSTalk_Context* context, LSTalk_ServerID id, char* trace);
+LSTALK_API int lstalk_set_trace_from_string(struct LSTalk_Context* context, LSTalk_ServerID id, const char* trace);
 
 /**
  * The document open notification is sent from the client to the server to
@@ -293,7 +293,7 @@ LSTALK_API int lstalk_set_trace_from_string(struct LSTalk_Context* context, LSTa
  * 
  * @return - Non-zero if the request was sent. 0 if it failed.
  */
-LSTALK_API int lstalk_text_document_did_open(struct LSTalk_Context* context, LSTalk_ServerID id, char* path);
+LSTALK_API int lstalk_text_document_did_open(struct LSTalk_Context* context, LSTalk_ServerID id, const char* path);
 
 /**
  * The document close notification is sent from the client to the server
@@ -305,7 +305,7 @@ LSTALK_API int lstalk_text_document_did_open(struct LSTalk_Context* context, LST
  * 
  * @return - Non-zero if the request was sent. 0 if it failed.
  */
-LSTALK_API int lstalk_text_document_did_close(struct LSTalk_Context* context, LSTalk_ServerID id, char* path);
+LSTALK_API int lstalk_text_document_did_close(struct LSTalk_Context* context, LSTalk_ServerID id, const char* path);
 
 /**
  * Retrieves all symbols for a given document.
@@ -316,7 +316,7 @@ LSTALK_API int lstalk_text_document_did_close(struct LSTalk_Context* context, LS
  * 
  * @return - Non-zero if the request was sent. 0 if it failed.
  */
-LSTALK_API int lstalk_text_document_symbol(struct LSTalk_Context* context, LSTalk_ServerID id, char* path);
+LSTALK_API int lstalk_text_document_symbol(struct LSTalk_Context* context, LSTalk_ServerID id, const char* path);
 
 //
 // The section below contains the definitions of interfaces used in communicating
