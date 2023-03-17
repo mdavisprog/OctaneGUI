@@ -48,6 +48,13 @@ std::string FileSystem::Extension(const std::string& Location)
     return Result;
 }
 
+std::u32string FileSystem::SetExtension(const std::u32string& Location, const std::u32string& Extension)
+{
+    std::filesystem::path Path { Location };
+    Path.replace_extension(Extension);
+    return Path.u32string();
+}
+
 FileSystem::FileSystem(Application& App)
     : m_Application(App)
 {

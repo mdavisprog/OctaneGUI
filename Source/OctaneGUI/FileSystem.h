@@ -53,6 +53,7 @@ public:
     typedef std::function<void(FileDialogType, const std::u32string&)> OnFileDialogResultSignature;
 
     static std::string Extension(const std::string& Location);
+    static std::u32string SetExtension(const std::u32string& Location, const std::u32string& Extension);
 
     FileSystem(Application& App);
     ~FileSystem();
