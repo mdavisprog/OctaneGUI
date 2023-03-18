@@ -28,6 +28,7 @@ SOFTWARE.
 
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #if WITH_LSTALK
     #include "External/lstalk/lstalk.h"
@@ -42,6 +43,21 @@ class Application;
 class LanguageServer
 {
 public:
+    struct Association
+    {
+    public:
+        std::u32string Name;
+        std::u32string Path;
+        std::vector<std::u32string> Extensions;
+    };
+
+    enum class ConnectionStatus
+    {
+        NotConnected,
+        Connecting,
+        Connected,
+    };
+
     LanguageServer(Application& App);
     ~LanguageServer();
 
@@ -52,13 +68,24 @@ public:
     void Shutdown();
     bool IsInitialized() const;
     bool Connect(const char32_t* Name, const char32_t* Path);
+    bool ConnectByAssociatedExtension(const char32_t* Extension);
     bool Close(const char32_t* Name);
+    ConnectionStatus ServerStatus(const char32_t* Name) const;
+    ConnectionStatus ServerStatusByExtension(const char32_t* Extension) const;
+
     void Process();
+
+    bool OpenDocument(const char32_t* Path);
+    void CloseDocument(const char32_t* Path);
+
+    const Association GetAssociationByExtension(const char32_t* Extension) const;
 
 private:
     Application& m_App;
     bool m_SearchEnvironmentPath { true };
     bool m_Initialized { false };
+    std::vector<Association> m_Associations {};
+    std::unordered_map<std::u32string, ConnectionStatus> m_ServerStatus;
 
 #if WITH_LSTALK
     struct LSTalk_Context* m_Context { nullptr };

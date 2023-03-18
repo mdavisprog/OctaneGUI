@@ -25,6 +25,9 @@ SOFTWARE.
 */
 
 #include "LanguageServer.h"
+#include "Application.h"
+#include "Defines.h"
+#include "FileSystem.h"
 #include "String.h"
 
 namespace OctaneGUI
@@ -33,6 +36,11 @@ namespace OctaneGUI
 LanguageServer::LanguageServer(Application& App)
     : m_App(App)
 {
+    // Fill with default associations to be used to connect to a language
+    // server.
+    m_Associations = {
+        {U"clangd", U"clangd", {U".c", U".cpp", U".h", U".hpp"}}
+    };
 }
 
 LanguageServer::~LanguageServer()
@@ -88,6 +96,11 @@ bool LanguageServer::Connect(const char32_t* Name, const char32_t* Path)
         return false;
     }
 
+    if (ServerStatus(Name) != ConnectionStatus::NotConnected)
+    {
+        return true;
+    }
+
 #if WITH_LSTALK
     if (m_Context == nullptr)
     {
@@ -106,6 +119,7 @@ bool LanguageServer::Connect(const char32_t* Name, const char32_t* Path)
     LSTalk_ServerID Server = lstalk_connect(m_Context, String::ToMultiByte(FullPath).c_str(), &Params);
     if (Server != LSTALK_INVALID_SERVER_ID)
     {
+        m_ServerStatus[Name] = ConnectionStatus::Connecting;
         m_Servers[Name] = Server;
         return true;
     }
@@ -114,8 +128,16 @@ bool LanguageServer::Connect(const char32_t* Name, const char32_t* Path)
     return false;
 }
 
+bool LanguageServer::ConnectByAssociatedExtension(const char32_t* Extension)
+{
+    const Association Item = GetAssociationByExtension(Extension);
+    return Connect(Item.Name.c_str(), Item.Path.c_str());
+}
+
 bool LanguageServer::Close(const char32_t* Name)
 {
+    m_ServerStatus.erase(Name);
+
 #if WITH_LSTALK
     if (m_Context == nullptr)
     {
@@ -133,7 +155,114 @@ bool LanguageServer::Close(const char32_t* Name)
     return false;
 }
 
+LanguageServer::ConnectionStatus LanguageServer::ServerStatus(const char32_t* Name) const
+{
+    if (m_ServerStatus.find(Name) != m_ServerStatus.end())
+    {
+        return m_ServerStatus.at(Name);
+    }
+
+    return ConnectionStatus::NotConnected;
+}
+
+LanguageServer::ConnectionStatus LanguageServer::ServerStatusByExtension(const char32_t* Extension) const
+{
+    const Association Item = GetAssociationByExtension(Extension);
+    return ServerStatus(Item.Name.c_str());
+}
+
 void LanguageServer::Process()
 {
+#if WITH_LSTALK
+    if (m_Context == NULL)
+    {
+        return;
+    }
+
+    lstalk_process_responses(m_Context);
+
+    for (const std::pair<std::u32string, LSTalk_ServerID>& Item : m_Servers)
+    {
+        LSTalk_Notification Notification;
+        lstalk_poll_notification(m_Context, Item.second, &Notification);
+
+        if (lstalk_get_connection_status(m_Context, Item.second) == LSTALK_CONNECTION_STATUS_CONNECTED)
+        {
+            m_ServerStatus[Item.first] = ConnectionStatus::Connected;
+        }
+    }
+#endif
 }
+
+bool LanguageServer::OpenDocument(const char32_t* Path)
+{
+    const std::u32string Extension { m_App.FS().Extension(Path) };
+    const Association Assoc { GetAssociationByExtension(Extension.c_str()) };
+
+    if (ServerStatus(Assoc.Name.c_str()) != ConnectionStatus::Connected)
+    {
+        return false;
+    }
+
+#if WITH_LSTALK
+    if (m_Context == nullptr)
+    {
+        return false;
+    }
+
+    if (m_Servers.find(Assoc.Name) == m_Servers.end())
+    {
+        return false;
+    }
+
+    if (lstalk_text_document_did_open(m_Context, m_Servers[Assoc.Name], String::ToMultiByte(Path).c_str()))
+    {
+        return true;
+    }
+#endif
+
+    return false;
+}
+
+void LanguageServer::CloseDocument(const char32_t* Path)
+{
+    const std::u32string Extension { m_App.FS().Extension(Path) };
+    const Association Assoc { GetAssociationByExtension(Extension.c_str()) };
+
+    if (ServerStatus(Assoc.Name.c_str()) != ConnectionStatus::NotConnected)
+    {
+        return;
+    }
+
+#if WITH_LSTALK
+    if (m_Context == nullptr)
+    {
+        return;
+    }
+
+    if (m_Servers.find(Assoc.Name) == m_Servers.end())
+    {
+        return;
+    }
+
+    lstalk_text_document_did_close(m_Context, m_Servers[Assoc.Name], String::ToMultiByte(Path).c_str());
+#endif
+}
+
+const LanguageServer::Association LanguageServer::GetAssociationByExtension(const char32_t* Extension) const
+{
+    for (const Association& Item : m_Associations)
+    {
+        for (const std::u32string& Ext : Item.Extensions)
+        {
+            if (Ext == Extension)
+            {
+                return Item;
+            }
+        }
+    }
+
+    return LanguageServer::Association {};
+}
+
 }
