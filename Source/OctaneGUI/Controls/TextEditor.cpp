@@ -28,8 +28,10 @@ SOFTWARE.
 #include "../Application.h"
 #include "../Font.h"
 #include "../Json.h"
+#include "../LanguageServer.h"
 #include "../Paint.h"
 #include "../String.h"
+#include "../Timer.h"
 #include "../Window.h"
 #include "ScrollableContainer.h"
 
@@ -52,6 +54,11 @@ TextEditor::TextEditor(Window* InWindow)
         });
     
     AddWordDelimiters(U"\",");
+
+    m_Timer = GetWindow()->CreateTimer(0, false, [this]() -> void
+        {
+            OnTimer();
+        });
 }
 
 TextEditor& TextEditor::SetMatchIndent(bool MatchIndent)
@@ -87,12 +94,14 @@ TextEditor& TextEditor::OpenFile(const char32_t* FileName)
 {
     std::string Contents = GetWindow()->App().FS().LoadContents(FileName);
     SetText(Contents.c_str());
+    m_FileName = FileName;
+    OnOpenDocument();
     return *this;
 }
 
 TextEditor& TextEditor::EnableLanguageServer()
 {
-    GetWindow()->App().LS().Initialize();
+    LS().Initialize();
     return *this;
 }
 
@@ -266,6 +275,61 @@ void TextEditor::PaintLineColors(Paint& Brush) const
 bool TextEditor::InsertSpaces() const
 {
     return GetProperty(ThemeProperties::TextEditor_InsertSpaces).Bool();
+}
+
+const LanguageServer& TextEditor::LS() const
+{
+    return GetWindow()->App().LS();
+}
+
+LanguageServer& TextEditor::LS()
+{
+    return GetWindow()->App().LS();
+}
+
+void TextEditor::OnOpenDocument()
+{
+    if (m_FileName.empty())
+    {
+        return;
+    }
+
+    const std::u32string Extension { GetWindow()->App().FS().Extension(m_FileName) };
+    const LanguageServer::ConnectionStatus Status { LS().ServerStatusByExtension(Extension.c_str()) };
+    
+    switch (Status)
+    {
+    case LanguageServer::ConnectionStatus::NotConnected:
+        LS().ConnectByAssociatedExtension(Extension.c_str());
+    
+    case LanguageServer::ConnectionStatus::Connecting:
+        m_State = State::OpenDocument;
+        m_Timer->SetInterval(1000).Start();
+        break;
+    
+    case LanguageServer::ConnectionStatus::Connected:
+    default: break;
+    }
+
+    LS().OpenDocument(m_FileName.c_str());
+}
+
+void TextEditor::OnTimer()
+{
+    if (!LS().IsInitialized())
+    {
+        return;
+    }
+
+    switch (m_State)
+    {
+    case State::OpenDocument:
+        OnOpenDocument();
+        break;
+
+    case State::None:
+    default: break;
+    }
 }
 
 }

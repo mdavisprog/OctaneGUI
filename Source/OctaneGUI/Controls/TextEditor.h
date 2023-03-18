@@ -33,6 +33,9 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+class LanguageServer;
+class Timer;
+
 class TextEditor : public TextInput
 {
     CLASS(TextEditor)
@@ -57,6 +60,12 @@ protected:
     virtual void TextAdded(const std::u32string& Contents) override;
 
 private:
+    enum class State
+    {
+        None,
+        OpenDocument,
+    };
+
     std::u32string ModifyText(const std::u32string& Pending);
     std::u32string MatchIndent(const std::u32string& Pending) const;
     std::u32string MatchCharacter(const std::u32string& Pending, char32_t Character) const;
@@ -64,8 +73,18 @@ private:
     void PaintLineColors(Paint& Brush) const;
     bool InsertSpaces() const;
 
+    const LanguageServer& LS() const;
+    LanguageServer& LS();
+
+    void OnOpenDocument();
+
+    void OnTimer();
+
     bool m_MatchIndent { true };
     std::unordered_map<size_t, Color> m_LineColors {};
+    std::u32string m_FileName {};
+    std::shared_ptr<Timer> m_Timer { nullptr };
+    State m_State { State::None };
 };
 
 }
