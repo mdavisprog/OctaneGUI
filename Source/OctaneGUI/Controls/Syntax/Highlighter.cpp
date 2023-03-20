@@ -58,9 +58,9 @@ Color Highlighter::DefaultColor() const
     return m_Input.lock()->TextColor();
 }
 
-std::vector<TextSpan> Highlighter::GetSpans(const std::u32string_view& Span) const
+std::vector<TextSpan> Highlighter::GetSpans(const std::u32string_view&) const
 {
-    return Update(Span);
+    return {};
 }
 
 }

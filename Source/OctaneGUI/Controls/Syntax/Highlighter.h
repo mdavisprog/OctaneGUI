@@ -51,9 +51,6 @@ public:
     Color DefaultColor() const;
     std::vector<TextSpan> GetSpans(const std::u32string_view& Span) const;
 
-protected:
-    virtual std::vector<TextSpan> Update(const std::u32string_view& Span) const = 0;
-
 private:
     std::weak_ptr<TextInput> m_Input {};
 };

@@ -4,7 +4,6 @@ set(DEFINES "")
 
 set(SOURCE
     Controls/Syntax/Highlighter.cpp
-    Controls/Syntax/JsonHighlighter.cpp
     Controls/BoxContainer.cpp
     Controls/Button.cpp
     Controls/CheckBox.cpp

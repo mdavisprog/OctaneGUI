@@ -180,8 +180,7 @@ int main(int, char**)
 
     Document = MainList.To<OctaneGUI::TextEditor>("Editor.Splitter.Document");
     Document
-        ->CreateHighlighter<OctaneGUI::Syntax::JsonHighlighter>()
-        .SetOnTextChanged([&](OctaneGUI::TextInput&) -> void
+        ->SetOnTextChanged([&](OctaneGUI::TextInput&) -> void
         {
             CompileTimer->Start();
         })

@@ -27,6 +27,7 @@ SOFTWARE.
 #pragma once
 
 #include "ScrollableViewControl.h"
+#include "Syntax/Highlighter.h"
 
 namespace OctaneGUI
 {
@@ -120,7 +121,6 @@ public:
     TextInput& SetMultiline(bool Multiline);
     bool Multiline() const;
 
-    TextInput& SetHighlighter(const std::shared_ptr<Syntax::Highlighter>& Value);
     Color TextColor() const;
 
     TextInput& SetNumbersOnly(bool NumbersOnly);
@@ -131,12 +131,6 @@ public:
 
     TextInput& SetWordDelimiters(const char32_t* Delimiters);
     TextInput& AddWordDelimiters(const char32_t* Delimiters);
-
-    template <class T>
-    TextInput& CreateHighlighter()
-    {
-        return SetHighlighter(std::make_shared<T>());
-    }
 
     void Focus();
     void Unfocus();
@@ -211,7 +205,7 @@ private:
     TextPosition m_FirstVisibleLine { 0, 0, 0 };
     TextPosition m_LastVisibleLine {};
 
-    std::shared_ptr<Syntax::Highlighter> m_Highlighter { nullptr };
+    Syntax::Highlighter m_Highlighter {};
 
     OnTextInputSignature m_OnTextChanged { nullptr };
     OnTextInputSignature m_OnConfirm { nullptr };
