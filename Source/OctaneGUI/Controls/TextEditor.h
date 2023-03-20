@@ -51,6 +51,7 @@ public:
     TextEditor& ClearLineColors();
 
     TextEditor& OpenFile(const char32_t* FileName);
+    TextEditor& CloseFile();
 
     TextEditor& EnableLanguageServer();
 

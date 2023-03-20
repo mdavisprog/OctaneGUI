@@ -52,7 +52,7 @@ TextEditor::TextEditor(Window* InWindow)
         {
             PaintLineColors(Brush);
         });
-    
+
     AddWordDelimiters(U"\",");
 
     m_Timer = GetWindow()->CreateTimer(0, false, [this]() -> void
@@ -96,6 +96,14 @@ TextEditor& TextEditor::OpenFile(const char32_t* FileName)
     SetText(Contents.c_str());
     m_FileName = FileName;
     OnOpenDocument();
+    return *this;
+}
+
+TextEditor& TextEditor::CloseFile()
+{
+    SetText(U"");
+    LS().CloseDocument(m_FileName.c_str());
+    m_FileName.clear();
     return *this;
 }
 
@@ -296,17 +304,17 @@ void TextEditor::OnOpenDocument()
 
     const std::u32string Extension { GetWindow()->App().FS().Extension(m_FileName) };
     const LanguageServer::ConnectionStatus Status { LS().ServerStatusByExtension(Extension.c_str()) };
-    
+
     switch (Status)
     {
     case LanguageServer::ConnectionStatus::NotConnected:
         LS().ConnectByAssociatedExtension(Extension.c_str());
-    
+
     case LanguageServer::ConnectionStatus::Connecting:
         m_State = State::OpenDocument;
         m_Timer->SetInterval(1000).Start();
         break;
-    
+
     case LanguageServer::ConnectionStatus::Connected:
     default: break;
     }

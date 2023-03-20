@@ -39,7 +39,7 @@ LanguageServer::LanguageServer(Application& App)
     // Fill with default associations to be used to connect to a language
     // server.
     m_Associations = {
-        {U"clangd", U"clangd", {U".c", U".cpp", U".h", U".hpp"}}
+        { U"clangd", U"clangd", { U".c", U".cpp", U".h", U".hpp" } }
     };
 }
 
@@ -107,11 +107,11 @@ bool LanguageServer::Connect(const char32_t* Name, const char32_t* Path)
         return false;
     }
 
-#ifdef WINDOWS
+    #ifdef WINDOWS
     const std::u32string FullPath = FileSystem::SetExtension(Path, U"exe");
-#else
+    #else
     const std::u32string FullPath { Path };
-#endif
+    #endif
 
     LSTalk_ConnectParams Params;
     Params.root_uri = nullptr;
@@ -229,7 +229,7 @@ void LanguageServer::CloseDocument(const char32_t* Path)
     const std::u32string Extension { m_App.FS().Extension(Path) };
     const Association Assoc { GetAssociationByExtension(Extension.c_str()) };
 
-    if (ServerStatus(Assoc.Name.c_str()) != ConnectionStatus::NotConnected)
+    if (ServerStatus(Assoc.Name.c_str()) != ConnectionStatus::Connected)
     {
         return;
     }
