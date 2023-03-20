@@ -418,6 +418,11 @@ bool TextInput::Multiline() const
     return m_Multiline;
 }
 
+Syntax::Highlighter& TextInput::Highlighter()
+{
+    return m_Highlighter;
+}
+
 Color TextInput::TextColor() const
 {
     return GetProperty(ThemeProperties::Text).ToColor();
@@ -1303,6 +1308,20 @@ void TextInput::ScrollIntoView()
 
 void TextInput::UpdateSpans()
 {
+    std::vector<TextSpan> Spans = m_Highlighter.GetSpans(VisibleText());
+    if (!Spans.empty())
+    {
+        for (TextSpan& Span : Spans)
+        {
+            Span.Start += m_FirstVisibleLine.Index();
+            Span.End += m_FirstVisibleLine.Index();
+        }
+
+        m_Text->ClearSpans();
+        m_Text->PushSpans(Spans);
+        return;
+    }
+
     m_Text->ClearSpans();
 
     if (!m_Anchor.IsValid())

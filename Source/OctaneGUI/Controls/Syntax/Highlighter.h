@@ -44,15 +44,18 @@ namespace Syntax
 class Highlighter
 {
 public:
-    Highlighter();
+    Highlighter(TextInput& Input);
     virtual ~Highlighter();
 
-    Highlighter& SetInput(const std::weak_ptr<TextInput>& Input);
+    Highlighter& SetKeywords(const std::vector<std::u32string>& Keywords);
+    const std::vector<std::u32string>& Keywords() const;
+
     Color DefaultColor() const;
-    std::vector<TextSpan> GetSpans(const std::u32string_view& Span) const;
+    std::vector<TextSpan> GetSpans(const std::u32string_view& View) const;
 
 private:
-    std::weak_ptr<TextInput> m_Input {};
+    TextInput& m_Input;
+    std::vector<std::u32string> m_Keywords {};
 };
 
 }

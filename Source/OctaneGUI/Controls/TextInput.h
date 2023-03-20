@@ -121,6 +121,7 @@ public:
     TextInput& SetMultiline(bool Multiline);
     bool Multiline() const;
 
+    Syntax::Highlighter& Highlighter();
     Color TextColor() const;
 
     TextInput& SetNumbersOnly(bool NumbersOnly);
@@ -205,7 +206,7 @@ private:
     TextPosition m_FirstVisibleLine { 0, 0, 0 };
     TextPosition m_LastVisibleLine {};
 
-    Syntax::Highlighter m_Highlighter {};
+    Syntax::Highlighter m_Highlighter { *this };
 
     OnTextInputSignature m_OnTextChanged { nullptr };
     OnTextInputSignature m_OnConfirm { nullptr };

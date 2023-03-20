@@ -29,12 +29,15 @@ SOFTWARE.
 #include "../../TextSpan.h"
 #include "../TextInput.h"
 
+#include <algorithm>
+
 namespace OctaneGUI
 {
 namespace Syntax
 {
 
-Highlighter::Highlighter()
+Highlighter::Highlighter(TextInput& Input)
+    : m_Input(Input)
 {
 }
 
@@ -42,25 +45,67 @@ Highlighter::~Highlighter()
 {
 }
 
-Highlighter& Highlighter::SetInput(const std::weak_ptr<TextInput>& Input)
+Highlighter& Highlighter::SetKeywords(const std::vector<std::u32string>& Keywords)
 {
-    m_Input = Input;
+    m_Keywords = Keywords;
     return *this;
+}
+
+const std::vector<std::u32string>& Highlighter::Keywords() const
+{
+    return m_Keywords;
 }
 
 Color Highlighter::DefaultColor() const
 {
-    if (m_Input.expired())
-    {
-        return Color::Black;
-    }
-
-    return m_Input.lock()->TextColor();
+    return m_Input.TextColor();
 }
 
-std::vector<TextSpan> Highlighter::GetSpans(const std::u32string_view&) const
+std::vector<TextSpan> Highlighter::GetSpans(const std::u32string_view& View) const
 {
-    return {};
+    std::vector<TextSpan> Result;
+
+    if (m_Keywords.empty())
+    {
+        return Result;
+    }
+
+    std::vector<TextSpan> Spans;
+    for (const std::u32string& Keyword : m_Keywords)
+    {
+        size_t Offset = 0;
+        size_t Pos = View.find(Keyword, Offset);
+        while (Pos != std::u32string_view::npos)
+        {
+            size_t End = std::min<size_t>(View.length(), Pos + Keyword.length());
+            Spans.push_back({ Pos, End, { 0, 255, 0, 255 } });
+            Offset += Keyword.length();
+            Pos = View.find(Keyword, Offset);
+        }
+    }
+
+    std::sort(Spans.begin(), Spans.end(), [](const TextSpan& A, const TextSpan& B) -> bool
+        {
+            return A.Start < B.Start;
+        });
+
+    size_t Start = 0;
+    for (const TextSpan& Span : Spans)
+    {
+        if (Start < Span.Start)
+        {
+            Result.push_back({ Start, Span.Start, DefaultColor() });
+            Result.push_back(Span);
+            Start = Span.End;
+        }
+    }
+
+    if (Start < View.length())
+    {
+        Result.push_back({ Start, View.length(), DefaultColor() });
+    }
+
+    return Result;
 }
 
 }
