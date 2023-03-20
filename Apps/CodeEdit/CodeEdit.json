@@ -5,6 +5,7 @@
             "MenuBar": {"Items": [
                 {"Text": "File", "ID": "File", "Items": [
                     {"Text": "Open File", "ID": "Open"},
+                    {"Text": "Close File", "ID": "Close"},
                     {"Type": "Separator"},
                     {"Text": "Quit", "ID": "Quit"}
                 ]}

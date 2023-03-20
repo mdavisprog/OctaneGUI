@@ -27,6 +27,10 @@ int main(int, char**)
         {
             Application.FS().FileDialog(OctaneGUI::FileDialogType::Open);
         });
+    ControlList.To<OctaneGUI::MenuItem>("File.Close")->SetOnPressed([&](OctaneGUI::TextSelectable) -> void
+        {
+            Editor->CloseFile();
+        });
     ControlList.To<OctaneGUI::MenuItem>("File.Quit")->SetOnPressed([&](OctaneGUI::TextSelectable&) -> void
         {
             Application.Quit();
