@@ -26,6 +26,8 @@ SOFTWARE.
 
 #pragma once
 
+#include "../../Color.h"
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -33,7 +35,6 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
-struct Color;
 class Text;
 class TextInput;
 struct TextSpan;
@@ -44,11 +45,22 @@ namespace Syntax
 class Highlighter
 {
 public:
+    struct Range
+    {
+    public:
+        std::u32string Start;
+        std::u32string End;
+        Color Tint;
+    };
+
     Highlighter(TextInput& Input);
     virtual ~Highlighter();
 
     Highlighter& SetKeywords(const std::vector<std::u32string>& Keywords);
     const std::vector<std::u32string>& Keywords() const;
+
+    Highlighter& SetRanges(const std::vector<Range>& Ranges);
+    const std::vector<Range>& Ranges() const;
 
     Color DefaultColor() const;
     std::vector<TextSpan> GetSpans(const std::u32string_view& View) const;
@@ -56,6 +68,7 @@ public:
 private:
     TextInput& m_Input;
     std::vector<std::u32string> m_Keywords {};
+    std::vector<Range> m_Ranges {};
 };
 
 }

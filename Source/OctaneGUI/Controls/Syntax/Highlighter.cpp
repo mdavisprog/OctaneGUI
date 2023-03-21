@@ -25,7 +25,6 @@ SOFTWARE.
 */
 
 #include "Highlighter.h"
-#include "../../Color.h"
 #include "../../TextSpan.h"
 #include "../TextInput.h"
 
@@ -56,6 +55,17 @@ const std::vector<std::u32string>& Highlighter::Keywords() const
     return m_Keywords;
 }
 
+Highlighter& Highlighter::SetRanges(const std::vector<Highlighter::Range>& Ranges)
+{
+    m_Ranges = Ranges;
+    return *this;
+}
+
+const std::vector<Highlighter::Range>& Highlighter::Ranges() const
+{
+    return m_Ranges;
+}
+
 Color Highlighter::DefaultColor() const
 {
     return m_Input.TextColor();
@@ -65,24 +75,61 @@ std::vector<TextSpan> Highlighter::GetSpans(const std::u32string_view& View) con
 {
     std::vector<TextSpan> Result;
 
-    if (m_Keywords.empty())
+    if (m_Ranges.empty() && m_Keywords.empty())
     {
         return Result;
     }
 
-    std::vector<TextSpan> Spans;
-    for (const std::u32string& Keyword : m_Keywords)
+    std::vector<TextSpan> RangeSpans;
+    for (const Range& Range_ : m_Ranges)
     {
-        size_t Offset = 0;
-        size_t Pos = View.find(Keyword, Offset);
+        size_t Pos = View.find(Range_.Start);
+        size_t End = View.find(Range_.End);
+        if (End < Pos && End != std::u32string_view::npos)
+        {
+            size_t EndPos = End + Range_.End.length();
+            RangeSpans.push_back({ 0, EndPos, Range_.Tint });
+            Pos = View.find(Range_.Start, EndPos);
+        }
+
         while (Pos != std::u32string_view::npos)
         {
-            size_t End = std::min<size_t>(View.length(), Pos + Keyword.length());
-            Spans.push_back({ Pos, End, { 0, 255, 0, 255 } });
-            Offset += Keyword.length();
-            Pos = View.find(Keyword, Offset);
+            End = std::min<size_t>(View.length(), View.find(Range_.End, Pos));
+            size_t EndPos = End + Range_.End.length();
+            RangeSpans.push_back({ Pos, EndPos, Range_.Tint });
+            Pos = View.find(Range_.Start, EndPos);
         }
     }
+
+    std::vector<TextSpan> KeywordSpans;
+    for (const std::u32string& Keyword : m_Keywords)
+    {
+        size_t Pos = View.find(Keyword);
+        while (Pos != std::u32string_view::npos)
+        {
+            bool InRange = false;
+            for (const TextSpan& Span : RangeSpans)
+            {
+                if (Span.Start <= Pos && Pos < Span.End)
+                {
+                    InRange = true;
+                    break;
+                }
+            }
+
+            if (!InRange)
+            {
+                size_t End = std::min<size_t>(View.length(), Pos + Keyword.length());
+                KeywordSpans.push_back({ Pos, End, { 0, 0, 255, 255 } });
+            }
+
+            Pos = View.find(Keyword, Pos + Keyword.length());
+        }
+    }
+
+    std::vector<TextSpan> Spans;
+    Spans.insert(Spans.end(), RangeSpans.begin(), RangeSpans.end());
+    Spans.insert(Spans.end(), KeywordSpans.begin(), KeywordSpans.end());
 
     std::sort(Spans.begin(), Spans.end(), [](const TextSpan& A, const TextSpan& B) -> bool
         {
@@ -92,7 +139,7 @@ std::vector<TextSpan> Highlighter::GetSpans(const std::u32string_view& View) con
     size_t Start = 0;
     for (const TextSpan& Span : Spans)
     {
-        if (Start < Span.Start)
+        if (Start <= Span.Start)
         {
             Result.push_back({ Start, Span.Start, DefaultColor() });
             Result.push_back(Span);
