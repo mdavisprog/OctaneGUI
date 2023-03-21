@@ -71,6 +71,17 @@ Color Highlighter::DefaultColor() const
     return m_Input.TextColor();
 }
 
+Highlighter& Highlighter::SetKeywordColor(Color KeywordColor)
+{
+    m_KeywordColor = KeywordColor;
+    return *this;
+}
+
+Color Highlighter::KeywordColor() const
+{
+    return m_KeywordColor;
+}
+
 std::vector<TextSpan> Highlighter::GetSpans(const std::u32string_view& View) const
 {
     std::vector<TextSpan> Result;
@@ -120,7 +131,7 @@ std::vector<TextSpan> Highlighter::GetSpans(const std::u32string_view& View) con
             if (!InRange)
             {
                 size_t End = std::min<size_t>(View.length(), Pos + Keyword.length());
-                KeywordSpans.push_back({ Pos, End, { 0, 0, 255, 255 } });
+                KeywordSpans.push_back({ Pos, End, m_KeywordColor });
             }
 
             Pos = View.find(Keyword, Pos + Keyword.length());

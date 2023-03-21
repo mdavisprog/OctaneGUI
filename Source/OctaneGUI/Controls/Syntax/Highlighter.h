@@ -63,12 +63,17 @@ public:
     const std::vector<Range>& Ranges() const;
 
     Color DefaultColor() const;
+
+    Highlighter& SetKeywordColor(Color KeywordColor);
+    Color KeywordColor() const;
+
     std::vector<TextSpan> GetSpans(const std::u32string_view& View) const;
 
 private:
     TextInput& m_Input;
     std::vector<std::u32string> m_Keywords {};
     std::vector<Range> m_Ranges {};
+    Color m_KeywordColor { 0, 0, 255, 255 };
 };
 
 }
