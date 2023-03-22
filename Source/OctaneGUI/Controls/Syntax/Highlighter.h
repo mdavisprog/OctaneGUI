@@ -59,6 +59,9 @@ public:
     Highlighter& SetKeywords(const std::vector<std::u32string>& Keywords);
     const std::vector<std::u32string>& Keywords() const;
 
+    Highlighter& SetSymbols(const std::vector<std::u32string>& Symbols);
+    const std::vector<std::u32string>& Symbols() const;
+
     Highlighter& SetRanges(const std::vector<Range>& Ranges);
     const std::vector<Range>& Ranges() const;
 
@@ -70,10 +73,14 @@ public:
     std::vector<TextSpan> GetSpans(const std::u32string_view& View) const;
 
 private:
+    bool ShouldHighlight() const;
+
     TextInput& m_Input;
     std::vector<std::u32string> m_Keywords {};
+    std::vector<std::u32string> m_Symbols {};
     std::vector<Range> m_Ranges {};
-    Color m_KeywordColor { 0, 0, 255, 255 };
+    Color m_KeywordColor { 189, 99, 197, 255 };
+    Color m_SymbolColor { 86, 156, 214, 255 };
 };
 
 }
