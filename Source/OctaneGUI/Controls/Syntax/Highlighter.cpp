@@ -151,7 +151,7 @@ std::vector<TextSpan> Highlighter::GetSpans(const std::u32string_view& View) con
 
         while (Pos != std::u32string_view::npos)
         {
-            End = std::min<size_t>(View.length(), View.find(Range_.End, Pos));
+            End = std::min<size_t>(View.length(), View.find(Range_.End, Pos + Range_.Start.length()));
             size_t EndPos = End + Range_.End.length();
             RangeSpans.push_back({ Pos, EndPos, Range_.Tint });
             Pos = View.find(Range_.Start, EndPos);
