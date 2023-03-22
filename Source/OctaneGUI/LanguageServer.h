@@ -78,7 +78,8 @@ public:
     bool OpenDocument(const char32_t* Path);
     void CloseDocument(const char32_t* Path);
 
-    const Association GetAssociationByExtension(const char32_t* Extension) const;
+    const Association AssociationByPath(const char32_t* Path) const;
+    const Association AssociationByExtension(const char32_t* Extension) const;
 
 private:
     Application& m_App;

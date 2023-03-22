@@ -130,7 +130,7 @@ bool LanguageServer::Connect(const char32_t* Name, const char32_t* Path)
 
 bool LanguageServer::ConnectByAssociatedExtension(const char32_t* Extension)
 {
-    const Association Item = GetAssociationByExtension(Extension);
+    const Association Item = AssociationByExtension(Extension);
     return Connect(Item.Name.c_str(), Item.Path.c_str());
 }
 
@@ -167,7 +167,7 @@ LanguageServer::ConnectionStatus LanguageServer::ServerStatus(const char32_t* Na
 
 LanguageServer::ConnectionStatus LanguageServer::ServerStatusByExtension(const char32_t* Extension) const
 {
-    const Association Item = GetAssociationByExtension(Extension);
+    const Association Item = AssociationByExtension(Extension);
     return ServerStatus(Item.Name.c_str());
 }
 
@@ -196,8 +196,7 @@ void LanguageServer::Process()
 
 bool LanguageServer::OpenDocument(const char32_t* Path)
 {
-    const std::u32string Extension { m_App.FS().Extension(Path) };
-    const Association Assoc { GetAssociationByExtension(Extension.c_str()) };
+    const Association Assoc { AssociationByPath(Path) };
 
     if (ServerStatus(Assoc.Name.c_str()) != ConnectionStatus::Connected)
     {
@@ -226,8 +225,7 @@ bool LanguageServer::OpenDocument(const char32_t* Path)
 
 void LanguageServer::CloseDocument(const char32_t* Path)
 {
-    const std::u32string Extension { m_App.FS().Extension(Path) };
-    const Association Assoc { GetAssociationByExtension(Extension.c_str()) };
+    const Association Assoc { AssociationByPath(Path) };
 
     if (ServerStatus(Assoc.Name.c_str()) != ConnectionStatus::Connected)
     {
@@ -249,7 +247,13 @@ void LanguageServer::CloseDocument(const char32_t* Path)
 #endif
 }
 
-const LanguageServer::Association LanguageServer::GetAssociationByExtension(const char32_t* Extension) const
+const LanguageServer::Association LanguageServer::AssociationByPath(const char32_t* Path) const
+{
+    const std::u32string Extension { m_App.FS().Extension(Path) };
+    return AssociationByExtension(Extension.c_str());
+}
+
+const LanguageServer::Association LanguageServer::AssociationByExtension(const char32_t* Extension) const
 {
     for (const Association& Item : m_Associations)
     {
