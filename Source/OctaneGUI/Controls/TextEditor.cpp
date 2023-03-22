@@ -95,7 +95,7 @@ TextEditor& TextEditor::OpenFile(const char32_t* FileName)
     std::string Contents = GetWindow()->App().FS().LoadContents(FileName);
     SetText(Contents.c_str());
     m_FileName = FileName;
-    OnOpenDocument();
+    OpenDocument();
     return *this;
 }
 
@@ -295,7 +295,7 @@ LanguageServer& TextEditor::LS()
     return GetWindow()->App().LS();
 }
 
-void TextEditor::OnOpenDocument()
+void TextEditor::OpenDocument()
 {
     if (m_FileName.empty())
     {
@@ -332,7 +332,7 @@ void TextEditor::OnTimer()
     switch (m_State)
     {
     case State::OpenDocument:
-        OnOpenDocument();
+        OpenDocument();
         break;
 
     case State::None:

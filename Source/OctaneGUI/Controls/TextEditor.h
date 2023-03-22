@@ -77,7 +77,7 @@ private:
     const LanguageServer& LS() const;
     LanguageServer& LS();
 
-    void OnOpenDocument();
+    void OpenDocument();
 
     void OnTimer();
 
