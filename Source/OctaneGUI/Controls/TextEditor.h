@@ -78,6 +78,7 @@ private:
     LanguageServer& LS();
 
     void OpenDocument();
+    void RetrieveSymbols();
 
     void OnTimer();
 

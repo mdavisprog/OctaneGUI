@@ -319,6 +319,17 @@ void TextEditor::OpenDocument()
     }
 
     LS().OpenDocument(m_FileName.c_str());
+    LS().DocumentSymbols(m_FileName.c_str());
+}
+
+void TextEditor::RetrieveSymbols()
+{
+    if (m_FileName.empty())
+    {
+        return;
+    }
+
+    LS().DocumentSymbols(m_FileName.c_str());
 }
 
 void TextEditor::OnTimer()
