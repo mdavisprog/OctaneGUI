@@ -302,13 +302,12 @@ void TextEditor::OpenDocument()
         return;
     }
 
-    const std::u32string Extension { GetWindow()->App().FS().Extension(m_FileName) };
-    const LanguageServer::ConnectionStatus Status { LS().ServerStatusByExtension(Extension.c_str()) };
+    const LanguageServer::ConnectionStatus Status { LS().ServerStatusByPath(m_FileName.c_str()) };
 
     switch (Status)
     {
     case LanguageServer::ConnectionStatus::NotConnected:
-        LS().ConnectByAssociatedExtension(Extension.c_str());
+        LS().ConnectByAssociatedPath(m_FileName.c_str());
 
     case LanguageServer::ConnectionStatus::Connecting:
         m_State = State::OpenDocument;

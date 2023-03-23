@@ -128,6 +128,12 @@ bool LanguageServer::Connect(const char32_t* Name, const char32_t* Path)
     return false;
 }
 
+bool LanguageServer::ConnectByAssociatedPath(const char32_t* Path)
+{
+    const std::u32string Extension { m_App.FS().Extension(Path) };
+    return ConnectByAssociatedExtension(Extension.c_str());
+}
+
 bool LanguageServer::ConnectByAssociatedExtension(const char32_t* Extension)
 {
     const Association Item = AssociationByExtension(Extension);
@@ -163,6 +169,12 @@ LanguageServer::ConnectionStatus LanguageServer::ServerStatus(const char32_t* Na
     }
 
     return ConnectionStatus::NotConnected;
+}
+
+LanguageServer::ConnectionStatus LanguageServer::ServerStatusByPath(const char32_t* Path) const
+{
+    const std::u32string Extension { m_App.FS().Extension(Path) };
+    return ServerStatusByExtension(Extension.c_str());
 }
 
 LanguageServer::ConnectionStatus LanguageServer::ServerStatusByExtension(const char32_t* Extension) const

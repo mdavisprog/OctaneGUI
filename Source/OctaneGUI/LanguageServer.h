@@ -68,9 +68,11 @@ public:
     void Shutdown();
     bool IsInitialized() const;
     bool Connect(const char32_t* Name, const char32_t* Path);
+    bool ConnectByAssociatedPath(const char32_t* Path);
     bool ConnectByAssociatedExtension(const char32_t* Extension);
     bool Close(const char32_t* Name);
     ConnectionStatus ServerStatus(const char32_t* Name) const;
+    ConnectionStatus ServerStatusByPath(const char32_t* Path) const;
     ConnectionStatus ServerStatusByExtension(const char32_t* Extension) const;
 
     void Process();
