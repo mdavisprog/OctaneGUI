@@ -259,6 +259,35 @@ void LanguageServer::CloseDocument(const char32_t* Path)
 #endif
 }
 
+bool LanguageServer::DocumentSymbols(const char32_t* Path)
+{
+    const Association Assoc { AssociationByPath(Path) };
+
+    if (ServerStatus(Assoc.Name.c_str()) != ConnectionStatus::Connected)
+    {
+        return false;
+    }
+
+#if WITH_LSTALK
+    if (m_Context == nullptr)
+    {
+        return false;
+    }
+
+    if (m_Servers.find(Assoc.Name) == m_Servers.end())
+    {
+        return false;
+    }
+
+    if (lstalk_text_document_symbol(m_Context, m_Servers[Assoc.Name], String::ToMultiByte(Path).c_str()))
+    {
+        return true;
+    }
+#endif
+
+    return false;
+}
+
 const LanguageServer::Association LanguageServer::AssociationByPath(const char32_t* Path) const
 {
     const std::u32string Extension { m_App.FS().Extension(Path) };

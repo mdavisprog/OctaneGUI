@@ -80,6 +80,8 @@ public:
     bool OpenDocument(const char32_t* Path);
     void CloseDocument(const char32_t* Path);
 
+    bool DocumentSymbols(const char32_t* Path);
+
     const Association AssociationByPath(const char32_t* Path) const;
     const Association AssociationByExtension(const char32_t* Extension) const;
 
