@@ -26,6 +26,7 @@ SOFTWARE.
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -43,19 +44,32 @@ class Application;
 class LanguageServer
 {
 public:
-    struct Association
+    class Server
     {
-    public:
-        std::u32string Name;
-        std::u32string Path;
-        std::vector<std::u32string> Extensions;
-    };
+        friend class LanguageServer;
 
-    enum class ConnectionStatus
-    {
-        NotConnected,
-        Connecting,
-        Connected,
+    public:
+        enum class Status
+        {
+            NotConnected,
+            Connecting,
+            Connected,
+        };
+
+        Server();
+        ~Server();
+
+        bool SupportsExtension(const char32_t* Extension) const;
+
+    private:
+        std::u32string m_Name {};
+        std::u32string m_Path {};
+        std::vector<std::u32string> m_Extensions {};
+        Status m_Status { Status::NotConnected };
+
+#if WITH_LSTALK
+        LSTalk_ServerID m_Connection { LSTALK_INVALID_SERVER_ID };
+#endif
     };
 
     LanguageServer(Application& App);
@@ -67,13 +81,13 @@ public:
     bool Initialize();
     void Shutdown();
     bool IsInitialized() const;
-    bool Connect(const char32_t* Name, const char32_t* Path);
-    bool ConnectByAssociatedPath(const char32_t* Path);
-    bool ConnectByAssociatedExtension(const char32_t* Extension);
+    void AddServer(const char32_t* Name, const char32_t* Path, const std::vector<std::u32string>& Extensions);
+    bool Connect(const char32_t* Name, const char32_t* Path, const std::vector<std::u32string>& Extensions);
+    bool ConnectFromFilePath(const char32_t* Path);
     bool Close(const char32_t* Name);
-    ConnectionStatus ServerStatus(const char32_t* Name) const;
-    ConnectionStatus ServerStatusByPath(const char32_t* Path) const;
-    ConnectionStatus ServerStatusByExtension(const char32_t* Extension) const;
+    Server::Status ServerStatus(const char32_t* Name) const;
+    Server::Status ServerStatusByFilePath(const char32_t* Path) const;
+    Server::Status ServerStatusByExtension(const char32_t* Extension) const;
 
     void Process();
 
@@ -82,19 +96,18 @@ public:
 
     bool DocumentSymbols(const char32_t* Path);
 
-    const Association AssociationByPath(const char32_t* Path) const;
-    const Association AssociationByExtension(const char32_t* Extension) const;
-
 private:
+    std::shared_ptr<Server> GetServer(const char32_t* Name) const;
+    std::shared_ptr<Server> GetServerByFilePath(const char32_t* Path) const;
+    std::shared_ptr<Server> GetServerByExtension(const char32_t* Extension) const;
+
     Application& m_App;
     bool m_SearchEnvironmentPath { true };
     bool m_Initialized { false };
-    std::vector<Association> m_Associations {};
-    std::unordered_map<std::u32string, ConnectionStatus> m_ServerStatus;
+    std::vector<std::shared_ptr<Server>> m_Servers {};
 
 #if WITH_LSTALK
     struct LSTalk_Context* m_Context { nullptr };
-    std::unordered_map<std::u32string, LSTalk_ServerID> m_Servers;
 #endif
 };
 

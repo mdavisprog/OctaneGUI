@@ -53,8 +53,6 @@ public:
     TextEditor& OpenFile(const char32_t* FileName);
     TextEditor& CloseFile();
 
-    TextEditor& EnableLanguageServer();
-
     virtual void OnLoad(const Json& Root) override;
 
 protected:

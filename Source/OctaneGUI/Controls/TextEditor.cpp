@@ -107,12 +107,6 @@ TextEditor& TextEditor::CloseFile()
     return *this;
 }
 
-TextEditor& TextEditor::EnableLanguageServer()
-{
-    LS().Initialize();
-    return *this;
-}
-
 void TextEditor::OnLoad(const Json& Root)
 {
     TextInput::OnLoad(Root);
@@ -302,19 +296,27 @@ void TextEditor::OpenDocument()
         return;
     }
 
-    const LanguageServer::ConnectionStatus Status { LS().ServerStatusByPath(m_FileName.c_str()) };
+    const LanguageServer::Server::Status Status { LS().ServerStatusByFilePath(m_FileName.c_str()) };
 
     switch (Status)
     {
-    case LanguageServer::ConnectionStatus::NotConnected:
-        LS().ConnectByAssociatedPath(m_FileName.c_str());
+    case LanguageServer::Server::Status::NotConnected:
+        {
+            if (LS().ConnectFromFilePath(m_FileName.c_str()))
+            {
+                m_State = State::OpenDocument;
+                m_Timer->SetInterval(1000).Start();
+            }
 
-    case LanguageServer::ConnectionStatus::Connecting:
+            return;
+        } break;
+
+    case LanguageServer::Server::Status::Connecting:
         m_State = State::OpenDocument;
         m_Timer->SetInterval(1000).Start();
         break;
 
-    case LanguageServer::ConnectionStatus::Connected:
+    case LanguageServer::Server::Status::Connected:
     default: break;
     }
 

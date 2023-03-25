@@ -33,14 +33,30 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+LanguageServer::Server::Server()
+{
+}
+
+LanguageServer::Server::~Server()
+{
+}
+
+bool LanguageServer::Server::SupportsExtension(const char32_t* Extension) const
+{
+    for (const std::u32string& Item : m_Extensions)
+    {
+        if (Item == Extension)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 LanguageServer::LanguageServer(Application& App)
     : m_App(App)
 {
-    // Fill with default associations to be used to connect to a language
-    // server.
-    m_Associations = {
-        { U"clangd", U"clangd", { U".c", U".cpp", U".h", U".hpp" } }
-    };
 }
 
 LanguageServer::~LanguageServer()
@@ -70,6 +86,7 @@ bool LanguageServer::Initialize()
     if (m_Context != nullptr)
     {
         lstalk_set_client_info(m_Context, "CodeEdit", "1");
+        lstalk_set_debug_flags(m_Context, LSTALK_DEBUGFLAGS_PRINT_RESPONSES);
         m_Initialized = true;
     }
 #endif
@@ -82,6 +99,7 @@ void LanguageServer::Shutdown()
     lstalk_shutdown(m_Context);
 #endif
     m_Initialized = false;
+    m_Servers.clear();
 }
 
 bool LanguageServer::IsInitialized() const
@@ -89,14 +107,28 @@ bool LanguageServer::IsInitialized() const
     return m_Initialized;
 }
 
-bool LanguageServer::Connect(const char32_t* Name, const char32_t* Path)
+void LanguageServer::AddServer(const char32_t* Name, const char32_t* Path, const std::vector<std::u32string>& Extensions)
+{
+    if (GetServer(Name))
+    {
+        return;
+    }
+
+    std::shared_ptr<Server> Item = std::make_shared<Server>();
+    Item->m_Name = Name;
+    Item->m_Path = Path;
+    Item->m_Extensions = Extensions;
+    m_Servers.push_back(Item);
+}
+
+bool LanguageServer::Connect(const char32_t* Name, const char32_t* Path, const std::vector<std::u32string>& Extensions)
 {
     if (std::u32string(Name).empty() || std::u32string(Path).empty())
     {
         return false;
     }
 
-    if (ServerStatus(Name) != ConnectionStatus::NotConnected)
+    if (ServerStatus(Name) != Server::Status::NotConnected)
     {
         return true;
     }
@@ -116,11 +148,14 @@ bool LanguageServer::Connect(const char32_t* Name, const char32_t* Path)
     LSTalk_ConnectParams Params;
     Params.root_uri = nullptr;
     Params.seek_path_env = m_SearchEnvironmentPath ? lstalk_true : lstalk_false;
-    LSTalk_ServerID Server = lstalk_connect(m_Context, String::ToMultiByte(FullPath).c_str(), &Params);
-    if (Server != LSTALK_INVALID_SERVER_ID)
+    LSTalk_ServerID Connection = lstalk_connect(m_Context, String::ToMultiByte(FullPath).c_str(), &Params);
+    if (Connection != LSTALK_INVALID_SERVER_ID)
     {
-        m_ServerStatus[Name] = ConnectionStatus::Connecting;
-        m_Servers[Name] = Server;
+        AddServer(Name, Path, Extensions);
+        std::shared_ptr<Server> Item = GetServer(Name);
+        Item->m_Status = Server::Status::Connecting;
+        Item->m_Connection = Connection;
+        m_Servers.push_back(Item);
         return true;
     }
 #endif
@@ -128,59 +163,75 @@ bool LanguageServer::Connect(const char32_t* Name, const char32_t* Path)
     return false;
 }
 
-bool LanguageServer::ConnectByAssociatedPath(const char32_t* Path)
+bool LanguageServer::ConnectFromFilePath(const char32_t* Path)
 {
-    const std::u32string Extension { m_App.FS().Extension(Path) };
-    return ConnectByAssociatedExtension(Extension.c_str());
-}
+    const std::shared_ptr<Server> Item = GetServerByFilePath(Path);
 
-bool LanguageServer::ConnectByAssociatedExtension(const char32_t* Extension)
-{
-    const Association Item = AssociationByExtension(Extension);
-    return Connect(Item.Name.c_str(), Item.Path.c_str());
+    if (!Item)
+    {
+        return false;
+    }
+
+    return Connect(Item->m_Name.c_str(), Item->m_Path.c_str(), Item->m_Extensions);
 }
 
 bool LanguageServer::Close(const char32_t* Name)
 {
-    m_ServerStatus.erase(Name);
-
 #if WITH_LSTALK
     if (m_Context == nullptr)
     {
         return false;
     }
 
-    if (m_Servers.find(Name) != m_Servers.end())
+    for (std::vector<std::shared_ptr<Server>>::const_iterator It = m_Servers.begin(); It != m_Servers.end(); ++It)
     {
-        lstalk_close(m_Context, m_Servers[Name]);
-        m_Servers.erase(Name);
-        return true;
+        const std::shared_ptr<Server>& Item = *It;
+        if (Item->m_Name == Name)
+        {
+            lstalk_close(m_Context, Item->m_Connection);
+            m_Servers.erase(It);
+            break;
+        }
     }
 #endif
 
     return false;
 }
 
-LanguageServer::ConnectionStatus LanguageServer::ServerStatus(const char32_t* Name) const
+LanguageServer::Server::Status LanguageServer::ServerStatus(const char32_t* Name) const
 {
-    if (m_ServerStatus.find(Name) != m_ServerStatus.end())
+    const std::shared_ptr<Server> Item = GetServer(Name);
+
+    if (Item)
     {
-        return m_ServerStatus.at(Name);
+        return Item->m_Status;
     }
 
-    return ConnectionStatus::NotConnected;
+    return Server::Status::NotConnected;
 }
 
-LanguageServer::ConnectionStatus LanguageServer::ServerStatusByPath(const char32_t* Path) const
+LanguageServer::Server::Status LanguageServer::ServerStatusByFilePath(const char32_t* Path) const
 {
-    const std::u32string Extension { m_App.FS().Extension(Path) };
-    return ServerStatusByExtension(Extension.c_str());
+    const std::shared_ptr<Server> Item = GetServerByFilePath(Path);
+
+    if (Item)
+    {
+        return Item->m_Status;
+    }
+
+    return Server::Status::NotConnected;
 }
 
-LanguageServer::ConnectionStatus LanguageServer::ServerStatusByExtension(const char32_t* Extension) const
+LanguageServer::Server::Status LanguageServer::ServerStatusByExtension(const char32_t* Extension) const
 {
-    const Association Item = AssociationByExtension(Extension);
-    return ServerStatus(Item.Name.c_str());
+    const std::shared_ptr<Server> Item = GetServerByExtension(Extension);
+
+    if (Item)
+    {
+        return Item->m_Status;
+    }
+
+    return Server::Status::NotConnected;
 }
 
 void LanguageServer::Process()
@@ -193,14 +244,16 @@ void LanguageServer::Process()
 
     lstalk_process_responses(m_Context);
 
-    for (const std::pair<std::u32string, LSTalk_ServerID>& Item : m_Servers)
+    for (const std::shared_ptr<Server>& Item : m_Servers)
     {
-        LSTalk_Notification Notification;
-        lstalk_poll_notification(m_Context, Item.second, &Notification);
+        LSTalk_ServerID Connection = Item->m_Connection;
 
-        if (lstalk_get_connection_status(m_Context, Item.second) == LSTALK_CONNECTION_STATUS_CONNECTED)
+        LSTalk_Notification Notification;
+        lstalk_poll_notification(m_Context, Connection, &Notification);
+
+        if (lstalk_get_connection_status(m_Context, Connection) == LSTALK_CONNECTION_STATUS_CONNECTED)
         {
-            m_ServerStatus[Item.first] = ConnectionStatus::Connected;
+            Item->m_Status = Server::Status::Connected;
         }
     }
 #endif
@@ -208,9 +261,7 @@ void LanguageServer::Process()
 
 bool LanguageServer::OpenDocument(const char32_t* Path)
 {
-    const Association Assoc { AssociationByPath(Path) };
-
-    if (ServerStatus(Assoc.Name.c_str()) != ConnectionStatus::Connected)
+    if (ServerStatusByFilePath(Path) != Server::Status::Connected)
     {
         return false;
     }
@@ -221,12 +272,14 @@ bool LanguageServer::OpenDocument(const char32_t* Path)
         return false;
     }
 
-    if (m_Servers.find(Assoc.Name) == m_Servers.end())
+    const std::shared_ptr<Server> Item = GetServerByFilePath(Path);
+
+    if (!Item)
     {
         return false;
     }
 
-    if (lstalk_text_document_did_open(m_Context, m_Servers[Assoc.Name], String::ToMultiByte(Path).c_str()))
+    if (lstalk_text_document_did_open(m_Context, Item->m_Connection, String::ToMultiByte(Path).c_str()))
     {
         return true;
     }
@@ -237,9 +290,7 @@ bool LanguageServer::OpenDocument(const char32_t* Path)
 
 void LanguageServer::CloseDocument(const char32_t* Path)
 {
-    const Association Assoc { AssociationByPath(Path) };
-
-    if (ServerStatus(Assoc.Name.c_str()) != ConnectionStatus::Connected)
+    if (ServerStatusByFilePath(Path) != Server::Status::Connected)
     {
         return;
     }
@@ -250,20 +301,20 @@ void LanguageServer::CloseDocument(const char32_t* Path)
         return;
     }
 
-    if (m_Servers.find(Assoc.Name) == m_Servers.end())
+    const std::shared_ptr<Server> Item = GetServerByFilePath(Path);
+
+    if (!Item)
     {
         return;
     }
 
-    lstalk_text_document_did_close(m_Context, m_Servers[Assoc.Name], String::ToMultiByte(Path).c_str());
+    lstalk_text_document_did_close(m_Context, Item->m_Connection, String::ToMultiByte(Path).c_str());
 #endif
 }
 
 bool LanguageServer::DocumentSymbols(const char32_t* Path)
 {
-    const Association Assoc { AssociationByPath(Path) };
-
-    if (ServerStatus(Assoc.Name.c_str()) != ConnectionStatus::Connected)
+    if (ServerStatusByFilePath(Path) != Server::Status::Connected)
     {
         return false;
     }
@@ -274,12 +325,14 @@ bool LanguageServer::DocumentSymbols(const char32_t* Path)
         return false;
     }
 
-    if (m_Servers.find(Assoc.Name) == m_Servers.end())
+    const std::shared_ptr<Server> Item = GetServerByFilePath(Path);
+
+    if (!Item)
     {
         return false;
     }
 
-    if (lstalk_text_document_symbol(m_Context, m_Servers[Assoc.Name], String::ToMultiByte(Path).c_str()))
+    if (lstalk_text_document_symbol(m_Context, Item->m_Connection, String::ToMultiByte(Path).c_str()))
     {
         return true;
     }
@@ -288,26 +341,36 @@ bool LanguageServer::DocumentSymbols(const char32_t* Path)
     return false;
 }
 
-const LanguageServer::Association LanguageServer::AssociationByPath(const char32_t* Path) const
+std::shared_ptr<LanguageServer::Server> LanguageServer::GetServer(const char32_t* Name) const
 {
-    const std::u32string Extension { m_App.FS().Extension(Path) };
-    return AssociationByExtension(Extension.c_str());
-}
-
-const LanguageServer::Association LanguageServer::AssociationByExtension(const char32_t* Extension) const
-{
-    for (const Association& Item : m_Associations)
+    for (const std::shared_ptr<Server>& Item : m_Servers)
     {
-        for (const std::u32string& Ext : Item.Extensions)
+        if (Item->m_Name == Name)
         {
-            if (Ext == Extension)
-            {
-                return Item;
-            }
+            return Item;
         }
     }
 
-    return LanguageServer::Association {};
+    return nullptr;
+}
+
+std::shared_ptr<LanguageServer::Server> LanguageServer::GetServerByFilePath(const char32_t* Path) const
+{
+    const std::u32string Extension { m_App.FS().Extension(Path) };
+    return GetServerByExtension(Extension.c_str());
+}
+
+std::shared_ptr<LanguageServer::Server> LanguageServer::GetServerByExtension(const char32_t* Extension) const
+{
+    for (const std::shared_ptr<Server>& Item : m_Servers)
+    {
+        if (Item->SupportsExtension(Extension))
+        {
+            return Item;
+        }
+    }
+
+    return nullptr;
 }
 
 }
