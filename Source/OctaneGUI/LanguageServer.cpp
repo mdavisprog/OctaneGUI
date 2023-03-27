@@ -265,6 +265,18 @@ LanguageServer& LanguageServer::UnregisterListener(ListenerID ID)
     return *this;
 }
 
+static LanguageServer::Server::Status ToStatus(LSTalk_ConnectionStatus Status)
+{
+    switch (Status)
+    {
+    case LSTALK_CONNECTION_STATUS_CONNECTING: return LanguageServer::Server::Status::Connecting;
+    case LSTALK_CONNECTION_STATUS_CONNECTED: return LanguageServer::Server::Status::Connected;
+    default: break;
+    }
+
+    return LanguageServer::Server::Status::NotConnected;
+}
+
 void LanguageServer::Process()
 {
 #if WITH_LSTALK
@@ -282,9 +294,11 @@ void LanguageServer::Process()
         LSTalk_Notification Notification;
         lstalk_poll_notification(m_Context, Connection, &Notification);
 
-        if (lstalk_get_connection_status(m_Context, Connection) == LSTALK_CONNECTION_STATUS_CONNECTED)
+        LanguageServer::Server::Status Status = ToStatus(lstalk_get_connection_status(m_Context, Connection));
+        if (Status != Item->m_Status)
         {
-            Item->m_Status = Server::Status::Connected;
+            Item->m_Status = Status;
+            Notify(Notification::ConnectionStatus, Item);
         }
     }
 #endif
