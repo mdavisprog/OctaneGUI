@@ -48,6 +48,19 @@ std::string FileSystem::Extension(const std::string& Location)
     return Result;
 }
 
+std::u32string FileSystem::Extension(const std::u32string& Location)
+{
+    std::u32string Result {};
+
+    size_t Pos = Location.rfind(U'.');
+    if (Pos != std::string::npos)
+    {
+        Result = Location.substr(Pos, Location.length() - Pos);
+    }
+
+    return Result;
+}
+
 std::u32string FileSystem::SetExtension(const std::u32string& Location, const std::u32string& Extension)
 {
     std::filesystem::path Path { Location };
@@ -103,12 +116,6 @@ std::u32string FileSystem::CombinePath(const std::u32string& Left, const std::u3
     std::filesystem::path Path { Left };
     Path.append(Right);
     return Path.u32string();
-}
-
-std::u32string FileSystem::Extension(const std::u32string& Location) const
-{
-    std::filesystem::path Path { Location };
-    return Path.extension().u32string();
 }
 
 std::u32string FileSystem::FileName(const std::u32string& Location) const

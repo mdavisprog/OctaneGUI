@@ -53,6 +53,7 @@ public:
     typedef std::function<void(FileDialogType, const std::u32string&)> OnFileDialogResultSignature;
 
     static std::string Extension(const std::string& Location);
+    static std::u32string Extension(const std::u32string& Location);
     static std::u32string SetExtension(const std::u32string& Location, const std::u32string& Extension);
 
     FileSystem(Application& App);
@@ -66,7 +67,6 @@ public:
     std::u32string ParentDirectory(const std::u32string& Location) const;
     std::u32string RootDirectory(const std::u32string& Location) const;
     std::u32string CombinePath(const std::u32string& Left, const std::u32string& Right) const;
-    std::u32string Extension(const std::u32string& Location) const;
     std::u32string FileName(const std::u32string& Location) const;
     std::vector<DirectoryItem> DirectoryItems(const std::u32string& Location) const;
 

@@ -401,7 +401,7 @@ std::shared_ptr<LanguageServer::Server> LanguageServer::GetServer(const char32_t
 
 std::shared_ptr<LanguageServer::Server> LanguageServer::GetServerByFilePath(const char32_t* Path) const
 {
-    const std::u32string Extension { m_App.FS().Extension(Path) };
+    const std::u32string Extension { FileSystem::Extension(Path) };
     return GetServerByExtension(Extension.c_str());
 }
 
