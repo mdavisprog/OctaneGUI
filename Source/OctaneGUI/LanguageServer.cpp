@@ -239,6 +239,32 @@ LanguageServer::Server::Status LanguageServer::ServerStatusByExtension(const cha
     return Server::Status::NotConnected;
 }
 
+LanguageServer::ListenerID LanguageServer::RegisterListener(OnNotificationSignature&& Fn)
+{
+    ListenerID ID = ++m_ListenerID;
+    m_Listeners.push_back({ ID, std::move(Fn) });
+    return ID;
+}
+
+LanguageServer& LanguageServer::UnregisterListener(ListenerID ID)
+{
+    if (ID == INVALID_LISTENER_ID)
+    {
+        return *this;
+    }
+
+    for (std::vector<Listener>::const_iterator It = m_Listeners.begin(); It != m_Listeners.end(); ++It)
+    {
+        if ((*It).ID == ID)
+        {
+            m_Listeners.erase(It);
+            break;
+        }
+    }
+
+    return *this;
+}
+
 void LanguageServer::Process()
 {
 #if WITH_LSTALK
@@ -376,6 +402,14 @@ std::shared_ptr<LanguageServer::Server> LanguageServer::GetServerByExtension(con
     }
 
     return nullptr;
+}
+
+void LanguageServer::Notify(Notification Type, const std::shared_ptr<Server>& Target) const
+{
+    for (const Listener& Listener_ : m_Listeners)
+    {
+        Listener_.Callback(Type, Target);
+    }
 }
 
 }

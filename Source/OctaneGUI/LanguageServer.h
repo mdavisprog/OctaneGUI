@@ -26,6 +26,7 @@ SOFTWARE.
 
 #pragma once
 
+#include <functional>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -73,6 +74,16 @@ public:
 #endif
     };
 
+    enum class Notification
+    {
+        None,
+        ConnectionStatus,
+    };
+
+    typedef std::function<void(Notification, const std::shared_ptr<Server>&)> OnNotificationSignature;
+    typedef unsigned int ListenerID;
+    static const ListenerID INVALID_LISTENER_ID = 0;
+
     LanguageServer(Application& App);
     ~LanguageServer();
 
@@ -90,6 +101,9 @@ public:
     Server::Status ServerStatusByFilePath(const char32_t* Path) const;
     Server::Status ServerStatusByExtension(const char32_t* Extension) const;
 
+    ListenerID RegisterListener(OnNotificationSignature&& Fn);
+    LanguageServer& UnregisterListener(ListenerID ID);
+
     void Process();
 
     bool OpenDocument(const char32_t* Path);
@@ -98,14 +112,24 @@ public:
     bool DocumentSymbols(const char32_t* Path);
 
 private:
+    struct Listener
+    {
+    public:
+        ListenerID ID { 0 };
+        OnNotificationSignature Callback {};
+    };
+
     std::shared_ptr<Server> GetServer(const char32_t* Name) const;
     std::shared_ptr<Server> GetServerByFilePath(const char32_t* Path) const;
     std::shared_ptr<Server> GetServerByExtension(const char32_t* Extension) const;
+    void Notify(Notification Type, const std::shared_ptr<Server>& Target) const;
 
     Application& m_App;
     bool m_SearchEnvironmentPath { true };
     bool m_Initialized { false };
     std::vector<std::shared_ptr<Server>> m_Servers {};
+    std::vector<Listener> m_Listeners {};
+    ListenerID m_ListenerID { 0 };
 
 #if WITH_LSTALK
     struct LSTalk_Context* m_Context { nullptr };
