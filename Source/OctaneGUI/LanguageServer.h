@@ -59,6 +59,7 @@ public:
         Server();
         ~Server();
 
+        Status GetStatus() const;
         bool SupportsExtension(const char32_t* Extension) const;
 
     private:

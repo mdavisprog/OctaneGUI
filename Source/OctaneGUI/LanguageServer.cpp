@@ -41,6 +41,11 @@ LanguageServer::Server::~Server()
 {
 }
 
+LanguageServer::Server::Status LanguageServer::Server::GetStatus() const
+{
+    return m_Status;
+}
+
 bool LanguageServer::Server::SupportsExtension(const char32_t* Extension) const
 {
     for (const std::u32string& Item : m_Extensions)
