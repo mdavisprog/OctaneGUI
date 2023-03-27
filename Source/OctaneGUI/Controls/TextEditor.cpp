@@ -28,10 +28,8 @@ SOFTWARE.
 #include "../Application.h"
 #include "../Font.h"
 #include "../Json.h"
-#include "../LanguageServer.h"
 #include "../Paint.h"
 #include "../String.h"
-#include "../Timer.h"
 #include "../Window.h"
 #include "ScrollableContainer.h"
 
@@ -54,11 +52,11 @@ TextEditor::TextEditor(Window* InWindow)
         });
 
     AddWordDelimiters(U"\",");
+}
 
-    m_Timer = GetWindow()->CreateTimer(0, false, [this]() -> void
-        {
-            OnTimer();
-        });
+TextEditor::~TextEditor()
+{
+    LS().UnregisterListener(m_ListenerID);
 }
 
 TextEditor& TextEditor::SetMatchIndent(bool MatchIndent)
@@ -87,6 +85,36 @@ TextEditor& TextEditor::ClearLineColor(const size_t Line)
 TextEditor& TextEditor::ClearLineColors()
 {
     m_LineColors.clear();
+    return *this;
+}
+
+TextEditor& TextEditor::RegisterLanguageServer()
+{
+    if (!LS().IsInitialized())
+    {
+        LS().Initialize();
+    }
+
+    if (LS().IsInitialized())
+    {
+        m_ListenerID = LS().RegisterListener([this](LanguageServer::Notification Notification, const std::shared_ptr<LanguageServer::Server>& Server) -> void
+            {
+                switch (Notification)
+                {
+                case LanguageServer::Notification::ConnectionStatus:
+                    {
+                        if (Server->GetStatus() == LanguageServer::Server::Status::Connected && Server->SupportsFile(m_FileName.c_str()))
+                        {
+                            OpenDocument();
+                        }
+                    } break;
+                
+                case LanguageServer::Notification::None:
+                default: break;
+                }
+            });
+    }
+
     return *this;
 }
 
@@ -302,26 +330,18 @@ void TextEditor::OpenDocument()
     {
     case LanguageServer::Server::Status::NotConnected:
         {
-            if (LS().ConnectFromFilePath(m_FileName.c_str()))
-            {
-                m_State = State::OpenDocument;
-                m_Timer->SetInterval(1000).Start();
-            }
-
+            LS().ConnectFromFilePath(m_FileName.c_str());
+            m_State = State::Connecting;
             return;
         } break;
 
-    case LanguageServer::Server::Status::Connecting:
-        m_State = State::OpenDocument;
-        m_Timer->SetInterval(1000).Start();
-        break;
-
+    case LanguageServer::Server::Status::Connecting: return;
     case LanguageServer::Server::Status::Connected:
     default: break;
     }
 
+    m_State = State::OpenDocument;
     LS().OpenDocument(m_FileName.c_str());
-    LS().DocumentSymbols(m_FileName.c_str());
 }
 
 void TextEditor::RetrieveSymbols()
@@ -331,25 +351,8 @@ void TextEditor::RetrieveSymbols()
         return;
     }
 
+    m_State = State::DocumentSymbols;
     LS().DocumentSymbols(m_FileName.c_str());
-}
-
-void TextEditor::OnTimer()
-{
-    if (!LS().IsInitialized())
-    {
-        return;
-    }
-
-    switch (m_State)
-    {
-    case State::OpenDocument:
-        OpenDocument();
-        break;
-
-    case State::None:
-    default: break;
-    }
 }
 
 }

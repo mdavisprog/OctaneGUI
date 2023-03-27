@@ -26,6 +26,7 @@ SOFTWARE.
 
 #pragma once
 
+#include "../LanguageServer.h"
 #include "TextInput.h"
 
 #include <unordered_map>
@@ -33,7 +34,6 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
-class LanguageServer;
 class Timer;
 
 class TextEditor : public TextInput
@@ -42,6 +42,7 @@ class TextEditor : public TextInput
 
 public:
     TextEditor(Window* InWindow);
+    virtual ~TextEditor();
 
     TextEditor& SetMatchIndent(bool MatchIndent);
     bool MatchIndent() const;
@@ -50,6 +51,7 @@ public:
     TextEditor& ClearLineColor(const size_t Line);
     TextEditor& ClearLineColors();
 
+    TextEditor& RegisterLanguageServer();
     TextEditor& OpenFile(const char32_t* FileName);
     TextEditor& CloseFile();
 
@@ -62,7 +64,9 @@ private:
     enum class State
     {
         None,
+        Connecting,
         OpenDocument,
+        DocumentSymbols,
     };
 
     std::u32string ModifyText(const std::u32string& Pending);
@@ -78,13 +82,11 @@ private:
     void OpenDocument();
     void RetrieveSymbols();
 
-    void OnTimer();
-
     bool m_MatchIndent { true };
     std::unordered_map<size_t, Color> m_LineColors {};
     std::u32string m_FileName {};
-    std::shared_ptr<Timer> m_Timer { nullptr };
     State m_State { State::None };
+    LanguageServer::ListenerID m_ListenerID { LanguageServer::INVALID_LISTENER_ID };
 };
 
 }

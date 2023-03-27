@@ -62,6 +62,7 @@ public:
 
         Status GetStatus() const;
         bool SupportsExtension(const char32_t* Extension) const;
+        bool SupportsFile(const char32_t* Path) const;
 
     private:
         std::u32string m_Name {};

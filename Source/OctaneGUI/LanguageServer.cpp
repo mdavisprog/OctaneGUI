@@ -59,6 +59,11 @@ bool LanguageServer::Server::SupportsExtension(const char32_t* Extension) const
     return false;
 }
 
+bool LanguageServer::Server::SupportsFile(const char32_t* Path) const
+{
+    return SupportsExtension(FileSystem::Extension(Path).c_str());
+}
+
 LanguageServer::LanguageServer(Application& App)
     : m_App(App)
 {
