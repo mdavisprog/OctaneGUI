@@ -12,7 +12,7 @@
             ]},
             "Body": {"Controls": [
                 {"Type": "MarginContainer", "Expand": "Both", "Margins": [4, 4, 4, 4], "Controls": [
-                    {"Type": "TextEditor", "ID": "Editor", "Expand": "Both"}
+                    {"Type": "TextEditor", "ID": "Editor", "Expand": "Both", "EnableLanguageServer": true}
                 ]}
             ]}
         }

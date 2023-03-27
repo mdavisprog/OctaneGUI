@@ -142,6 +142,11 @@ void TextEditor::OnLoad(const Json& Root)
     SetMatchIndent(Root["MatchIndent"].Boolean(m_MatchIndent));
 
     SetMultiline(true);
+
+    if (Root["EnableLanguageServer"].Boolean())
+    {
+        RegisterLanguageServer();
+    }
 }
 
 void TextEditor::TextAdded(const std::u32string& Contents)
