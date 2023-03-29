@@ -116,8 +116,7 @@ public:
 
     bool OpenDocument(const char32_t* Path);
     void CloseDocument(const char32_t* Path);
-
-    bool DocumentSymbols(const char32_t* Path);
+    bool GetDocumentSymbols(const char32_t* Path);
 
 private:
     struct Listener

@@ -357,7 +357,7 @@ void TextEditor::RetrieveSymbols()
     }
 
     m_State = State::DocumentSymbols;
-    LS().DocumentSymbols(m_FileName.c_str());
+    LS().GetDocumentSymbols(m_FileName.c_str());
 }
 
 }

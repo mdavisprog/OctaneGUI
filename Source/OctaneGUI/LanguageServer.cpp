@@ -362,7 +362,7 @@ void LanguageServer::CloseDocument(const char32_t* Path)
 #endif
 }
 
-bool LanguageServer::DocumentSymbols(const char32_t* Path)
+bool LanguageServer::GetDocumentSymbols(const char32_t* Path)
 {
     if (ServerStatusByFilePath(Path) != Server::Status::Connected)
     {
