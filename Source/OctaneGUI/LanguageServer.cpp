@@ -96,7 +96,6 @@ bool LanguageServer::Initialize()
     if (m_Context != nullptr)
     {
         lstalk_set_client_info(m_Context, "CodeEdit", "1");
-        lstalk_set_debug_flags(m_Context, LSTALK_DEBUGFLAGS_PRINT_RESPONSES);
         m_Initialized = true;
     }
 #endif
@@ -303,7 +302,32 @@ void LanguageServer::Process()
         if (Status != Item->m_Status)
         {
             Item->m_Status = Status;
-            Notify(Notification::Type::ConnectionStatus, Item);
+            Broadcast(CreateNotification(Notification::Type::ConnectionStatus), Item);
+        }
+
+        switch (Notification.type)
+        {
+        case LSTALK_NOTIFICATION_TEXT_DOCUMENT_SYMBOLS:
+            {
+                LanguageServer::Notification Notify = CreateNotification(Notification::Type::DocumentSymbols);
+                DocumentSymbols* Symbols = std::get_if<DocumentSymbols>(&Notify.Data);
+                if (Symbols != nullptr)
+                {
+                    Symbols->URI = String::ToUTF32(Notification.data.document_symbols.uri);
+                    for (int I = 0; I < Notification.data.document_symbols.symbols_count; I++)
+                    {
+                        LSTalk_DocumentSymbol* Symbol = &Notification.data.document_symbols.symbols[I];
+
+                        DocumentSymbols::Symbol NewSymbol {};
+                        NewSymbol.Name = String::ToUTF32(Symbol->name);
+                        Symbols->Symbols.push_back(NewSymbol);
+                    }
+
+                    Broadcast(Notify, Item);
+                }
+            } break;
+
+        default: break;
         }
     }
 #endif
@@ -423,14 +447,19 @@ std::shared_ptr<LanguageServer::Server> LanguageServer::GetServerByExtension(con
     return nullptr;
 }
 
-void LanguageServer::Notify(Notification::Type Type, const std::shared_ptr<Server>& Target) const
+void LanguageServer::Broadcast(const Notification& Data, const std::shared_ptr<Server>& Target) const
 {
-    Notification Notify { Type };
-
     for (const Listener& Listener_ : m_Listeners)
     {
-        Listener_.Callback(Notify, Target);
+        Listener_.Callback(Data, Target);
     }
+}
+
+LanguageServer::Notification LanguageServer::CreateNotification(Notification::Type Type) const
+{
+    Notification Result;
+    Result.Type_ = Type;
+    return Result;
 }
 
 }

@@ -30,6 +30,7 @@ SOFTWARE.
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <variant>
 #include <vector>
 
 #if WITH_LSTALK
@@ -75,7 +76,19 @@ public:
 #endif
     };
 
+    struct DocumentSymbols
     {
+    public:
+        struct Symbol
+        {
+        public:
+            std::u32string Name {};
+        };
+
+        std::u32string URI {};
+        std::vector<Symbol> Symbols {};
+    };
+
     struct Notification
     {
     public:
@@ -83,9 +96,11 @@ public:
         {
             None,
             ConnectionStatus,
+            DocumentSymbols,
         };
 
         Type Type_ { Type::None };
+        std::variant<DocumentSymbols> Data {};
     };
 
     typedef std::function<void(const Notification&, const std::shared_ptr<Server>&)> OnNotificationSignature;
@@ -129,7 +144,8 @@ private:
     std::shared_ptr<Server> GetServer(const char32_t* Name) const;
     std::shared_ptr<Server> GetServerByFilePath(const char32_t* Path) const;
     std::shared_ptr<Server> GetServerByExtension(const char32_t* Extension) const;
-    void Notify(Notification::Type Type, const std::shared_ptr<Server>& Target) const;
+    void Broadcast(const Notification& Data, const std::shared_ptr<Server>& Target) const;
+    Notification CreateNotification(Notification::Type Type) const;
 
     Application& m_App;
     bool m_SearchEnvironmentPath { true };
