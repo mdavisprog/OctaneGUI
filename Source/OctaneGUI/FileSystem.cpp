@@ -35,12 +35,13 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
-std::string FileSystem::Extension(const std::string& Location)
+template<class T>
+static T TExtension(const T& Location)
 {
-    std::string Result {};
+    T Result {};
 
     size_t Pos = Location.rfind('.');
-    if (Pos != std::string::npos)
+    if (Pos != T::npos)
     {
         Result = Location.substr(Pos, Location.length() - Pos);
     }
@@ -48,17 +49,14 @@ std::string FileSystem::Extension(const std::string& Location)
     return Result;
 }
 
+std::string FileSystem::Extension(const std::string& Location)
+{
+    return TExtension<std::string>(Location);
+}
+
 std::u32string FileSystem::Extension(const std::u32string& Location)
 {
-    std::u32string Result {};
-
-    size_t Pos = Location.rfind(U'.');
-    if (Pos != std::string::npos)
-    {
-        Result = Location.substr(Pos, Location.length() - Pos);
-    }
-
-    return Result;
+    return TExtension<std::u32string>(Location);
 }
 
 std::u32string FileSystem::SetExtension(const std::u32string& Location, const std::u32string& Extension)
