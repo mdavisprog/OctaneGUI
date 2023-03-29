@@ -640,6 +640,7 @@ typedef struct LSTalk_DocumentSymbol {
  * Response received from a document_symbol request.
  */
 typedef struct LSTalk_DocumentSymbolNotification {
+    char* uri;
     LSTalk_DocumentSymbol* symbols;
     int symbols_count;
 } LSTalk_DocumentSymbolNotification;
