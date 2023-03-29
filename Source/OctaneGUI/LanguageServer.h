@@ -75,13 +75,20 @@ public:
 #endif
     };
 
-    enum class Notification
     {
-        None,
-        ConnectionStatus,
+    struct Notification
+    {
+    public:
+        enum class Type
+        {
+            None,
+            ConnectionStatus,
+        };
+
+        Type Type_ { Type::None };
     };
 
-    typedef std::function<void(Notification, const std::shared_ptr<Server>&)> OnNotificationSignature;
+    typedef std::function<void(const Notification&, const std::shared_ptr<Server>&)> OnNotificationSignature;
     typedef unsigned int ListenerID;
     static const ListenerID INVALID_LISTENER_ID = 0;
 
@@ -123,7 +130,7 @@ private:
     std::shared_ptr<Server> GetServer(const char32_t* Name) const;
     std::shared_ptr<Server> GetServerByFilePath(const char32_t* Path) const;
     std::shared_ptr<Server> GetServerByExtension(const char32_t* Extension) const;
-    void Notify(Notification Type, const std::shared_ptr<Server>& Target) const;
+    void Notify(Notification::Type Type, const std::shared_ptr<Server>& Target) const;
 
     Application& m_App;
     bool m_SearchEnvironmentPath { true };

@@ -97,11 +97,11 @@ TextEditor& TextEditor::RegisterLanguageServer()
 
     if (LS().IsInitialized())
     {
-        m_ListenerID = LS().RegisterListener([this](LanguageServer::Notification Notification, const std::shared_ptr<LanguageServer::Server>& Server) -> void
+        m_ListenerID = LS().RegisterListener([this](const LanguageServer::Notification& Notification, const std::shared_ptr<LanguageServer::Server>& Server) -> void
             {
-                switch (Notification)
+                switch (Notification.Type_)
                 {
-                case LanguageServer::Notification::ConnectionStatus:
+                case LanguageServer::Notification::Type::ConnectionStatus:
                     {
                         if (Server->GetStatus() == LanguageServer::Server::Status::Connected && Server->SupportsFile(m_FileName.c_str()))
                         {
@@ -109,7 +109,7 @@ TextEditor& TextEditor::RegisterLanguageServer()
                         }
                     } break;
                 
-                case LanguageServer::Notification::None:
+                case LanguageServer::Notification::Type::None:
                 default: break;
                 }
             });

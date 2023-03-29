@@ -303,7 +303,7 @@ void LanguageServer::Process()
         if (Status != Item->m_Status)
         {
             Item->m_Status = Status;
-            Notify(Notification::ConnectionStatus, Item);
+            Notify(Notification::Type::ConnectionStatus, Item);
         }
     }
 #endif
@@ -423,11 +423,13 @@ std::shared_ptr<LanguageServer::Server> LanguageServer::GetServerByExtension(con
     return nullptr;
 }
 
-void LanguageServer::Notify(Notification Type, const std::shared_ptr<Server>& Target) const
+void LanguageServer::Notify(Notification::Type Type, const std::shared_ptr<Server>& Target) const
 {
+    Notification Notify { Type };
+
     for (const Listener& Listener_ : m_Listeners)
     {
-        Listener_.Callback(Type, Target);
+        Listener_.Callback(Notify, Target);
     }
 }
 
