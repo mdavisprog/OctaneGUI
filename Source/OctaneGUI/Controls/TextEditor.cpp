@@ -106,6 +106,22 @@ TextEditor& TextEditor::RegisterLanguageServer()
                         if (Server->GetStatus() == LanguageServer::Server::Status::Connected && Server->SupportsFile(m_FileName.c_str()))
                         {
                             OpenDocument();
+                            RetrieveSymbols();
+                        }
+                    } break;
+                
+                case LanguageServer::Notification::Type::DocumentSymbols:
+                    {
+                        const LanguageServer::DocumentSymbols* DocumentSymbols = std::get_if<LanguageServer::DocumentSymbols>(&Notification.Data);
+                        if (DocumentSymbols != nullptr && DocumentSymbols->URI.find(m_FileName) != std::u32string::npos)
+                        {
+                            std::vector<std::u32string> Symbols;
+                            for (const LanguageServer::DocumentSymbols::Symbol& Symbol : DocumentSymbols->Symbols)
+                            {
+                                Symbols.push_back(Symbol.Name);
+                            }
+                            Highlighter().SetSymbols(Symbols);
+                            Rehighlight();
                         }
                     } break;
                 
@@ -122,7 +138,7 @@ TextEditor& TextEditor::OpenFile(const char32_t* FileName)
 {
     std::string Contents = GetWindow()->App().FS().LoadContents(FileName);
     SetText(Contents.c_str());
-    m_FileName = FileName;
+    m_FileName = String::Replace(FileName, U"\\", U"/");
     OpenDocument();
     return *this;
 }

@@ -423,6 +423,12 @@ Syntax::Highlighter& TextInput::Highlighter()
     return m_Highlighter;
 }
 
+TextInput& TextInput::Rehighlight()
+{
+    UpdateSpans();
+    return *this;
+}
+
 Color TextInput::TextColor() const
 {
     return GetProperty(ThemeProperties::Text).ToColor();

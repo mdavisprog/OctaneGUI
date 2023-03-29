@@ -122,6 +122,7 @@ public:
     bool Multiline() const;
 
     Syntax::Highlighter& Highlighter();
+    TextInput& Rehighlight();
     Color TextColor() const;
 
     TextInput& SetNumbersOnly(bool NumbersOnly);
