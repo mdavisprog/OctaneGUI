@@ -426,6 +426,7 @@ Syntax::Highlighter& TextInput::Highlighter()
 TextInput& TextInput::Rehighlight()
 {
     UpdateSpans();
+    Invalidate();
     return *this;
 }
 
