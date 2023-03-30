@@ -85,6 +85,9 @@ public:
             std::u32string Name {};
         };
 
+        DocumentSymbols()
+        {}
+
         std::u32string URI {};
         std::vector<Symbol> Symbols {};
     };
@@ -99,8 +102,11 @@ public:
             DocumentSymbols,
         };
 
+        Notification()
+        {}
+
         Type Type_ { Type::None };
-        std::variant<DocumentSymbols> Data {};
+        std::variant<DocumentSymbols> Data;
     };
 
     typedef std::function<void(const Notification&, const std::shared_ptr<Server>&)> OnNotificationSignature;
