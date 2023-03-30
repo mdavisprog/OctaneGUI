@@ -102,29 +102,31 @@ TextEditor& TextEditor::RegisterLanguageServer()
                 switch (Notification.Type_)
                 {
                 case LanguageServer::Notification::Type::ConnectionStatus:
+                {
+                    if (Server->GetStatus() == LanguageServer::Server::Status::Connected && Server->SupportsFile(m_FileName.c_str()))
                     {
-                        if (Server->GetStatus() == LanguageServer::Server::Status::Connected && Server->SupportsFile(m_FileName.c_str()))
-                        {
-                            OpenDocument();
-                            RetrieveSymbols();
-                        }
-                    } break;
-                
+                        OpenDocument();
+                        RetrieveSymbols();
+                    }
+                }
+                break;
+
                 case LanguageServer::Notification::Type::DocumentSymbols:
+                {
+                    const LanguageServer::DocumentSymbols* DocumentSymbols = std::get_if<LanguageServer::DocumentSymbols>(&Notification.Data);
+                    if (DocumentSymbols != nullptr && DocumentSymbols->URI.find(m_FileName) != std::u32string::npos)
                     {
-                        const LanguageServer::DocumentSymbols* DocumentSymbols = std::get_if<LanguageServer::DocumentSymbols>(&Notification.Data);
-                        if (DocumentSymbols != nullptr && DocumentSymbols->URI.find(m_FileName) != std::u32string::npos)
+                        std::vector<std::u32string> Symbols;
+                        for (const LanguageServer::DocumentSymbols::Symbol& Symbol : DocumentSymbols->Symbols)
                         {
-                            std::vector<std::u32string> Symbols;
-                            for (const LanguageServer::DocumentSymbols::Symbol& Symbol : DocumentSymbols->Symbols)
-                            {
-                                Symbols.push_back(Symbol.Name);
-                            }
-                            Highlighter().SetSymbols(Symbols);
-                            Rehighlight();
+                            Symbols.push_back(Symbol.Name);
                         }
-                    } break;
-                
+                        Highlighter().SetSymbols(Symbols);
+                        Rehighlight();
+                    }
+                }
+                break;
+
                 case LanguageServer::Notification::Type::None:
                 default: break;
                 }
@@ -350,11 +352,12 @@ void TextEditor::OpenDocument()
     switch (Status)
     {
     case LanguageServer::Server::Status::NotConnected:
-        {
-            LS().ConnectFromFilePath(m_FileName.c_str());
-            m_State = State::Connecting;
-            return;
-        } break;
+    {
+        LS().ConnectFromFilePath(m_FileName.c_str());
+        m_State = State::Connecting;
+        return;
+    }
+    break;
 
     case LanguageServer::Server::Status::Connecting: return;
     case LanguageServer::Server::Status::Connected:

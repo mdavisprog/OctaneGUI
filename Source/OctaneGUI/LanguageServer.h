@@ -86,7 +86,8 @@ public:
         };
 
         DocumentSymbols()
-        {}
+        {
+        }
 
         std::u32string URI {};
         std::vector<Symbol> Symbols {};
@@ -103,7 +104,8 @@ public:
         };
 
         Notification()
-        {}
+        {
+        }
 
         Type Type_ { Type::None };
         std::variant<DocumentSymbols> Data;

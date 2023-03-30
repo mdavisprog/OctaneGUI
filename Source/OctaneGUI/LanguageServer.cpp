@@ -167,6 +167,8 @@ bool LanguageServer::Connect(const char32_t* Name, const char32_t* Path, const s
         m_Servers.push_back(Item);
         return true;
     }
+#else
+    (void)Extensions;
 #endif
 
     return false;
@@ -202,6 +204,8 @@ bool LanguageServer::Close(const char32_t* Name)
             break;
         }
     }
+#else
+    (void)Name;
 #endif
 
     return false;
@@ -269,6 +273,7 @@ LanguageServer& LanguageServer::UnregisterListener(ListenerID ID)
     return *this;
 }
 
+#if WITH_LSTALK
 static LanguageServer::Server::Status ToStatus(LSTalk_ConnectionStatus Status)
 {
     switch (Status)
@@ -280,6 +285,7 @@ static LanguageServer::Server::Status ToStatus(LSTalk_ConnectionStatus Status)
 
     return LanguageServer::Server::Status::NotConnected;
 }
+#endif
 
 void LanguageServer::Process()
 {
@@ -308,24 +314,25 @@ void LanguageServer::Process()
         switch (Notification.type)
         {
         case LSTALK_NOTIFICATION_TEXT_DOCUMENT_SYMBOLS:
+        {
+            LanguageServer::Notification Notify = CreateNotification(Notification::Type::DocumentSymbols);
+            DocumentSymbols* Symbols = std::get_if<DocumentSymbols>(&Notify.Data);
+            if (Symbols != nullptr)
             {
-                LanguageServer::Notification Notify = CreateNotification(Notification::Type::DocumentSymbols);
-                DocumentSymbols* Symbols = std::get_if<DocumentSymbols>(&Notify.Data);
-                if (Symbols != nullptr)
+                Symbols->URI = String::ToUTF32(Notification.data.document_symbols.uri);
+                for (int I = 0; I < Notification.data.document_symbols.symbols_count; I++)
                 {
-                    Symbols->URI = String::ToUTF32(Notification.data.document_symbols.uri);
-                    for (int I = 0; I < Notification.data.document_symbols.symbols_count; I++)
-                    {
-                        LSTalk_DocumentSymbol* Symbol = &Notification.data.document_symbols.symbols[I];
+                    LSTalk_DocumentSymbol* Symbol = &Notification.data.document_symbols.symbols[I];
 
-                        DocumentSymbols::Symbol NewSymbol {};
-                        NewSymbol.Name = String::ToUTF32(Symbol->name);
-                        Symbols->Symbols.push_back(NewSymbol);
-                    }
-
-                    Broadcast(Notify, Item);
+                    DocumentSymbols::Symbol NewSymbol {};
+                    NewSymbol.Name = String::ToUTF32(Symbol->name);
+                    Symbols->Symbols.push_back(NewSymbol);
                 }
-            } break;
+
+                Broadcast(Notify, Item);
+            }
+        }
+        break;
 
         default: break;
         }

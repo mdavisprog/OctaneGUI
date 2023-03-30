@@ -35,7 +35,7 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
-template<class T>
+template <class T>
 static T TExtension(const T& Location)
 {
     T Result {};
