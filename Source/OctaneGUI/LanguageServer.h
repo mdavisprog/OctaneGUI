@@ -115,7 +115,7 @@ public:
     typedef unsigned int ListenerID;
     static const ListenerID INVALID_LISTENER_ID = 0;
 
-    LanguageServer(Application& App);
+    LanguageServer();
     ~LanguageServer();
 
     LanguageServer& SetSearchEnvironmentPath(bool Value);
@@ -155,7 +155,6 @@ private:
     void Broadcast(const Notification& Data, const std::shared_ptr<Server>& Target) const;
     Notification CreateNotification(Notification::Type Type) const;
 
-    Application& m_App;
     bool m_SearchEnvironmentPath { true };
     bool m_Initialized { false };
     std::vector<std::shared_ptr<Server>> m_Servers {};

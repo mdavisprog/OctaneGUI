@@ -375,7 +375,7 @@ private:
     FileSystem m_FileSystem { *this };
     bool m_HighDPI { true };
     bool m_CustomTitleBar { false };
-    LanguageServer m_LanguageServer { *this };
+    LanguageServer m_LanguageServer {};
 
 #if TOOLS
     bool m_IgnoreModals { false };
