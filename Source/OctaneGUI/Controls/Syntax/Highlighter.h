@@ -26,7 +26,7 @@ SOFTWARE.
 
 #pragma once
 
-#include "../../Color.h"
+#include "Rules.h"
 
 #include <memory>
 #include <string>
@@ -45,25 +45,13 @@ namespace Syntax
 class Highlighter
 {
 public:
-    struct Range
-    {
-    public:
-        std::u32string Start;
-        std::u32string End;
-        Color Tint;
-    };
-
     Highlighter(TextInput& Input);
     virtual ~Highlighter();
-
-    Highlighter& SetKeywords(const std::vector<std::u32string>& Keywords);
-    const std::vector<std::u32string>& Keywords() const;
 
     Highlighter& SetSymbols(const std::vector<std::u32string>& Symbols);
     const std::vector<std::u32string>& Symbols() const;
 
-    Highlighter& SetRanges(const std::vector<Range>& Ranges);
-    const std::vector<Range>& Ranges() const;
+    Highlighter& SetRules(Rules& Rules_);
 
     Color DefaultColor() const;
 
@@ -76,9 +64,8 @@ private:
     bool ShouldHighlight() const;
 
     TextInput& m_Input;
-    std::vector<std::u32string> m_Keywords {};
     std::vector<std::u32string> m_Symbols {};
-    std::vector<Range> m_Ranges {};
+    Rules& m_Rules { Rules::Get(U"") };
     Color m_KeywordColor { 189, 99, 197, 255 };
     Color m_SymbolColor { 86, 156, 214, 255 };
 };

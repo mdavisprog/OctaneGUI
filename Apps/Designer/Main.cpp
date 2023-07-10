@@ -179,7 +179,7 @@ int main(int, char**)
     Splitter = MainList.To<OctaneGUI::Splitter>("Editor.Splitter");
 
     Document = MainList.To<OctaneGUI::TextEditor>("Editor.Splitter.Document");
-    Document->Highlighter().SetRanges({ {U"\"", U"\"", {206, 145, 120, 255}} });
+    Document->Highlighter().SetRules(OctaneGUI::Syntax::Rules::Get(U".json"));
     Document
         ->SetOnTextChanged([&](OctaneGUI::TextInput&) -> void
         {

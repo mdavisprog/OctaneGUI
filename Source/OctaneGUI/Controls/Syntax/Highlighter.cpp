@@ -44,17 +44,6 @@ Highlighter::~Highlighter()
 {
 }
 
-Highlighter& Highlighter::SetKeywords(const std::vector<std::u32string>& Keywords)
-{
-    m_Keywords = Keywords;
-    return *this;
-}
-
-const std::vector<std::u32string>& Highlighter::Keywords() const
-{
-    return m_Keywords;
-}
-
 Highlighter& Highlighter::SetSymbols(const std::vector<std::u32string>& Symbols)
 {
     m_Symbols = Symbols;
@@ -66,15 +55,10 @@ const std::vector<std::u32string>& Highlighter::Symbols() const
     return m_Symbols;
 }
 
-Highlighter& Highlighter::SetRanges(const std::vector<Highlighter::Range>& Ranges)
+Highlighter& Highlighter::SetRules(Rules& Rules_)
 {
-    m_Ranges = Ranges;
+    m_Rules = Rules_;
     return *this;
-}
-
-const std::vector<Highlighter::Range>& Highlighter::Ranges() const
-{
-    return m_Ranges;
 }
 
 Color Highlighter::DefaultColor() const
@@ -138,7 +122,7 @@ std::vector<TextSpan> Highlighter::GetSpans(const std::u32string_view& View) con
     }
 
     std::vector<TextSpan> RangeSpans;
-    for (const Range& Range_ : m_Ranges)
+    for (const Range& Range_ : m_Rules.Ranges)
     {
         size_t Pos = View.find(Range_.Start);
         size_t End = View.find(Range_.End);
@@ -158,7 +142,7 @@ std::vector<TextSpan> Highlighter::GetSpans(const std::u32string_view& View) con
         }
     }
 
-    std::vector<TextSpan> KeywordSpans = SpansFrom(View, m_Keywords, RangeSpans, m_KeywordColor);
+    std::vector<TextSpan> KeywordSpans = SpansFrom(View, m_Rules.Keywords, RangeSpans, m_KeywordColor);
     std::vector<TextSpan> SymbolSpans = SpansFrom(View, m_Symbols, RangeSpans, m_SymbolColor);
 
     std::vector<TextSpan> Spans;
@@ -192,7 +176,7 @@ std::vector<TextSpan> Highlighter::GetSpans(const std::u32string_view& View) con
 
 bool Highlighter::ShouldHighlight() const
 {
-    return !m_Ranges.empty() || !m_Keywords.empty() || !m_Symbols.empty();
+    return !m_Rules.IsEmpty() || !m_Symbols.empty();
 }
 
 }
