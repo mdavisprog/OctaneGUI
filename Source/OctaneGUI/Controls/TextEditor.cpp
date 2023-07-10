@@ -32,6 +32,7 @@ SOFTWARE.
 #include "../String.h"
 #include "../Window.h"
 #include "ScrollableContainer.h"
+#include "Syntax/Rules.h"
 
 namespace OctaneGUI
 {
@@ -141,6 +142,8 @@ TextEditor& TextEditor::OpenFile(const char32_t* FileName)
     std::string Contents = GetWindow()->App().FS().LoadContents(FileName);
     SetText(Contents.c_str());
     m_FileName = String::Replace(FileName, U"\\", U"/");
+    const std::u32string Extension { FileSystem::Extension(FileName) };
+    Highlighter().SetRules(Syntax::Rules::Get(Extension));
     OpenDocument();
     return *this;
 }
