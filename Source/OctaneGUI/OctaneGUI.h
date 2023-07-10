@@ -54,6 +54,7 @@ SOFTWARE.
 #include "Controls/Spinner.h"
 #include "Controls/Splitter.h"
 #include "Controls/Syntax/Highlighter.h"
+#include "Controls/Syntax/Rules.h"
 #include "Controls/Table.h"
 #include "Controls/Text.h"
 #include "Controls/TextButton.h"
