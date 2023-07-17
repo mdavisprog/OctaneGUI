@@ -39,9 +39,10 @@ namespace Syntax
 struct Range
 {
 public:
-    std::u32string Start;
-    std::u32string End;
-    Color Tint;
+    std::u32string Start { U"" };
+    std::u32string End { U"" };
+    Color Tint { 255, 255, 255, 255 };
+    bool MultiLine { true };
 };
 
 struct Rules
