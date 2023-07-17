@@ -126,17 +126,33 @@ std::vector<TextSpan> Highlighter::GetSpans(const std::u32string_view& View) con
     {
         size_t Pos = View.find(Range_.Start);
         size_t End = View.find(Range_.End);
-        if (End < Pos && End != std::u32string_view::npos)
+
+        // Multiline range checking. The start of the range may be out of view,
+        // so if the end of the range is found, then assume everything before
+        // it is marked with the starting tag (e.g. multiline comments). 
+        if (Range_.MultiLine)
         {
-            size_t EndPos = End + Range_.End.length();
-            RangeSpans.push_back({ 0, EndPos, Range_.Tint });
-            Pos = View.find(Range_.Start, EndPos);
+            if (End < Pos && End != std::u32string_view::npos)
+            {
+                size_t EndPos = End + Range_.End.length();
+                RangeSpans.push_back({ 0, EndPos, Range_.Tint });
+                Pos = View.find(Range_.Start, EndPos);
+            }
         }
 
         while (Pos != std::u32string_view::npos)
         {
-            End = std::min<size_t>(View.length(), View.find(Range_.End, Pos + Range_.Start.length()));
+            const size_t Offset { Pos + Range_.Start.length() };
+            End = std::min<size_t>(View.length(), View.find(Range_.End, Offset));
             size_t EndPos = End + Range_.End.length();
+            if (!Range_.MultiLine)
+            {
+                const size_t LineEnd { View.find(U"\n", Offset) };
+                if (LineEnd < End)
+                {
+                    EndPos = LineEnd + 1;
+                }
+            }
             RangeSpans.push_back({ Pos, EndPos, Range_.Tint });
             Pos = View.find(Range_.Start, EndPos);
         }
