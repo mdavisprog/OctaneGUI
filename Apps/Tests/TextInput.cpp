@@ -352,6 +352,30 @@ TEST_CASE(PageUp,
     return true;
 })
 
+TEST_CASE(NewLineZeroIndex,
+{
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, R"({"Type": "TextInput", "ID": "TextInput", "Multiline": true, "Text": {"Text": "Hello\nWorld"}})", List);
+
+    const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+
+    Utility::MouseClick(Application, TextInput->GetAbsolutePosition());
+    Application.Update();
+
+    VERIFYF(TextInput->LineNumber() == 0, "TextInput cursor line (%zu) is not 0!", TextInput->LineNumber());
+    VERIFYF(TextInput->Column() == 0, "TextInput cursor column (%zu) is not 0!", TextInput->Column());
+    VERIFYF(TextInput->Index() == 0, "TextInput cursor index (%zu) is not 0!", TextInput->Index());
+
+    Utility::KeyEvent(Application, OctaneGUI::Keyboard::Key::Enter);
+    Application.Update();
+
+    VERIFYF(TextInput->LineNumber() == 1, "TextInput cursor line (%zu) is not 1!", TextInput->LineNumber());
+    VERIFYF(TextInput->Column() == 0, "TextInput cursor column (%zu) is not 0!", TextInput->Column());
+    VERIFYF(TextInput->Index() == 1, "TextInput cursor index (%zu) is not 1!", TextInput->Index());
+
+    return true;
+})
+
 )
 
 }
