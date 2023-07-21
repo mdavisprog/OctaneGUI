@@ -1253,7 +1253,7 @@ size_t TextInput::LineStartIndex(size_t Index) const
 
     // The index may already be on a newline character. Start the search at the character
     // before this one.
-    const size_t Offset = String[Index] == '\n' ? std::max<size_t>(Index - 1, 0) : Index;
+    const size_t Offset = String[Index] == '\n' ? (Index > 0 ? Index - 1 : 0) : Index;
     size_t Result = String.rfind('\n', Offset);
     return Result == std::string::npos ? 0 : Result;
 }
