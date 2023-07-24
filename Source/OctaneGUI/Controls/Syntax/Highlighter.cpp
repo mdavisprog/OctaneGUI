@@ -90,7 +90,18 @@ static bool IsInSpans(size_t Position, const std::vector<TextSpan>& Spans)
     return false;
 }
 
-static std::vector<TextSpan> SpansFrom(const std::u32string_view& View, const std::vector<std::u32string>& List, const std::vector<TextSpan>& Ranges, Color Tint)
+static bool IsWord(const Rules& Rules_, const std::u32string_view& View, const std::u32string& Keyword, size_t Position)
+{
+    const size_t Start { Position > 0 ? Position - 1 : 0 };
+    const size_t End { Position + Keyword.length() };
+
+    const bool IsStartValid { Start == 0 ? Rules_.IsValidIdentifier(View[Start]) : !Rules_.IsValidIdentifier(View[Start]) };
+    const bool IsEndValid { End >= View.length() ? Rules_.IsValidIdentifier(View[View.length() - 1]) : !Rules_.IsValidIdentifier(View[End]) };
+
+    return IsStartValid && IsEndValid;
+}
+
+static std::vector<TextSpan> SpansFrom(const Rules& Rules_, const std::u32string_view& View, const std::vector<std::u32string>& List, const std::vector<TextSpan>& Ranges, Color Tint)
 {
     std::vector<TextSpan> Result;
 
@@ -99,7 +110,7 @@ static std::vector<TextSpan> SpansFrom(const std::u32string_view& View, const st
         size_t Pos = View.find(Item);
         while (Pos != std::u32string_view::npos)
         {
-            if (!IsInSpans(Pos, Ranges))
+            if (!IsInSpans(Pos, Ranges) && IsWord(Rules_, View, Item, Pos))
             {
                 size_t End = std::min<size_t>(View.length(), Pos + Item.length());
                 Result.push_back({ Pos, End, Tint });
@@ -158,8 +169,8 @@ std::vector<TextSpan> Highlighter::GetSpans(const std::u32string_view& View) con
         }
     }
 
-    std::vector<TextSpan> KeywordSpans = SpansFrom(View, m_Rules.Keywords, RangeSpans, m_KeywordColor);
-    std::vector<TextSpan> SymbolSpans = SpansFrom(View, m_Symbols, RangeSpans, m_SymbolColor);
+    std::vector<TextSpan> KeywordSpans = SpansFrom(m_Rules, View, m_Rules.Keywords, RangeSpans, m_KeywordColor);
+    std::vector<TextSpan> SymbolSpans = SpansFrom(m_Rules, View, m_Symbols, RangeSpans, m_SymbolColor);
 
     std::vector<TextSpan> Spans;
     Spans.insert(Spans.end(), RangeSpans.begin(), RangeSpans.end());
