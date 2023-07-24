@@ -50,6 +50,11 @@ bool Rules::IsEmpty() const
     return Keywords.empty() && Ranges.empty();
 }
 
+bool Rules::IsValidIdentifier(char32_t Char) const
+{
+    return std::isalnum(Char) || Char == U'_';
+}
+
 Rules Rules::s_Empty {};
 Rules Rules::s_Cpp {
     // Keywords

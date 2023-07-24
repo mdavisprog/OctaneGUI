@@ -54,6 +54,7 @@ public:
     static Rules& Get(const std::u32string& Extension);
 
     bool IsEmpty() const;
+    bool IsValidIdentifier(char32_t Char) const;
 
 private:
     static Rules s_Empty;
