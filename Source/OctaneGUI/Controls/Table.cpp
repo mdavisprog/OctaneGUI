@@ -208,8 +208,6 @@ private:
 Table::Table(Window* InWindow)
     : Container(InWindow)
 {
-    SetClip(true);
-
     m_Contents = AddControl<VerticalContainer>();
     m_Contents
         ->SetSpacing({})
