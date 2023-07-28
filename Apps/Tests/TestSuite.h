@@ -78,14 +78,14 @@ private:
 #endif
 #define VERIFY(Condition) if ((Condition) == false) { return false; }
 
-#if __APPLE__
+#if __clang__
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
 #endif
 
 #define VERIFYF(Condition, Message, ...) if ((Condition) == false) { printf(Message, ##__VA_ARGS__); printf("\n"); return false; }
 
-#if __APPLE__
+#if __clang__
     #pragma clang diagnostic pop
 #endif
 

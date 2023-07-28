@@ -383,7 +383,7 @@ OctaneGUI::Event Event(OctaneGUI::Window* Window)
 
 void Exit()
 {
-    for (const std::pair<OctaneGUI::Window*, std::shared_ptr<sf::RenderWindow>>& Item : g_Windows)
+    for (const std::pair<OctaneGUI::Window*, std::shared_ptr<sf::RenderWindow>> Item : g_Windows)
     {
         Item.second->close();
     }
