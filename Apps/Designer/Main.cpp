@@ -5,13 +5,15 @@
 #include <fstream>
 #include <string>
 
-int main(int, char**)
+int main(int argc, char** argv)
 {
     OctaneGUI::Application Application;
     Frontend::Initialize(Application);
 
     std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
-    Application.Initialize(Application.FS().LoadContents("App.json").c_str(), WindowControls);
+    Application
+        .SetCommandLine(argc, argv)
+        .Initialize(Application.FS().LoadContents("App.json").c_str(), WindowControls);
 
     std::shared_ptr<OctaneGUI::TextEditor> Document { nullptr };
     std::shared_ptr<OctaneGUI::Text> StatusText { nullptr };

@@ -21,13 +21,15 @@ std::string GetContents(const char* Filename)
     return Result;
 }
 
-int main(int, char**)
+int main(int argc, char** argv)
 {
     OctaneGUI::Application Application;
     Frontend::Initialize(Application);
 
     std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
-    Application.Initialize(GetContents("Blank.json").c_str(), WindowControls);
+    Application
+        .SetCommandLine(argc, argv)
+        .Initialize(GetContents("Blank.json").c_str(), WindowControls);
 
     return Application.Run();
 }

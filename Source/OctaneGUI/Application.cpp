@@ -132,6 +132,9 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
     // Notify the main window to be visible again. This will force any custom title bars to initialize.
     GetMainWindow()->SetVisible(true);
 
+    const Vector2 Position { GetMainWindow()->GetPosition() };
+    GetMainWindow()->SetPosition({ (float)m_CommandLine.GetInt("--winx", (int)Position.X), (float)m_CommandLine.GetInt("--winy", (int)Position.Y) });
+
     return true;
 }
 
@@ -237,6 +240,12 @@ int Application::Run()
 void Application::Quit()
 {
     m_IsRunning = false;
+}
+
+Application& Application::SetCommandLine(int Argc, char** Argv)
+{
+    m_CommandLine.Set(Argc, Argv);
+    return *this;
 }
 
 std::shared_ptr<Window> Application::GetMainWindow() const

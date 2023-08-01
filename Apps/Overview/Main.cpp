@@ -86,7 +86,9 @@ int main(int argc, char **argv)
     Frontend::Initialize(Application);
 
     std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
-    Application.Initialize(GetContents("Overview.json").c_str(), WindowControls);
+    Application
+        .SetCommandLine(argc, argv)
+        .Initialize(GetContents("Overview.json").c_str(), WindowControls);
     LoadTheme(Application, Theme.c_str());
     
     const OctaneGUI::ControlList& List = WindowControls["Main"];

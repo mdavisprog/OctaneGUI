@@ -27,7 +27,7 @@ SOFTWARE.
 #include "Frontend.h"
 #include "OctaneGUI/OctaneGUI.h"
 
-int main(int, char**)
+int main(int argc, char** argv)
 {
     const char* Stream = R"({
     "Theme": "Resources/Themes/Dark.json",
@@ -46,7 +46,9 @@ int main(int, char**)
     Frontend::Initialize(Application);
 
     std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
-    Application.Initialize(Stream, WindowControls);
+    Application
+        .SetCommandLine(argc, argv)
+        .Initialize(Stream, WindowControls);
 
     const OctaneGUI::ControlList& List = WindowControls["Main"];
     List.To<OctaneGUI::Button>("Container.Button")->SetOnClicked([&](OctaneGUI::Button&) -> void

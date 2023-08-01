@@ -1,7 +1,7 @@
 #include "Frontend.h"
 #include "OctaneGUI/OctaneGUI.h"
 
-int main(int, char**)
+int main(int argc, char** argv)
 {
     OctaneGUI::Application Application;
     Frontend::Initialize(Application);
@@ -9,7 +9,9 @@ int main(int, char**)
     const std::string Contents = Application.FS().LoadContents("CodeEdit.json");
 
     std::unordered_map<std::string, OctaneGUI::ControlList> WindowControls;
-    Application.Initialize(Contents.c_str(), WindowControls);
+    Application
+        .SetCommandLine(argc, argv)
+        .Initialize(Contents.c_str(), WindowControls);
 
     const OctaneGUI::ControlList& ControlList = WindowControls["Main"];
     std::shared_ptr<OctaneGUI::TextEditor> Editor = ControlList.To<OctaneGUI::TextEditor>("Editor");

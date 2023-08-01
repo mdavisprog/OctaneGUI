@@ -27,6 +27,7 @@ SOFTWARE.
 #pragma once
 
 #include "CallbackDefs.h"
+#include "CommandLine.h"
 #include "FileSystem.h"
 #include "Keyboard.h"
 #include "LanguageServer.h"
@@ -145,6 +146,12 @@ public:
 
     /// @brief Forces the application to break out of the Run loop.
     void Quit();
+
+    /// @brief Sets the program's command-line variables. This should be called before Initialize.
+    /// @param Argc Number of arguments.
+    /// @param Argv Argument list.
+    /// @return The Application object for chaining methods.
+    Application& SetCommandLine(int Argc, char** Argv);
 
     /// @brief Retrieves the window with the 'Main' ID.
     /// @return std::shared_ptr<Window> object.
@@ -364,6 +371,7 @@ private:
     void LoadIcons(const Json& Root);
     void FocusWindow(const std::shared_ptr<Window>& Focus);
 
+    CommandLine m_CommandLine {};
     std::unordered_map<std::string, std::shared_ptr<Window>> m_Windows;
     std::vector<std::weak_ptr<Window>> m_Modals {};
     std::weak_ptr<Window> m_EventFocus {};
