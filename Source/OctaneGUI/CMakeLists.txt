@@ -47,6 +47,7 @@ set(SOURCE
     Class.cpp
     Clock.cpp
     Color.cpp
+    CommandLine.cpp
     DrawCommand.cpp
     Event.cpp
     FileSystem.cpp
