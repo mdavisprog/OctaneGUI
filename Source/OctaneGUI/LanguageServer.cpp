@@ -103,8 +103,10 @@ bool LanguageServer::Initialize()
 
 void LanguageServer::Shutdown()
 {
+    ClearListeners();
 #if WITH_LSTALK
     lstalk_shutdown(m_Context);
+    m_Context = nullptr;
 #endif
     m_Initialized = false;
     m_Servers.clear();
@@ -268,6 +270,18 @@ LanguageServer& LanguageServer::UnregisterListener(ListenerID ID)
             break;
         }
     }
+
+    return *this;
+}
+
+LanguageServer& LanguageServer::ClearListeners()
+{
+    for (const Listener& Item : m_Listeners)
+    {
+        UnregisterListener(Item.ID);
+    }
+
+    m_Listeners.clear();
 
     return *this;
 }

@@ -140,6 +140,8 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
 
 void Application::Shutdown()
 {
+    m_LanguageServer.Shutdown();
+
     for (auto& Item : m_Windows)
     {
         OnWindowAction(Item.second.get(), WindowAction::Destroy);
@@ -154,8 +156,6 @@ void Application::Shutdown()
     {
         m_OnExit();
     }
-
-    m_LanguageServer.Shutdown();
 }
 
 void Application::Update()

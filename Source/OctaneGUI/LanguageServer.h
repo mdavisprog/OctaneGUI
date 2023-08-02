@@ -134,6 +134,7 @@ public:
 
     ListenerID RegisterListener(OnNotificationSignature&& Fn);
     LanguageServer& UnregisterListener(ListenerID ID);
+    LanguageServer& ClearListeners();
 
     void Process();
 
