@@ -57,7 +57,10 @@ TextEditor::TextEditor(Window* InWindow)
 
 TextEditor::~TextEditor()
 {
-    LS().UnregisterListener(m_ListenerID);
+    if (GetWindow() != nullptr)
+    {
+        LS().UnregisterListener(m_ListenerID);
+    }
 }
 
 TextEditor& TextEditor::SetMatchIndent(bool MatchIndent)
