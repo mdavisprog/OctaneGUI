@@ -72,6 +72,7 @@ Window::Window(Application* InApplication)
 
 Window::~Window()
 {
+    m_Container->SetWindow(nullptr);
     m_Container = nullptr;
 }
 
