@@ -28,6 +28,7 @@ SOFTWARE.
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Profiler.h"
+#include "Canvas.h"
 #include "CheckBox.h"
 #include "ComboBox.h"
 #include "ControlList.h"
@@ -75,7 +76,11 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
 {
     std::shared_ptr<Control> Result;
 
-    if (Type == CheckBox::TypeName())
+    if (Type == Canvas::TypeName())
+    {
+        Result = AddControl<Canvas>();
+    }
+    else if (Type == CheckBox::TypeName())
     {
         Result = AddControl<CheckBox>();
     }

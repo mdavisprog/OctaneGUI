@@ -7,6 +7,7 @@ set(SOURCE
     Controls/Syntax/Rules.cpp
     Controls/BoxContainer.cpp
     Controls/Button.cpp
+    Controls/Canvas.cpp
     Controls/CheckBox.cpp
     Controls/ComboBox.cpp
     Controls/Container.cpp
