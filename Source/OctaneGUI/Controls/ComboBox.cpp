@@ -98,9 +98,9 @@ ComboBox::ComboBox(Window* InWindow)
     OnThemeLoaded();
 }
 
-ComboBox& ComboBox::SetExpand(Expand InExpand)
+ComboBox& ComboBox::SetExpandCB(Expand InExpand)
 {
-    Control::SetExpand(InExpand);
+    SetExpand(InExpand);
 
     if (InExpand == Expand::Width || InExpand == Expand::Both)
     {
@@ -220,7 +220,7 @@ void ComboBox::OnLoad(const Json& Root)
         }
     }
 
-    SetExpand(GetExpand());
+    SetExpandCB(GetExpand());
 
     OnThemeLoaded();
 }
