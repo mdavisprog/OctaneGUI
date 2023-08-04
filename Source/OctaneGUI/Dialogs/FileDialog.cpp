@@ -140,7 +140,7 @@ FileDialog::FileDialog(Window* InWindow)
 
     const std::shared_ptr<MarginContainer> FileInfo = Root->AddControl<MarginContainer>();
     FileInfo
-        ->SetMargins({ 4.0f, 4.0f, 16.0f, 4.0f })
+        ->SetMargins({ 4.0f, 4.0f, 4.0f, 4.0f })
         .SetExpand(Expand::Width);
 
     const std::shared_ptr<HorizontalContainer> FileInfoLayout = FileInfo->AddControl<HorizontalContainer>();
@@ -156,7 +156,7 @@ FileDialog::FileDialog(Window* InWindow)
 
     m_FilterBox = FileInfoLayout->AddControl<ComboBox>();
     m_FilterBox
-        ->SetWidth(200.0f)
+        ->SetExpandCB(Expand::Width)
         .SetOnSelected([this](const std::u32string&) -> void
             {
                 PopulateList();
