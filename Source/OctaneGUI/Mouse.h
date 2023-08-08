@@ -50,6 +50,7 @@ public:
 
     enum class Cursor : uint8_t
     {
+        None,
         Arrow,
         IBeam,
         SizeWE,

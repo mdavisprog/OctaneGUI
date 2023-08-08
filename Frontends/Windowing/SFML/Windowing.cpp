@@ -98,6 +98,7 @@ sf::Cursor::Type GetCursorType(OctaneGUI::Mouse::Cursor Cursor)
     case OctaneGUI::Mouse::Cursor::IBeam: return sf::Cursor::Text;
     case OctaneGUI::Mouse::Cursor::SizeWE: return sf::Cursor::SizeHorizontal;
     case OctaneGUI::Mouse::Cursor::SizeNS: return sf::Cursor::SizeVertical;
+    case OctaneGUI::Mouse::Cursor::None:
     case OctaneGUI::Mouse::Cursor::Arrow:
     default: break;
     }
@@ -452,6 +453,7 @@ void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor)
         return;
     }
 
+    g_Windows[Window]->setMouseCursorVisible(Cursor != OctaneGUI::Mouse::Cursor::None);
     SetMouseCursor(g_Windows[Window], GetCursorType(Cursor));
 }
 
