@@ -480,6 +480,16 @@ Application& Application::SetMouseCursor(Window* Target, Mouse::Cursor Cursor)
     return *this;
 }
 
+Application& Application::SetMousePosition(Window* Target, const Vector2& Position)
+{
+    if (m_OnSetMousePosition)
+    {
+        m_OnSetMousePosition(Target, Position);
+    }
+
+    return *this;
+}
+
 const FileSystem& Application::FS() const
 {
     return m_FileSystem;
@@ -570,6 +580,12 @@ Application& Application::SetOnSetWindowTitle(OnSetWindowTitleSignature&& Fn)
 Application& Application::SetOnSetMouseCursor(OnSetMouseCursorSignature&& Fn)
 {
     m_OnSetMouseCursor = std::move(Fn);
+    return *this;
+}
+
+Application& Application::SetOnSetMousePosition(OnSetMousePositionSignature&& Fn)
+{
+    m_OnSetMousePosition = std::move(Fn);
     return *this;
 }
 

@@ -681,6 +681,12 @@ Mouse::Cursor Window::MouseCursor() const
     return m_MouseCursor;
 }
 
+Window& Window::SetMousePosition(const Vector2& Position)
+{
+    m_Application->SetMousePosition(this, Position);
+    return *this;
+}
+
 void Window::Update()
 {
     PROFILER_SAMPLE_GROUP((std::string("Window::Update (") + GetTitle() + ")").c_str());

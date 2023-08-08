@@ -187,6 +187,7 @@ public:
     bool IsKeyPressed(Keyboard::Key Key) const;
     Window& SetMouseCursor(Mouse::Cursor Cursor);
     Mouse::Cursor MouseCursor() const;
+    Window& SetMousePosition(const Vector2& Position);
 
     void Update();
     void DoPaint(Paint& Brush);

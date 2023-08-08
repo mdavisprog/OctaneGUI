@@ -94,6 +94,7 @@ public:
     typedef std::function<std::u32string(void)> OnGetClipboardContentsSignature;
     typedef std::function<void(Window*, const char*)> OnSetWindowTitleSignature;
     typedef std::function<void(Window*, Mouse::Cursor)> OnSetMouseCursorSignature;
+    typedef std::function<void(Window*, const Vector2&)> OnSetMousePositionSignature;
 
     Application();
     virtual ~Application();
@@ -258,6 +259,13 @@ public:
     /// @return The Application object for chaining.
     Application& SetMouseCursor(Window* Target, Mouse::Cursor Cursor);
 
+    /// @brief Sets the system's mouse position.
+    /// @param Target The Window object to set the mouse position relative to. This can be NULL to set
+    /// an absolute position.
+    /// @param Position The position of the mouse. Can be relative to the Target window or absolute.
+    /// @return The Application object for chaining.
+    Application& SetMousePosition(Window* Target, const Vector2& Position);
+
     /// @brief Const version of the FileSystem object.
     /// @return const FileSystem reference.
     const FileSystem& FS() const;
@@ -362,6 +370,11 @@ public:
     /// @return The Application object to allow for chaining methods.
     Application& SetOnSetMouseCursor(OnSetMouseCursorSignature&& Fn);
 
+    /// @brief Request to set the system's mouse position.
+    /// @param Fn The OnSetMousePositionSignature callback.
+    /// @return The Application object to allow for chaining methods.
+    Application& SetOnSetMousePosition(OnSetMousePositionSignature&& Fn);
+
 private:
     void OnPaint(Window* InWindow, const VertexBuffer& Buffer);
     std::shared_ptr<Window> CreateWindow(const char* ID);
@@ -400,6 +413,7 @@ private:
     OnGetClipboardContentsSignature m_OnGetClipboardContents { nullptr };
     OnSetWindowTitleSignature m_OnSetWindowTitle { nullptr };
     OnSetMouseCursorSignature m_OnSetMouseCursor { nullptr };
+    OnSetMousePositionSignature m_OnSetMousePosition { nullptr };
 };
 
 }
