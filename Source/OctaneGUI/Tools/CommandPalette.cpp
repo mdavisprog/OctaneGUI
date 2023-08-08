@@ -39,6 +39,7 @@ SOFTWARE.
 #include "Inspector.h"
 #include "Profiler.h"
 #include "TextureViewer.h"
+#include "Tools.h"
 
 namespace OctaneGUI
 {
@@ -163,7 +164,7 @@ bool CommandPalette::Process(const std::u32string& Command, const std::vector<st
     std::u32string Lower = String::ToLower(Command);
     if (Lower == U"inspector")
     {
-        GetWindow()->App().Tools().ShowInspector(GetWindow());
+        GetWindow()->App().Tools()->ShowInspector(GetWindow());
     }
     else if (Lower == U"profile")
     {
@@ -180,7 +181,7 @@ bool CommandPalette::Process(const std::u32string& Command, const std::vector<st
                 if (Profiler::Get().IsEnabled())
                 {
                     Profiler::Get().Disable();
-                    GetWindow()->App().Tools().ShowProfileViewer(GetWindow());
+                    GetWindow()->App().Tools()->ShowProfileViewer(GetWindow());
                 }
             }
             else

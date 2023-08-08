@@ -38,6 +38,10 @@ SOFTWARE.
 #include "Theme.h"
 #include "Window.h"
 
+#if TOOLS
+    #include "Tools/Tools.h"
+#endif
+
 #include <algorithm>
 #include <chrono>
 #include <sstream>
@@ -134,6 +138,10 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
 
     const Vector2 Position { GetMainWindow()->GetPosition() };
     GetMainWindow()->SetPosition({ (float)m_CommandLine.GetInt("--winx", (int)Position.X), (float)m_CommandLine.GetInt("--winy", (int)Position.Y) });
+
+#if TOOLS
+    m_Tools = std::make_shared<Tools::Interface>();
+#endif // TOOLS
 
     return true;
 }
@@ -493,7 +501,7 @@ LanguageServer& Application::LS()
 }
 
 #if TOOLS
-Tools::Interface& Application::Tools()
+const std::shared_ptr<Tools::Interface>& Application::Tools()
 {
     return m_Tools;
 }

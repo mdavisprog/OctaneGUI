@@ -37,6 +37,7 @@ SOFTWARE.
 
 #if TOOLS
     #include "Tools/CommandPalette.h"
+    #include "Tools/Tools.h"
 #endif
 
 #include <algorithm>
@@ -455,7 +456,7 @@ void Window::OnKeyPressed(Keyboard::Key Key)
 #if TOOLS
     if (Key == Keyboard::Key::P && (IsKeyPressed(Keyboard::Key::LeftControl) || IsKeyPressed(Keyboard::Key::RightControl)))
     {
-        App().Tools().ShowCommandPalette(this);
+        App().Tools()->ShowCommandPalette(this);
         return;
     }
 #endif

@@ -35,10 +35,6 @@ SOFTWARE.
 #include "TextureCache.h"
 #include "Vector2.h"
 
-#if TOOLS
-    #include "Tools/Tools.h"
-#endif
-
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -54,6 +50,11 @@ class Json;
 class Theme;
 class VertexBuffer;
 class Window;
+
+namespace Tools
+{
+class Interface;
+}
 
 /// @enum WindowAction
 /// @brief List of window actions that must be handled by the frontend.
@@ -274,7 +275,7 @@ public:
     LanguageServer& LS();
 
 #if TOOLS
-    Tools::Interface& Tools();
+    const std::shared_ptr<Tools::Interface>& Tools();
     Application& SetIgnoreModals(bool IgnoreModals);
 #endif
 
@@ -384,13 +385,10 @@ private:
     bool m_HighDPI { true };
     bool m_CustomTitleBar { false };
     LanguageServer m_LanguageServer {};
-    // Moving this flag to be a member to prevent different class layouts between TOOLS settings.
-    // This flag will not be mutable when TOOLS is disabled.
+    // Moving these members to be outside of the TOOLS declaration to prevent different class layouts.
+    // These members cannot be accessed with TOOLS disabled.
     bool m_IgnoreModals { false };
-
-#if TOOLS
-    Tools::Interface m_Tools {};
-#endif
+    std::shared_ptr<Tools::Interface> m_Tools { nullptr };
 
     OnWindowActionSignature m_OnWindowAction { nullptr };
     OnWindowPaintSignature m_OnPaint { nullptr };
