@@ -384,9 +384,11 @@ private:
     bool m_HighDPI { true };
     bool m_CustomTitleBar { false };
     LanguageServer m_LanguageServer {};
+    // Moving this flag to be a member to prevent different class layouts between TOOLS settings.
+    // This flag will not be mutable when TOOLS is disabled.
+    bool m_IgnoreModals { false };
 
 #if TOOLS
-    bool m_IgnoreModals { false };
     Tools::Interface m_Tools {};
 #endif
 
