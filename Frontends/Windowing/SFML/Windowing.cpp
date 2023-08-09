@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "../Windowing.h"
+#include "Interface.h"
 #include "OctaneGUI/OctaneGUI.h"
 #include "SFML/Graphics.hpp"
 
@@ -455,6 +456,17 @@ void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor)
 
     g_Windows[Window]->setMouseCursorVisible(Cursor != OctaneGUI::Mouse::Cursor::None);
     SetMouseCursor(g_Windows[Window], GetCursorType(Cursor));
+}
+
+void SetMousePosition(OctaneGUI::Window* Window, const OctaneGUI::Vector2& Position)
+{
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        sf::Mouse::setPosition({(int)Position.X, (int)Position.Y});
+        return;
+    }
+
+    sf::Mouse::setPosition({(int)Position.X, (int)Position.Y}, *Get(Window));
 }
 
 const std::shared_ptr<sf::RenderWindow>& Get(OctaneGUI::Window* Window)

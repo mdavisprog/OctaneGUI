@@ -142,6 +142,11 @@ void OnSetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor
     Windowing::SetMouseCursor(Window, Cursor);
 }
 
+void OnSetMousePosition(OctaneGUI::Window* Window, const OctaneGUI::Vector2& Position)
+{
+    Windowing::SetMousePosition(Window, Position);
+}
+
 std::u32string OnFileDialog(OctaneGUI::FileDialogType Type, const std::vector<OctaneGUI::FileDialogFilter>& Filters)
 {
 #if defined(WINDOWS)
@@ -170,7 +175,8 @@ void Initialize(OctaneGUI::Application& Application)
         .SetOnSetClipboardContents(OnSetClipboardContents)
         .SetOnGetClipboardContents(OnGetClipboardContents)
         .SetOnSetWindowTitle(OnSetWindowTitle)
-        .SetOnSetMouseCursor(OnSetMouseCursor);
+        .SetOnSetMouseCursor(OnSetMouseCursor)
+        .SetOnSetMousePosition(OnSetMousePosition);
 
     Application.FS()
         .SetOnFileDialog(OnFileDialog);

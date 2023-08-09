@@ -78,6 +78,7 @@ void SetWindowTitle(OctaneGUI::Window* Window, const char* Title);
 void SetWindowPosition(OctaneGUI::Window* Window);
 void SetWindowSize(OctaneGUI::Window* Window);
 void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor);
+void SetMousePosition(OctaneGUI::Window* Window, const OctaneGUI::Vector2& Position);
 HitTestResult PerformHitTest(OctaneGUI::Window* Window, const OctaneGUI::Rect& Bounds, const OctaneGUI::Vector2& Point);
 
 }

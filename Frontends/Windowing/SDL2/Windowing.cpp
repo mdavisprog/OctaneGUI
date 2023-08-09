@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "../Windowing.h"
+#include "Interface.h"
 #include "OctaneGUI/OctaneGUI.h"
 #include "SDL.h"
 #include "SDL_syswm.h"
@@ -47,9 +48,9 @@ namespace Frontend
 namespace Windowing
 {
 
-std::unordered_map<OctaneGUI::Window*, SDL_Window*> g_Windows;
-std::unordered_map<uint32_t, std::vector<SDL_Event>> g_UnhandledEvents {};
-std::unordered_map<SDL_SystemCursor, SDL_Cursor*> g_SystemCursors {};
+static std::unordered_map<OctaneGUI::Window*, SDL_Window*> g_Windows;
+static std::unordered_map<uint32_t, std::vector<SDL_Event>> g_UnhandledEvents {};
+static std::unordered_map<SDL_SystemCursor, SDL_Cursor*> g_SystemCursors {};
 
 OctaneGUI::Keyboard::Key GetKey(SDL_Keycode Code)
 {
@@ -102,6 +103,7 @@ SDL_SystemCursor GetMouseCursor(OctaneGUI::Mouse::Cursor Cursor)
     case OctaneGUI::Mouse::Cursor::IBeam: return SDL_SYSTEM_CURSOR_IBEAM;
     case OctaneGUI::Mouse::Cursor::SizeWE: return SDL_SYSTEM_CURSOR_SIZEWE;
     case OctaneGUI::Mouse::Cursor::SizeNS: return SDL_SYSTEM_CURSOR_SIZENS;
+    case OctaneGUI::Mouse::Cursor::None:
     case OctaneGUI::Mouse::Cursor::Arrow:
     default: break;
     }
@@ -691,7 +693,19 @@ void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor)
         return;
     }
 
+    SDL_ShowCursor(Cursor == OctaneGUI::Mouse::Cursor::None ? SDL_DISABLE : SDL_ENABLE);
     SDL_SetCursor(g_SystemCursors[SystemCursor]);
+}
+
+void SetMousePosition(OctaneGUI::Window* Window, const OctaneGUI::Vector2& Position)
+{
+    if (g_Windows.find(Window) == g_Windows.end())
+    {
+        SDL_WarpMouseGlobal((int)Position.X, (int)Position.Y);
+        return;
+    }
+
+    SDL_WarpMouseInWindow(Get(Window), (int)Position.X, (int)Position.Y);
 }
 
 SDL_Window* Get(OctaneGUI::Window* Window)
