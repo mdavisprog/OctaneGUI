@@ -38,15 +38,28 @@ class Canvas : public ScrollableViewControl
     CLASS(Canvas)
 
 public:
+    enum class Action : unsigned char
+    {
+        None,
+        Pan,
+    };
+
     Canvas(Window* InWindow);
 
     Canvas& SetBackgroundColor(Color BackgroundColor);
 
     virtual void OnPaint(Paint& Brush) const override;
     virtual void OnLoad(const Json& Root) override;
+    virtual void OnMouseMove(const Vector2& Position) override;
+    virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;
+    virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
 
 private:
+    Canvas& SetAction(Action Action_);
+
     Color m_BackgrounColor { Color::White };
+    Action m_Action { Action::None };
+    Vector2 m_LastPosition {};
 };
 
 }

@@ -27,6 +27,8 @@ SOFTWARE.
 #include "Canvas.h"
 #include "../Json.h"
 #include "../Paint.h"
+#include "../Window.h"
+#include "ScrollableContainer.h"
 
 namespace OctaneGUI
 {
@@ -34,6 +36,8 @@ namespace OctaneGUI
 Canvas::Canvas(Window* InWindow)
     : ScrollableViewControl(InWindow)
 {
+    Interaction()->SetAlwaysFocus(true);
+    Scrollable()->SetInfinite(true);
 }
 
 Canvas& Canvas::SetBackgroundColor(Color BackgroundColor)
@@ -54,6 +58,68 @@ void Canvas::OnLoad(const Json& Root)
     ScrollableViewControl::OnLoad(Root);
 
     SetBackgroundColor(Color::Parse(Root["BackgroundColor"]));
+}
+
+void Canvas::OnMouseMove(const Vector2& Position)
+{
+    const Vector2 Delta { Position - m_LastPosition };
+
+    switch (m_Action)
+    {
+    case Action::Pan:
+    {
+        const Vector2 Current { Scrollable()->GetPosition() };
+        Scrollable()->SetPosition(Current - Delta);
+        GetWindow()->SetMousePosition(m_LastPosition);
+        Invalidate();
+    } break;
+
+    case Action::None:
+    default: break;
+    }
+}
+
+bool Canvas::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count)
+{
+    m_LastPosition = Position;
+
+    if (Button == Mouse::Button::Left)
+    {
+        SetAction(Action::Pan);
+        return true;
+    }
+
+    return false;
+}
+
+void Canvas::OnMouseReleased(const Vector2&, Mouse::Button)
+{
+    SetAction(Action::None);
+}
+
+Canvas& Canvas::SetAction(Action Action_)
+{
+    if (m_Action != Action_)
+    {
+        m_Action = Action_;
+
+        switch (m_Action)
+        {
+        case Action::None:
+        {
+            GetWindow()->SetMouseCursor(Mouse::Cursor::Arrow);
+        } break;
+
+        case Action::Pan:
+        {
+            GetWindow()->SetMouseCursor(Mouse::Cursor::None);
+        } break;
+
+        default: break;
+        }
+    }
+
+    return *this;
 }
 
 }
