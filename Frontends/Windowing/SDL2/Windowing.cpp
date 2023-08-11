@@ -699,13 +699,19 @@ void SetMouseCursor(OctaneGUI::Window* Window, OctaneGUI::Mouse::Cursor Cursor)
 
 void SetMousePosition(OctaneGUI::Window* Window, const OctaneGUI::Vector2& Position)
 {
-    if (g_Windows.find(Window) == g_Windows.end())
+    OctaneGUI::Vector2 Global { Position };
+
+    SDL_Window* Window_ { Get(Window) };
+    if (Window_ != nullptr)
     {
-        SDL_WarpMouseGlobal((int)Position.X, (int)Position.Y);
-        return;
+        int X = 0, Y = 0;
+        SDL_GetWindowPosition(Window_, &X, &Y);
+        Global += { (float)X, (float)Y };
     }
 
-    SDL_WarpMouseInWindow(Get(Window), (int)Position.X, (int)Position.Y);
+    // Don't use 'SDL_WarpMouseInWindow'. This causes very inaccurate mouse motions.
+    // The 'Global' position should be translated by the owning window given.
+    SDL_WarpMouseGlobal((int)Global.X, (int)Global.Y);
 }
 
 SDL_Window* Get(OctaneGUI::Window* Window)
