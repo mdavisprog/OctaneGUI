@@ -69,7 +69,7 @@ void Canvas::OnMouseMove(const Vector2& Position)
     case Action::Pan:
     {
         const Vector2 Current { Scrollable()->GetPosition() };
-        Scrollable()->SetPosition(Current - Delta);
+        Scrollable()->SetPosition(Current + Delta);
         GetWindow()->SetMousePosition(m_LastPosition);
         Invalidate();
     } break;
