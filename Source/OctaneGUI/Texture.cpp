@@ -141,8 +141,10 @@ std::shared_ptr<Texture> Texture::LoadSVG(const char* Path)
     NSVGimage* Image = nsvgParseFromFile(Path, "px", 96);
     if (Image != nullptr)
     {
+        const uint32_t Width { (uint32_t)Image->width };
+        const uint32_t Height { (uint32_t)Image->height };
         const std::vector<uint8_t> Data = RasterSVG(Image, Image->width, Image->height);
-        Result = Load(Data, (uint32_t)Image->width, (uint32_t)Image->height);
+        Result = Load(Data, Width, Height);
     }
 
     return Result;
