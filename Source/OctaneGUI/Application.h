@@ -96,6 +96,7 @@ public:
     typedef std::function<void(Window*, const char*)> OnSetWindowTitleSignature;
     typedef std::function<void(Window*, Mouse::Cursor)> OnSetMouseCursorSignature;
     typedef std::function<void(Window*, const Vector2&)> OnSetMousePositionSignature;
+    typedef std::function<std::shared_ptr<Control>(Container*, const std::string&)> OnCreateControlSignature;
 
     Application();
     virtual ~Application();
@@ -292,6 +293,14 @@ public:
     /// @return Network reference.
     Network& Net();
 
+    /// @brief Attempt to create a control for the given Owner if a control of the given
+    /// Type is not found.
+    /// @param Owner The owning container to create the control for. The 'AddControl' function
+    /// must be called.
+    /// @param Type The type of the control to create.
+    /// @return The newly created control within the 'Owner' container.
+    std::shared_ptr<Control> CreateControl(Container* Owner, const std::string& Type) const;
+
 #if TOOLS
     const std::shared_ptr<Tools::Interface>& Tools();
     Application& SetIgnoreModals(bool IgnoreModals);
@@ -385,6 +394,12 @@ public:
     /// @return The Application object to allow for chaining methods.
     Application& SetOnSetMousePosition(OnSetMousePositionSignature&& Fn);
 
+    /// @brief Callback invoked when a Container wishes to create a control that
+    /// is not registered with OctaneGUI.
+    /// @param Fn The OnCreateControlSignature callback.
+    /// @return The Application object to allow for chaining methods.
+    Application& SetOnCreateControl(OnCreateControlSignature&& Fn);
+
 private:
     void OnPaint(Window* InWindow, const VertexBuffer& Buffer);
     std::shared_ptr<Window> CreateWindow(const char* ID);
@@ -425,6 +440,7 @@ private:
     OnSetWindowTitleSignature m_OnSetWindowTitle { nullptr };
     OnSetMouseCursorSignature m_OnSetMouseCursor { nullptr };
     OnSetMousePositionSignature m_OnSetMousePosition { nullptr };
+    OnCreateControlSignature m_OnCreateControl { nullptr };
 };
 
 }

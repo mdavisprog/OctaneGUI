@@ -526,6 +526,16 @@ Network& Application::Net()
     return m_Network;
 }
 
+std::shared_ptr<Control> Application::CreateControl(Container* Owner, const std::string& Type) const
+{
+    if (m_OnCreateControl)
+    {
+        return m_OnCreateControl(Owner, Type);
+    }
+
+    return nullptr;
+}
+
 #if TOOLS
 const std::shared_ptr<Tools::Interface>& Application::Tools()
 {
@@ -602,6 +612,12 @@ Application& Application::SetOnSetMouseCursor(OnSetMouseCursorSignature&& Fn)
 Application& Application::SetOnSetMousePosition(OnSetMousePositionSignature&& Fn)
 {
     m_OnSetMousePosition = std::move(Fn);
+    return *this;
+}
+
+Application& Application::SetOnCreateControl(OnCreateControlSignature&& Fn)
+{
+    m_OnCreateControl = std::move(Fn);
     return *this;
 }
 

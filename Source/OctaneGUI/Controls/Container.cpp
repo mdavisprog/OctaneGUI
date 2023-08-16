@@ -25,9 +25,11 @@ SOFTWARE.
 */
 
 #include "Container.h"
+#include "../Application.h"
 #include "../Json.h"
 #include "../Paint.h"
 #include "../Profiler.h"
+#include "../Window.h"
 #include "Canvas.h"
 #include "CheckBox.h"
 #include "ComboBox.h"
@@ -179,6 +181,10 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
     else if (Type == WindowContainer::TypeName())
     {
         Result = AddControl<WindowContainer>();
+    }
+    else if (GetWindow() != nullptr)
+    {
+        Result = GetWindow()->App().CreateControl(this, Type);
     }
 
     return Result;
