@@ -57,6 +57,7 @@ set(SOURCE
     Icons.cpp
     Json.cpp
     LanguageServer.cpp
+    Network.cpp
     Orientation.cpp
     Paint.cpp
     Popup.cpp

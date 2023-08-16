@@ -75,6 +75,7 @@ SOFTWARE.
 #include "Keyboard.h"
 #include "LanguageServer.h"
 #include "Mouse.h"
+#include "Network.h"
 #include "Paint.h"
 #include "Rect.h"
 #include "String.h"

@@ -32,6 +32,7 @@ SOFTWARE.
 #include "Keyboard.h"
 #include "LanguageServer.h"
 #include "Mouse.h"
+#include "Network.h"
 #include "TextureCache.h"
 #include "Vector2.h"
 
@@ -114,6 +115,7 @@ public:
     /// * CustomTitleBar: Forces all windows to be created with no system title bar.
     /// * UseSystemFileDialog: Notifies the FileSystem object to use the system's file dialog instead
     /// of the custom one using the libraries controls.
+    /// * UseNetwork: Will initialize the networking subsystem.
     ///
     /// The second parameter is a reference to a map<string, ControlList>, which returns all controls
     /// that has a 'ID' property in their JSON for their respective window defined by a string.
@@ -278,9 +280,17 @@ public:
     /// @return const LanguageServer reference.
     const LanguageServer& LS() const;
 
-    /// @brief Mutable version of the Language
+    /// @brief Mutable version of the LanguageServer object.
     /// @return LanguageServer reference.
     LanguageServer& LS();
+
+    /// @brief Const version of the Network object.
+    /// @return const Network reference.
+    const Network& Net() const;
+
+    /// @brief Mutable version of the Network object.
+    /// @return Network reference.
+    Network& Net();
 
 #if TOOLS
     const std::shared_ptr<Tools::Interface>& Tools();
@@ -398,6 +408,7 @@ private:
     bool m_HighDPI { true };
     bool m_CustomTitleBar { false };
     LanguageServer m_LanguageServer {};
+    Network m_Network {};
     // Moving these members to be outside of the TOOLS declaration to prevent different class layouts.
     // These members cannot be accessed with TOOLS disabled.
     bool m_IgnoreModals { false };

@@ -124,6 +124,11 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
 
     m_FileSystem.SetUseSystemFileDialog(Root["UseSystemFileDialog"].Boolean());
 
+    if (Root["UseNetwork"].Boolean())
+    {
+        m_Network.Initialize();
+    }
+
     // Now load the contents for each window. Some of the controls may require
     // a valid font. The font is loaded with the theme.
     Windows.ForEach([&](const std::string& Key, const Json& Value) -> void
@@ -149,6 +154,7 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
 void Application::Shutdown()
 {
     m_LanguageServer.Shutdown();
+    m_Network.Shutdown();
 
     for (auto& Item : m_Windows)
     {
@@ -508,6 +514,16 @@ const LanguageServer& Application::LS() const
 LanguageServer& Application::LS()
 {
     return m_LanguageServer;
+}
+
+const Network& Application::Net() const
+{
+    return m_Network;
+}
+
+Network& Application::Net()
+{
+    return m_Network;
 }
 
 #if TOOLS
