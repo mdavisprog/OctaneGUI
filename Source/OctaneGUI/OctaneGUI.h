@@ -78,6 +78,7 @@ SOFTWARE.
 #include "Network.h"
 #include "Paint.h"
 #include "Rect.h"
+#include "Socket.h"
 #include "String.h"
 #include "Theme.h"
 #include "Timer.h"

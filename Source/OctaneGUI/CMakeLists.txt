@@ -62,6 +62,7 @@ set(SOURCE
     Paint.cpp
     Popup.cpp
     Rect.cpp
+    Socket.cpp
     String.cpp
     Texture.cpp
     TextureCache.cpp
