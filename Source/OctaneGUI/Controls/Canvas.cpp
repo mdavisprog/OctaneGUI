@@ -72,7 +72,8 @@ void Canvas::OnMouseMove(const Vector2& Position)
         Scrollable()->SetPosition(Current + Delta);
         GetWindow()->SetMousePosition(m_LastPosition);
         Invalidate();
-    } break;
+    }
+    break;
 
     case Action::None:
     default: break;
@@ -108,12 +109,14 @@ Canvas& Canvas::SetAction(Action Action_)
         case Action::None:
         {
             GetWindow()->SetMouseCursor(Mouse::Cursor::Arrow);
-        } break;
+        }
+        break;
 
         case Action::Pan:
         {
             GetWindow()->SetMouseCursor(Mouse::Cursor::None);
-        } break;
+        }
+        break;
 
         default: break;
         }

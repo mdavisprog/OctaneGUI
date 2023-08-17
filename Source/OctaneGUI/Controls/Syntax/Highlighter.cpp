@@ -140,7 +140,7 @@ std::vector<TextSpan> Highlighter::GetSpans(const std::u32string_view& View) con
 
         // Multiline range checking. The start of the range may be out of view,
         // so if the end of the range is found, then assume everything before
-        // it is marked with the starting tag (e.g. multiline comments). 
+        // it is marked with the starting tag (e.g. multiline comments).
         if (Range_.MultiLine)
         {
             if (End < Pos && End != std::u32string_view::npos)

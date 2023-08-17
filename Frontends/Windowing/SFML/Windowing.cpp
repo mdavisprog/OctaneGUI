@@ -462,11 +462,11 @@ void SetMousePosition(OctaneGUI::Window* Window, const OctaneGUI::Vector2& Posit
 {
     if (g_Windows.find(Window) == g_Windows.end())
     {
-        sf::Mouse::setPosition({(int)Position.X, (int)Position.Y});
+        sf::Mouse::setPosition({ (int)Position.X, (int)Position.Y });
         return;
     }
 
-    sf::Mouse::setPosition({(int)Position.X, (int)Position.Y}, *Get(Window));
+    sf::Mouse::setPosition({ (int)Position.X, (int)Position.Y }, *Get(Window));
 }
 
 const std::shared_ptr<sf::RenderWindow>& Get(OctaneGUI::Window* Window)

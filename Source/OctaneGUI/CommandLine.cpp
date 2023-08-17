@@ -80,7 +80,8 @@ int CommandLine::GetInt(const char* Argument, int Default) const
         return std::stoi(Result.c_str());
     }
     catch (const std::exception&)
-    {}
+    {
+    }
 
     return Default;
 }

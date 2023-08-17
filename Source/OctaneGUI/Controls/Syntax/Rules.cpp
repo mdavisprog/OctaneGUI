@@ -58,24 +58,20 @@ bool Rules::IsValidIdentifier(char32_t Char) const
 Rules Rules::s_Empty {};
 Rules Rules::s_Cpp {
     // Keywords
-    {
-        U"asm", U"auto", U"bool", U"break", U"case", U"catch", U"char", U"class", U"const", U"const_cast"
+    { U"asm", U"auto", U"bool", U"break", U"case", U"catch", U"char", U"class", U"const", U"const_cast",
         U"continue", U"default", U"delete", U"do", U"double", U"dynamic_cast", U"else", U"enum", U"extern",
         U"false", U"float", U"for", U"friend", U"goto", U"if", U"inline", U"int", U"long", U"mutable",
         U"namespace", U"new", U"nullptr", U"operator", U"private", U"protected", U"public", U"reinterpret_cast",
         U"return", U"short", U"signed", U"sizeof", U"static", U"static_assert", U"static_cast", U"struct",
         U"switch", U"template", U"this", U"throw", U"true", U"try", U"typedef", U"typeid", U"typename", U"union",
-        U"unsigned", U"using", U"virtual", U"void", U"volatile", U"wchar_t", U"while"
-    },
+        U"unsigned", U"using", U"virtual", U"void", U"volatile", U"wchar_t", U"while" },
 
     // Ranges
-    {
-        {U"/*", U"*/", {106, 153, 85, 255}},
-        {U"\"", U"\"", {206, 145, 120, 255}},
-        {U"//", U"\n", {106, 153, 85, 255}, false},
-        {U"#", U" ", {189, 99, 197, 255}, false},
-        {U"<", U">", {206, 145, 120, 255}, false}
-    }
+    { { U"/*", U"*/", { 106, 153, 85, 255 } },
+        { U"\"", U"\"", { 206, 145, 120, 255 } },
+        { U"//", U"\n", { 106, 153, 85, 255 }, false },
+        { U"#", U" ", { 189, 99, 197, 255 }, false },
+        { U"<", U">", { 206, 145, 120, 255 }, false } }
 };
 
 Rules Rules::s_Json {
@@ -83,9 +79,7 @@ Rules Rules::s_Json {
     {},
 
     // Ranges
-    {
-        {U"\"", U"\"", {206, 145, 120, 255}}
-    }
+    { { U"\"", U"\"", { 206, 145, 120, 255 } } }
 };
 
 }
