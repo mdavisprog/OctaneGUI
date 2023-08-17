@@ -420,6 +420,7 @@ void Window::SetPopup(const std::shared_ptr<Container>& Popup, OnContainerSignat
     m_Popup.Open(Popup, Modal);
     m_OnPopupClose = Callback;
     RequestLayout(Popup);
+    Repaint();
 }
 
 void Window::ClosePopup()
