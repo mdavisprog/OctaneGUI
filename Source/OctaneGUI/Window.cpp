@@ -27,6 +27,7 @@ SOFTWARE.
 #include "Window.h"
 #include "Application.h"
 #include "Controls/ControlList.h"
+#include "Controls/Menu.h"
 #include "Controls/MenuBar.h"
 #include "Controls/MenuItem.h"
 #include "Controls/WindowContainer.h"
@@ -558,9 +559,21 @@ void Window::OnMouseReleased(const Vector2& Position, Mouse::Button MouseButton)
         Focused = m_Focus.lock();
     }
 
-    if (Hovered && Hovered != Focused)
+    if (Hovered)
     {
-        Hovered->OnMouseReleased(Position * m_RenderScale, MouseButton);
+        if (Hovered != Focused)
+        {
+            Hovered->OnMouseReleased(Position * m_RenderScale, MouseButton);
+        }
+
+        if (Hovered->ShouldCreateContextMenu() && MouseButton == Mouse::Button::Right)
+        {
+            const std::shared_ptr<Menu> ContextMenu = std::make_shared<Menu>(this);
+            Hovered->CreateContextMenu(ContextMenu);
+            ContextMenu->Resize();
+            ContextMenu->SetPosition(Position);
+            SetPopup(ContextMenu);
+        }
     }
 
     if (Focused)

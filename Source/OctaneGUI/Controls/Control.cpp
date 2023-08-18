@@ -320,6 +320,27 @@ void Control::Load(const char* Stream)
     OnLoad(Root);
 }
 
+Control& Control::SetOnCreateContextMenu(OnCreateContextMenuSignature&& Fn)
+{
+    m_OnCreateContextMenu = std::move(Fn);
+    return *this;
+}
+
+bool Control::ShouldCreateContextMenu() const
+{
+    return m_OnCreateContextMenu != nullptr;
+}
+
+Control& Control::CreateContextMenu(const std::shared_ptr<Menu>& ContextMenu)
+{
+    if (m_OnCreateContextMenu)
+    {
+        m_OnCreateContextMenu(this, ContextMenu);
+    }
+
+    return *this;
+}
+
 void Control::OnPaint(Paint&) const
 {
 }

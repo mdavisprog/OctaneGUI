@@ -180,6 +180,17 @@ std::weak_ptr<Control> ScrollableViewControl::GetControl(const Vector2& Point) c
     return std::weak_ptr<Control>();
 }
 
+Control& ScrollableViewControl::SetOnCreateContextMenu(Control::OnCreateContextMenuSignature&& Fn)
+{
+    if (m_Interaction)
+    {
+        m_Interaction->SetOnCreateContextMenu(std::move(Fn));
+        return *this;
+    }
+
+    return Container::SetOnCreateContextMenu(std::move(Fn));
+}
+
 void ScrollableViewControl::OnLoad(const Json& Root)
 {
     Json Copy = Root;

@@ -280,6 +280,16 @@ Vector2 Splitter::DesiredSize() const
     return m_Split->DesiredSize();
 }
 
+Control& Splitter::SetOnCreateContextMenu(Control::OnCreateContextMenuSignature&& Fn)
+{
+    if (m_Interaction)
+    {
+        return m_Interaction->SetOnCreateContextMenu(std::move(Fn));
+    }
+
+    return Container::SetOnCreateContextMenu(std::move(Fn));
+}
+
 void Splitter::OnLoad(const Json& Root)
 {
     Container::OnLoad(Root);

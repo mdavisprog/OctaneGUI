@@ -84,6 +84,7 @@ public:
 
     virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override;
 
+    virtual Control& SetOnCreateContextMenu(Control::OnCreateContextMenuSignature&& Fn) override;
     virtual void OnLoad(const Json& Root) override;
     virtual void OnMouseMove(const Vector2& Position) override;
     virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;

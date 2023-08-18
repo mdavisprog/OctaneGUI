@@ -41,6 +41,7 @@ namespace OctaneGUI
 {
 
 class Json;
+class Menu;
 class Paint;
 class Theme;
 class Window;
@@ -68,6 +69,8 @@ class Control
     CLASS(Control)
 
 public:
+    typedef std::function<void(Control*, const std::shared_ptr<Menu>&)> OnCreateContextMenuSignature;
+
     Control(Window* InWindow);
     virtual ~Control();
 
@@ -304,6 +307,21 @@ public:
     /// @param Stream JSON string.
     void Load(const char* Stream);
 
+    /// @brief Callback invoked when a control desires to have a context menu associated.
+    /// @param Fn The OnCreateContextMenuSignature callback.
+    /// @return The Control object for chaining methods.
+    virtual Control& SetOnCreateContextMenu(OnCreateContextMenuSignature&& Fn);
+
+    /// @brief Determines if the control desires to create a context menu.
+    /// @return True if the control should create a context menu, False otherwise.
+    bool ShouldCreateContextMenu() const;
+
+    /// @brief This function will invoke the registered callback for the menu to be
+    /// populated.
+    /// @param ContextMenu The Menu object to append context menu items to.
+    /// @return The Control object for chaining methods.
+    Control& CreateContextMenu(const std::shared_ptr<Menu>& ContextMenu);
+
     /// @brief Notifies the control to paint into a given brush.
     ///
     /// This is called for all controls of a given Window when a repaint request
@@ -370,6 +388,7 @@ private:
     Expand m_Expand { Expand::None };
     std::string m_ID {};
     OnInvalidateSignature m_OnInvalidate { nullptr };
+    OnCreateContextMenuSignature m_OnCreateContextMenu { nullptr };
     ThemeProperties m_ThemeProperties {};
 
     bool m_ForwardKeyEvents { false };
