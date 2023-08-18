@@ -96,5 +96,27 @@ void TextEvent(OctaneGUI::Application& Application, const std::u32string& Text)
     }
 }
 
+bool ContextMenu(OctaneGUI::Application& Application, const std::shared_ptr<OctaneGUI::Control>& Control)
+{
+    bool Opened { false };
+    bool Selected { false };
+    Control->SetOnCreateContextMenu([&](OctaneGUI::Control*, const std::shared_ptr<OctaneGUI::Menu>& ContextMenu) -> void
+        {
+            Opened = true;
+
+            ContextMenu
+                ->AddItem("Item 1", [&]() -> void
+                    {
+                        Selected = true;
+                    });
+        });
+    
+    MouseClick(Application, Control->GetAbsolutePosition(), OctaneGUI::Mouse::Button::Right);
+    Application.Update();
+    MouseClick(Application, Control->GetAbsolutePosition() + OctaneGUI::Vector2{8.0f, 8.0f}, OctaneGUI::Mouse::Button::Left);
+
+    return Opened && Selected;
+}
+
 }
 }

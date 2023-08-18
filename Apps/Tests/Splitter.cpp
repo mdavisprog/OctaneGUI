@@ -212,6 +212,16 @@ TEST_CASE(InitialSplitterSize,
     return Top->GetSize().Y == 100.0f;
 })
 
+TEST_CASE(ContextMenu,
+{
+    OctaneGUI::ControlList List;
+    LoadSplitter(Application, R"({}, {})", List, false);
+
+    const std::shared_ptr<OctaneGUI::Splitter> Splitter = List.To<OctaneGUI::Splitter>("Splitter");
+
+    return Utility::ContextMenu(Application, Splitter);
+})
+
 )
 
 }

@@ -31,6 +31,7 @@ SOFTWARE.
 namespace OctaneGUI
 {
 class Application;
+class Control;
 class ControlList;
 }
 
@@ -48,6 +49,7 @@ void MousePress(OctaneGUI::Application& Application, const OctaneGUI::Vector2& P
 void MouseRelease(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Position, OctaneGUI::Mouse::Button Button = OctaneGUI::Mouse::Button::Left);
 void MouseClick(OctaneGUI::Application& Application, const OctaneGUI::Vector2& Position, OctaneGUI::Mouse::Button Button = OctaneGUI::Mouse::Button::Left);
 void TextEvent(OctaneGUI::Application& Application, const std::u32string& Text);
+bool ContextMenu(OctaneGUI::Application& Application, const std::shared_ptr<OctaneGUI::Control>& Control);
 
 }
 }

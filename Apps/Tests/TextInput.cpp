@@ -376,6 +376,19 @@ TEST_CASE(NewLineZeroIndex,
     return true;
 })
 
+TEST_CASE(ContextMenu,
+{
+    OctaneGUI::ControlList List;
+    Utility::Load(
+        Application,
+        R"({"Type": "TextInput", "ID": "TextInput", "Text": {"Text": "Well Hello Friends! Welcome to the program!"}})",
+        List);
+    
+    const std::shared_ptr<OctaneGUI::TextInput> TextInput = List.To<OctaneGUI::TextInput>("TextInput");
+
+    return Utility::ContextMenu(Application, TextInput);
+})
+
 )
 
 }

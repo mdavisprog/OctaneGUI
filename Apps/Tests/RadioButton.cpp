@@ -138,6 +138,19 @@ TEST_CASE(MouseClick,
     return true;
 })
 
+TEST_CASE(ContextMenu,
+{
+    const std::string Stream =
+        R"({"Type": "RadioButton", "ID": "RadioButton", "Text": {"Text": "One"}})";
+
+    OctaneGUI::ControlList List;
+    Load(Application, Stream.c_str(), List);
+
+    const std::shared_ptr<OctaneGUI::RadioButton> RadioButton { List.To<OctaneGUI::RadioButton>("RadioButton") };
+
+    return Utility::ContextMenu(Application, RadioButton);
+})
+
 )
 
 }

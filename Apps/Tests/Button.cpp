@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "OctaneGUI/OctaneGUI.h"
 #include "TestSuite.h"
+#include "Utility.h"
 
 namespace Tests
 {
@@ -109,6 +110,17 @@ TEST_CASE(Disabled,
     Application.GetMainWindow()->OnMouseReleased(Position, OctaneGUI::Mouse::Button::Left);
 
     return !Pressed;
+})
+
+TEST_CASE(ContextMenu,
+{
+    OctaneGUI::ControlList List;
+    Application.GetMainWindow()->Load(Json, List);
+    Application.GetMainWindow()->Update();
+
+    const std::shared_ptr<OctaneGUI::Button> Button { List.To<OctaneGUI::Button>("Button") };
+
+    return Utility::ContextMenu(Application, Button);
 })
 
 )

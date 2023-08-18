@@ -66,6 +66,16 @@ TEST_CASE(Wrap,
     return Text->GetSize().Y > Font->Size();
 })
 
+TEST_CASE(ContextMenu,
+{
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, R"({"Type": "Text", "ID": "Text", "Text": "Well Hello Friends!"})", List);
+
+    const std::shared_ptr<OctaneGUI::Text> Text = List.To<OctaneGUI::Text>("Text");
+
+    return Utility::ContextMenu(Application, Text);
+})
+
 )
 
 }

@@ -86,6 +86,17 @@ TEST_CASE(TriState,
     return CheckBox->GetState() == OctaneGUI::CheckBox::State::None;
 })
 
+TEST_CASE(ContextMenu,
+{
+    OctaneGUI::ControlList List;
+    Application.GetMainWindow()->Load(CheckBoxJson("CheckBox", "CheckBox", false).c_str(), List);
+    Application.GetMainWindow()->Update();
+
+    std::shared_ptr<OctaneGUI::CheckBox> CheckBox = List.To<OctaneGUI::CheckBox>("CheckBox");
+
+    return Utility::ContextMenu(Application, CheckBox);
+})
+
 )
 
 }

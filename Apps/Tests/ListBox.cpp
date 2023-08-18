@@ -184,6 +184,16 @@ TEST_CASE(MultiSelect,
     return true;
 })
 
+TEST_CASE(ContextMenu,
+{
+    OctaneGUI::ControlList List;
+    Load(Application, {}, List);
+
+    const std::shared_ptr<OctaneGUI::ListBox> ListBox = List.To<OctaneGUI::ListBox>("ListBox");
+
+    return Utility::ContextMenu(Application, ListBox);
+})
+
 )
 
 }

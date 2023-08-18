@@ -173,6 +173,14 @@ TEST_CASE(ScrollBarPositions,
     return true;
 })
 
+TEST_CASE(ContextMenu,
+{
+    OctaneGUI::ControlList List;
+    Load(Application, "", List, 200, 200);
+    const std::shared_ptr<OctaneGUI::ScrollableViewControl> View = List.To<OctaneGUI::ScrollableViewControl>("View");
+    return Utility::ContextMenu(Application, View);
+})
+
 )
 
 }
