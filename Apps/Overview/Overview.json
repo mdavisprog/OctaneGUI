@@ -4,7 +4,7 @@
         "File": "Resources/Icons.json"
     },
     "Windows": {
-        "Main": { "Title": "Overview", "Width": 800, "Height": 400,
+        "Main": { "Title": "Overview", "Width": 960, "Height": 540,
             "MenuBar": {"Items": [
                 {"ID": "File", "Text": "File", "Items": [
                     {"ID": "OpenFile", "Text": "Open File"},
@@ -23,9 +23,10 @@
                             {"Type": "HorizontalContainer", "Controls": [
                                 {"Type": "GroupBox", "Text": "Text Buttons", "Controls": [
                                     {"Type": "HorizontalContainer", "Expand": "Width", "Controls": [
-                                        {"Type": "TextButton", "Expand": "Width", "Text": {"Text": "Enabled"}},
-                                        {"Type": "TextButton", "Expand": "Width", "Disabled": true, "Text": {"Text": "Disabled"}},
-                                        {"Type": "TextButton", "Expand": "Width", "Radius": 4.0, "Text": {"Text": "Rounded"}}
+                                        {"Type": "TextButton", "Text": {"Text": "Enabled"}},
+                                        {"Type": "TextButton", "Disabled": true, "Text": {"Text": "Disabled"}},
+                                        {"Type": "TextButton", "Radius": 4.0, "Text": {"Text": "Rounded"}},
+                                        {"Type": "TextButton", "ID": "ButtonContextMenu", "Text": {"Text": "Context Menu"}}
                                     ]}
                                 ]},
                                 {"Type": "Separator", "Orientation": "Vertical"},

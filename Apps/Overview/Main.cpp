@@ -106,6 +106,19 @@ int main(int argc, char **argv)
     {
         Application.DisplayWindow("About");
     });
+
+    List.To<OctaneGUI::TextButton>("ButtonContextMenu")->SetOnCreateContextMenu([&](OctaneGUI::Control*, const std::shared_ptr<OctaneGUI::Menu>& ContextMenu) -> void
+    {
+        ContextMenu
+            ->AddItem("Option 1", []() -> void
+                {
+                    printf("Selected Option 1\n");
+                })
+            .AddItem("Option 2", []() -> void
+                {
+                    printf("Selected Option 2\n");
+                });
+    });
     
     List.To<OctaneGUI::Button>("FlipSpinners")->SetOnClicked([List](OctaneGUI::Button&) -> void
     {
