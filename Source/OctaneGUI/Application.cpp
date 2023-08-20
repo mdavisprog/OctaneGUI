@@ -75,7 +75,14 @@ bool Application::Initialize(const char* JsonStream, std::unordered_map<std::str
         return false;
     }
 
-    const Json Root = Json::Parse(JsonStream);
+    bool IsError { false };
+    const Json Root = Json::Parse(JsonStream, IsError);
+    if (IsError)
+    {
+        printf("Error attempting to parse Json stream: '%s'\n", Root["Error"].String());
+        Shutdown();
+        return false;
+    }
 
     if (Root.IsNull())
     {
