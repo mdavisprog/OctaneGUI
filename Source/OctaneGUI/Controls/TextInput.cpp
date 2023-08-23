@@ -328,6 +328,11 @@ const std::u32string_view TextInput::SelectedText() const
 
 TextInput& TextInput::SelectAll()
 {
+    if (m_Text->Length() == 0)
+    {
+        return *this;
+    }
+
     m_Anchor = { 0, 0, 0 };
     SetPosition(0, LineEndIndex(m_Text->Length() - 1), m_Text->Length());
     return *this;
