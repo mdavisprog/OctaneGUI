@@ -75,6 +75,8 @@ void Popup::Close()
         return;
     }
 
+    m_State = State::Closing;
+
     if (m_Container)
     {
         m_Container->SetOnInvalidate(nullptr);
@@ -84,16 +86,27 @@ void Popup::Close()
             m_OnClose(*m_Container.get());
         }
     }
-
-    m_Container = nullptr;
-    m_Modal = false;
-    m_State = State::None;
 }
 
 void Popup::Update()
 {
     if (m_Container)
     {
+        switch (m_State)
+        {
+        case State::Opening:
+            m_State = State::Opened;
+            break;
+        
+        case State::Closing:
+            m_Container = nullptr;
+            m_Modal = false;
+            m_State = State::None;
+            break;
+        
+        default: break;
+        }
+
         if (m_State == State::Opening)
         {
             m_State = State::Opened;
@@ -104,6 +117,11 @@ void Popup::Update()
 bool Popup::IsModal() const
 {
     return m_Modal;
+}
+
+bool Popup::IsClosed() const
+{
+    return m_State == State::Closing || m_State == State::None;
 }
 
 const std::shared_ptr<Container>& Popup::GetContainer() const

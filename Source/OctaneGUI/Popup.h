@@ -48,7 +48,8 @@ public:
     {
         None,
         Opening,
-        Opened
+        Opened,
+        Closing,
     };
 
     Popup();
@@ -58,6 +59,7 @@ public:
     void Close();
     void Update();
     bool IsModal() const;
+    bool IsClosed() const;
     const std::shared_ptr<Container>& GetContainer() const;
     bool HasControl(const std::shared_ptr<Control>& Item) const;
     void OnMouseMove(const Vector2& Position);

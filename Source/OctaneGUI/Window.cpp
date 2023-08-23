@@ -977,6 +977,11 @@ void Window::UpdateFocus(const std::shared_ptr<Control>& Focus)
 {
     std::shared_ptr<Control> Focused = m_Focus.lock();
 
+    if (m_Popup.IsClosed() && m_Popup.HasControl(Focus))
+    {
+        return;
+    }
+
     bool ShouldClosePopup = false;
     if (Focus != Focused)
     {

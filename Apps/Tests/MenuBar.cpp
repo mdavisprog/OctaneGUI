@@ -72,6 +72,7 @@ TEST_CASE(CloseMenu,
 
     VERIFYF(Window->IsPopupOpen(), "File menu is not open!");
     Utility::MouseClick(Application, Window->GetSize() + OctaneGUI::Vector2{-5.0, -5.0f});
+    Application.Update();
 
     return !Window->IsPopupOpen();
 })
