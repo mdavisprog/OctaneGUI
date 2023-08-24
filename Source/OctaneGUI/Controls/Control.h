@@ -373,6 +373,7 @@ public:
     virtual void OnResized();
     virtual void OnText(uint32_t Code);
     virtual void OnThemeLoaded();
+    virtual void OnRemoved(Container& From);
 
 protected:
     void Invalidate(std::shared_ptr<Control> Focus, InvalidateType Type) const;

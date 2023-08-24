@@ -457,6 +457,10 @@ void Control::OnThemeLoaded()
 {
 }
 
+void Control::OnRemoved(Container&)
+{
+}
+
 void Control::Invalidate(std::shared_ptr<Control> Focus, InvalidateType Type) const
 {
     if (!Focus)

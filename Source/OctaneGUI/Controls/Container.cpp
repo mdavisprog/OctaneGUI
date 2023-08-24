@@ -227,6 +227,7 @@ Container* Container::RemoveControl(const std::shared_ptr<Control>& Item)
         m_Controls.erase(Iter);
         Invalidate(InvalidateType::Both);
         OnRemoveControl(Item);
+        Item->OnRemoved(*this);
     }
 
     return this;
