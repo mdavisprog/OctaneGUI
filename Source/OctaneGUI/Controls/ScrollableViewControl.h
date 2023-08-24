@@ -89,6 +89,7 @@ public:
     virtual void OnMouseMove(const Vector2& Position) override;
     virtual bool OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse::Count Count) override;
     virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
+    virtual void OnRemoved(Container& From) override;
 
 protected:
     using Container::AddControl;

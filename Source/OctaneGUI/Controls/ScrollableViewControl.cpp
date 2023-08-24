@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "ScrollableViewControl.h"
 #include "../Json.h"
+#include "../Window.h"
 #include "ScrollableContainer.h"
 
 namespace OctaneGUI
@@ -217,6 +218,19 @@ bool ScrollableViewControl::OnMousePressed(const Vector2& Position, Mouse::Butto
 void ScrollableViewControl::OnMouseReleased(const Vector2& Position, Mouse::Button Button)
 {
     m_Scrollable->OnMouseReleased(Position, Button);
+}
+
+void ScrollableViewControl::OnRemoved(Container&)
+{
+    if (GetWindow() == nullptr)
+    {
+        return;
+    }
+
+    if (GetWindow()->IsFocused(m_Interaction))
+    {
+        GetWindow()->SetFocus(nullptr);
+    }
 }
 
 void ScrollableViewControl::OnLayoutComplete()
