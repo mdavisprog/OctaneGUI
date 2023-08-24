@@ -385,6 +385,16 @@ const std::weak_ptr<Control>& Window::Hovered() const
     return m_Hovered;
 }
 
+bool Window::IsFocused(const std::shared_ptr<Control>& Focus) const
+{
+    if (m_Focus.expired())
+    {
+        return false;
+    }
+
+    return m_Focus.lock() == Focus;
+}
+
 Window& Window::SetFocused(bool Focused)
 {
     if (Focused)

@@ -151,6 +151,7 @@ public:
     Window& SetFocus(const std::shared_ptr<Control>& Focus);
     const std::weak_ptr<Control>& Focus() const;
     const std::weak_ptr<Control>& Hovered() const;
+    bool IsFocused(const std::shared_ptr<Control>& Focus) const;
 
     Window& SetFocused(bool Focused);
     bool Focused() const;
