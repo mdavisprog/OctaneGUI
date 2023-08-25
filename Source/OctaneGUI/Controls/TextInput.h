@@ -134,9 +134,6 @@ public:
     TextInput& SetWordDelimiters(const char32_t* Delimiters);
     TextInput& AddWordDelimiters(const char32_t* Delimiters);
 
-    void Focus();
-    void Unfocus();
-
     TextInput& SetOnTextChanged(OnTextInputSignature&& Fn);
     TextInput& SetOnConfirm(OnTextInputSignature&& Fn);
     TextInput& SetOnModifyText(OnModifyTextSignature&& Fn);
@@ -146,6 +143,8 @@ public:
     TextInput& SetFontSize(float FontSize);
     float LineHeight() const;
 
+    virtual void OnFocused() override;
+    virtual void OnUnfocused() override;
     virtual void OnPaint(Paint& Brush) const override;
     virtual void OnLoad(const Json& Root) override;
     virtual void OnSave(Json& Root) const override;

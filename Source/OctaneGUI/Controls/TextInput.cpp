@@ -60,12 +60,12 @@ public:
 
     virtual void OnFocused() override
     {
-        m_Input->Focus();
+        m_Input->OnFocused();
     }
 
     virtual void OnUnfocused() override
     {
-        m_Input->Unfocus();
+        m_Input->OnUnfocused();
     }
 
     virtual bool OnKeyPressed(Keyboard::Key Key) override
@@ -474,25 +474,6 @@ TextInput& TextInput::AddWordDelimiters(const char32_t* Delimiters)
     return *this;
 }
 
-void TextInput::Focus()
-{
-    if (!m_Position.IsValid())
-    {
-        m_Position = { 0, 0, 0 };
-    }
-
-    m_Focused = true;
-    ResetCursorTimer();
-    Invalidate();
-}
-
-void TextInput::Unfocus()
-{
-    m_Focused = false;
-    m_BlinkTimer->Stop();
-    Invalidate();
-}
-
 TextInput& TextInput::SetOnTextChanged(OnTextInputSignature&& Fn)
 {
     m_OnTextChanged = std::move(Fn);
@@ -538,6 +519,27 @@ TextInput& TextInput::SetFontSize(float FontSize)
 float TextInput::LineHeight() const
 {
     return m_Text->LineHeight();
+}
+
+void TextInput::OnFocused()
+{
+    if (!m_Position.IsValid())
+    {
+        m_Position = { 0, 0, 0 };
+    }
+
+    m_Focused = true;
+    ResetCursorTimer();
+    Invalidate();
+}
+
+void TextInput::OnUnfocused()
+{
+    ScrollableViewControl::OnUnfocused();
+
+    m_Focused = false;
+    m_BlinkTimer->Stop();
+    Invalidate();
 }
 
 void TextInput::OnPaint(Paint& Brush) const
