@@ -107,7 +107,7 @@ int main(int argc, char **argv)
         Application.DisplayWindow("About");
     });
 
-    List.To<OctaneGUI::TextButton>("ButtonContextMenu")->SetOnCreateContextMenu([&](OctaneGUI::Control*, const std::shared_ptr<OctaneGUI::Menu>& ContextMenu) -> void
+    List.To<OctaneGUI::TextButton>("ButtonContextMenu")->SetOnCreateContextMenu([&](OctaneGUI::Control&, const std::shared_ptr<OctaneGUI::Menu>& ContextMenu) -> void
     {
         ContextMenu
             ->AddItem("Option 1", []() -> void

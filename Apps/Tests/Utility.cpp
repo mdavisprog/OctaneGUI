@@ -100,7 +100,7 @@ bool ContextMenu(OctaneGUI::Application& Application, const std::shared_ptr<Octa
 {
     bool Opened { false };
     bool Selected { false };
-    Control->SetOnCreateContextMenu([&](OctaneGUI::Control*, const std::shared_ptr<OctaneGUI::Menu>& ContextMenu) -> void
+    Control->SetOnCreateContextMenu([&](OctaneGUI::Control&, const std::shared_ptr<OctaneGUI::Menu>& ContextMenu) -> void
         {
             Opened = true;
 

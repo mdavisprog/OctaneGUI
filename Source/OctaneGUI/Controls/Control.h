@@ -69,7 +69,7 @@ class Control
     CLASS(Control)
 
 public:
-    typedef std::function<void(Control*, const std::shared_ptr<Menu>&)> OnCreateContextMenuSignature;
+    typedef std::function<void(Control&, const std::shared_ptr<Menu>&)> OnCreateContextMenuSignature;
 
     Control(Window* InWindow);
     virtual ~Control();

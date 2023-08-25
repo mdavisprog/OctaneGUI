@@ -335,7 +335,7 @@ Control& Control::CreateContextMenu(const std::shared_ptr<Menu>& ContextMenu)
 {
     if (m_OnCreateContextMenu)
     {
-        m_OnCreateContextMenu(this, ContextMenu);
+        m_OnCreateContextMenu(*this, ContextMenu);
     }
 
     return *this;
