@@ -56,8 +56,6 @@ public:
 
     CustomControl& SetOnPaint(OnPaintSignature&& Fn);
     CustomControl& SetOnUpdate(OnCustomControlSignature&& Fn);
-    CustomControl& SetOnFocused(OnCustomControlSignature&& Fn);
-    CustomControl& SetOnUnfocused(OnCustomControlSignature&& Fn);
     CustomControl& SetOnLoad(OnLoadSignature&& Fn);
     CustomControl& SetOnSave(OnSaveSignature&& Fn);
     CustomControl& SetOnKeyPressed(OnKeyPressedSignature&& Fn);
@@ -74,8 +72,6 @@ public:
 
     virtual void OnPaint(Paint& Brush) const override;
     virtual void Update() override;
-    virtual void OnFocused() override;
-    virtual void OnUnfocused() override;
     virtual void OnLoad(const Json& Root) override;
     virtual void OnSave(Json& Root) const override;
     virtual bool OnKeyPressed(Keyboard::Key Key) override;
@@ -93,8 +89,6 @@ public:
 private:
     OnPaintSignature m_OnPaint { nullptr };
     OnCustomControlSignature m_OnUpdate { nullptr };
-    OnCustomControlSignature m_OnFocused { nullptr };
-    OnCustomControlSignature m_OnUnfocused { nullptr };
     OnLoadSignature m_OnLoad { nullptr };
     OnSaveSignature m_OnSave { nullptr };
     OnKeyPressedSignature m_OnKeyPressed { nullptr };

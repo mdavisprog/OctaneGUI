@@ -322,6 +322,16 @@ public:
     /// @return The Control object for chaining methods.
     Control& CreateContextMenu(const std::shared_ptr<Menu>& ContextMenu);
 
+    /// @brief Callback invoked when the control gains focus.
+    /// @param Fn The OnControlSignature callback.
+    /// @return The Control object for chaining methods.
+    Control& SetOnFocused(OnControlSignature&& Fn);
+
+    /// @brief Callback invoked when the control loses focus.
+    /// @param Fn The OnControlSignature callback.
+    /// @return The Control object for chaining methods.
+    Control& SetOnUnfocused(OnControlSignature&& Fn);
+
     /// @brief Notifies the control to paint into a given brush.
     ///
     /// This is called for all controls of a given Window when a repaint request
@@ -388,9 +398,12 @@ private:
     Rect m_Bounds {};
     Expand m_Expand { Expand::None };
     std::string m_ID {};
+    ThemeProperties m_ThemeProperties {};
+
     OnInvalidateSignature m_OnInvalidate { nullptr };
     OnCreateContextMenuSignature m_OnCreateContextMenu { nullptr };
-    ThemeProperties m_ThemeProperties {};
+    OnControlSignature m_OnFocused { nullptr };
+    OnControlSignature m_OnUnfocused { nullptr };
 
     bool m_ForwardKeyEvents { false };
     bool m_ForwardMouseEvents { false };

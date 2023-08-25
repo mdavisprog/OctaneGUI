@@ -67,13 +67,13 @@ TEST_CASE(OnFocused,
     Utility::Load(Application, "", "", List, 200, 200);
     bool OnFocused = false;
     Application.GetMainWindow()->GetContainer()->AddControl<OctaneGUI::CustomControl>()
-        ->SetOnFocused([&](OctaneGUI::CustomControl&) -> void
-            {
-                OnFocused = true;
-            })
-        .SetOnMousePressed([](OctaneGUI::CustomControl&, const OctaneGUI::Vector2&, OctaneGUI::Mouse::Button, OctaneGUI::Mouse::Count) -> bool
+        ->SetOnMousePressed([](OctaneGUI::CustomControl&, const OctaneGUI::Vector2&, OctaneGUI::Mouse::Button, OctaneGUI::Mouse::Count) -> bool
             {
                 return true;
+            })
+        .SetOnFocused([&](OctaneGUI::Control&) -> void
+            {
+                OnFocused = true;
             })
         .SetSize({ 100.0f, 100.0f });
     Utility::MousePress(Application, {5.0f, 5.0f});
@@ -87,17 +87,17 @@ TEST_CASE(OnUnfocused,
     Utility::Load(Application, "", "", List, 200, 200);
     bool OnFocused = false;
     Application.GetMainWindow()->GetContainer()->AddControl<OctaneGUI::CustomControl>()
-        ->SetOnFocused([&](OctaneGUI::CustomControl&) -> void
+        ->SetOnMousePressed([](OctaneGUI::CustomControl&, const OctaneGUI::Vector2&, OctaneGUI::Mouse::Button, OctaneGUI::Mouse::Count) -> bool
+            {
+                return true;
+            })
+        .SetOnFocused([&](OctaneGUI::Control&) -> void
             {
                 OnFocused = true;
             })
-        .SetOnUnfocused([&](OctaneGUI::CustomControl&) -> void
+        .SetOnUnfocused([&](OctaneGUI::Control&) -> void
             {
                 OnFocused = false;
-            })
-        .SetOnMousePressed([](OctaneGUI::CustomControl&, const OctaneGUI::Vector2&, OctaneGUI::Mouse::Button, OctaneGUI::Mouse::Count) -> bool
-            {
-                return true;
             })
         .SetSize({ 100.0f, 100.0f });
     Utility::MousePress(Application, {5.0f, 5.0f});

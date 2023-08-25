@@ -46,18 +46,6 @@ CustomControl& CustomControl::SetOnUpdate(OnCustomControlSignature&& Fn)
     return *this;
 }
 
-CustomControl& CustomControl::SetOnFocused(OnCustomControlSignature&& Fn)
-{
-    m_OnFocused = std::move(Fn);
-    return *this;
-}
-
-CustomControl& CustomControl::SetOnUnfocused(OnCustomControlSignature&& Fn)
-{
-    m_OnUnfocused = std::move(Fn);
-    return *this;
-}
-
 CustomControl& CustomControl::SetOnLoad(OnLoadSignature&& Fn)
 {
     m_OnLoad = std::move(Fn);
@@ -149,22 +137,6 @@ void CustomControl::Update()
     if (m_OnUpdate)
     {
         m_OnUpdate(*this);
-    }
-}
-
-void CustomControl::OnFocused()
-{
-    if (m_OnFocused)
-    {
-        m_OnFocused(*this);
-    }
-}
-
-void CustomControl::OnUnfocused()
-{
-    if (m_OnUnfocused)
-    {
-        m_OnUnfocused(*this);
     }
 }
 

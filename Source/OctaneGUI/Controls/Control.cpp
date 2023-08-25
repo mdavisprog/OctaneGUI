@@ -341,6 +341,18 @@ Control& Control::CreateContextMenu(const std::shared_ptr<Menu>& ContextMenu)
     return *this;
 }
 
+Control& Control::SetOnFocused(OnControlSignature&& Fn)
+{
+    m_OnFocused = std::move(Fn);
+    return *this;
+}
+
+Control& Control::SetOnUnfocused(OnControlSignature&& Fn)
+{
+    m_OnUnfocused = std::move(Fn);
+    return *this;
+}
+
 void Control::OnPaint(Paint&) const
 {
 }
@@ -351,10 +363,18 @@ void Control::Update()
 
 void Control::OnFocused()
 {
+    if (m_OnFocused)
+    {
+        m_OnFocused(*this);
+    }
 }
 
 void Control::OnUnfocused()
 {
+    if (m_OnUnfocused)
+    {
+        m_OnUnfocused(*this);
+    }
 }
 
 void Control::OnLoad(const Json& Root)
