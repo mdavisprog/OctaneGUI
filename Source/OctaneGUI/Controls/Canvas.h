@@ -48,6 +48,8 @@ public:
 
     Canvas& SetBackgroundColor(Color BackgroundColor);
 
+    Action GetAction() const;
+
     virtual void OnPaint(Paint& Brush) const override;
     virtual void OnLoad(const Json& Root) override;
     virtual void OnMouseMove(const Vector2& Position) override;

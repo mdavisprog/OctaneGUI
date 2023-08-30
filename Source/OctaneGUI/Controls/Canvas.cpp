@@ -46,6 +46,11 @@ Canvas& Canvas::SetBackgroundColor(Color BackgroundColor)
     return *this;
 }
 
+Canvas::Action Canvas::GetAction() const
+{
+    return m_Action;
+}
+
 void Canvas::OnPaint(Paint& Brush) const
 {
     Brush.Rectangle(GetAbsoluteBounds(), m_BackgrounColor);
