@@ -290,6 +290,8 @@ ProfileViewer::ProfileViewer()
 
 void ProfileViewer::View(Window* InWindow)
 {
+#define ID "__TOOLS__.ProfileViewer"
+
     if (m_Window.expired())
     {
         const char* Stream = R"({"Title": "ProfileViewer", "Width": 800, "Height": 400, "MenuBar": {"Items": [
@@ -305,7 +307,7 @@ void ProfileViewer::View(Window* InWindow)
     ]}
 })";
         ControlList List;
-        m_Window = InWindow->App().NewWindow("ProfileViewer", Stream, List);
+        m_Window = InWindow->App().NewWindow(ID, Stream, List);
 
         std::shared_ptr<MenuItem> ViewElapsed = List.To<MenuItem>("View.Elapsed");
         std::shared_ptr<MenuItem> ViewCount = List.To<MenuItem>("View.Count");
@@ -390,7 +392,7 @@ void ProfileViewer::View(Window* InWindow)
         return;
     }
 
-    InWindow->App().DisplayWindow("ProfileViewer");
+    InWindow->App().DisplayWindow(ID);
     Populate();
 }
 

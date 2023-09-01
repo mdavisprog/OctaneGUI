@@ -97,13 +97,13 @@ void Popup::Update()
         case State::Opening:
             m_State = State::Opened;
             break;
-        
+
         case State::Closing:
             m_Container = nullptr;
             m_Modal = false;
             m_State = State::None;
             break;
-        
+
         default: break;
         }
 

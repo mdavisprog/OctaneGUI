@@ -28,12 +28,12 @@ SOFTWARE.
 
 #include "Mouse.h"
 #include "../Application.h"
-#include "../String.h"
-#include "../Window.h"
 #include "../Controls/ControlList.h"
 #include "../Controls/Panel.h"
 #include "../Controls/Text.h"
 #include "../Controls/VerticalContainer.h"
+#include "../String.h"
+#include "../Window.h"
 
 namespace OctaneGUI
 {
@@ -107,7 +107,7 @@ Mouse::Mouse()
 
 Mouse& Mouse::Show(Application& App)
 {
-    #define ID "__TOOLS__.Mouse"
+#define ID "__TOOLS__.Mouse"
 
     if (!App.HasWindow(ID))
     {

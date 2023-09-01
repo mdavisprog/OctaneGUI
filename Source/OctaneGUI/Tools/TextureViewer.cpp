@@ -51,7 +51,7 @@ namespace OctaneGUI
 namespace Tools
 {
 
-#define ID "TextureViewer"
+#define ID "__TOOLS__.TextureViewer"
 
 class ImagePreview : public VerticalContainer
 {

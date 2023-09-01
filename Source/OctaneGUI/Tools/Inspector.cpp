@@ -222,6 +222,8 @@ Inspector::Inspector()
 
 void Inspector::Inspect(Window* Target)
 {
+#define ID "__TOOLS__.Inspector"
+
     if (m_Window.expired())
     {
         const char* Stream =
@@ -241,7 +243,7 @@ void Inspector::Inspect(Window* Target)
 ]}})";
 
         ControlList List;
-        std::shared_ptr<Window> NewWindow = Target->App().NewWindow("Inspector", Stream, List);
+        std::shared_ptr<Window> NewWindow = Target->App().NewWindow(ID, Stream, List);
         NewWindow
             ->SetOnClose([this](Window&) -> void
                 {
@@ -320,7 +322,7 @@ void Inspector::Inspect(Window* Target)
                 //           e.g. only update visible nodes.
                 // Populate();
             });
-    Target->App().DisplayWindow("Inspector");
+    Target->App().DisplayWindow(ID);
 
     m_MenuBarProxy
         ->SetRoot(Target->GetMenuBar())
