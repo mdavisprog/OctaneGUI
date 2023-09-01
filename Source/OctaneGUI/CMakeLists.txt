@@ -87,6 +87,7 @@ if(TOOLS)
         ${SOURCE}
         Tools/CommandPalette.cpp
         Tools/Inspector.cpp
+        Tools/Mouse.cpp
         Tools/Profiler.cpp
         Tools/ProfileViewer.cpp
         Tools/Properties.cpp

@@ -39,6 +39,7 @@ namespace Tools
 
 class CommandPalette;
 class Inspector;
+class Mouse;
 class ProfileViewer;
 
 class Interface
@@ -50,10 +51,13 @@ public:
     Interface& ShowInspector(Window* Target);
     Interface& ShowProfileViewer(Window* Target);
 
+    const std::shared_ptr<Tools::Mouse> Mouse() const;
+
 private:
     std::shared_ptr<CommandPalette> m_CommandPalette { nullptr };
     std::shared_ptr<Inspector> m_Inspector { nullptr };
     std::shared_ptr<ProfileViewer> m_ProfileViewer { nullptr };
+    std::shared_ptr<Tools::Mouse> m_Mouse { nullptr };
 };
 
 }

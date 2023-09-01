@@ -24,57 +24,40 @@ SOFTWARE.
 
 */
 
-#include "Tools.h"
-#include "../Window.h"
-#include "CommandPalette.h"
-#include "Inspector.h"
-#include "Mouse.h"
-#include "ProfileViewer.h"
+#pragma once
+
+#include "../Mouse.h"
+
+#include <memory>
 
 namespace OctaneGUI
 {
+
+struct Vector2;
+
+class Application;
+class Window;
+
 namespace Tools
 {
 
-Interface::Interface()
+class MouseContainer;
+
+class Mouse
 {
-    m_Inspector = std::make_shared<Inspector>();
-    m_ProfileViewer = std::make_shared<ProfileViewer>();
-    m_Mouse = std::make_shared<Tools::Mouse>();
-}
+public:
+    Mouse();
 
-Interface& Interface::ShowCommandPalette(Window* Target)
-{
-    if (!m_CommandPalette)
-    {
-        m_CommandPalette = std::make_shared<CommandPalette>(Target);
-    }
+    Mouse& Show(Application& App);
+    Mouse& OnMove(const std::shared_ptr<Window>& Target, const Vector2& Position);
+    Mouse& OnPressed(const std::shared_ptr<Window>& Target, const Vector2& Position, OctaneGUI::Mouse::Button Button, OctaneGUI::Mouse::Count Count);
+    Mouse& OnReleased(const std::shared_ptr<Window>& Target, const Vector2& Position, OctaneGUI::Mouse::Button Button);
 
-    if (m_CommandPalette != Target->GetPopup())
-    {
-        m_CommandPalette->SetWindow(Target);
-        m_CommandPalette->Show();
-    }
+private:
+    Mouse& Update(const std::shared_ptr<Window>& Target, const Vector2& Position);
 
-    return *this;
-}
-
-Interface& Interface::ShowInspector(Window* Target)
-{
-    m_Inspector->Inspect(Target);
-    return *this;
-}
-
-Interface& Interface::ShowProfileViewer(Window* Target)
-{
-    m_ProfileViewer->View(Target);
-    return *this;
-}
-
-const std::shared_ptr<Tools::Mouse> Interface::Mouse() const
-{
-    return m_Mouse;
-}
+    std::shared_ptr<MouseContainer> m_Container { nullptr };
+};
 
 }
 }

@@ -37,6 +37,7 @@ SOFTWARE.
 #include "../String.h"
 #include "../Window.h"
 #include "Inspector.h"
+#include "Mouse.h"
 #include "Profiler.h"
 #include "TextureViewer.h"
 #include "Tools.h"
@@ -161,10 +162,12 @@ bool CommandPalette::Process(const std::u32string& Command, const std::vector<st
 {
     bool Result = true;
 
+    const std::shared_ptr<Interface> Tools_ = GetWindow()->App().Tools();
+
     std::u32string Lower = String::ToLower(Command);
     if (Lower == U"inspector")
     {
-        GetWindow()->App().Tools()->ShowInspector(GetWindow());
+        Tools_->ShowInspector(GetWindow());
     }
     else if (Lower == U"profile")
     {
@@ -181,7 +184,7 @@ bool CommandPalette::Process(const std::u32string& Command, const std::vector<st
                 if (Profiler::Get().IsEnabled())
                 {
                     Profiler::Get().Disable();
-                    GetWindow()->App().Tools()->ShowProfileViewer(GetWindow());
+                    Tools_->ShowProfileViewer(GetWindow());
                 }
             }
             else
@@ -261,6 +264,10 @@ bool CommandPalette::Process(const std::u32string& Command, const std::vector<st
         {
             printf("Not enough arguments given for displaying message box.");
         }
+    }
+    else if (Lower == U"mouse")
+    {
+        Tools_->Mouse()->Show(GetWindow()->App());
     }
     else if (Lower == U"quit" || Lower == U"exit")
     {

@@ -39,6 +39,7 @@ SOFTWARE.
 #include "Window.h"
 
 #if TOOLS
+    #include "Tools/Mouse.h"
     #include "Tools/Tools.h"
 #endif
 
@@ -764,14 +765,23 @@ int Application::ProcessEvent(const std::shared_ptr<Window>& Item)
 
     case Event::Type::MouseMoved:
         Item->OnMouseMove(E.GetData().m_MouseMove.m_Position);
+#if TOOLS
+        m_Tools->Mouse()->OnMove(Item, E.GetData().m_MouseMove.m_Position);
+#endif
         break;
 
     case Event::Type::MousePressed:
         Item->OnMousePressed(E.GetData().m_MouseButton.m_Position, E.GetData().m_MouseButton.m_Button, E.GetData().m_MouseButton.m_Count);
+#if TOOLS
+        m_Tools->Mouse()->OnPressed(Item, E.GetData().m_MouseButton.m_Position, E.GetData().m_MouseButton.m_Button, E.GetData().m_MouseButton.m_Count);
+#endif
         break;
 
     case Event::Type::MouseReleased:
         Item->OnMouseReleased(E.GetData().m_MouseButton.m_Position, E.GetData().m_MouseButton.m_Button);
+#if TOOLS
+        m_Tools->Mouse()->OnReleased(Item, E.GetData().m_MouseButton.m_Position, E.GetData().m_MouseButton.m_Button);
+#endif
         break;
 
     case Event::Type::MouseWheel:
