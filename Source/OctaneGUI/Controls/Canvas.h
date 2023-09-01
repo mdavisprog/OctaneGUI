@@ -48,6 +48,7 @@ public:
 
     Canvas& SetBackgroundColor(Color BackgroundColor);
 
+    Canvas& SetAction(Action Action_);
     Action GetAction() const;
 
     virtual void OnPaint(Paint& Brush) const override;
@@ -57,8 +58,6 @@ public:
     virtual void OnMouseReleased(const Vector2& Position, Mouse::Button Button) override;
 
 private:
-    Canvas& SetAction(Action Action_);
-
     Color m_BackgrounColor { Color::White };
     Action m_Action { Action::None };
     Vector2 m_LastPosition {};

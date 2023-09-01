@@ -46,6 +46,33 @@ Canvas& Canvas::SetBackgroundColor(Color BackgroundColor)
     return *this;
 }
 
+Canvas& Canvas::SetAction(Action Action_)
+{
+    if (m_Action != Action_)
+    {
+        m_Action = Action_;
+
+        switch (m_Action)
+        {
+        case Action::None:
+        {
+            GetWindow()->SetMouseCursor(Mouse::Cursor::Arrow);
+        }
+        break;
+
+        case Action::Pan:
+        {
+            GetWindow()->SetMouseCursor(Mouse::Cursor::None);
+        }
+        break;
+
+        default: break;
+        }
+    }
+
+    return *this;
+}
+
 Canvas::Action Canvas::GetAction() const
 {
     return m_Action;
@@ -101,33 +128,6 @@ bool Canvas::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse
 void Canvas::OnMouseReleased(const Vector2&, Mouse::Button)
 {
     SetAction(Action::None);
-}
-
-Canvas& Canvas::SetAction(Action Action_)
-{
-    if (m_Action != Action_)
-    {
-        m_Action = Action_;
-
-        switch (m_Action)
-        {
-        case Action::None:
-        {
-            GetWindow()->SetMouseCursor(Mouse::Cursor::Arrow);
-        }
-        break;
-
-        case Action::Pan:
-        {
-            GetWindow()->SetMouseCursor(Mouse::Cursor::None);
-        }
-        break;
-
-        default: break;
-        }
-    }
-
-    return *this;
 }
 
 }
