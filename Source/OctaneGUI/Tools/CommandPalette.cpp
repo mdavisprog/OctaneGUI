@@ -96,6 +96,12 @@ std::shared_ptr<Control> CommandPalette::Input() const
     return m_Input->Interaction();
 }
 
+CommandPalette& CommandPalette::SetOnCommand(OnCommandSignature&& Fn)
+{
+    m_OnCommand = std::move(Fn);
+    return *this;
+}
+
 bool CommandPalette::OnKeyPressed(Keyboard::Key Key)
 {
     if (Key == Keyboard::Key::Enter)
@@ -112,14 +118,20 @@ bool CommandPalette::OnKeyPressed(Keyboard::Key Key)
             Tokens.erase(Tokens.begin());
         }
 
-        if (Process(Command, Tokens))
+        if (m_History.empty() || m_History.back() != Buffer)
         {
-            if (m_History.empty() || m_History.back() != Buffer)
-            {
-                m_History.push_back(Buffer);
-            }
-            return true;
+            m_History.push_back(Buffer);
         }
+
+        if (!Process(Command, Tokens))
+        {
+            if (m_OnCommand)
+            {
+                m_OnCommand(Command.c_str(), Tokens);
+            }
+        }
+
+        return true;
     }
     else if (Key == Keyboard::Key::Escape)
     {

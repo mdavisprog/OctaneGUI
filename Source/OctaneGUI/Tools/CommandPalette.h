@@ -42,11 +42,14 @@ class CommandPalette : public Container
     CLASS(CommandPalette)
 
 public:
+    typedef std::function<void(const char32_t*, const std::vector<std::u32string>&)> OnCommandSignature;
+
     CommandPalette(Window* InWindow);
 
     void Show();
 
     std::shared_ptr<Control> Input() const;
+    CommandPalette& SetOnCommand(OnCommandSignature&& Fn);
 
     virtual bool OnKeyPressed(Keyboard::Key Key) override;
 
@@ -57,6 +60,7 @@ private:
     std::shared_ptr<TextInput> m_Input { nullptr };
     std::vector<std::u32string> m_History {};
     size_t m_HistoryIndex { 0 };
+    OnCommandSignature m_OnCommand { nullptr };
 };
 
 }

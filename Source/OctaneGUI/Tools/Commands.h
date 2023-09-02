@@ -26,43 +26,34 @@ SOFTWARE.
 
 #pragma once
 
-#include "Commands.h"
-
-#include <memory>
+#include <functional>
+#include <string>
+#include <vector>
 
 namespace OctaneGUI
 {
-
-class Application;
-class Window;
-
 namespace Tools
 {
 
-class CommandPalette;
-class Inspector;
-class Mouse;
-class ProfileViewer;
-
-class Interface
+class Commands
 {
 public:
-    Interface();
+    typedef std::function<void(const std::vector<std::u32string>&)> OnCommandSignature;
 
-    Interface& ShowCommandPalette(Window* Target);
-    Interface& ShowInspector(Window* Target);
-    Interface& ShowProfileViewer(Window* Target);
+    Commands();
 
-    Interface& RegisterCommand(const char32_t* Name, Commands::OnCommandSignature&& Fn);
-
-    const std::shared_ptr<Tools::Mouse>& Mouse() const;
+    Commands& Register(const char32_t* Name, OnCommandSignature&& Fn);
+    bool Invoke(const char32_t* Name, const std::vector<std::u32string>& Args) const;
 
 private:
-    Commands m_Commands {};
-    std::shared_ptr<CommandPalette> m_CommandPalette { nullptr };
-    std::shared_ptr<Inspector> m_Inspector { nullptr };
-    std::shared_ptr<ProfileViewer> m_ProfileViewer { nullptr };
-    std::shared_ptr<Tools::Mouse> m_Mouse { nullptr };
+    struct Command
+    {
+    public:
+        std::u32string Name {};
+        OnCommandSignature Callback { nullptr };
+    };
+
+    std::vector<Command> m_Commands {};
 };
 
 }

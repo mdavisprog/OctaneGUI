@@ -85,6 +85,7 @@ endif()
 if(TOOLS)
     set(SOURCE
         ${SOURCE}
+        Tools/Commands.cpp
         Tools/CommandPalette.cpp
         Tools/Inspector.cpp
         Tools/Mouse.cpp

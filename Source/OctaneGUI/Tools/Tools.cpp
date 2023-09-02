@@ -48,6 +48,10 @@ Interface& Interface::ShowCommandPalette(Window* Target)
     if (!m_CommandPalette)
     {
         m_CommandPalette = std::make_shared<CommandPalette>(Target);
+        m_CommandPalette->SetOnCommand([this](const char32_t* Name, const std::vector<std::u32string>& Args) -> void
+            {
+                m_Commands.Invoke(Name, Args);
+            });
     }
 
     if (m_CommandPalette != Target->GetPopup())
@@ -71,7 +75,13 @@ Interface& Interface::ShowProfileViewer(Window* Target)
     return *this;
 }
 
-const std::shared_ptr<Tools::Mouse> Interface::Mouse() const
+Interface& Interface::RegisterCommand(const char32_t* Name, Commands::OnCommandSignature&& Fn)
+{
+    m_Commands.Register(Name, std::move(Fn));
+    return *this;
+}
+
+const std::shared_ptr<Tools::Mouse>& Interface::Mouse() const
 {
     return m_Mouse;
 }
