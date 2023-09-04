@@ -64,6 +64,7 @@ set(SOURCE
     Rect.cpp
     Socket.cpp
     String.cpp
+    SystemInfo.cpp
     Texture.cpp
     TextureCache.cpp
     Theme.cpp

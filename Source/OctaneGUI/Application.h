@@ -33,6 +33,7 @@ SOFTWARE.
 #include "LanguageServer.h"
 #include "Mouse.h"
 #include "Network.h"
+#include "SystemInfo.h"
 #include "TextureCache.h"
 #include "Vector2.h"
 
@@ -301,6 +302,14 @@ public:
     /// @return The newly created control within the 'Owner' container.
     std::shared_ptr<Control> CreateControl(Container* Owner, const std::string& Type) const;
 
+    /// @brief Const version of the SystemInfo object.
+    /// @return Const SystemInfo reference.
+    const SystemInfo& GetSystemInfo() const;
+
+    /// @brief Mutable version of the SystemInfo object.
+    /// @return SystemInfo reference.
+    SystemInfo& GetSystemInfo();
+
 #if TOOLS
     const std::shared_ptr<Tools::Interface>& Tools();
     Application& SetIgnoreModals(bool IgnoreModals);
@@ -428,6 +437,7 @@ private:
     // These members cannot be accessed with TOOLS disabled.
     bool m_IgnoreModals { false };
     std::shared_ptr<Tools::Interface> m_Tools { nullptr };
+    SystemInfo m_SystemInfo {};
 
     OnWindowActionSignature m_OnWindowAction { nullptr };
     OnWindowPaintSignature m_OnPaint { nullptr };

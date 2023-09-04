@@ -544,6 +544,16 @@ std::shared_ptr<Control> Application::CreateControl(Container* Owner, const std:
     return nullptr;
 }
 
+const SystemInfo& Application::GetSystemInfo() const
+{
+    return m_SystemInfo;
+}
+
+SystemInfo& Application::GetSystemInfo()
+{
+    return m_SystemInfo;
+}
+
 #if TOOLS
 const std::shared_ptr<Tools::Interface>& Application::Tools()
 {
