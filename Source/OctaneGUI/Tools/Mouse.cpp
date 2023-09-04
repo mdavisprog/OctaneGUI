@@ -58,9 +58,16 @@ public:
         Contents->SetExpand(Expand::Width);
 
         m_Window = Contents->AddControl<Text>();
+        m_Window->SetText("Window:");
+
         m_Position = Contents->AddControl<Text>();
+        m_Position->SetText("Position:");
+
         m_Focused = Contents->AddControl<Text>();
+        m_Focused->SetText("Focused:");
+
         m_Hovered = Contents->AddControl<Text>();
+        m_Hovered->SetText("Hovered:");
     }
 
     MouseContainer& SetWindow(const std::shared_ptr<Window>& Window_)
