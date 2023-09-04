@@ -162,7 +162,7 @@ std::u32string OnFileDialog(OctaneGUI::FileDialogType Type, const std::vector<Oc
 
 void Initialize(OctaneGUI::Application& Application)
 {
-    Windowing::Initialize();
+    Windowing::Initialize(Application);
     Rendering::Initialize();
 
     Application

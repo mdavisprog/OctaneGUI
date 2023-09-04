@@ -35,6 +35,7 @@ SOFTWARE.
 namespace OctaneGUI
 {
 
+class Application;
 class Event;
 struct FileDialogFilter;
 struct Rect;
@@ -62,7 +63,7 @@ enum class HitTestResult
     Left,
 };
 
-bool Initialize();
+bool Initialize(OctaneGUI::Application& Application);
 void NewWindow(OctaneGUI::Window* Window);
 void DestroyWindow(OctaneGUI::Window* Window);
 void RaiseWindow(OctaneGUI::Window* Window);

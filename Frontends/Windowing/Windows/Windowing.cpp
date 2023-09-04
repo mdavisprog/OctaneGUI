@@ -32,7 +32,10 @@ SOFTWARE.
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <commdlg.h>
+#include <ShellScalingApi.h>
 #include <windowsx.h>
+
+#pragma comment(lib, "Shcore.lib")
 
 namespace Frontend
 {
@@ -109,6 +112,37 @@ void RegisterWndProc(HWND Handle)
     {
         OriginalEvent = SetWindowLongPtr(Handle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&OnEvent));
     }
+}
+
+BOOL OnDisplayMonitor(HMONITOR Monitor, HDC, LPRECT, LPARAM LParam)
+{
+    OctaneGUI::Application* Application = (OctaneGUI::Application*)LParam;
+
+    MONITORINFOEX Info {};
+    Info.cbSize = sizeof(MONITORINFOEX);
+    GetMonitorInfo(Monitor, &Info);
+
+    OctaneGUI::SystemInfo::Display Display {};
+    Display.Name = Info.szDevice;
+    Display.Bounds = { (float)Info.rcMonitor.left, (float)Info.rcMonitor.top, (float)Info.rcMonitor.right, (float)Info.rcMonitor.bottom };
+    Display.Usable = { (float)Info.rcWork.left, (float)Info.rcWork.top, (float)Info.rcWork.right, (float)Info.rcWork.bottom };
+
+    UINT DPIX, DPIY;
+    GetDpiForMonitor(Monitor, MDT_EFFECTIVE_DPI, &DPIX, &DPIY);
+    Display.DPI_.Diagonal = (float)DPIX;
+    Display.DPI_.Horizontal = (float)DPIX;
+    Display.DPI_.Vertical = (float)DPIY;
+
+    // TODO: Get monitor orientation.
+
+    Application->GetSystemInfo().AddDisplay(Display);
+
+    return TRUE;
+}
+
+void GatherSystemInfo(OctaneGUI::Application& Application)
+{
+    EnumDisplayMonitors(nullptr, nullptr, OnDisplayMonitor, (LPARAM)&Application);
 }
 
 OctaneGUI::Rect GetWorkingArea(void* Handle)

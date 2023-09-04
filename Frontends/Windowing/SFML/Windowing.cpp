@@ -135,8 +135,12 @@ OctaneGUI::Window* ToWindow(void* Handle)
     return nullptr;
 }
 
-bool Initialize()
+bool Initialize(OctaneGUI::Application& Application)
 {
+#ifdef WINDOWS
+    Windows::GatherSystemInfo(Application);
+#endif
+
     return true;
 }
 

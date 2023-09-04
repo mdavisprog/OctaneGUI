@@ -43,6 +43,7 @@ namespace Windows
 typedef void (*OnWindowMoveSignature)(void*, const OctaneGUI::Vector2&);
 typedef HitTestResult (*OnHitTestSignature)(void*, const OctaneGUI::Vector2&);
 
+void GatherSystemInfo(OctaneGUI::Application& Application);
 OctaneGUI::Rect GetWorkingArea(void* Handle);
 OctaneGUI::Rect GetCaptionArea(void* Handle);
 void FocusWindow(void* Handle);

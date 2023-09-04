@@ -367,7 +367,22 @@ SDL_HitTestResult SDLCALL OnHitTest(SDL_Window* Window, SDL_Point* Area, void*)
     return SDL_HITTEST_NORMAL;
 }
 
-bool Initialize()
+OctaneGUI::SystemInfo::Display::Orientation ToOrientation(SDL_DisplayOrientation Orientation)
+{
+    switch (Orientation)
+    {
+    case SDL_ORIENTATION_LANDSCAPE: return OctaneGUI::SystemInfo::Display::Orientation::Landscape;
+    case SDL_ORIENTATION_LANDSCAPE_FLIPPED: return OctaneGUI::SystemInfo::Display::Orientation::LandscapeFlipped;
+    case SDL_ORIENTATION_PORTRAIT: return OctaneGUI::SystemInfo::Display::Orientation::Portrait;
+    case SDL_ORIENTATION_PORTRAIT_FLIPPED: return OctaneGUI::SystemInfo::Display::Orientation::PortraitFlipped;
+    case SDL_ORIENTATION_UNKNOWN:
+    default: break;
+    }
+
+    return OctaneGUI::SystemInfo::Display::Orientation::Unknown;
+}
+
+bool Initialize(OctaneGUI::Application& Application)
 {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
     {
@@ -383,6 +398,25 @@ bool Initialize()
     g_SystemCursors[SDL_SYSTEM_CURSOR_IBEAM] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_IBEAM);
     g_SystemCursors[SDL_SYSTEM_CURSOR_SIZEWE] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEWE);
     g_SystemCursors[SDL_SYSTEM_CURSOR_SIZENS] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENS);
+
+    for (int I = 0; I < SDL_GetNumVideoDisplays(); I++)
+    {
+        OctaneGUI::SystemInfo::Display Display;
+        Display.Name = SDL_GetDisplayName(I);
+
+        SDL_Rect Bounds {};
+        SDL_GetDisplayBounds(I, &Bounds);
+        Display.Bounds = { (float)Bounds.x, (float)Bounds.y, (float)Bounds.x + (float)Bounds.w, (float)Bounds.y + (float)Bounds.h };
+
+        SDL_GetDisplayUsableBounds(I, &Bounds);
+        Display.Usable = { (float)Bounds.x, (float)Bounds.y, (float)Bounds.x + (float)Bounds.w, (float)Bounds.y + (float)Bounds.h };
+
+        SDL_GetDisplayDPI(I, &Display.DPI_.Diagonal, &Display.DPI_.Horizontal, &Display.DPI_.Vertical);
+
+        Display.Orientation_ = ToOrientation(SDL_GetDisplayOrientation(I));
+
+        Application.GetSystemInfo().AddDisplay(Display);
+    }
 
     return true;
 }
