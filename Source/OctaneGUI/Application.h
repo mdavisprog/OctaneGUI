@@ -418,6 +418,7 @@ private:
     void OnWindowAction(Window* InWindow, WindowAction Action);
     void LoadIcons(const Json& Root);
     void FocusWindow(const std::shared_ptr<Window>& Focus);
+    std::shared_ptr<Window> FocusedWindow() const;
 
     CommandLine m_CommandLine {};
     std::unordered_map<std::string, std::shared_ptr<Window>> m_Windows;

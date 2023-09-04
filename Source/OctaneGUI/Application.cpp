@@ -349,6 +349,7 @@ bool Application::DisplayWindow(const char* ID)
         return true;
     }
 
+    std::shared_ptr<Window> Focused { FocusedWindow() };
     const Vector2 RenderScale = It->second->RenderScale();
 
     OnWindowAction(It->second.get(), WindowAction::Create);
@@ -378,6 +379,13 @@ bool Application::DisplayWindow(const char* ID)
             {
                 OnWindowAction(&Target, WindowAction::Size);
             });
+
+    if (Focused != nullptr && Focused != It->second)
+    {
+        const SystemInfo::Display Display { m_SystemInfo.GetDisplay(Focused->GetPosition()) };
+        const Vector2 Position { It->second->GetPosition() };
+        It->second->SetPosition(Position + Vector2 { Display.Bounds.Min.X, 0.0f });
+    }
 
     FocusWindow(It->second);
 
@@ -906,6 +914,19 @@ void Application::FocusWindow(const std::shared_ptr<Window>& Focus)
             Item.second->SetFocused(false);
         }
     }
+}
+
+std::shared_ptr<Window> Application::FocusedWindow() const
+{
+    for (const std::pair<std::string, std::shared_ptr<Window>> Item : m_Windows)
+    {
+        if (Item.second->Focused())
+        {
+            return Item.second;
+        }
+    }
+
+    return GetMainWindow();
 }
 
 }
