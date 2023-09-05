@@ -400,6 +400,11 @@ Window& Window::SetFocused(bool Focused)
     if (Focused)
     {
         SetFlags(WindowFlags::Focused);
+
+        if (m_OnFocus)
+        {
+            m_OnFocus(*this);
+        }
     }
     else
     {
@@ -910,6 +915,12 @@ Window& Window::SetOnClose(OnWindowSignature&& Fn)
 Window& Window::SetOnLayout(OnWindowSignature&& Fn)
 {
     m_OnLayout = std::move(Fn);
+    return *this;
+}
+
+Window& Window::SetOnFocus(OnWindowSignature&& Fn)
+{
+    m_OnFocus = std::move(Fn);
     return *this;
 }
 

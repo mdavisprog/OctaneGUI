@@ -215,6 +215,7 @@ public:
     Window& SetOnMaximize(OnWindowSignature&& Fn);
     Window& SetOnClose(OnWindowSignature&& Fn);
     Window& SetOnLayout(OnWindowSignature&& Fn);
+    Window& SetOnFocus(OnWindowSignature&& Fn);
 
 private:
     struct TimerHandle
@@ -266,6 +267,7 @@ private:
     OnWindowSignature m_OnMaximize { nullptr };
     OnWindowSignature m_OnClose { nullptr };
     OnWindowSignature m_OnLayout { nullptr };
+    OnWindowSignature m_OnFocus { nullptr };
 };
 
 }

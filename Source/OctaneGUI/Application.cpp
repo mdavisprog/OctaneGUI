@@ -346,6 +346,7 @@ bool Application::DisplayWindow(const char* ID)
 
     if (It->second->IsVisible())
     {
+        FocusWindow(It->second);
         return true;
     }
 
@@ -378,6 +379,10 @@ bool Application::DisplayWindow(const char* ID)
         .SetOnSetSize([this](Window& Target) -> void
             {
                 OnWindowAction(&Target, WindowAction::Size);
+            })
+        .SetOnFocus([this](Window& Target) -> void
+            {
+                OnWindowAction(&Target, WindowAction::Raise);
             });
 
     if (Focused != nullptr && Focused != It->second)
