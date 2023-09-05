@@ -68,7 +68,7 @@ public:
         m_Hovered->SetText("Hovered:");
     }
 
-    MouseContainer& SetWindow(const std::shared_ptr<Window>& Window_)
+    MouseContainer& SetWindowTarget(const std::shared_ptr<Window>& Window_)
     {
         std::string Contents { "Window: " };
         Contents += Window_->GetTitle();
@@ -151,7 +151,7 @@ Mouse& Mouse::Update(const std::shared_ptr<Window>& Target, const Vector2& Posit
     }
 
     m_Container
-        ->SetWindow(Target)
+        ->SetWindowTarget(Target)
         .SetPosition(Position);
 
     return *this;
