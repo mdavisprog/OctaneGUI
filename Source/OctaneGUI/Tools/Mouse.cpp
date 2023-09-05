@@ -24,8 +24,6 @@ SOFTWARE.
 
 */
 
-#pragma once
-
 #include "Mouse.h"
 #include "../Application.h"
 #include "../Controls/ControlList.h"
