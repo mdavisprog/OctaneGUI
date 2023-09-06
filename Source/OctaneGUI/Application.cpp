@@ -567,7 +567,6 @@ SystemInfo& Application::GetSystemInfo()
     return m_SystemInfo;
 }
 
-#if TOOLS
 const std::shared_ptr<Tools::Interface>& Application::Tools()
 {
     return m_Tools;
@@ -578,7 +577,6 @@ Application& Application::SetIgnoreModals(bool IgnoreModals)
     m_IgnoreModals = IgnoreModals;
     return *this;
 }
-#endif
 
 Application& Application::SetOnWindowAction(OnWindowActionSignature&& Fn)
 {

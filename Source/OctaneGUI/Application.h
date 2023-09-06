@@ -310,10 +310,11 @@ public:
     /// @return SystemInfo reference.
     SystemInfo& GetSystemInfo();
 
-#if TOOLS
+    /// @cond !IGNORE_FUNCTIONS
+    /// @brief Used internally.
     const std::shared_ptr<Tools::Interface>& Tools();
     Application& SetIgnoreModals(bool IgnoreModals);
-#endif
+    /// @endcond
 
     /// @brief Window event notifications that must be handled by the frontend.
     ///
