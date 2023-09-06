@@ -382,7 +382,6 @@ void Splitter::Resize() const
     {
         Vector2 Available { AvailableSize() };
         const Vector2 Partition { Available / (float)m_Items.size() };
-        size_t Index = 0;
         for (const Item& Item_ : m_Items)
         {
             const bool IsLast = m_Items.back().Data == Item_.Data;
@@ -405,7 +404,6 @@ void Splitter::Resize() const
 
             Item_.Data->SetSize(ItemSize);
             Available -= ItemSize;
-            Index++;
         }
     }
     else
