@@ -295,6 +295,11 @@ const Variant& Control::GetProperty(ThemeProperties::Property Property) const
         return m_ThemeProperties[Property];
     }
 
+    if (m_Parent != nullptr)
+    {
+        return m_Parent->GetProperty(Property);
+    }
+
     return GetTheme()->Get(Property);
 }
 
