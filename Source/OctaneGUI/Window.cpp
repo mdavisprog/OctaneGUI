@@ -586,7 +586,7 @@ void Window::OnMouseReleased(const Vector2& Position, Mouse::Button MouseButton)
             const std::shared_ptr<Menu> ContextMenu = std::make_shared<Menu>(this);
             Hovered->CreateContextMenu(ContextMenu);
             ContextMenu->Resize();
-            ContextMenu->SetPosition(Position);
+            ContextMenu->SetPosition(Position * m_RenderScale);
             SetPopup(ContextMenu);
         }
     }
