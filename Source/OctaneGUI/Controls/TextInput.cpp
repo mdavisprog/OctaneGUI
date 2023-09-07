@@ -229,7 +229,7 @@ TextInput::TextInput(Window* InWindow)
 
     SetInteraction(std::make_shared<TextInputInteraction>(InWindow, this));
 
-    SetSize({ 100.0f, m_Text->LineHeight() });
+    SetSize({ 100.0f * InWindow->RenderScale().X, m_Text->LineHeight() });
 
     m_BlinkTimer = InWindow->CreateTimer(500, true, [this]() -> void
         {
