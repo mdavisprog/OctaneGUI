@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 #include "Control.h"
+#include "../Assert.h"
 #include "../Json.h"
 #include "../Paint.h"
 #include "../String.h"
@@ -282,8 +283,9 @@ Control& Control::SetProperty(ThemeProperties::Property Property, const Variant&
         return *this;
     }
 
-    assert(Property < ThemeProperties::Max);
+    Assert(Property < ThemeProperties::Max, "Invalid property index given! Property: %d Max: %d", (int)Property, (int)ThemeProperties::Max);
     m_ThemeProperties[Property] = Value;
+    OnThemeLoaded();
 
     return *this;
 }
