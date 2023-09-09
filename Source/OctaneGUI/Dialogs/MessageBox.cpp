@@ -161,7 +161,7 @@ void Show(Application& App, const char32_t* Title, const char32_t* Message, OnRe
     }
 
     const std::shared_ptr<Window> MBWindow { App.GetWindow(ID) };
-    MBWindow->SetTitle(String::ToMultiByte(Title).c_str());
+    MBWindow->SetTitle(Title);
 
     MBWindow->GetContainer()->ClearControls();
     const std::shared_ptr<MB> MBContainer = MBWindow->GetContainer()->AddControl<MB>();

@@ -449,7 +449,7 @@ void NewWindow(OctaneGUI::Window* Window)
 #endif
 
         SDL_Window* Instance = SDL_CreateWindow(
-            Window->GetTitle(),
+            OctaneGUI::String::ToMultiByte(Window->GetTitle()).c_str(),
             SDL_WINDOWPOS_UNDEFINED,
             SDL_WINDOWPOS_UNDEFINED,
             (int)Window->GetSize().X,
@@ -682,14 +682,14 @@ std::u32string GetClipboardContents()
     return OctaneGUI::String::ToUTF32(SDL_GetClipboardText());
 }
 
-void SetWindowTitle(OctaneGUI::Window* Window, const char* Title)
+void SetWindowTitle(OctaneGUI::Window* Window, const char32_t* Title)
 {
     if (g_Windows.find(Window) == g_Windows.end())
     {
         return;
     }
 
-    SDL_SetWindowTitle(g_Windows[Window], Title);
+    SDL_SetWindowTitle(g_Windows[Window], OctaneGUI::String::ToMultiByte(Title).c_str());
 }
 
 void SetWindowPosition(OctaneGUI::Window* Window)

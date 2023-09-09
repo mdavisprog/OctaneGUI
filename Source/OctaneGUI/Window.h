@@ -77,14 +77,15 @@ class Window
 {
 public:
     typedef std::function<void(Window*, const VertexBuffer&)> OnPaintSignature;
-    typedef std::function<void(Window&, const char*)> OnSetTitleSignature;
+    typedef std::function<void(Window&, const char32_t*)> OnSetTitleSignature;
     typedef std::function<void(Window&)> OnWindowSignature;
 
     Window(Application* InApplication);
     virtual ~Window();
 
-    void SetTitle(const char* Title);
-    const char* GetTitle() const;
+    Window& SetTitle(const char* Title);
+    Window& SetTitle(const char32_t* Title);
+    const char32_t* GetTitle() const;
 
     Window& SetPosition(Vector2 Position);
     Window& SetPositionBoundsOnly(const Vector2& Position);
@@ -238,7 +239,7 @@ private:
     void UpdateFocus(const std::shared_ptr<Control>& Focus);
 
     Application* m_Application { nullptr };
-    std::string m_Title {};
+    std::u32string m_Title {};
     std::string m_ID {};
     Vector2 m_MousePosition {};
     Mouse::Cursor m_MouseCursor { Mouse::Cursor::Arrow };

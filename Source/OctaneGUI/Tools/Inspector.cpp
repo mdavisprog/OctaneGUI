@@ -295,7 +295,7 @@ void Inspector::Inspect(Window* Target)
             });
     }
 
-    m_Window.lock()->SetTitle((std::string("Inspecting ") + Target->GetTitle()).c_str());
+    m_Window.lock()->SetTitle((std::u32string(U"Inspecting ") + Target->GetTitle()).c_str());
 
     if (m_Window.lock()->IsVisible())
     {

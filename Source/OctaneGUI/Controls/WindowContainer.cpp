@@ -204,7 +204,7 @@ WindowContainer& WindowContainer::ShowTitleBar(bool Show)
         {
             m_TitleBar = std::make_shared<TitleBar>(GetWindow());
             InsertControl(m_TitleBar, 0);
-            SetTitle(String::ToUTF32(GetWindow()->GetTitle()).c_str());
+            SetTitle(GetWindow()->GetTitle());
         }
     }
     else if (m_TitleBar)

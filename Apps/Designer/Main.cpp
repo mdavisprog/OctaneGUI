@@ -64,7 +64,7 @@ int main(int argc, char** argv)
 
                 if (PreviewWindow->IsVisible())
                 {
-                    PreviewWindow->SetTitle(Main["Title"].String());
+                    PreviewWindow->SetTitle(OctaneGUI::String::ToUTF32(Main["Title"].String()).c_str());
                     PreviewWindow->LoadContents(Main);
                 }
 

@@ -357,7 +357,7 @@ bool Application::DisplayWindow(const char* ID)
 
     It->second
         ->SetVisible(true)
-        .SetOnSetTitle([this](Window& Target, const char* Title) -> void
+        .SetOnSetTitle([this](Window& Target, const char32_t* Title) -> void
             {
                 if (m_OnSetWindowTitle)
                 {

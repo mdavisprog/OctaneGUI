@@ -71,7 +71,7 @@ public:
     MouseContainer& SetWindowTarget(const std::shared_ptr<Window>& Window_)
     {
         std::string Contents { "Window: " };
-        Contents += Window_->GetTitle();
+        Contents += String::ToMultiByte(Window_->GetTitle());
         m_Window->SetText(Contents.c_str());
 
         const std::shared_ptr<Control> Focused { Window_->Focus().lock() };

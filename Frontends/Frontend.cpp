@@ -132,7 +132,7 @@ std::u32string OnGetClipboardContents()
     return Windowing::GetClipboardContents();
 }
 
-void OnSetWindowTitle(OctaneGUI::Window* Window, const char* Title)
+void OnSetWindowTitle(OctaneGUI::Window* Window, const char32_t* Title)
 {
     Windowing::SetWindowTitle(Window, Title);
 }

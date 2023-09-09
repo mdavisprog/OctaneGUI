@@ -94,7 +94,7 @@ public:
     typedef std::function<uint32_t(const std::vector<uint8_t>&, uint32_t, uint32_t)> OnLoadTextureSignature;
     typedef std::function<void(const std::u32string&)> OnSetClipboardContentsSignature;
     typedef std::function<std::u32string(void)> OnGetClipboardContentsSignature;
-    typedef std::function<void(Window*, const char*)> OnSetWindowTitleSignature;
+    typedef std::function<void(Window*, const char32_t*)> OnSetWindowTitleSignature;
     typedef std::function<void(Window*, Mouse::Cursor)> OnSetMouseCursorSignature;
     typedef std::function<void(Window*, const Vector2&)> OnSetMousePositionSignature;
     typedef std::function<std::shared_ptr<Control>(Container*, const std::string&)> OnCreateControlSignature;

@@ -160,7 +160,7 @@ void NewWindow(OctaneGUI::Window* Window)
         }
 
         const OctaneGUI::Vector2 Size = Window->GetSize();
-        sf::RenderWindow* RenderWindow = new sf::RenderWindow(sf::VideoMode((int)Size.X, (int)Size.Y), Window->GetTitle(), Style);
+        sf::RenderWindow* RenderWindow = new sf::RenderWindow(sf::VideoMode((int)Size.X, (int)Size.Y), reinterpret_cast<const sf::Uint32*>(Window->GetTitle()), Style);
         RenderWindow->setFramerateLimit(0);
         RenderWindow->setVerticalSyncEnabled(false);
         g_Windows[Window] = std::shared_ptr<sf::RenderWindow>(RenderWindow);
@@ -421,14 +421,14 @@ std::u32string GetClipboardContents()
     return Result;
 }
 
-void SetWindowTitle(OctaneGUI::Window* Window, const char* Title)
+void SetWindowTitle(OctaneGUI::Window* Window, const char32_t* Title)
 {
     if (g_Windows.find(Window) == g_Windows.end())
     {
         return;
     }
 
-    g_Windows[Window]->setTitle(Title);
+    g_Windows[Window]->setTitle(reinterpret_cast<const sf::Uint32*>(Title));
 }
 
 void SetWindowPosition(OctaneGUI::Window* Window)

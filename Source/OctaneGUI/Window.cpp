@@ -34,6 +34,7 @@ SOFTWARE.
 #include "Json.h"
 #include "Paint.h"
 #include "Profiler.h"
+#include "String.h"
 #include "Timer.h"
 
 #if TOOLS
@@ -78,7 +79,12 @@ Window::~Window()
     m_Container = nullptr;
 }
 
-void Window::SetTitle(const char* Title)
+Window& Window::SetTitle(const char* Title)
+{
+    return SetTitle(String::ToUTF32(Title).c_str());
+}
+
+Window& Window::SetTitle(const char32_t* Title)
 {
     m_Title = Title;
 
@@ -86,9 +92,11 @@ void Window::SetTitle(const char* Title)
     {
         m_OnSetTitle(*this, Title);
     }
+
+    return *this;
 }
 
-const char* Window::GetTitle() const
+const char32_t* Window::GetTitle() const
 {
     return m_Title.c_str();
 }
@@ -718,7 +726,7 @@ Window& Window::SetMousePosition(const Vector2& Position)
 
 void Window::Update()
 {
-    PROFILER_SAMPLE_GROUP((std::string("Window::Update (") + GetTitle() + ")").c_str());
+    PROFILER_SAMPLE_GROUP((std::string("Window::Update (") + String::ToMultiByte(GetTitle()) + ")").c_str());
 
     UpdateTimers();
 
@@ -747,7 +755,7 @@ void Window::DoPaint(Paint& Brush)
 {
     if (m_Repaint)
     {
-        PROFILER_SAMPLE_GROUP((std::string("Window::OnPaint (") + GetTitle() + ")").c_str());
+        PROFILER_SAMPLE_GROUP((std::string("Window::OnPaint (") + String::ToMultiByte(GetTitle()) + ")").c_str());
 
         m_Container->OnPaint(Brush);
         m_Popup.OnPaint(Brush);
@@ -790,7 +798,7 @@ void Window::LoadRoot(const Json& Root)
     float Width = Root["Width"].Number(640.0f);
     float Height = Root["Height"].Number(480.0f);
 
-    SetTitle(Title.c_str());
+    SetTitle(String::ToUTF32(Title.c_str()).c_str());
     SetSize({ Width, Height });
     SetResizable(Root["Resizable"].Boolean(IsResizable()));
     SetCanMinimize(Root["CanMinimize"].Boolean(CanMinimize()));

@@ -69,7 +69,7 @@ void FileDialog::Show(Application& App, FileDialogType Type, const std::vector<F
     }
 
     const std::shared_ptr<Window>& Dialog = App.GetWindow(ID);
-    Dialog->SetTitle(Type == FileDialogType::Open ? "Open File" : "Save File");
+    Dialog->SetTitle(Type == FileDialogType::Open ? U"Open File" : U"Save File");
     SetFileDialogData(Dialog, Type, Filters);
     App.DisplayWindow(ID);
 }
