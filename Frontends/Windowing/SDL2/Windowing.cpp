@@ -735,6 +735,12 @@ void SetMousePosition(OctaneGUI::Window* Window, const OctaneGUI::Vector2& Posit
 {
     OctaneGUI::Vector2 Global { Position };
 
+    // The mouse position has been scaled by the library for high DPI devices.
+    if (Window != nullptr)
+    {
+        Global /= Window->RenderScale();
+    } 
+
     SDL_Window* Window_ { Get(Window) };
     if (Window_ != nullptr)
     {
