@@ -357,6 +357,23 @@ TEST_CASE(VerticalSpacing,
         Button2->GetPosition().Y + Button2->GetSize().Y == Container->GetSize().Y;
 })
 
+TEST_CASE(ThemePropertyUpdate,
+{
+    OctaneGUI::ControlList List;
+    Load(Application, R"({"Type": "VerticalContainer", "ID": "Container", "Controls": [
+        {"Type": "Text", "ID": "Text"}
+    ]})", List);
+
+    const std::shared_ptr<OctaneGUI::Container> Container { List.To<OctaneGUI::Container>("Container") };
+    const std::shared_ptr<OctaneGUI::Text> Text { List.To<OctaneGUI::Text>("Container.Text") };
+
+    VERIFY(Text->FontSize() == Text->GetTheme()->GetFont()->Size());
+
+    Container->SetProperty(OctaneGUI::ThemeProperties::FontSize, 6.0f);
+
+    return Text->FontSize() == 6.0f && Text->FontSize() != Text->GetTheme()->GetFont()->Size();
+})
+
 )
 
 }
