@@ -56,11 +56,13 @@ public:
     const char32_t* GetText() const;
     const std::u32string& GetString() const;
     size_t Length() const;
-    const std::shared_ptr<Font>& GetFont() const;
     float LineHeight() const;
 
     Text& SetFont(const char* Path);
+    const std::shared_ptr<Font>& GetFont() const;
+
     Text& SetFontSize(float Size);
+    float FontSize() const;
 
     Text& SetWrap(bool Wrap);
     bool Wrap() const;

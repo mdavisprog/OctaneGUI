@@ -75,11 +75,6 @@ size_t Text::Length() const
     return m_Contents.length();
 }
 
-const std::shared_ptr<Font>& Text::GetFont() const
-{
-    return m_Font;
-}
-
 float Text::LineHeight() const
 {
     if (!m_Font)
@@ -97,6 +92,11 @@ Text& Text::SetFont(const char* Path)
     return *this;
 }
 
+const std::shared_ptr<Font>& Text::GetFont() const
+{
+    return m_Font;
+}
+
 Text& Text::SetFontSize(float Size)
 {
     if (Size <= 0.0f)
@@ -107,6 +107,16 @@ Text& Text::SetFontSize(float Size)
     SetProperty(ThemeProperties::FontSize, Size);
     UpdateFont();
     return *this;
+}
+
+float Text::FontSize() const
+{
+    if (m_Font == nullptr)
+    {
+        return 0.0f;
+    }
+
+    return m_Font->Size();
 }
 
 Text& Text::SetWrap(bool Wrap)
