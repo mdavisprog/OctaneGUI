@@ -306,6 +306,7 @@ void Splitter::OnLoad(const Json& Root)
     }
 
     UpdateLayout();
+    Resize();
 }
 
 void Splitter::PlaceControls(const std::vector<std::shared_ptr<Control>>& Controls) const
