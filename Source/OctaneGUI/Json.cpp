@@ -32,6 +32,7 @@ SOFTWARE.
 #include <climits>
 #include <cstdarg>
 #include <cstring>
+#include <iterator>
 #include <utility>
 
 namespace OctaneGUI
@@ -922,7 +923,7 @@ std::string Json::ToString(bool Pretty, int Depth) const
             Result += ": ";
             Result += It->second.ToString(Pretty, Depth);
 
-            if (It != m_Data.Object->end())
+            if (std::next(It) != m_Data.Object->end())
             {
                 Result += ",";
             }
