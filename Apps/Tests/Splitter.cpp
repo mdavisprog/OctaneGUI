@@ -222,6 +222,30 @@ TEST_CASE(ContextMenu,
     return Utility::ContextMenu(Application, Splitter);
 })
 
+TEST_CASE(OnLoadInitialInteraction,
+{
+    OctaneGUI::ControlList List;
+    Utility::Load(Application, R"({"Type": "Splitter", "Size": [50, 100], "ID": "Splitter", "Containers": [
+        {"Controls": [{"Type": "Text", "Text": "First"}]},
+        {"Controls": [{"Type": "Text", "Text": "Second"}]}
+    ]})", List);
+
+    const std::shared_ptr<OctaneGUI::Splitter> Splitter = List.To<OctaneGUI::Splitter>("Splitter");
+    const std::shared_ptr<OctaneGUI::Container> Top = Splitter->GetSplit(0);
+
+    const float Height { Top->GetSize().Y };
+
+    OctaneGUI::Vector2 Mouse(5.0f, Top->GetSize().Y + 1.0f);
+    Utility::MousePress(Application, Mouse);
+    Application.Update();
+
+    Mouse.Y += 5.0f;
+    Utility::MouseMove(Application, Mouse);
+    Application.Update();
+
+    return Top->GetSize().Y == Height + 5.0f;
+})
+
 )
 
 }
