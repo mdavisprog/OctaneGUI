@@ -246,6 +246,37 @@ TEST_CASE(OnLoadInitialInteraction,
     return Top->GetSize().Y == Height + 5.0f;
 })
 
+TEST_CASE(MouseCursor,
+{
+    OctaneGUI::ControlList List;
+    LoadSplitter(Application, R"({}, {})", List, true);
+
+    const std::shared_ptr<OctaneGUI::Splitter> Splitter = List.To<OctaneGUI::Splitter>("Splitter");
+    const std::shared_ptr<OctaneGUI::Container> Top = Splitter->GetSplit(0);
+    const OctaneGUI::Vector2 SplitterSize = Splitter->SplitterSize();
+
+    VERIFYF(Application.GetMainWindow()->MouseCursor() == OctaneGUI::Mouse::Cursor::Arrow, "Mouse cursor is not an arrow!");
+
+    OctaneGUI::Vector2 Mouse(5.0f, Top->GetSize().Y + 1.0f);
+    Utility::MouseMove(Application, Mouse);
+    Application.Update();
+
+    VERIFYF(Application.GetMainWindow()->MouseCursor() == OctaneGUI::Mouse::Cursor::SizeNS, "Mouse cursor is not a NS sizer after hover!");
+
+    Utility::MouseClick(Application, Mouse);
+    Application.Update();
+
+    VERIFYF(Application.GetMainWindow()->MouseCursor() == OctaneGUI::Mouse::Cursor::SizeNS, "Mouse cursor is not a NS sizer after click!");
+
+    Mouse.Y += 20.0f;
+    Utility::MouseMove(Application, Mouse);
+    Application.Update();
+
+    VERIFYF(Application.GetMainWindow()->MouseCursor() == OctaneGUI::Mouse::Cursor::Arrow, "Mouse cursor is not an arrow after move!");
+
+    return true;
+})
+
 )
 
 }
