@@ -1466,7 +1466,7 @@ void TextInput::UpdateVisibleLines()
     Index = std::min<size_t>(Index, String.length());
     m_LastVisibleLine = { LastLine, Index - LineStartIndex(Index), Index };
 
-    m_Text->SetPosition({ 0.0f, m_FirstVisibleLine.Line() * LineHeight });
+    m_Text->SetPosition({ m_Text->GetPosition().X, m_FirstVisibleLine.Line() * LineHeight });
 }
 
 void TextInput::SetVisibleLineSpan()
