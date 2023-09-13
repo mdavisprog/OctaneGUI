@@ -253,7 +253,6 @@ TEST_CASE(MouseCursor,
 
     const std::shared_ptr<OctaneGUI::Splitter> Splitter = List.To<OctaneGUI::Splitter>("Splitter");
     const std::shared_ptr<OctaneGUI::Container> Top = Splitter->GetSplit(0);
-    const OctaneGUI::Vector2 SplitterSize = Splitter->SplitterSize();
 
     VERIFYF(Application.GetMainWindow()->MouseCursor() == OctaneGUI::Mouse::Cursor::Arrow, "Mouse cursor is not an arrow!");
 
