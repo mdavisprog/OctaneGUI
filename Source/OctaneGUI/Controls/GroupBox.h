@@ -45,6 +45,9 @@ class GroupBox : public Container
 public:
     GroupBox(Window* InWindow);
 
+    GroupBox& SetText(const char32_t* Contents);
+    const char32_t* GetText() const;
+
     virtual Vector2 DesiredSize() const override;
 
     virtual void OnPaint(Paint& Brush) const override;

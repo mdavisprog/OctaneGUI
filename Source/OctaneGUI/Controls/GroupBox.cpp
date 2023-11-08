@@ -47,6 +47,17 @@ GroupBox::GroupBox(Window* InWindow)
     m_Margins->SetMargins({ MARGIN, TopMargin(), MARGIN, MARGIN });
 }
 
+GroupBox& GroupBox::SetText(const char32_t* Contents)
+{
+    m_Text->SetText(Contents);
+    return *this;
+}
+
+const char32_t* GroupBox::GetText() const
+{
+    return m_Text->GetText();
+}
+
 Vector2 GroupBox::DesiredSize() const
 {
     Vector2 Result = m_Margins->DesiredSize();
