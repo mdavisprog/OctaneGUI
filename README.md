@@ -1,5 +1,5 @@
 # OctaneGUI
-Latest update: [December 2022](https://github.com/mdavisprog/OctaneGUI/wiki/December22)
+Latest update: [October 2023](https://github.com/mdavisprog/OctaneGUI/wiki/October23)
 
 <img src=https://github.com/mdavisprog/OctaneGUI/wiki/Images/September22/Window_High_Res.png width=50%>
 
@@ -99,7 +99,7 @@ Before beginning the process of building the project, some tools will be needed.
 
 ## Scripts
 
-The repository provides shell scripts and batch files to make building the project and its applications easier. These files can be found in the 'Scripts' folder. The 'Build' script is the main script to run when building this project. This can be run from any directory and accpets a number of arguments. Below is the list of arguments and a desription for each:
+The repository provides shell scripts and batch files to make building the project and its applications easier. These files can be found in the 'Scripts' folder. The 'Build' script is the main script to run when building this project. This can be run from any directory and accepts a number of arguments. Below is the list of arguments and a desription for each:
 
 * release - Sets the configuration to Release. The default is Debug.
 * tools - Compiles with tools enabled. This can be compiled in any configuration.
@@ -110,8 +110,9 @@ The repository provides shell scripts and batch files to make building the proje
 * sdl2 - Builds the app using the SDL library. The SDL2 cmake and library paths must be locatable by the generator through either the environment variables or the SDL2_DIR and SDL2_MODULE_PATH variables.
 * xcode - Builds an project for use within the Xcode IDE (.xcodeproj)
 * help - Displays this help message.
+* lstalk - Compiles the 'lstalk' library.
 
-On Windows, a VCVars.bat file is called which will load Visual Studio tools into the current environment. This will attempt to load Visual Studio 2019 first, then 2017. More versions of Visual Studio will be added in the future.
+On Windows, a VCVars.bat file is called which will load Visual Studio tools into the current environment. This will attempt to load Visual Studio 2022 first, then 2019 and 2017. More versions of Visual Studio will be added in the future.
 
 The path to CMake/Ninja will need to be set in the PATH environment variable on your system. This may be set during the installation of these tools. The PATH can also be set in your own script before calling the 'Build' script. Below are example scripts that can be used to build the project.
 
