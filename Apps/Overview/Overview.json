@@ -140,6 +140,14 @@
                                     {"Controls": [{"Type": "Text", "Text": "Cell 2, 2"}]},
                                     {"Controls": [{"Type": "Text", "Text": "Cell 2, 3"}]}
                                 ]}
+                            ]},
+                            {"Type": "TabContainer", "Size": [0, 100], "Expand": "Width", "Tabs": [
+                                {"Label": "Tab 1", "Controls": [
+                                    {"Type": "Text", "Text": "Hello Tab 1"}
+                                ]},
+                                {"Label": "Tab 2", "Controls": [
+                                    {"Type": "Text", "Text": "Hello Tab 2"}
+                                ]}
                             ]}
                         ]}
                     ]}
