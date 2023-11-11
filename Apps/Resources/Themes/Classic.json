@@ -28,6 +28,8 @@
     "RadioButton_Selected": [0, 0, 0, 255],
     "Window_Focused": [10, 36, 106, 255],
     "Window_Title_Focused": [255, 255, 255, 255],
+    "Tab": [194, 194, 194, 255],
+    "Tab_Selected": [214, 218, 217, 255],
 
     "Separator_Thickness": 1.5,
     "Separator_Margins": 8.0,
@@ -42,6 +44,7 @@
     "TextSelectable_Offset": [8.0, 0.0],
     "Menu_Margins": [0.0, 8.0],
     "MenuBar_Padding": [0.0, 6.0],
+    "Tab_Padding": [4.0, 4.0],
 
     "Button_3D": true,
     "TextInput_3D": true,

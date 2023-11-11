@@ -145,6 +145,8 @@ void Theme::Load(const Json& Root)
     Set(ThemeProperties::RadioButton_Selected, Root["RadioButton_Selected"]);
     Set(ThemeProperties::Window_Focused, Root["Window_Focused"]);
     Set(ThemeProperties::Window_Title_Focused, Root["Window_Title_Focused"]);
+    Set(ThemeProperties::Tab, Root["Tab"]);
+    Set(ThemeProperties::Tab_Selected, Root["Tab_Selected"]);
 
     Set(ThemeProperties::Separator_Thickness, Root["Separator_Thickness"]);
     Set(ThemeProperties::Separator_Margins, Root["Separator_Margins"]);
@@ -159,6 +161,7 @@ void Theme::Load(const Json& Root)
     Set(ThemeProperties::TextSelectable_Offset, Root["TextSelectable_Offset"]);
     Set(ThemeProperties::Menu_Margins, Root["Menu_Margins"]);
     Set(ThemeProperties::MenuBar_Padding, Root["MenuBar_Padding"]);
+    Set(ThemeProperties::Tab_Padding, Root["Tab_Padding"]);
 
     Set(ThemeProperties::Button_3D, Root["Button_3D"]);
     Set(ThemeProperties::TextInput_3D, Root["TextInput_3D"]);
@@ -216,6 +219,8 @@ void Theme::InitializeDefault()
     m_Properties[ThemeProperties::RadioButton_Selected] = Color(255, 255, 255, 255);
     m_Properties[ThemeProperties::Window_Focused] = Color(48, 48, 48, 255);
     m_Properties[ThemeProperties::Window_Title_Focused] = Color(255, 255, 255, 255);
+    m_Properties[ThemeProperties::Tab] = Color(33, 33, 33, 255);
+    m_Properties[ThemeProperties::Tab_Selected] = Color(48, 48, 48, 255);
 
     m_Properties[ThemeProperties::Separator_Thickness] = 1.5f;
     m_Properties[ThemeProperties::Separator_Margins] = 8.0f;
@@ -230,6 +235,7 @@ void Theme::InitializeDefault()
     m_Properties[ThemeProperties::TextSelectable_Offset] = Vector2(8.0f, 0.0f);
     m_Properties[ThemeProperties::Menu_Margins] = Vector2(0.0f, 8.0f);
     m_Properties[ThemeProperties::MenuBar_Padding] = Vector2(0.0f, 6.0f);
+    m_Properties[ThemeProperties::Tab_Padding] = Vector2(4.0f, 4.0f);
 
     m_Properties[ThemeProperties::Button_3D] = false;
     m_Properties[ThemeProperties::TextInput_3D] = false;

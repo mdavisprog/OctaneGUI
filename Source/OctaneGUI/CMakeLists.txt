@@ -31,6 +31,7 @@ set(SOURCE
     Controls/Separator.cpp
     Controls/Spinner.cpp
     Controls/Splitter.cpp
+    Controls/TabContainer.cpp
     Controls/Table.cpp
     Controls/Text.cpp
     Controls/TextButton.cpp

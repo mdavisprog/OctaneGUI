@@ -47,6 +47,7 @@ SOFTWARE.
 #include "Separator.h"
 #include "Spinner.h"
 #include "Splitter.h"
+#include "TabContainer.h"
 #include "Table.h"
 #include "Text.h"
 #include "TextButton.h"
@@ -145,6 +146,10 @@ std::shared_ptr<Control> Container::CreateControl(const std::string& Type)
     else if (Type == Splitter::TypeName())
     {
         Result = AddControl<Splitter>();
+    }
+    else if (Type == TabContainer::TypeName())
+    {
+        Result = AddControl<TabContainer>();
     }
     else if (Type == Table::TypeName())
     {

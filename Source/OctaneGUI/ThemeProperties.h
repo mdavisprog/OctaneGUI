@@ -68,6 +68,8 @@ public:
         RadioButton_Selected,
         Window_Focused,
         Window_Title_Focused,
+        Tab,
+        Tab_Selected,
 
         // Floats
         Separator_Thickness,
@@ -84,6 +86,7 @@ public:
         TextSelectable_Offset,
         Menu_Margins,
         MenuBar_Padding,
+        Tab_Padding,
 
         // Flags
         Button_3D,
