@@ -211,7 +211,7 @@ Table::Table(Window* InWindow)
     m_Contents = AddControl<VerticalContainer>();
     m_Contents
         ->SetSpacing({})
-        ->SetExpand(Expand::Both);
+        .SetExpand(Expand::Both);
 
     m_Header = m_Contents->AddControl<Splitter>();
     m_Header

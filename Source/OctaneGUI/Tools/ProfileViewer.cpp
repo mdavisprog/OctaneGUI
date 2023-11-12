@@ -460,7 +460,7 @@ void AddRow(const std::shared_ptr<Container>& Column, int64_t Value)
     std::shared_ptr<HorizontalContainer> Outer = Column->AddControl<HorizontalContainer>();
     Outer
         ->SetGrow(Grow::Center)
-        ->SetExpand(Expand::Width);
+        .SetExpand(Expand::Width);
     Outer->AddControl<Text>()->SetText(std::to_string(Value).c_str());
 }
 

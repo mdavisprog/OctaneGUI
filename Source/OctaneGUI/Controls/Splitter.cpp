@@ -355,7 +355,7 @@ void Splitter::UpdateLayout()
 
     m_Split
         ->SetSpacing({ 0.0f, 0.0f })
-        ->SetExpand(GetExpand());
+        .SetExpand(GetExpand());
 
     for (Item& Item_ : m_Items)
     {

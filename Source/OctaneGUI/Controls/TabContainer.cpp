@@ -57,7 +57,7 @@ public:
         const std::shared_ptr<VerticalContainer> Contents { m_Margins->AddControl<VerticalContainer>() };
         Contents
             ->SetGrow(Grow::Center)
-            ->SetExpand(Expand::Both);
+            .SetExpand(Expand::Both);
 
         m_Label = Contents->AddControl<Text>();
         m_Label->SetText(U"New Tab");

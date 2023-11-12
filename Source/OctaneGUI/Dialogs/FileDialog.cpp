@@ -146,7 +146,7 @@ FileDialog::FileDialog(Window* InWindow)
     const std::shared_ptr<HorizontalContainer> FileInfoLayout = FileInfo->AddControl<HorizontalContainer>();
     FileInfoLayout
         ->SetGrow(Grow::End)
-        ->SetExpand(Expand::Width);
+        .SetExpand(Expand::Width);
 
     m_FileName = FileInfoLayout->AddControl<TextInput>();
     m_FileName
@@ -171,8 +171,8 @@ FileDialog::FileDialog(Window* InWindow)
     const std::shared_ptr<HorizontalContainer> ButtonsLayout = Buttons->AddControl<HorizontalContainer>();
     ButtonsLayout
         ->SetSpacing({ 12.0f, 4.0f })
-        ->SetGrow(Grow::End)
-        ->SetExpand(Expand::Width);
+        .SetGrow(Grow::End)
+        .SetExpand(Expand::Width);
 
     m_ConfirmButton = ButtonsLayout->AddControl<TextButton>();
     m_ConfirmButton
@@ -424,8 +424,9 @@ void FileDialog::AddListItem(const char32_t* Name, size_t Size)
 
     // Set size
     std::shared_ptr<HorizontalContainer> Outer = m_DirectoryList->Cell(Row, 1)->AddControl<HorizontalContainer>();
-    Outer->SetGrow(Grow::End)
-        ->SetExpand(Expand::Width);
+    Outer
+        ->SetGrow(Grow::End)
+        .SetExpand(Expand::Width);
 
     MemoryUnit Unit = MemoryUnit::B;
     while (Size > 10000)

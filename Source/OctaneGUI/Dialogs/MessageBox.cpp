@@ -62,17 +62,17 @@ public:
         const std::shared_ptr<VerticalContainer> Layout = Margins->AddControl<VerticalContainer>();
         Layout
             ->SetSpacing({ 0.0f, 0.0f })
-            ->SetExpand(Expand::Both);
+            .SetExpand(Expand::Both);
 
         const std::shared_ptr<VerticalContainer> VMessageContainer = Layout->AddControl<VerticalContainer>();
         VMessageContainer
             ->SetGrow(Grow::Center)
-            ->SetExpand(Expand::Both);
+            .SetExpand(Expand::Both);
 
         const std::shared_ptr<HorizontalContainer> HMessageContainer = VMessageContainer->AddControl<HorizontalContainer>();
         HMessageContainer
             ->SetGrow(Grow::Center)
-            ->SetExpand(Expand::Width);
+            .SetExpand(Expand::Width);
 
         m_Message = HMessageContainer->AddControl<Text>();
         m_Message->SetWrap(true);
@@ -80,7 +80,7 @@ public:
         m_Buttons = Layout->AddControl<HorizontalContainer>();
         m_Buttons
             ->SetGrow(Grow::End)
-            ->SetExpand(Expand::Width);
+            .SetExpand(Expand::Width);
     }
 
     MB& SetButtons(Buttons::Type ButtonTypes)

@@ -54,7 +54,7 @@ public:
         const std::shared_ptr<VerticalContainer> ToggleContainer = AddControl<VerticalContainer>();
         ToggleContainer
             ->SetGrow(Grow::Center)
-            ->SetExpand(Expand::Height);
+            .SetExpand(Expand::Height);
 
         m_Toggle = ToggleContainer->AddControl<Image>();
         m_Text = AddControl<Text>();

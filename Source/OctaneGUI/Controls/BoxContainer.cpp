@@ -65,11 +65,11 @@ BoxContainer::BoxContainer(Orientation Orient, Window* InWindow)
 {
 }
 
-BoxContainer* BoxContainer::SetGrow(Grow Direction)
+BoxContainer& BoxContainer::SetGrow(Grow Direction)
 {
     m_Grow = Direction;
     Invalidate(InvalidateType::Layout);
-    return this;
+    return *this;
 }
 
 Grow BoxContainer::GrowDirection() const
@@ -77,10 +77,10 @@ Grow BoxContainer::GrowDirection() const
     return m_Grow;
 }
 
-BoxContainer* BoxContainer::SetSpacing(const Vector2& Spacing)
+BoxContainer& BoxContainer::SetSpacing(const Vector2& Spacing)
 {
     m_Spacing = Spacing;
-    return this;
+    return *this;
 }
 
 Vector2 BoxContainer::Spacing() const

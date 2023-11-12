@@ -57,10 +57,10 @@ class BoxContainer : public Container
 public:
     BoxContainer(Orientation Orient, Window* InWindow);
 
-    BoxContainer* SetGrow(Grow Direction);
+    BoxContainer& SetGrow(Grow Direction);
     Grow GrowDirection() const;
 
-    BoxContainer* SetSpacing(const Vector2& Spacing);
+    BoxContainer& SetSpacing(const Vector2& Spacing);
     Vector2 Spacing() const;
 
     BoxContainer& SetIgnoreDesiredSize(bool IgnoreDesiredSize);

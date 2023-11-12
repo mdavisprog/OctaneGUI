@@ -60,18 +60,18 @@ public:
         const std::shared_ptr<VerticalContainer> TextContainer = m_Draggable->AddControl<VerticalContainer>();
         TextContainer
             ->SetGrow(Grow::Center)
-            ->SetExpand(Expand::Height);
+            .SetExpand(Expand::Height);
         m_Title = TextContainer->AddControl<Text>();
 
         const std::shared_ptr<VerticalContainer> RightLayout = Root->AddControl<VerticalContainer>();
         RightLayout
             ->SetGrow(Grow::Center)
-            ->SetExpand(Expand::Height);
+            .SetExpand(Expand::Height);
 
         const std::shared_ptr<HorizontalContainer> Buttons = RightLayout->AddControl<HorizontalContainer>();
         Buttons
             ->SetGrow(Grow::End)
-            ->SetExpand(Expand::Height);
+            .SetExpand(Expand::Height);
 
         if (GetWindow()->CanMinimize())
         {

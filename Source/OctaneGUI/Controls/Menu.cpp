@@ -46,7 +46,7 @@ Menu::Menu(Window* InWindow)
     m_Container = AddControl<VerticalContainer>();
     m_Container
         ->SetSpacing({ 0.0f, 0.0f })
-        ->SetExpand(Expand::Width);
+        .SetExpand(Expand::Width);
 }
 
 Menu& Menu::AddItem(const char* InText, OnEmptySignature Fn)
