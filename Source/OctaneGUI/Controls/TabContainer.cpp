@@ -25,11 +25,14 @@ SOFTWARE.
 */
 
 #include "TabContainer.h"
+#include "../Application.h"
+#include "../Icons.h"
 #include "../Json.h"
 #include "../Paint.h"
 #include "../String.h"
 #include "../Window.h"
 #include "HorizontalContainer.h"
+#include "ImageButton.h"
 #include "MarginContainer.h"
 #include "Text.h"
 #include "VerticalContainer.h"
@@ -186,12 +189,59 @@ TabContainer::TabContainer(Window* InWindow)
 {
     m_Contents = AddControl<VerticalContainer>();
     m_Tabs = m_Contents->AddControl<HorizontalContainer>();
+
+    const float Height { GetProperty(ThemeProperties::FontSize).Float() };
+
+    const std::shared_ptr<VerticalContainer> Aligner { m_Tabs->AddControl<VerticalContainer>() };
+    Aligner
+        ->SetGrow(Grow::Center)
+        .SetExpand(Expand::Height);
+    m_AddTab = Aligner;
+    const std::shared_ptr<ImageButton> AddButton { Aligner->AddControl<ImageButton>() };
+    AddButton
+        ->SetTexture(InWindow->App().GetIcons()->GetTexture())
+        .SetUVs(InWindow->App().GetIcons()->GetUVs(Icons::Type::Plus))
+        .SetOnPressed([this](Button&) -> void
+            {
+                CreateTab(U"New Tab");
+            })
+        .SetProperty(ThemeProperties::Button, Color{})
+        .SetSize({ Height, Height });
+    
+    if (!m_ShowAdd)
+    {
+        m_Tabs->RemoveControl(m_AddTab);
+    }
 }
 
 std::shared_ptr<Container> TabContainer::AddTab(const char32_t* Label)
 {
     const std::shared_ptr<Tab> Result { CreateTab(Label) };
     return Result->Contents();
+}
+
+TabContainer& TabContainer::SetShowAdd(bool ShowAdd)
+{
+    if (m_ShowAdd != ShowAdd)
+    {
+        m_ShowAdd = ShowAdd;
+
+        if (m_ShowAdd)
+        {
+            m_Tabs->InsertControl(m_AddTab);
+        }
+        else
+        {
+            m_Tabs->RemoveControl(m_AddTab);
+        }
+    }
+
+    return *this;
+}
+
+bool TabContainer::ShowAdd() const
+{
+    return m_ShowAdd;
 }
 
 void TabContainer::OnLoad(const Json& Root)
@@ -214,11 +264,14 @@ void TabContainer::OnLoad(const Json& Root)
             SetTab(New->Contents());
         }
     }
+
+    SetShowAdd(Root["ShowAdd"].Boolean(ShowAdd()));
 }
 
 std::shared_ptr<Tab> TabContainer::CreateTab(const char32_t* Label)
 {
-    const std::shared_ptr<Tab> Result { m_Tabs->AddControl<Tab>() };
+    const std::shared_ptr<Tab> Result { std::make_shared<Tab>(GetWindow()) };
+    m_Tabs->InsertControl(Result, ShowAdd() ? (int)m_Tabs->NumControls() - 1 : -1);
     Result
         ->SetLabel(Label)
         .SetOnPressed([this](const Tab& Pressed) -> void

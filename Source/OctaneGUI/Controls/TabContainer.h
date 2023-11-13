@@ -46,6 +46,9 @@ public:
 
     std::shared_ptr<Container> AddTab(const char32_t* Label);
 
+    TabContainer& SetShowAdd(bool ShowAdd);
+    bool ShowAdd() const;
+
     virtual void OnLoad(const Json& Root) override;
 
 private:
@@ -59,7 +62,10 @@ private:
 
     std::shared_ptr<Container> m_Contents { nullptr };
     std::shared_ptr<Container> m_Tabs { nullptr };
+    std::shared_ptr<Container> m_AddTab { nullptr };
     std::weak_ptr<Container> m_Tab {};
+
+    bool m_ShowAdd { false };
 };
 
 }
