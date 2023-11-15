@@ -48,6 +48,7 @@ public:
     ImageButton& SetTexture(const std::shared_ptr<Texture>& InTexture);
     ImageButton& SetUVs(const Rect& UVs);
     ImageButton& SetTint(const Color& Tint);
+    ImageButton& SetImageSize(const Vector2& Size);
 
     virtual void SetWindow(Window* InWindow) override;
     virtual void OnPaint(Paint& Brush) const override;

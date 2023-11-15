@@ -67,6 +67,13 @@ ImageButton& ImageButton::SetTint(const Color& Tint)
     return *this;
 }
 
+ImageButton& ImageButton::SetImageSize(const Vector2& Size)
+{
+    SetSize(Size);
+    m_Image->SetSize(Size);
+    return *this;
+}
+
 void ImageButton::SetWindow(Window* InWindow)
 {
     Button::SetWindow(InWindow);
