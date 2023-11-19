@@ -35,17 +35,21 @@ bool AssertFunc(const char* File, int Line, bool Condition, const char* Format, 
 
 }
 
+#if __clang__
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
+#endif
+
 #if NDEBUG
-    #define Assert(Condition, Format, ...)
+    // This is done due to Clang throwing an error for calls to this macro with only 2 arguments.
+    // The arguments need to be expanded out and passed to a custom macro which will
+    // always receive one variadic argument.
+    #define AssertEmpty(Condition, Format, ...)
+    #define Assert(Condition, Format, ...) AssertEmpty(Condition, Format, NULL, ##__VA_ARGS__)
 #else
-    #if __clang__
-        #pragma clang diagnostic push
-        #pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
-    #endif
-
     #define Assert(Condition, Format, ...) OctaneGUI::AssertFunc(__FILE__, __LINE__, Condition, Format, ##__VA_ARGS__);
+#endif
 
-    #if __clang__
-        #pragma clang diagnostic pop
-    #endif
+#if __clang__
+    #pragma clang diagnostic pop
 #endif
