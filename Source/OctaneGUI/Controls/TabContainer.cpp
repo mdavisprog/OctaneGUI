@@ -168,7 +168,7 @@ public:
         return m_Margins->DesiredSize() + Padding * 2.0f;
     }
 
-    virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const
+    virtual std::weak_ptr<Control> GetControl(const Vector2& Point) const override
     {
         std::weak_ptr<Control> Result;
 
