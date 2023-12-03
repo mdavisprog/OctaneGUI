@@ -150,6 +150,22 @@ public:
     /// @return Exit code for the function. 0 is success.
     int Run();
 
+    /// @brief Runs a single frame for the application.
+    ///
+    /// When a single frame is run, all events for all active windows are first processed. Then,
+    /// each window is updated with the new state.
+    ///
+    /// @return Number of events processed this frame,
+    int RunFrame();
+
+    /// @brief Returns whether the app is still running.
+    ///
+    /// This will return false if the Application object was not initialized, or if there was
+    /// a Quit request.
+    ///
+    /// @return True if the Application is still running. False otherwise.
+    bool IsRunning() const;
+
     /// @brief Forces the application to break out of the Run loop.
     void Quit();
 

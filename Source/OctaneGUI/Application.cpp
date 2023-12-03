@@ -216,36 +216,7 @@ int Application::Run()
     {
         while (m_IsRunning)
         {
-            PROFILER_FRAME();
-
-            if (m_OnNewFrame)
-            {
-                m_OnNewFrame();
-            }
-
-            int EventsProcessed = 0;
-            for (auto& Item : m_Windows)
-            {
-                // Attempt to process all events for a single window.
-                while (Item.second->IsVisible())
-                {
-                    int Processed = ProcessEvent(Item.second);
-                    EventsProcessed += Processed;
-
-                    if (Processed == 0)
-                    {
-                        break;
-                    }
-                }
-
-                if (!m_IsRunning)
-                {
-                    EventsProcessed = 0;
-                    break;
-                }
-            }
-
-            Update();
+            const int EventsProcessed { RunFrame() };
 
             if (EventsProcessed <= 0)
             {
@@ -257,6 +228,52 @@ int Application::Run()
 
     Shutdown();
     return 0;
+}
+
+int Application::RunFrame()
+{
+    if (m_OnEvent == nullptr)
+    {
+        return 0;
+    }
+
+    PROFILER_FRAME();
+
+    if (m_OnNewFrame)
+    {
+        m_OnNewFrame();
+    }
+
+    int EventsProcessed = 0;
+    for (auto& Item : m_Windows)
+    {
+        // Attempt to process all events for a single window.
+        while (Item.second->IsVisible())
+        {
+            int Processed = ProcessEvent(Item.second);
+            EventsProcessed += Processed;
+
+            if (Processed == 0)
+            {
+                break;
+            }
+        }
+
+        if (!m_IsRunning)
+        {
+            EventsProcessed = 0;
+            break;
+        }
+    }
+
+    Update();
+
+    return EventsProcessed;
+}
+
+bool Application::IsRunning() const
+{
+    return m_IsRunning;
 }
 
 void Application::Quit()
