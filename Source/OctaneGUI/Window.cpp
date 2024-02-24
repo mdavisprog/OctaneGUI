@@ -803,6 +803,7 @@ void Window::LoadRoot(const Json& Root)
     SetResizable(Root["Resizable"].Boolean(IsResizable()));
     SetCanMinimize(Root["CanMinimize"].Boolean(CanMinimize()));
     SetCustomTitleBar(Root["CustomTitleBar"].Boolean(CustomTitleBar()));
+    SetMaximized(Root["Maximized"].Boolean(IsMaximized()));
 
     if (Root["Modal"].Boolean(Modal()))
     {
