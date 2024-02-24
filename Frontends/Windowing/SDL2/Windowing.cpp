@@ -444,6 +444,11 @@ void NewWindow(OctaneGUI::Window* Window)
             Flags |= SDL_WINDOW_RESIZABLE;
         }
 
+        if (Window->IsMaximized())
+        {
+            Flags |= SDL_WINDOW_MAXIMIZED;
+        }
+
 #if OPENGL
         Flags |= SDL_WINDOW_OPENGL;
 #endif
