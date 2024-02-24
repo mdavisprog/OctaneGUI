@@ -159,8 +159,10 @@ void NewWindow(OctaneGUI::Window* Window)
             }
         }
 
+        const OctaneGUI::Vector2 Position = Window->GetPosition();
         const OctaneGUI::Vector2 Size = Window->GetSize();
         sf::RenderWindow* RenderWindow = new sf::RenderWindow(sf::VideoMode((int)Size.X, (int)Size.Y), reinterpret_cast<const sf::Uint32*>(Window->GetTitle()), Style);
+        RenderWindow->setPosition({ (int)Position.X, (int)Position.Y });
         RenderWindow->setFramerateLimit(0);
         RenderWindow->setVerticalSyncEnabled(false);
         g_Windows[Window] = std::shared_ptr<sf::RenderWindow>(RenderWindow);

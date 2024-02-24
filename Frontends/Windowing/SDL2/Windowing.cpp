@@ -455,8 +455,8 @@ void NewWindow(OctaneGUI::Window* Window)
 
         SDL_Window* Instance = SDL_CreateWindow(
             OctaneGUI::String::ToMultiByte(Window->GetTitle()).c_str(),
-            SDL_WINDOWPOS_UNDEFINED,
-            SDL_WINDOWPOS_UNDEFINED,
+            (int)Window->GetPosition().X,
+            (int)Window->GetPosition().Y,
             (int)Window->GetSize().X,
             (int)Window->GetSize().Y,
             Flags);
