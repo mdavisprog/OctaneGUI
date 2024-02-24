@@ -795,10 +795,13 @@ void Window::Load(const Json& Root, ControlList& List)
 void Window::LoadRoot(const Json& Root)
 {
     const std::string Title = Root["Title"].String();
+    float X = Root["X"].Number(50.0f);
+    float Y = Root["Y"].Number(50.0f);
     float Width = Root["Width"].Number(640.0f);
     float Height = Root["Height"].Number(480.0f);
 
     SetTitle(String::ToUTF32(Title.c_str()).c_str());
+    SetPosition({ X, Y });
     SetSize({ Width, Height });
     SetResizable(Root["Resizable"].Boolean(IsResizable()));
     SetCanMinimize(Root["CanMinimize"].Boolean(CanMinimize()));
