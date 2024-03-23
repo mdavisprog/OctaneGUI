@@ -40,3 +40,7 @@ add_dependencies(
     ${TARGET}
     Blank_Json
 )
+
+if (MSVC)
+target_compile_options(${TARGET} PUBLIC /WX-)
+endif(MSVC)

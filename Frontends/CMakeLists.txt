@@ -61,6 +61,8 @@ if(${RENDERING} MATCHES OpenGL)
     set(FRONTEND_LIBS ${FRONTEND_LIBS} ${OPENGL_LIBRARIES})
 endif()
 
+list(APPEND FRONTEND_LIBS OctaneGUI)
+
 add_subdirectory(Rendering)
 set(RENDERING_SOURCE ${SOURCE})
 
@@ -68,7 +70,7 @@ add_subdirectory(Windowing)
 set(WINDOWING_SOURCE ${SOURCE})
 
 add_library(
-    ${TARGET}
+    ${TARGET} STATIC
     ${RENDERING_SOURCE}
     ${WINDOWING_SOURCE}
     Frontend.cpp

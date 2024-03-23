@@ -114,7 +114,7 @@ void RegisterWndProc(HWND Handle)
     }
 }
 
-BOOL OnDisplayMonitor(HMONITOR Monitor, HDC, LPRECT, LPARAM LParam)
+BOOL CALLBACK OnDisplayMonitor(HMONITOR Monitor, HDC, LPRECT, LPARAM LParam)
 {
     OctaneGUI::Application* Application = (OctaneGUI::Application*)LParam;
 
