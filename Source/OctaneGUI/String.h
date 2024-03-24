@@ -28,6 +28,7 @@ SOFTWARE.
 
 #include <string>
 #include <vector>
+#include <cctype>
 
 namespace OctaneGUI
 {

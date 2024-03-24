@@ -27,6 +27,7 @@ SOFTWARE.
 #pragma once
 
 #include "Vector2.h"
+#include <algorithm>
 
 namespace OctaneGUI
 {
