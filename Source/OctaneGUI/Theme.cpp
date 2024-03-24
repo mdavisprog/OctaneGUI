@@ -100,7 +100,7 @@ void Theme::Load(const char* Path)
 
     std::string Buffer;
     File.seekg(0, std::ios::end);
-    Buffer.resize(File.tellg());
+    Buffer.resize(static_cast<size_t>(File.tellg()));
     File.seekg(0, std::ios::beg);
     File.read(&Buffer[0], Buffer.size());
     File.close();

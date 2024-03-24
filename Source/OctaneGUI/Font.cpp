@@ -99,7 +99,7 @@ bool Font::Load(const char* Path, float Size, const std::vector<Range>& Ranges)
     }
 
     Stream.seekg(0, std::ios_base::end);
-    size_t FileSize = Stream.tellg();
+    size_t FileSize = static_cast<size_t>(Stream.tellg());
     Stream.seekg(0, std::ios_base::beg);
 
     std::vector<char> Buffer;

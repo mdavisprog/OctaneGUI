@@ -41,7 +41,7 @@ std::string GetContents(const char* Filename)
     if (File.is_open())
     {
         File.seekg(0, std::ios::end);
-        Result.resize(File.tellg());
+        Result.resize(static_cast<size_t>(File.tellg()));
         File.seekg(0, std::ios::beg);
 
         File.read(&Result[0], Result.size());

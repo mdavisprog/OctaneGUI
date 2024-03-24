@@ -11,10 +11,25 @@ target_include_directories(
     PUBLIC ${FRONTEND_INCLUDE}
 )
 
-target_link_libraries(
-    ${TARGET}
+set(DEBUG_LIB
     Frontend
     OctaneGUI
+    sfml-system-d
+    sfml-graphics-d
+    sfml-window-d
+)
+
+set(RELEASE_LIB
+    Frontend
+    OctaneGUI
+    sfml-system
+    sfml-graphics
+    sfml-window
+)
+
+target_link_libraries(
+    ${TARGET}
+    $<$<CONFIG:Debug>:${DEBUG_LIB}>;$<$<CONFIG:Release>:${RELEASE_LIB}>
 )
 
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
