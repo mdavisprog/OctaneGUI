@@ -30,10 +30,10 @@ if(${WINDOWING} MATCHES SFML OR ${RENDERING} MATCHES SFML)
     if(WIN32)
         set(LIBS ${LIBS} main)
     endif()
-    find_package(SFML COMPONENTS ${LIBS} REQUIRED)
-    foreach(LIB ${LIBS})
-        list(APPEND FRONTEND_LIBS sfml-${LIB})
-    endforeach()
+#    find_package(SFML COMPONENTS ${LIBS} REQUIRED)
+#    foreach(LIB ${LIBS})
+#        list(APPEND FRONTEND_LIBS sfml-${LIB})
+#    endforeach()
     list(APPEND DEFINES SFML)
 endif()
 
@@ -61,6 +61,8 @@ if(${RENDERING} MATCHES OpenGL)
     set(FRONTEND_LIBS ${FRONTEND_LIBS} ${OPENGL_LIBRARIES})
 endif()
 
+list(APPEND FRONTEND_LIBS OctaneGUI)
+
 add_subdirectory(Rendering)
 set(RENDERING_SOURCE ${SOURCE})
 
@@ -68,7 +70,7 @@ add_subdirectory(Windowing)
 set(WINDOWING_SOURCE ${SOURCE})
 
 add_library(
-    ${TARGET}
+    ${TARGET} STATIC
     ${RENDERING_SOURCE}
     ${WINDOWING_SOURCE}
     Frontend.cpp
