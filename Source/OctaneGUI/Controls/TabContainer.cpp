@@ -57,7 +57,7 @@ public:
     {
         m_Margins = AddControl<MarginContainer>();
         m_Margins
-            ->SetMargins({ 8.0f * RenderScale().X, 2.0f, 2.0f, 8.0f * RenderScale().X })
+            ->SetMargins({ 8.0f * RenderScale().X, 2.0f, 8.0f * RenderScale().X, 2.0f })
             .SetExpand(Expand::Both);
 
         m_Row = m_Margins->AddControl<HorizontalContainer>();
