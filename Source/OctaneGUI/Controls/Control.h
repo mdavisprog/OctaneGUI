@@ -33,10 +33,10 @@ SOFTWARE.
 #include "../Rect.h"
 #include "../ThemeProperties.h"
 
+#include <algorithm>
 #include <functional>
 #include <memory>
 #include <string>
-#include <algorithm>
 
 namespace OctaneGUI
 {

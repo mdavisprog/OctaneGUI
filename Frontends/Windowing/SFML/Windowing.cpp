@@ -195,7 +195,7 @@ void NewWindow(OctaneGUI::Window* Window)
 
                 return PerformHitTest(Window, Bounds, Point);
             });
-        
+
         if (Window->IsMaximized())
         {
             Windows::MaximizeWindow((void*)RenderWindow->getSystemHandle());

@@ -744,7 +744,7 @@ void SetMousePosition(OctaneGUI::Window* Window, const OctaneGUI::Vector2& Posit
     if (Window != nullptr)
     {
         Global /= Window->RenderScale();
-    } 
+    }
 
     SDL_Window* Window_ { Get(Window) };
     if (Window_ != nullptr)

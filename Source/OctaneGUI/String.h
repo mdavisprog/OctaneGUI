@@ -26,9 +26,9 @@ SOFTWARE.
 
 #pragma once
 
+#include <cctype>
 #include <string>
 #include <vector>
-#include <cctype>
 
 namespace OctaneGUI
 {

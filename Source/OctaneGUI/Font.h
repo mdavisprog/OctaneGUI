@@ -28,6 +28,7 @@ SOFTWARE.
 
 #include "Vector2.h"
 
+#include <cctype>
 #include <cstdint>
 #include <functional>
 #include <memory>
@@ -35,7 +36,6 @@ SOFTWARE.
 #include <string_view>
 #include <unordered_map>
 #include <vector>
-#include <cctype>
 
 namespace OctaneGUI
 {

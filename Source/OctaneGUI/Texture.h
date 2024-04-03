@@ -28,12 +28,12 @@ SOFTWARE.
 
 #include "Vector2.h"
 
+#include <algorithm>
 #include <cstdint>
 #include <functional>
 #include <memory>
 #include <string>
 #include <vector>
-#include <algorithm>
 
 namespace OctaneGUI
 {

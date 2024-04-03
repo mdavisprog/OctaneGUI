@@ -304,7 +304,7 @@ TabContainer::TabContainer(Window* InWindow)
             {
                 CreateTab(U"New Tab");
             })
-        .SetProperty(ThemeProperties::Button, Color{})
+        .SetProperty(ThemeProperties::Button, Color {})
         .SetSize({ Height, Height });
 
     if (!m_ShowAdd)

@@ -28,9 +28,9 @@ SOFTWARE.
 
 #include "../../Color.h"
 
+#include <cctype>
 #include <string>
 #include <vector>
-#include <cctype>
 
 namespace OctaneGUI
 {
