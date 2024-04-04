@@ -1,7 +1,7 @@
 @ECHO OFF
 
-SET SDL2=FALSE
-SET SFML=TRUE
+SET SDL2=TRUE
+SET SFML=FALSE
 SET NINJA=FALSE
 SET CONFIGURATION=Debug
 SET BUILD_TOOLS=OFF
@@ -21,7 +21,10 @@ IF NOT "%1" == "" (
     IF /I "%1" == "Release" SET CONFIGURATION=Release
     IF /I "%1" == "Tools" SET BUILD_TOOLS=ON
     IF /I "%1" == "SDL2" SET SDL2=TRUE
-    IF /I "%1" == "SFML" SET SFML=TRUE
+    IF /I "%1" == "SFML" (
+        SET SFML=TRUE
+        SET SDL2=FALSE
+    )
     IF /I "%1" == "NINJA" SET NINJA=TRUE
     IF /I "%1" == "CLEAN" SET CLEAN=TRUE
     IF /I "%1" == "NOAPPS" SET NO_APPS=ON
