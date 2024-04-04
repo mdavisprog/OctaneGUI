@@ -68,6 +68,7 @@ private:
     void PopulateList();
     void AddListItem(const char32_t* Name, size_t Size);
     void Close(bool Success);
+    void OnConfirm();
 
     std::u32string Path(const std::shared_ptr<Tree>& Item) const;
     bool IsEmpty(const std::shared_ptr<Tree>& Item) const;

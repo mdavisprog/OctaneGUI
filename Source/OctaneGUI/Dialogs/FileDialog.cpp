@@ -134,6 +134,10 @@ FileDialog::FileDialog(Window* InWindow)
                 m_Selected = Contents->GetText();
                 m_FileName->SetText(GetWindow()->App().FS().CombinePath(m_Directory, m_Selected).c_str());
             })
+        .SetOnDoubleClicked([this](Table&, size_t) -> void
+            {
+                OnConfirm();
+            })
         .SetColumnSize(0, 200.0f)
         .SetColumnSize(1, 100.0f)
         .SetExpand(Expand::Both);
@@ -179,23 +183,7 @@ FileDialog::FileDialog(Window* InWindow)
         ->SetText("Open")
         ->SetOnClicked([this](Button&) -> void
             {
-                Application& App = GetWindow()->App();
-                if (m_Type == FileDialogType::Save && App.FS().Exists(m_FileName->GetText()))
-                {
-                    std::u32string Message { App.FS().FileName(m_FileName->GetText()) };
-                    Message += U" already exists.\nDo you want to replace it?";
-                    MessageBox::Show(App, U"Confirm Save As", Message.c_str(), [this](MessageBox::Response Response) -> void
-                        {
-                            if (Response == MessageBox::Response::Accept)
-                            {
-                                Close(true);
-                            }
-                        });
-                }
-                else
-                {
-                    Close(true);
-                }
+                OnConfirm();
             });
 
     const std::shared_ptr<TextButton> CancelBtn = ButtonsLayout->AddControl<TextButton>();
@@ -467,6 +455,27 @@ void FileDialog::Close(bool Success)
     }
 
     GetWindow()->App().CloseWindow(ID);
+}
+
+void FileDialog::OnConfirm()
+{
+    Application& App = GetWindow()->App();
+    if (m_Type == FileDialogType::Save && App.FS().Exists(m_FileName->GetText()))
+    {
+        std::u32string Message { App.FS().FileName(m_FileName->GetText()) };
+        Message += U" already exists.\nDo you want to replace it?";
+        MessageBox::Show(App, U"Confirm Save As", Message.c_str(), [this](MessageBox::Response Response) -> void
+            {
+                if (Response == MessageBox::Response::Accept)
+                {
+                    Close(true);
+                }
+            });
+    }
+    else
+    {
+        Close(true);
+    }
 }
 
 std::u32string FileDialog::Path(const std::shared_ptr<Tree>& Item) const
