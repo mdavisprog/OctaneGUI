@@ -320,6 +320,12 @@ Table& Table::SetOnSelected(OnSelectedSignature&& Fn)
     return *this;
 }
 
+Table& Table::SetOnDoubleClicked(OnSelectedSignature&& Fn)
+{
+    m_OnDoubleClicked = std::move(Fn);
+    return *this;
+}
+
 std::weak_ptr<Control> Table::GetControl(const Vector2& Point) const
 {
     std::weak_ptr<Control> Result = Container::GetControl(Point);
@@ -449,7 +455,14 @@ bool Table::OnMousePressed(const Vector2& Position, Mouse::Button Button, Mouse:
 
                 if (m_OnSelected)
                 {
-                    m_OnSelected(*this, (size_t)m_Selected);
+                    m_OnSelected(*this, static_cast<size_t>(m_Selected));
+                }
+            }
+            else if (Count == Mouse::Count::Double)
+            {
+                if (m_OnDoubleClicked)
+                {
+                    m_OnDoubleClicked(*this, static_cast<size_t>(m_Selected));
                 }
             }
         }
